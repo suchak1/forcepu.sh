@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "start": "npx umi dev",
+    "test-local-api": "cd hello-world && sudo sam local invoke -e event.json HelloWorld"
+  },
+  "dependencies": {
+    "@ant-design/charts": "^1.1.16",
+    "umi": "^3.4.25"
+  }
+}
