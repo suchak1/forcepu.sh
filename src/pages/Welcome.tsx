@@ -14,6 +14,11 @@ const CodePreview: React.FC = ({ children }) => (
 
 export default (): React.ReactNode => {
   const intl = useIntl();
+
+  fetch('/hello', { method: 'GET' })
+    .then(response => response.json())
+    .then(data => console.log(data));
+
   return (
     <PageContainer>
       <Card>
