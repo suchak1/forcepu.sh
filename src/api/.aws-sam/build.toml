@@ -6,6 +6,6 @@ codeuri = "/home/suchak/forcepu.sh/src/api/hello_world"
 runtime = "python3.8"
 source_md5 = ""
 packagetype = "Zip"
-functions = ["HelloWorldFunction", "ByeWorldFunction"]
+functions = ["HelloWorldFunction", "LoveFunction"]
 
 [layer_build_definitions]

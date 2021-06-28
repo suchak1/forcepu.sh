@@ -24,17 +24,29 @@ Resources:
           Properties:
             Path: /hello
             Method: get
-  ByeWorldFunction:
+  # ByeWorldFunction:
+  #   Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  #   Properties:
+  #     CodeUri: hello_world/
+  #     Handler: app.bye_handler
+  #     Runtime: python3.8
+  #     Events:
+  #       ByeWorld:
+  #         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  #         Properties:
+  #           Path: /bye
+  #           Method: get
+  LoveFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: hello_world/
-      Handler: app.bye_handler
+      Handler: app.love_handler
       Runtime: python3.8
       Events:
-        ByeWorld:
+        LoveWorld:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /bye
+            Path: /whodoilove
             Method: get
 
 Outputs:
@@ -50,6 +62,6 @@ Outputs:
   HelloWorldFunctionIamRole:
     Description: 'Implicit IAM Role created for Hello World function'
     Value: !GetAtt HelloWorldFunctionRole.Arn
-  ByeWorldFunction:
-    Description: 'Bye World Lambda Function ARN'
-    Value: !GetAtt ByeWorldFunction.Arn
+  # ByeWorldFunction:
+  #   Description: 'Bye World Lambda Function ARN'
+  #   Value: !GetAtt ByeWorldFunction.Arn

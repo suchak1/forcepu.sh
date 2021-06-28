@@ -2,6 +2,15 @@ import json
 
 # import requests
 
+def love_handler(event, context):
+    return {
+        "statusCode": 200,
+        "body": json.dumps({
+            "message": "Jess",
+            # "location": ip.text.replace("\n", "")
+        }),
+    }
+
 def bye_handler(event, context):
     return {
         "statusCode": 200,
