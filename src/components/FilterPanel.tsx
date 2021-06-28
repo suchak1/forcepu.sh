@@ -12,20 +12,20 @@ function FilterPanel() {
       <Form layout="vertical">
         <Collapse defaultActiveKey={['access']} ghost>
           <Collapse.Panel header="Access" key="access">
-            <Form.Item label="What data" name="what-data">
+            <Form.Item label="Exercise" name="exercise">
               <Select defaultValue="*">
                 <Select.Option value="*">Anything</Select.Option>
               </Select>
             </Form.Item>
-            <Form.Item label="Who attempted" name="who-attempted">
+            <Form.Item label="Volume" name="volume">
               <Select defaultValue="*">
-                <Select.Option value="*">Anyone</Select.Option>
+                <Select.Option value="*">Any</Select.Option>
               </Select>
             </Form.Item>
-            <Form.Item label="When attempted" name="when-attempted">
+            <Form.Item label="Date Range" name="date-range">
               <DatePicker.RangePicker />
             </Form.Item>
-            <Form.Item label="Request result" name="request-result">
+            {/* <Form.Item label="Request result" name="request-result">
               <Select
                 mode="multiple"
                 allowClear
@@ -36,7 +36,7 @@ function FilterPanel() {
                 <Select.Option value="granted">Granted</Select.Option>
                 <Select.Option value="rejected">Rejected</Select.Option>
               </Select>
-            </Form.Item>
+            </Form.Item> */}
           </Collapse.Panel>
         </Collapse>
       </Form>

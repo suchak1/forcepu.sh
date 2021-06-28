@@ -2,8 +2,8 @@ import faker from 'faker';
 import { sendJson } from '../../helpers/mockHelpers';
 
 const dataTypes = ['email', 'attachment', 'cse', 'sdk'];
-const actionTypes = ['decrypt', 'encrypt'];
-const actionStatuses = ['granted', 'denied'];
+const ids = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
+const exercises = ['Bench', 'Overhead', 'Curl', 'Upright', 'Squat', 'Deadlift', 'Standing', 'Sitting', 'Row', 'Extension', 'Pullover', 'Crunch']
 
 function getEnum (list: string[]) {
   return list[Math.floor(Math.random() * list.length)]
@@ -16,10 +16,12 @@ function generateGymRecord () {
     dataType: getEnum(dataTypes),
     dataContext: faker.company.catchPhrase(),
     dataOwner: faker.internet.email(),
-    actionType: getEnum(actionTypes),
-    actionStatus: getEnum(actionStatuses),
-    actionActor: faker.internet.email(),
-    actionOn: new Date(),
+    id: getEnum(ids),
+    exercise: getEnum(exercises),
+    volume: faker.datatype.number(),
+    weight: faker.datatype.number(),
+    reps: faker.datatype.number(),
+    date: new Date(),
   };
 }
 

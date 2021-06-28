@@ -3,7 +3,7 @@ export default {
     '@umijs/preset-react'
   ],
   plugins: [],
-  antd: {},
+  antd: {compact: true, dark: true},
   dva: {
     immer: true,
     hmr: true,
@@ -13,6 +13,6 @@ export default {
     baseNavigator: true,
   },
   theme: {
-
+    dark: true
   }
 }
