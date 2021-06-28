@@ -5,7 +5,11 @@ import styles from './index.css';
 
 const routes = [
   { text: 'Home', to: '' },
-  { text: 'Audit', to: 'audit' }
+  { text: 'Gym', to: 'gym' },
+  { text: 'Art', to: 'art' },
+  { text: 'Docs', to: 'docs' },
+  { text: 'App', to: 'app' },
+
 ];
 
 export default function Layout({ route, children }) {

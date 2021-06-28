@@ -6,7 +6,7 @@ import { CheckOutlined, StopOutlined, LoadingOutlined, SearchOutlined } from '@a
 import FilterPanel from '@/components/FilterPanel';
 
 const { Title, Text } = Typography;
-
+// 
 const columns = [
   {
     title: 'What data',
@@ -61,17 +61,17 @@ const columns = [
   },
 ]
 
-function AuditPage({ dispatch, audit, loading }) {
+function GymPage({ dispatch, gym, loading }) {
   return (
     <Layout style={{ backgroundColor: 'white' }}>
       <Layout.Content style={{ backgroundColor: 'white', padding: 24 }}>
-        <Title>TDF Activity</Title>
+        <Title>Exercise Log</Title>
         <Input.Search size="large" prefix={<SearchOutlined />} allowClear enterButton="Search" style={{ marginBottom: 16 }} />
-        <Text>{audit.total} results</Text>
+        <Text>{gym.total} results</Text>
         <Table
           loading={loading && { indicator: <LoadingOutlined style={{ fontSize: 24 }} spin /> }}
           columns={columns}
-          dataSource={audit.list} 
+          dataSource={gym.list} 
           scroll={{ x: 1500 }}
           pagination={{ position: ['topRight', 'bottomRight'] }}
           // sticky
@@ -82,9 +82,9 @@ function AuditPage({ dispatch, audit, loading }) {
   );
 }
 
-AuditPage.displayName = 'Audit'
+GymPage.displayName = 'Gym'
 
-export default connect(({ audit, loading }) => ({
-  audit,
-  loading: loading.models.audit,
-}))(AuditPage)
+export default connect(({ gym, loading }) => ({
+  gym,
+  loading: loading.models.gym,
+}))(GymPage)

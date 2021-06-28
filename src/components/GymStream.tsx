@@ -132,6 +132,6 @@ function renderStreamlet({ id, date, user, action, policy }) {
   );
 }
 
-export default function AuditStream({stream = []}) {
+export default function GymStream({stream = []}) {
   return <Timeline>{stream.map((streamlet) => renderStreamlet(streamlet))}</Timeline>;
 }

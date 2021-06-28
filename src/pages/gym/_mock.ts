@@ -9,7 +9,7 @@ function getEnum (list: string[]) {
   return list[Math.floor(Math.random() * list.length)]
 }
 
-function generateAuditRecord () {
+function generateGymRecord () {
   return {
     recordId: faker.datatype.number(),
     dataId: faker.datatype.uuid(),
@@ -23,14 +23,14 @@ function generateAuditRecord () {
   };
 }
 
-const AUDIT_RECORD_RESULT = 25;
+const GYM_RECORD_RESULT = 25;
 
 export default {
-  'GET /api/audit': {
-    data: [...Array(AUDIT_RECORD_RESULT)].map(() => generateAuditRecord()),
-    total: AUDIT_RECORD_RESULT,
+  'GET /api/gym': {
+    data: [...Array(GYM_RECORD_RESULT)].map(() => generateGymRecord()),
+    total: GYM_RECORD_RESULT,
   },
-  'GET /api/audit/:id/stream': {
+  'GET /api/gym/:id/stream': {
     data: [
       {
         id: Math.random() * 1000,

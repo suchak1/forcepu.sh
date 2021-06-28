@@ -1,17 +1,17 @@
-import { AuditService } from './service';
+import { GymService } from './service';
 
-const service = new AuditService();
+const service = new GymService();
 
-export class AuditListState {
+export class GymListState {
   list = []
   total = null
   page = null
 }
 
 export default {
-  namespace: 'audit',
+  namespace: 'gym',
 
-  state: new AuditListState(),
+  state: new GymListState(),
 
   reducers: {
     save(state, { payload: { data: list, total, page }}) {
@@ -36,7 +36,7 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
-        if (pathname === '/audit') {
+        if (pathname === '/gym') {
           dispatch({ type: 'fetch', payload: query });
           // dispatch({ type: 'fetchStream', payload: query });
         }
