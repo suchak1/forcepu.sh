@@ -63,8 +63,8 @@ const columns = [
 
 function GymPage({ dispatch, gym, loading }) {
   return (
-    <Layout style={{ backgroundColor: 'white' }}>
-      <Layout.Content style={{ backgroundColor: 'white', padding: 24 }}>
+    <Layout>
+      <Layout.Content style={{ padding: 24 }}>
         <Title>Exercise Log</Title>
         <Input.Search size="large" prefix={<SearchOutlined />} allowClear enterButton="Search" style={{ marginBottom: 16 }} />
         <Text>{gym.total} results</Text>

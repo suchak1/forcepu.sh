@@ -5,13 +5,12 @@ import { Layout, Collapse, Form, Select, DatePicker } from 'antd';
 function FilterPanel() {
   return (
     <Layout.Sider
-      theme="light"
       width={300}
       style={{ borderLeft: '1px solid #aeaeae', marginLeft: 24 }}
     >
       <Form layout="vertical">
-        <Collapse defaultActiveKey={['access']} ghost>
-          <Collapse.Panel header="Access" key="access">
+        <Collapse defaultActiveKey={['filter']} ghost>
+          <Collapse.Panel header="Filter" key="filter">
             <Form.Item label="Exercise" name="exercise">
               <Select defaultValue="*">
                 <Select.Option value="*">Anything</Select.Option>

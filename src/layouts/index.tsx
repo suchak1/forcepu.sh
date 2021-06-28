@@ -19,7 +19,7 @@ export default function Layout({ route, children }) {
       <PageHeader title={<><span>force</span><span style={{color: '#52E5FF'}}>pu.sh</span></>} subTitle={'move fast; break everything'} />
       <AntLayout>
 
-      <AntLayout.Sider theme="light">
+      <AntLayout.Sider>
         <List
           style={{ padding: 24 }}
           dataSource={routes}
