@@ -2,10 +2,10 @@
 
 [function_build_definitions]
 [function_build_definitions.5996b159-4d02-475b-9549-79aaced860dd]
-codeuri = "/home/suchak/forcepu.sh/src/api/hello_world"
+codeuri = "/home/suchak/forcepu.sh/src/api/backend"
 runtime = "python3.8"
 source_md5 = ""
 packagetype = "Zip"
-functions = ["HelloWorldFunction", "LoveFunction"]
+functions = ["ExerciseLogFunction"]
 
 [layer_build_definitions]

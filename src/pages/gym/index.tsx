@@ -62,6 +62,9 @@ const columns = [
 ]
 
 function GymPage({ dispatch, gym, loading }) {
+  fetch('/api/exercise_log', { method: 'GET' })
+    .then(response => response.json())
+    .then(data => console.log(data));
   return (
     <Layout>
       <Layout.Content style={{ padding: 24 }}>

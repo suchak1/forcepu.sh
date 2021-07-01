@@ -6,9 +6,10 @@
   "scripts": {
     "build:umi": "umi build",
     "build:api": "cd src/api && sam build",
-    "deploy:api": "cd src/api && sam deploy --no-confirm-changeset",
+    "build+start:api": "npm run build:api && npm run start:local-api",
     "build+deploy:api": "npm run build:api && npm run deploy:api",
-    "start": "npx umi dev",
+    "deploy:api": "cd src/api && sam deploy --no-confirm-changeset",
+    "start": "REACT_APP_ENV=dev MOCK=none npx umi dev",
     "start:local-api": "cd src/api && sam local start-api",
     "umi": "npx umi",
     "test": "echo \"Error: no test specified\" && exit 1",

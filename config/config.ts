@@ -1,4 +1,8 @@
-export default {
+import { defineConfig } from 'umi';
+import proxy from './proxy';
+const { REACT_APP_ENV } = process.env;
+
+export default defineConfig({
   // presets: [
   //   '@umijs/preset-react'
   // ],
@@ -12,5 +16,7 @@ export default {
     // default: 'us-EN',
     baseNavigator: true,
   },
+  // proxy: proxy[REACT_APP_ENV || 'prod'],
+  proxy: proxy['dev'],
   theme: {}
-}
+});

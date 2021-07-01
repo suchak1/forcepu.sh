@@ -2,6 +2,7 @@ import json
 
 # import requests
 
+
 def love_handler(event, context):
     return {
         "statusCode": 200,
@@ -11,6 +12,7 @@ def love_handler(event, context):
         }),
     }
 
+
 def bye_handler(event, context):
     return {
         "statusCode": 200,
@@ -19,6 +21,7 @@ def bye_handler(event, context):
             # "location": ip.text.replace("\n", "")
         }),
     }
+
 
 def lambda_handler(event, context):
     """Sample pure Lambda function
