@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "umi";
 import { Layout as AntLayout, Menu, PageHeader, Typography, List } from "antd";
-import styles from "./index.css";
+// import styles from "./index.less";
 import Page from "@/pages";
 
 const routes = [
@@ -12,15 +12,18 @@ const routes = [
   { text: "App", to: "app" },
 ];
 
+const styles = { ice: { color: "#52e5ff" }, white: { color: "white" } };
+
 export default function Layout({ route, children }) {
+  console.log(window.location);
   return (
     <AntLayout>
       <PageHeader
         title={
-          <>
+          <div>
             <span>force</span>
-            <span style={{ color: "#52E5FF" }}>pu.sh</span>
-          </>
+            <span style={styles.ice}>pu.sh</span>
+          </div>
         }
         subTitle={"move fast; break everything"}
       />
@@ -33,14 +36,23 @@ export default function Layout({ route, children }) {
               return (
                 <List.Item>
                   <Typography.Title level={4}>
-                    <NavLink to={to}>{text}</NavLink>
+                    <NavLink
+                      to={to}
+                      style={
+                        window.location.pathname.slice(1) === to
+                          ? styles.ice
+                          : styles.white
+                      }
+                    >
+                      {text}
+                    </NavLink>
                   </Typography.Title>
                 </List.Item>
               );
             }}
           />
         </AntLayout.Sider>
-        <AntLayout className={styles.content}>{children}</AntLayout>
+        <AntLayout>{children}</AntLayout>
       </AntLayout>
     </AntLayout>
   );

@@ -9,7 +9,7 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import FilterPanel from "@/components/FilterPanel";
-
+import styles from "./index.less";
 const { Title, Text } = Typography;
 //
 const columns = [

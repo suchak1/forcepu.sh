@@ -7,7 +7,7 @@ export default defineConfig({
   //   '@umijs/preset-react'
   // ],
   plugins: [],
-  antd: { compact: true, dark: true },
+  antd: { dark: true },
   dva: {
     // immer: true,
     hmr: true,
@@ -18,5 +18,5 @@ export default defineConfig({
   },
   // proxy: proxy[REACT_APP_ENV || 'prod'],
   proxy: proxy['dev'],
-  theme: {}
+  theme: {"primary-color": "#177ddc"}
 });
