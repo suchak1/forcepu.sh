@@ -25,6 +25,7 @@ def get_exercise_log(*_):
     )
     df = pd.read_csv(BytesIO(res.content))
     df = df[df['Exercise'] != 'Exercise']
+    df = df[['Date', 'Id', 'Weight', 'Reps', 'Exercise', 'Volume', '1RM']]
     records = df.to_json(orient='records')
     return {
         "statusCode": 200,
