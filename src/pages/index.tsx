@@ -1,13 +1,9 @@
-import React from 'react';
+import React from "react";
 
 function Page() {
-  return (
-    <ul>
-
-    </ul>
-  );
+  return <ul></ul>;
 }
 
-Page.displayName = 'Page';
+Page.displayName = "Page";
 
-export default Page
+export default Page;

@@ -16,7 +16,6 @@ export default defineConfig({
     // default: 'us-EN',
     baseNavigator: true,
   },
-  // proxy: proxy[REACT_APP_ENV || 'prod'],
-  proxy: proxy['dev'],
-  theme: {"primary-color": "#177ddc"}
+  proxy: proxy[REACT_APP_ENV || 'prod'],
+  // theme: {"primary-color": "#52e5ff"}
 });

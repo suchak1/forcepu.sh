@@ -1,16 +1,9 @@
-import { request } from 'umi';
+// import { request } from 'umi';
 
 export class GymService {
-  async all() {
-    return request(`/api/gym`)
-  }
-  async fetch(id: number) {
-    return request(`/api/gym`)
-  }
-}
-
-export class GymStreamService {
-  async fetch(id: number) {
-    return request(`/api/gym/${id}/stream`);
-  }
+  // async fetch() {
+  //   await fetch('/api/exercise_log', { method: 'GET' })
+  //   .then(response => response.json())
+  //   .then(data => data);
+  // }
 }

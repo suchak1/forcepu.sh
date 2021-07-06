@@ -30,6 +30,7 @@ def get_exercise_log(*_):
     return {
         "statusCode": 200,
         "body": records,
+        "headers": {"Access-Control-Allow-Origin": "*"}
     }
 
 

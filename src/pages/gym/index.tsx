@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "dva";
 import { format } from "date-fns";
+import { useState, useEffect } from "react";
 import { Layout, Typography, Table, Input } from "antd";
 import {
   CheckOutlined,
@@ -8,15 +9,17 @@ import {
   LoadingOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import FilterPanel from "@/components/FilterPanel";
+// import FilterPanel from "@/components/FilterPanel";
 import styles from "./index.less";
+// import { GymService } from "./service";
+
 const { Title, Text } = Typography;
-//
+
 const columns = [
   {
     title: "Date",
-    dataIndex: "date",
-    key: "date",
+    dataIndex: "Date",
+    key: "Date",
     fixed: "left",
     render(date: string) {
       return format(Date.parse(date), "yyyy-MM-dd");
@@ -24,52 +27,54 @@ const columns = [
   },
   {
     title: "Id",
-    dataIndex: "id",
-    key: "id",
+    dataIndex: "Id",
+    key: "Id",
   },
   {
     title: "Weight",
-    dataIndex: "weight",
-    key: "weight",
+    dataIndex: "Weight",
+    key: "Weight",
   },
   {
     title: "Reps",
-    dataIndex: "reps",
-    key: "reps",
+    dataIndex: "Reps",
+    key: "Reps",
   },
   {
     title: "Exercise",
-    dataIndex: "exercise",
-    key: "exercise",
+    dataIndex: "Exercise",
+    key: "Exercise",
   },
   {
     title: "Volume",
-    dataIndex: "volume",
-    key: "volume",
+    dataIndex: "Volume",
+    key: "Volume",
   },
-  // {
-  //   title: 'Request result',
-  //   dataIndex: 'actionStatus',
-  //   key: 'actionStatus',
-  //   width: 100,
-  //   render(result) {
-  //     switch (result) {
-  //       case 'granted':
-  //         return <><CheckOutlined /> Granted</>
-  //       case 'denied':
-  //         return <><StopOutlined /> Denied</>
-  //       default:
-  //         return ''
-  //     }
-  //   }
-  // },
-  // Actions
+  {
+    title: "1RM",
+    dataIndex: "1RM",
+    key: "1RM",
+  },
 ];
 
-function GymPage({ dispatch, gym, loading }) {
-  // fetch('/api/exercise_log', { method: 'GET' })
-  //   .then(response => response.json())
-  //   .then(data => console.log(data));
+const GymPage = ({ dispatch, gym, _loading }) => {
+  const [log, setLog] = useState([]);
+  const [loading, setLoading] = useState(true);
+  // const gymService = new GymService();
+
+  useEffect(() => {
+    (async () => {
+      const url =
+        process.env.REACT_APP_ENV === "dev"
+          ? "/api/exercise_log"
+          : "https://api.forcepu.sh/exercise_log";
+      fetch(url, { method: "GET" })
+        .then((response) => response.json())
+        .then((data) => setLog(data))
+        .then(() => setLoading(false));
+    })();
+  }, []);
+
   return (
     <Layout>
       <Layout.Content style={{ padding: 24 }}>
@@ -81,7 +86,7 @@ function GymPage({ dispatch, gym, loading }) {
           enterButton="Search"
           style={{ marginBottom: 16 }}
         />
-        <Text>{gym.total} results</Text>
+        <Text>{log.length} results</Text>
         <Table
           loading={
             loading && {
@@ -89,15 +94,15 @@ function GymPage({ dispatch, gym, loading }) {
             }
           }
           columns={columns}
-          dataSource={gym.list}
+          dataSource={log}
           pagination={{ position: ["topRight", "bottomRight"] }}
           // sticky
         />
       </Layout.Content>
-      <FilterPanel />
+      {/* <FilterPanel /> */}
     </Layout>
   );
-}
+};
 
 GymPage.displayName = "Gym";
 

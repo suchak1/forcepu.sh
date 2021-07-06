@@ -12,11 +12,17 @@ const routes = [
   { text: "App", to: "app" },
 ];
 
-const styles = { ice: { color: "#52e5ff" }, white: { color: "white" } };
+const styles = {
+  ice: { color: "#52e5ff" },
+  white: { color: "white" },
+  // wrapper: {
+  //   overflow: "hidden",
+  // },
+};
 
 export default function Layout({ route, children }) {
-  console.log(window.location);
   return (
+    // <div style={styles.wrapper}>
     <AntLayout>
       <PageHeader
         title={
@@ -30,7 +36,9 @@ export default function Layout({ route, children }) {
       <AntLayout>
         <AntLayout.Sider>
           <List
-            style={{ padding: 24 }}
+            style={{
+              padding: 24,
+            }}
             dataSource={routes}
             renderItem={({ text, to }) => {
               return (
@@ -55,5 +63,6 @@ export default function Layout({ route, children }) {
         <AntLayout>{children}</AntLayout>
       </AntLayout>
     </AntLayout>
+    // </div>
   );
 }
