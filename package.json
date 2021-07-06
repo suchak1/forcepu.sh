@@ -24,11 +24,11 @@
     "@umijs/plugin-locale": "^0.11.2",
     "@umijs/plugin-request": "^2.5.2",
     "@wojtekmaj/react-hooks": "^1.11.1",
-    "antd": "^4.15.0",
+    "antd": "4.16.6",
     "date-fns": "^2.21.2",
     "faker": "^5.5.3",
     "react-pdf": "^5.3.0",
-    "umi": "^3.4.7"
+    "umi": "3.5.3"
   },
   "devDependencies": {
     "eslint": "^7.30.0",

@@ -30,14 +30,16 @@ const DocsPage = ({ dispatch, docs, _loading }) => {
   //   }, []);
 
   return (
-    <Layout>
-      <Layout.Content style={{ padding: 24 }}>
-        <Title>Resume</Title>
-        <Document file="https://s3.amazonaws.com/api.forcepu.sh/resume.pdf">
-          <Page size="letter" pageNumber={1} height={height * 1.5} />
-        </Document>
-      </Layout.Content>
-    </Layout>
+    // <Layout>
+    // <Layout.Content style={{ padding: 24 }}>
+    //   <Title>Resume</Title>
+    <div>
+      <Document file="https://s3.amazonaws.com/api.forcepu.sh/resume.pdf">
+        <Page size="letter" pageNumber={1} width={width * 0.6} />
+      </Document>
+    </div>
+    // </Layout.Content>
+    // </Layout>
   );
 };
 
