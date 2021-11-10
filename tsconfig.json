@@ -6,8 +6,7 @@
     "lib": ["esnext", "dom"],
     "sourceMap": true,
     "baseUrl": ".",
-    "jsx": "react-jsx",
-    "resolveJsonModule": true,
+    "jsx": "react",
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
@@ -23,19 +22,14 @@
       "@@/*": ["./src/.umi/*"]
     }
   },
-  "include": [
-    "mock/**/*",
-    "src/**/*",
-    "tests/**/*",
-    "test/**/*",
-    "__test__/**/*",
-    "typings/**/*",
-    "config/**/*",
-    ".eslintrc.js",
-    ".stylelintrc.js",
-    ".prettierrc.js",
-    "jest.config.js",
-    "mock/*"
-  ],
-  "exclude": ["node_modules", "build", "dist", "scripts", "src/.umi/*", "webpack", "jest"]
+  "include": ["mock/**/*", "src/**/*", "config/**/*", ".umirc.ts"],
+  "exclude": [
+    "node_modules",
+    "build",
+    "dist",
+    "scripts",
+    "src/.umi/*",
+    "webpack",
+    "jest"
+  ]
 }

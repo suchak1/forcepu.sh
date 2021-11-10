@@ -5,29 +5,20 @@
  * For details, please see
  * https://pro.ant.design/docs/deploy
  */
-export default {
-  dev: {
-    '/api/': {
-      target: 'https://preview.pro.ant.design',
-      changeOrigin: true,
-      pathRewrite: { '^': '' },
+ export default {
+    dev: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        pathRewrite: { "^/api" : "" },
+        secure: false,
+      }
     },
-    '/hello': {
-      target: 'http://localhost:3000',
-    }
-  },
-  test: {
-    '/api/': {
-      target: 'https://preview.pro.ant.design',
-      changeOrigin: true,
-      pathRewrite: { '^': '' },
+    prod: {
+      '/api': {
+        target: 'api.forcepu.sh',
+        changeOrigin: true,
+        pathRewrite: { "^/api" : "" },
+      },
     },
-  },
-  pre: {
-    '/api/': {
-      target: 'your pre url',
-      changeOrigin: true,
-      pathRewrite: { '^': '' },
-    },
-  },
-};
+  };
