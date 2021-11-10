@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "umi";
 import { Layout as AntLayout, Menu, PageHeader, Typography, List } from "antd";
 // import styles from "./index.less";
-import Page from "@/pages";
+// import Page from "@/pages";
 
 const routes = [
   { text: "Home", to: "" },

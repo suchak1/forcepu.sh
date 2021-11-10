@@ -17,5 +17,6 @@ export default defineConfig({
     baseNavigator: true,
   },
   proxy: proxy[REACT_APP_ENV || 'prod'],
+  // publicPath: 'assets/'
   // theme: {"primary-color": "#52e5ff"}
 });
