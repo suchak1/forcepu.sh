@@ -22,7 +22,7 @@ jobs:
         run: npm run ci
 
       - name: Build app
-        run: npm run build
+        run: npm run build:umi
 
       - name: Deploy umi
         uses: jakejarvis/s3-sync-action@master
