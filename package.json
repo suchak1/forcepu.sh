@@ -13,7 +13,9 @@
     "start:local-api": "cd src/api && sam local start-api",
     "umi": "npx umi",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "test:local-api": "cd src/api && sam local invoke HelloWorldFunction --event events/event.json"
+    "test:local-api": "cd src/api && sam local invoke HelloWorldFunction --event events/event.json",
+    "preci": "rm -fr node_modules",
+    "ci": "yarn install --frozen-lockfile"
   },
   "author": "Krish Suchak <suchak.krish@gmail.com>",
   "license": "MIT",
