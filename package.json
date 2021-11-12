@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build:umi": "REACT_APP_ENV=prod umi build && cp -r assets/. dist",
-    "build:api": "cd src/api && sam build",
+    "build:api": "cd src/api && sam build --use-container",
     "build+start:api": "npm run build:api && npm run start:local-api",
     "build+deploy:api": "npm run build:api && npm run deploy:api",
-    "deploy:api": "cd src/api && sam deploy --no-confirm-changeset",
+    "deploy:api": "cd src/api && sam deploy --no-confirm-changeset --no-fail-on-empty-changeset",
     "start": "REACT_APP_ENV=dev MOCK=none npx umi dev",
     "start:local-api": "cd src/api && sam local start-api",
     "umi": "npx umi",
