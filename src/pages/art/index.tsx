@@ -2,7 +2,8 @@ import React from "react";
 import { connect } from "dva";
 import { format } from "date-fns";
 import { useState, useEffect } from "react";
-import { Card, Typography, Row, Col } from "antd";
+import { Card, Typography, Row, Col, Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 import { NFTE } from "@nfte/react";
 import HoverVideoPlayer from "react-hover-video-player";
 
@@ -11,7 +12,7 @@ import HoverVideoPlayer from "react-hover-video-player";
 import styles from "./index.less";
 
 const { Title, Text } = Typography;
-
+const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 const nftWidth = 400;
 const metadataWidth = nftWidth / 3;
 const nftCard = (contract, token) => (
@@ -25,7 +26,10 @@ const nftCard = (contract, token) => (
           style={{ width: nftWidth + 48 }}
         >
           {/* <img src={data?.media} width={nftWidth} /> */}
-          <HoverVideoPlayer videoSrc={data?.metadata?.animation_url} />
+          <HoverVideoPlayer
+            videoSrc={data?.metadata?.animation_url}
+            loadingOverlay={<Spin indicator={antIcon} />}
+          />
           <div style={{ paddingTop: 18 }}>{data?.description}</div>
           <div
             style={{
@@ -54,18 +58,12 @@ const nftCard = (contract, token) => (
                 new Date(data?.timestamp * 1000).toISOString()}
             </span>
           </div>
-          {/* description then next line => owner, minted by, minted on spread out all gray, second line white bold */}
-          {/* first line => owned by (gray, lowercase, no colon) */}
-          {/* second line => vapem.eth with white and ice coloring semibold? */}
         </Card>
       );
     }}
-    {/* use create a better custom card w antd and preview video (autoplay on hover) else display png */}
-    {/* react-hover-video-player */}
   </NFTE>
 );
-// use NFTE
-// or opensea / embeddable
+
 const ArtPage = ({ dispatch, art, _loading }) => {
   const [loading, setLoading] = useState(true);
 

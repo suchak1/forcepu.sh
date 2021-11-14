@@ -48,9 +48,6 @@ const routes = [
 
 export default function Layout({ route, children }) {
   return (
-    // <div style={styles.wrapper}>
-    // 11-12 right of logo
-    // segoi ui 20px
     <AntLayout>
       <AntLayout.Header style={{ zIndex: 1, width: "100%" }}>
         <span style={{ display: "flex", alignItems: "center" }}>
@@ -86,6 +83,5 @@ export default function Layout({ route, children }) {
 
       <AntLayout.Content style={{ padding: 24 }}>{children}</AntLayout.Content>
     </AntLayout>
-    // </div>
   );
 }
