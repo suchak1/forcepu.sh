@@ -107,5 +107,5 @@ GymPage.displayName = "Gym";
 
 export default connect(({ gym, loading }) => ({
   gym,
-  loading: loading.models.gym,
+  // loading: loading.models.gym,
 }))(GymPage);

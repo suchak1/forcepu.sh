@@ -11,7 +11,7 @@ import {
 } from "@ant-design/icons";
 // import FilterPanel from "@/components/FilterPanel";
 import styles from "./index.less";
-// import { GymService } from "./service";
+// import { GalleryService } from "./service";
 
 const { Title, Text } = Typography;
 
@@ -57,10 +57,10 @@ const columns = [
   },
 ];
 
-const GymPage = ({ dispatch, gym, _loading }) => {
+const GalleryPage = ({ dispatch, gym, _loading }) => {
   const [log, setLog] = useState([]);
   const [loading, setLoading] = useState(true);
-  // const gymService = new GymService();
+  // const gymService = new GalleryService();
 
   useEffect(() => {
     (async () => {
@@ -103,9 +103,9 @@ const GymPage = ({ dispatch, gym, _loading }) => {
   );
 };
 
-GymPage.displayName = "Gallery";
+GalleryPage.displayName = "Gallery";
 
 export default connect(({ gym, loading }) => ({
   gym,
-  loading: loading.models.gym,
-}))(GymPage);
+  // loading: loading.models.gym,
+}))(GalleryPage);
