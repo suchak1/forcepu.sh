@@ -17,7 +17,16 @@ const styles = {
   //   overflow: "hidden",
   // },
 };
-const pages = ["gym", "art", "docs", "app"];
+const pages = [
+  "gym",
+  // "art",
+  "docs",
+];
+// "docs" should be example of how to use library or service
+// resume should be in about section
+// home page should be "app"
+// "art" should be hidden
+// "gym" should be hidden?
 
 const capitalize = (s) => s[0].toUpperCase() + s.slice(1);
 
