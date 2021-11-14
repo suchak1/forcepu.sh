@@ -17,16 +17,19 @@ const styles = {
   //   overflow: "hidden",
   // },
 };
+// original: gym, art, docs, app
 const pages = [
   "gym",
-  // "art",
-  "docs",
+  "gallery",
+  // "docs"
 ];
+
 // "docs" should be example of how to use library or service
 // resume should be in about section
 // home page should be "app"
 // "art" should be hidden
 // "gym" should be hidden?
+// split gym, art/gallery to right side of nav
 
 const capitalize = (s) => s[0].toUpperCase() + s.slice(1);
 
@@ -49,7 +52,7 @@ export default function Layout({ route, children }) {
     // 11-12 right of logo
     // segoi ui 20px
     <AntLayout>
-      <AntLayout.Header style={{ position: "fixed", zIndex: 1, width: "100%" }}>
+      <AntLayout.Header style={{ zIndex: 1, width: "100%" }}>
         <span style={{ display: "flex", alignItems: "center" }}>
           <img
             className="logo"
@@ -80,11 +83,8 @@ export default function Layout({ route, children }) {
           </Menu>
         </span>
       </AntLayout.Header>
-      <AntLayout>
-        <AntLayout.Content></AntLayout.Content>
-      </AntLayout>
-      <AntLayout>{children}</AntLayout>
-      {/* </AntLayout> */}
+
+      <AntLayout.Content style={{ padding: 24 }}>{children}</AntLayout.Content>
     </AntLayout>
     // </div>
   );
