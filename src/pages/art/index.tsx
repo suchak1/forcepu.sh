@@ -11,6 +11,7 @@ import styles from "./index.less";
 const { Title, Text } = Typography;
 
 const nftWidth = 400;
+const metadataWidth = nftWidth / 3;
 const nftCard = (contract, token) => (
   <NFTE contract={contract} tokenId={token} darkMode={true}>
     {({ data, className, style, darkMode, autoPlay }) => {
@@ -31,9 +32,15 @@ const nftCard = (contract, token) => (
               paddingTop: 16,
             }}
           >
-            <span>owned by</span>
-            <span>token id</span>
-            <span>minted on</span>
+            <span style={{ width: metadataWidth }}>owned by</span>
+            {/* </Col>
+            <Col flex={1}> */}
+            <span style={{ width: metadataWidth }}>token id</span>
+            {/* </Col>
+            <Col flex={1}> */}
+            <span style={{ width: metadataWidth }}>minted on</span>
+            {/* </Col>
+          </Row> */}
           </div>
           <div
             style={{
@@ -41,14 +48,22 @@ const nftCard = (contract, token) => (
               justifyContent: "space-between",
             }}
           >
-            <span>
+            {/* <Row>
+            <Col flex={1}> */}
+            <span style={{ width: metadataWidth }}>
               vape<span style={{ color: "#52e5ff" }}>m.eth</span>
-            </span>
-            <span>{data?.tokenId}</span>
-            <span>
+            </span>{" "}
+            {/* </Col>
+            <Col flex={1}> */}
+            <span style={{ width: metadataWidth }}>{data?.tokenId}</span>
+            {/* </Col>
+            <Col flex={1}> */}
+            <span style={{ width: metadataWidth }}>
               {data?.timestamp &&
-                new Date(data?.timestamp * 1000).toUTCString()}
-            </span>
+                new Date(data?.timestamp * 1000).toISOString()}
+            </span>{" "}
+            {/* </Col>
+          </Row> */}
           </div>
           {/* description then next line => owner, minted by, minted on spread out all gray, second line white bold */}
           {/* first line => owned by (gray, lowercase, no colon) */}
