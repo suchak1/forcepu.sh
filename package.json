@@ -20,6 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
+    "@nfte/react": "^1.0.4",
     "@umijs/plugin-antd": "^0.9.1",
     "@umijs/plugin-dva": "^0.12.0",
     "@umijs/plugin-locale": "^0.11.2",
