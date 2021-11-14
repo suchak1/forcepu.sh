@@ -47,5 +47,5 @@ DocsPage.displayName = "Docs";
 
 export default connect(({ docs, loading }) => ({
   docs,
-  loading: loading.models.docs,
+  // loading: loading.models.docs,
 }))(DocsPage);
