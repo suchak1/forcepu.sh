@@ -1,6 +1,9 @@
 import React from "react";
 import { NavLink } from "umi";
 import { Layout as AntLayout, Menu, PageHeader, Typography, List } from "antd";
+import BTC from "../../assets/favicon.ico";
+import BTC_ICE from "../../assets/btc_ice.png";
+
 // import styles from "./index.less";
 // import Page from "@/pages";
 
@@ -27,6 +30,14 @@ export default function Layout({ route, children }) {
       <PageHeader
         title={
           <div>
+            {/* <span style={{ marginRight: 6, paddingBottom: 10 }}> */}
+            {/* <img src={BTC_ICE} width={16}></img> */}
+            <img
+              src={BTC_ICE}
+              width={24}
+              style={{ marginRight: 10, marginBottom: 4 }}
+            ></img>
+            {/* </span> */}
             <span>force</span>
             <span style={styles.ice}>pu.sh</span>
           </div>
