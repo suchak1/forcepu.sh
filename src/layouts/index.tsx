@@ -20,7 +20,7 @@ const styles = {
 // original: gym, art, docs, app
 const pages = [
   "gym",
-  "gallery",
+  "art",
   // "docs"
 ];
 
