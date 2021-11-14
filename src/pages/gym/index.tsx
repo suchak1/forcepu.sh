@@ -60,7 +60,6 @@ const columns = [
 const GymPage = ({ dispatch, gym, _loading }) => {
   const [log, setLog] = useState([]);
   const [loading, setLoading] = useState(true);
-  // const gymService = new GymService();
 
   useEffect(() => {
     (async () => {
@@ -76,8 +75,6 @@ const GymPage = ({ dispatch, gym, _loading }) => {
   }, []);
 
   return (
-    // <Layout>
-    //   <Layout.Content style={{ padding: 24 }}>
     <>
       <Title>Exercise Log</Title>
       <Input.Search
@@ -107,5 +104,4 @@ GymPage.displayName = "Gym";
 
 export default connect(({ gym, loading }) => ({
   gym,
-  // loading: loading.models.gym,
 }))(GymPage);
