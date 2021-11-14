@@ -99,7 +99,6 @@ const GymPage = ({ dispatch, gym, _loading }) => {
           // sticky
         />
       </Layout.Content>
-      {/* <FilterPanel /> */}
     </Layout>
   );
 };
