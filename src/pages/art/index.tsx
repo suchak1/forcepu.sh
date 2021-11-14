@@ -74,7 +74,7 @@ const ArtPage = ({ dispatch, art, _loading }) => {
       <Title>Gallery</Title>
       <Row>
         <Col flex={1}>
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
             {nftCard(
               "0x86b3448919dcb802c96759f85b532dfe34990e64",
               "49700010004"
@@ -82,14 +82,14 @@ const ArtPage = ({ dispatch, art, _loading }) => {
           </div>
         </Col>
         <Col flex={1}>
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          <div style={{ display: "flex", justifyContent: "flex-start" }}>
             {nftCard("0x3e34556b7d6a6c79320168140e14c10d7a1febb7", "100010492")}
           </div>
         </Col>
       </Row>
       <Row>
         <Col flex={1}>
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
             {nftCard(
               "0xc0cf5b82ae2352303b2ea02c3be88e23f2594171",
               "22700084881"
@@ -97,7 +97,7 @@ const ArtPage = ({ dispatch, art, _loading }) => {
           </div>
         </Col>
         <Col flex={1}>
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          <div style={{ display: "flex", justifyContent: "flex-start" }}>
             {nftCard(
               "0x4398b03f65d32505557d8719936d3a190c40df6c",
               "40200010012"
@@ -107,7 +107,7 @@ const ArtPage = ({ dispatch, art, _loading }) => {
       </Row>
       <Row>
         <Col flex={1}>
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
             {nftCard(
               "0xdad9dc2d497fbf0d27837700c0a7ba6b8c8f2b30",
               "49100040011"
@@ -115,7 +115,7 @@ const ArtPage = ({ dispatch, art, _loading }) => {
           </div>
         </Col>
         <Col flex={1}>
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          <div style={{ display: "flex", justifyContent: "flex-start" }}>
             {nftCard(
               "0xc92ca2b5b8a996ad2a6fdd97c6d7ed038e61c725",
               "14500012231"
