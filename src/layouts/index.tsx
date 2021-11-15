@@ -19,8 +19,8 @@ const styles = {
 };
 // original: gym, art, docs, app
 const pages = [
-  "gym",
-  "art",
+  // "gym",
+  // "art",
   // "docs"
 ];
 
@@ -36,20 +36,44 @@ const capitalize = (s) => s[0].toUpperCase() + s.slice(1);
 const routes = [
   {
     text: (
-      <div style={{ fontSize: 20, marginLeft: -10 }}>
-        <span className={overrides.white}>force</span>
-        {/* <span className={overrides.ice}>pu.sh</span> */}
-        pu.sh
-      </div>
+      <>
+        <div style={{ fontSize: 20, marginLeft: -10 }}>
+          <span className={overrides.white}>force</span>
+          {/* <span className={overrides.ice}>pu.sh</span> */}
+          pu.sh
+        </div>
+        {/* <div
+          style={{
+            marginTop: -35,
+            color: "grey",
+            fontWeight: "normal",
+            marginLeft: -10,
+          }}
+        >
+          move fast; break everything
+        </div> */}
+      </>
     ),
     to: "",
   },
 ].concat(pages.map((page) => ({ text: capitalize(page), to: page })));
 
+const headerHeight = 64;
+// add move fast; break everything to right side of header
+// add logo to forcepush div
+// remove menu and menu items?
+// or at least move these pieces out
 export default function Layout({ route, children }) {
   return (
     <AntLayout>
-      <AntLayout.Header style={{ zIndex: 1, width: "100%" }}>
+      <AntLayout.Header
+        style={{
+          zIndex: 1000,
+          width: "100%",
+          position: "fixed",
+          height: headerHeight,
+        }}
+      >
         <span style={{ display: "flex", alignItems: "center" }}>
           <img
             className="logo"
@@ -59,6 +83,7 @@ export default function Layout({ route, children }) {
             style={{ marginLeft: -30 }}
           ></img>
           <Menu
+            style={{ height: headerHeight }}
             theme="dark"
             mode="horizontal"
             defaultSelectedKeys={["0"].concat([
@@ -72,7 +97,11 @@ export default function Layout({ route, children }) {
               <Menu.Item
                 className={overrides}
                 key={idx}
-                style={idx === 0 ? { backgroundColor: "transparent" } : {}}
+                style={
+                  idx === 0
+                    ? { backgroundColor: "transparent" }
+                    : { display: "flex", alignItems: "center" }
+                }
               >
                 <NavLink to={route.to}>{route.text}</NavLink>
               </Menu.Item>
@@ -81,7 +110,9 @@ export default function Layout({ route, children }) {
         </span>
       </AntLayout.Header>
 
-      <AntLayout.Content style={{ padding: 24 }}>{children}</AntLayout.Content>
+      <AntLayout.Content style={{ padding: 24, marginTop: headerHeight }}>
+        {children}
+      </AntLayout.Content>
     </AntLayout>
   );
 }

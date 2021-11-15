@@ -19,6 +19,7 @@
   "author": "Krish Suchak <suchak.krish@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@ant-design/charts": "^1.2.14",
     "@ant-design/icons": "^4.6.2",
     "@nfte/react": "^1.0.4",
     "@umijs/plugin-antd": "^0.9.1",
