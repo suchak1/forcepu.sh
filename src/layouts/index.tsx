@@ -42,7 +42,7 @@ const routes = [
           {/* <span className={overrides.ice}>pu.sh</span> */}
           pu.sh
         </div>
-        <div
+        {/* <div
           style={{
             marginTop: -35,
             color: "grey",
@@ -51,14 +51,18 @@ const routes = [
           }}
         >
           move fast; break everything
-        </div>
+        </div> */}
       </>
     ),
     to: "",
   },
 ].concat(pages.map((page) => ({ text: capitalize(page), to: page })));
 
-const headerHeight = 64 + 12;
+const headerHeight = 64;
+// add move fast; break everything to right side of header
+// add logo to forcepush div
+// remove menu and menu items?
+// or at least move these pieces out
 export default function Layout({ route, children }) {
   return (
     <AntLayout>
@@ -76,7 +80,7 @@ export default function Layout({ route, children }) {
             src={BTC_ICE}
             width={24}
             height={24}
-            style={{ marginLeft: -30, marginTop: -12 }}
+            style={{ marginLeft: -30 }}
           ></img>
           <Menu
             style={{ height: headerHeight }}
