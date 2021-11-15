@@ -36,11 +36,14 @@ const capitalize = (s) => s[0].toUpperCase() + s.slice(1);
 const routes = [
   {
     text: (
-      <div style={{ fontSize: 20, marginLeft: -10 }}>
-        <span className={overrides.white}>force</span>
-        {/* <span className={overrides.ice}>pu.sh</span> */}
-        pu.sh
-      </div>
+      <>
+        <div style={{ fontSize: 20, marginLeft: -10 }}>
+          <span className={overrides.white}>force</span>
+          {/* <span className={overrides.ice}>pu.sh</span> */}
+          pu.sh
+        </div>
+        {/* <div>move fast; break everything</div> */}
+      </>
     ),
     to: "",
   },
@@ -49,7 +52,7 @@ const routes = [
 export default function Layout({ route, children }) {
   return (
     <AntLayout>
-      <AntLayout.Header style={{ zIndex: 1, width: "100%" }}>
+      <AntLayout.Header style={{ zIndex: 1, width: "100%", position: "fixed" }}>
         <span style={{ display: "flex", alignItems: "center" }}>
           <img
             className="logo"
@@ -81,7 +84,9 @@ export default function Layout({ route, children }) {
         </span>
       </AntLayout.Header>
 
-      <AntLayout.Content style={{ padding: 24 }}>{children}</AntLayout.Content>
+      <AntLayout.Content style={{ padding: 24, marginTop: 64 }}>
+        {children}
+      </AntLayout.Content>
     </AntLayout>
   );
 }
