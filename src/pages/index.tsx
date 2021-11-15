@@ -74,6 +74,7 @@ function Page() {
         </a>
       </Title>
       {newData !== [] ? <Line {...config} /> : null}
+      {/* place strat stats here (sortino, return, drawdown, etc) */}
     </>
     // automated portfolio management
     // using momentum based strategy
