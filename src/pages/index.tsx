@@ -2,7 +2,7 @@ import React from "react";
 import { PageHeader, Typography } from "antd";
 import { Line } from "@ant-design/charts";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 function Page() {
   const data = [
@@ -60,13 +60,19 @@ function Page() {
     animation: {
       appear: {
         animation: "wave-in",
-        duration: 10000,
+        duration: 5000,
       },
     },
   };
   return (
     <>
       <Title>Leveraging AutoML to beat BTC</Title>
+      <Title level={5} style={{ paddingBottom: 12, marginTop: -12 }}>
+        a momentum trading strategy using{" "}
+        <a href="https://github.com/suchak1/hyperdrive">
+          <i style={{ color: "#52e5ff" }}>hyperdrive</i>
+        </a>
+      </Title>
       {newData !== [] ? <Line {...config} /> : null}
     </>
     // automated portfolio management
@@ -83,6 +89,12 @@ function Page() {
 
     // OR EASIER:
     // have lambda predict using pickled data and combine w signals.csv (consistent simulation)
+
+    // best soln so far:
+    // hyperdrive: test predictions.csv using pca5 branch / create model workflow dispatch
+    // backend: make api endpoint that combines predictions.csv with signals.csv and returns
+    // backend: make endpoint that returns btc close data (including most recent close - little hard) / might use alt source
+    // frontend: make js fx that calculates acct balance given close array and signals array
   );
 }
 
