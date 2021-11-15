@@ -50,6 +50,9 @@ function Page() {
     // need to make oracle class in hyperdrive
     // and write declassified script that updates predictions.csv in models/latest each night
     // does it need latest data? then make sure api key is hidden in declassified file
+
+    // OR EASIER:
+    // have lambda predict using pickled data and combine w signals.csv (consistent simulation)
   );
 }
 

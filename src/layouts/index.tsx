@@ -19,8 +19,8 @@ const styles = {
 };
 // original: gym, art, docs, app
 const pages = [
-  "gym",
-  "art",
+  // "gym",
+  // "art",
   // "docs"
 ];
 
@@ -42,26 +42,44 @@ const routes = [
           {/* <span className={overrides.ice}>pu.sh</span> */}
           pu.sh
         </div>
-        {/* <div>move fast; break everything</div> */}
+        <div
+          style={{
+            marginTop: -35,
+            color: "grey",
+            fontWeight: "normal",
+            marginLeft: -10,
+          }}
+        >
+          move fast; break everything
+        </div>
       </>
     ),
     to: "",
   },
 ].concat(pages.map((page) => ({ text: capitalize(page), to: page })));
 
+const headerHeight = 64 + 12;
 export default function Layout({ route, children }) {
   return (
     <AntLayout>
-      <AntLayout.Header style={{ zIndex: 1, width: "100%", position: "fixed" }}>
+      <AntLayout.Header
+        style={{
+          zIndex: 1000,
+          width: "100%",
+          position: "fixed",
+          height: headerHeight,
+        }}
+      >
         <span style={{ display: "flex", alignItems: "center" }}>
           <img
             className="logo"
             src={BTC_ICE}
             width={24}
             height={24}
-            style={{ marginLeft: -30 }}
+            style={{ marginLeft: -30, marginTop: -12 }}
           ></img>
           <Menu
+            style={{ height: headerHeight }}
             theme="dark"
             mode="horizontal"
             defaultSelectedKeys={["0"].concat([
@@ -75,7 +93,11 @@ export default function Layout({ route, children }) {
               <Menu.Item
                 className={overrides}
                 key={idx}
-                style={idx === 0 ? { backgroundColor: "transparent" } : {}}
+                style={
+                  idx === 0
+                    ? { backgroundColor: "transparent" }
+                    : { display: "flex", alignItems: "center" }
+                }
               >
                 <NavLink to={route.to}>{route.text}</NavLink>
               </Menu.Item>
@@ -84,7 +106,7 @@ export default function Layout({ route, children }) {
         </span>
       </AntLayout.Header>
 
-      <AntLayout.Content style={{ padding: 24, marginTop: 64 }}>
+      <AntLayout.Content style={{ padding: 24, marginTop: headerHeight }}>
         {children}
       </AntLayout.Content>
     </AntLayout>
