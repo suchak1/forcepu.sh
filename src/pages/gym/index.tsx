@@ -60,7 +60,6 @@ const columns = [
 const GymPage = ({ dispatch, gym, _loading }) => {
   const [log, setLog] = useState([]);
   const [loading, setLoading] = useState(true);
-  // const gymService = new GymService();
 
   useEffect(() => {
     (async () => {
@@ -76,30 +75,28 @@ const GymPage = ({ dispatch, gym, _loading }) => {
   }, []);
 
   return (
-    <Layout>
-      <Layout.Content style={{ padding: 24 }}>
-        <Title>Exercise Log</Title>
-        <Input.Search
-          size="large"
-          prefix={<SearchOutlined />}
-          allowClear
-          enterButton="Search"
-          style={{ marginBottom: 16 }}
-        />
-        <Text>{log.length} results</Text>
-        <Table
-          loading={
-            loading && {
-              indicator: <LoadingOutlined style={{ fontSize: 24 }} spin />,
-            }
+    <>
+      <Title>Exercise Log</Title>
+      <Input.Search
+        size="large"
+        prefix={<SearchOutlined />}
+        allowClear
+        enterButton="Search"
+        style={{ marginBottom: 16 }}
+      />
+      <Text>{log.length} results</Text>
+      <Table
+        loading={
+          loading && {
+            indicator: <LoadingOutlined style={{ fontSize: 24 }} spin />,
           }
-          columns={columns}
-          dataSource={log}
-          pagination={{ position: ["topRight", "bottomRight"] }}
-          // sticky
-        />
-      </Layout.Content>
-    </Layout>
+        }
+        columns={columns}
+        dataSource={log}
+        pagination={{ position: ["topRight", "bottomRight"] }}
+        // sticky
+      />
+    </>
   );
 };
 
@@ -107,5 +104,4 @@ GymPage.displayName = "Gym";
 
 export default connect(({ gym, loading }) => ({
   gym,
-  loading: loading.models.gym,
 }))(GymPage);

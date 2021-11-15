@@ -171,6 +171,11 @@
   resolved "https://registry.npmjs.org/@humanwhocodes/object-schema/-/object-schema-1.2.0.tgz"
   integrity sha512-wdppn25U8z/2yiaT6YGquE6X8sSv7hNMWSXYSSU1jGv/yd6XqjXgTDJ8KP4NgjTXfJ3GbRjeeb8RTV7a/VpM+w==
 
+"@nfte/react@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@nfte/react/-/react-1.0.4.tgz#b584cc6640e3d650609bf1a49bf53c569c0996c4"
+  integrity sha512-qLgAdWGvAKi2miwb8CaYszOuLoWZnGcTt3xrnLgiOQwScvNS5zcwMs4pr32VLGN5gotPBNR7b2GHbaqYjL0S8g==
+
 "@types/history@*":
   version "4.7.8"
   resolved "https://registry.npmjs.org/@types/history/-/history-4.7.8.tgz"
@@ -3873,6 +3878,11 @@ react-dom@16.x:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     scheduler "^0.19.1"
+
+react-hover-video-player@^9.4.0:
+  version "9.4.0"
+  resolved "https://registry.yarnpkg.com/react-hover-video-player/-/react-hover-video-player-9.4.0.tgz#a1260b1fe465bceacff408bab4f504675692a3db"
+  integrity sha512-KjBN+C7fEfSgxBAUNsiIrglgS20zM/WjOJdzvr73isThDoykb/0/1Pcnn1hEixI1wEurhu5JsSVzrpxfjf40CA==
 
 react-intl@3.12.1:
   version "3.12.1"
