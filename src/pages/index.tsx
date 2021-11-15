@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography } from "antd";
+import { PageHeader, Typography } from "antd";
 import { Line } from "@ant-design/charts";
 
 const { Title } = Typography;
@@ -17,27 +17,57 @@ function Page() {
     { year: "1999", value: 13 },
   ];
 
+  let newData = [];
+  data.forEach((datum, idx) => {
+    const btc_datum = { ...datum };
+    btc_datum.name = "BTC";
+    newData.push(btc_datum);
+    datum.name = "hyperBTC";
+    datum.value = datum.value * idx;
+    newData.push(datum);
+  });
+
+  console.log(newData);
+
   const config = {
-    data,
+    data: newData === [] ? data : newData,
     height: 400,
     xField: "year",
     yField: "value",
-    point: {
-      size: 5,
-      shape: "diamond",
+    seriesField: "name",
+    smooth: true,
+    colorField: "name",
+    color: ({ name }) => {
+      if (name === "BTC") {
+        return "magenta";
+      }
+      return "#52e5ff";
     },
-    label: {
+    // point: {
+    //   size: 5,
+    //   shape: "diamond",
+    // },
+    // label: {
+    //   style: {
+    //     fill: "#aaa",
+    //   },
+    // },
+    area: {
       style: {
-        fill: "#aaa",
+        fillOpacity: 0.15,
+      },
+    },
+    animation: {
+      appear: {
+        animation: "wave-in",
+        duration: 10000,
       },
     },
   };
   return (
     <>
-      <Title>
-        <i>hyperdrive</i> performance
-      </Title>
-      <Line {...config} />
+      <Title>Leveraging AutoML to beat BTC</Title>
+      {newData !== [] ? <Line {...config} /> : null}
     </>
     // automated portfolio management
     // using momentum based strategy
