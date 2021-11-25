@@ -1,41 +1,14 @@
 import os
-# import boto3
-# import vectorbt as vbt
-# from dotenv import find_dotenv, load_dotenv
+from hyperdrive import DataSource, FileOps
+from FileOps import FileReader
+# from DataSource import IEXCloud, MarketData
 
-# cd src/api
-# cp ../../../hyperdrive/config.env ./backend/config.env
-# import hyperdrive as hd
-# from hyperdrive import MarketData
-# import yfinance as yf
-
-
-# load_dotenv(find_dotenv('../../../hyperdrive/config.env'))
-
-# s3 = boto3.resource('s3')
-# bucket = s3.Bucket(os.environ['S3_BUCKET'])
-
-# print(MarketData)
-
-# btc = yf.download("BTC-USD")
-# data = yf.download("SPY AAPL", start="2017-01-01", end="2017-04-30")
-# print(data)
-
-# price = vbt.YFData.download('BTC-USD').get('Close')
-# price = vbt.YFData.download('TSLA').get('Close')
-# price = vbt.YFData.download(
-#     "TSLA", start='2021-04-12 09:30:00 -0400', end='2021-04-12 09:35:00 -0400', interval='1m')
-# print(price)
-# pf = vbt.Portfolio.from_holding(price, init_cash=1000)
-# print(pf.value())
-
-# use renderJson marketplace github action
-#
 
 def get_holding(*_):
     #     price = vbt.YFData.download('BTC-USD').get('Close')
     #     pf = vbt.Portfolio.from_holding(price, init_cash=1000)
     #     print(pf.value())
+
     return {
         "statusCode": 200,
         # "body": pf.value(),

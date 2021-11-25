@@ -5,16 +5,20 @@ Description: >
 
   Sample SAM Template for forcepu.sh
 Parameters:
-  SecretParam:
-    Description: "this is a secret"
+  S3Bucket:
     Type: "String"
-    # Default: false
+  AWSAccessKeyId:
+    Type: "String"
+  AWSSecretAccessKey:
+    Type: "String"
+  AWSDefaultRegion:
+    Type: "String"
+  Dev:
+    Type: "String"
+
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
-    # Environment:
-    #   Variables:
-    #     SecretEnv: true
     Timeout: 10
   Api:
     Cors:
@@ -40,7 +44,11 @@ Resources:
     Properties:
       Environment:
         Variables:
-          SecretEnv: true
+          S3_BUCKET: !Ref S3Bucket
+          AWS_ACCESS_KEY_ID: !Ref AWSAccessKeyId
+          AWS_SECRET_ACCESS_KEY: !Ref AWSSecretAccessKey
+          AWS_DEFAULT_REGION: !Ref AWSDefaultRegion
+          DEV: !Ref Dev
       CodeUri: backend/
       Handler: home.get_holding
       Runtime: python3.8
@@ -50,6 +58,3 @@ Resources:
           Properties:
             Path: /holding
             Method: get
-            # Environment:
-            #   Variables:
-            #     SecretEnv: true
