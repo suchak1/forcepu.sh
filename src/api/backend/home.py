@@ -28,7 +28,8 @@ def get_hyper(*_):
         )
     df = pd.read_csv(filename)
     df = df[df['Time'] > '2021-11-06']
-    pf = vbt.Portfolio.from_signals(df['Close'], init_cash=1000, freq='D')
+    pf = vbt.Portfolio.from_signals(
+        df['Close'], init_cash=1000, freq='D', fees=0.001)
     balances = pf.value()
     stats = pf.stats()
     return {
