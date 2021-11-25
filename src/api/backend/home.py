@@ -1,9 +1,47 @@
 import os
+import boto3
 import pandas as pd
-from hyperdrive import DataSource, FileOps, History, Constants as C
-from FileOps import FileReader
-from DataSource import IEXCloud, MarketData
-from History import Historian
+import vectorbt as vbt
+# from hyperdrive import DataSource, FileOps, History, Constants as C
+# from FileOps import FileReader
+# from DataSource import IEXCloud, MarketData
+# from History import Historian
+s3 = boto3.resource('s3')
+bucket = s3.Bucket(os.environ['S3_BUCKET'])
+metrics = [
+    'Total Return [%]',
+    'Max Drawdown [%]',
+    'Win Rate [%]',
+    'Profit Factor',
+    'Sharpe Ratio',
+    'Sortino Ratio'
+]
+
+
+def get_hyper(*_):
+    filename = '/tmp/signals.csv'
+    with open(filename, 'wb') as file:
+        # bucket.download_fileobj(
+        #     'models/latest/signals.csv', file)
+        bucket.download_fileobj(
+            'models/latest/signals.csv', file
+        )
+    df = pd.read_csv(filename)
+    df = df[df['Time'] > '2021-11-06']
+    pf = vbt.Portfolio.from_signals(df['Close'], init_cash=1000, freq='D')
+    balances = pf.value()
+    stats = pf.stats()
+    return {
+        "statusCode": 200,
+        "body": {
+            'balances': list(balances),
+            'stats': dict(stats[metrics]),
+            # 'close': btc_df.to_dict(),
+            # 'holding': {'balances': holding_balances, 'stats': holding_stats},
+            # 'hyper': {'balances': hyper_balances, 'stats': hyper_stats},
+        },
+        "headers": {"Access-Control-Allow-Origin": "*"}
+    }
 
 
 def get_holding(*_):
@@ -11,18 +49,33 @@ def get_holding(*_):
     #     pf = vbt.Portfolio.from_holding(price, init_cash=1000)
     #     print(pf.value())
     # print(os.environ)
-    md = MarketData()
-    reader = md.reader
-    finder = md.finder
-    store = reader.store
+
+    # filename = '/tmp/signals.csv'
+    filename = '/tmp/BTC.csv'
+    with open(filename, 'wb') as file:
+        # bucket.download_fileobj(
+        #     'models/latest/signals.csv', file)
+        bucket.download_fileobj(
+            'data/ohlc/polygon/X%3ABTCUSD.csv', file
+        )
+    df = pd.read_csv(filename)
+    df = df[df['Time'] > '2021-11-06']
+    pf = vbt.Portfolio.from_holding(df['Close'], init_cash=1000, freq='D')
+    balances = pf.value()
+    stats = pf.stats()
+
+    # md = MarketData()
+    # reader = md.reader
+    # finder = md.finder
+    # store = reader.store
     # store.download_file(finder.get_signals_path(), '/tmp/')
     # signals_filename = f'/tmp/{finder.get_signals_path()}'
     # signals_df = pd.read_csv(signals_filename)
 
-    symbol = C.POLY_CRYPTO_DICT['BTC']
-    store.download_file(finder.get_ohlc_path(symbol, 'polygon'), '/tmp/')
-    btc_filename = f'/tmp/{finder.get_ohlc_path(symbol, "polygon")}'
-    btc_df = pd.read_csv(btc_filename)
+    # symbol = C.POLY_CRYPTO_DICT['BTC']
+    # store.download_file(finder.get_ohlc_path(symbol, 'polygon'), '/tmp/')
+    # btc_filename = f'/tmp/{finder.get_ohlc_path(symbol, "polygon")}'
+    # btc_df = pd.read_csv(btc_filename)
 
     # df = btc_df.merge(signals_df, on=C.TIME)[C.CLOSE, C.SIG]
     # close = btc_df[C.CLOSE].to_numpy()
@@ -50,7 +103,9 @@ def get_holding(*_):
     return {
         "statusCode": 200,
         "body": {
-            'df': btc_df.to_dict(),
+            'balances': list(balances),
+            'stats': dict(stats[metrics]),
+            # 'close': btc_df.to_dict(),
             # 'holding': {'balances': holding_balances, 'stats': holding_stats},
             # 'hyper': {'balances': hyper_balances, 'stats': hyper_stats},
         },
