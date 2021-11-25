@@ -1,18 +1,28 @@
 import os
 from hyperdrive import DataSource, FileOps
 from FileOps import FileReader
-# from DataSource import IEXCloud, MarketData
+from DataSource import IEXCloud, MarketData
 
 
 def get_holding(*_):
     #     price = vbt.YFData.download('BTC-USD').get('Close')
     #     pf = vbt.Portfolio.from_holding(price, init_cash=1000)
     #     print(pf.value())
+    # print(os.environ)
+    md = MarketData()
+    df = md.get_ohlc(symbol='TSLA', timeframe='5d')
+    # reader = FileReader()
+    # df = reader.load_csv('models/latest/signals.csv')
 
+    print(df)
     return {
         "statusCode": 200,
-        # "body": pf.value(),
-        "body": {'environ': dict(os.environ)},
+        "body": {
+            'bucket': md.reader.store.bucket_name,
+            'df': df.to_dict(),
+            'env': os.environ
+        },
+        # "body": {'environ': dict(os.environ)},
         "headers": {"Access-Control-Allow-Origin": "*"}
     }
 
