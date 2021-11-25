@@ -19,7 +19,7 @@ Parameters:
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
-    Timeout: 10
+    Timeout: 100
   Api:
     Cors:
       AllowMethods: "'*'"

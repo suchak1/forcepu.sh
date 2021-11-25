@@ -5,4 +5,8 @@
 # boto3 == 1.20.7
 # python-dotenv == 0.19.2
 
-hyperdrive == 1.1.1
+# hyperdrive == 1.1.1
+requests
+git+git://github.com/suchak1/hyperdrive@feature/cleanup
+# boto3
+pandas
