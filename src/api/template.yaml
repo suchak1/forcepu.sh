@@ -4,16 +4,24 @@ Description: >
   forcepu.sh
 
   Sample SAM Template for forcepu.sh
-
+Parameters:
+  SecretParam:
+    Description: "this is a secret"
+    Type: "String"
+    # Default: false
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
+    # Environment:
+    #   Variables:
+    #     SecretEnv: true
     Timeout: 10
   Api:
     Cors:
       AllowMethods: "'*'"
       AllowHeaders: "'*'"
       AllowOrigin: "'*'"
+
 Resources:
   ExerciseLogFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -27,3 +35,21 @@ Resources:
           Properties:
             Path: /exercise_log
             Method: get
+  HoldingFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Environment:
+        Variables:
+          SecretEnv: true
+      CodeUri: backend/
+      Handler: home.get_holding
+      Runtime: python3.8
+      Events:
+        Holding:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /holding
+            Method: get
+            # Environment:
+            #   Variables:
+            #     SecretEnv: true

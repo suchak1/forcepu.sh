@@ -6,6 +6,6 @@ codeuri = "/home/suchak/forcepu.sh/src/api/backend"
 runtime = "python3.8"
 source_md5 = ""
 packagetype = "Zip"
-functions = ["ExerciseLogFunction"]
+functions = ["ExerciseLogFunction", "HoldingFunction"]
 
 [layer_build_definitions]
