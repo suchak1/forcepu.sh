@@ -6,7 +6,7 @@
 # python-dotenv == 0.19.2
 
 # hyperdrive == 1.1.1
-requests
+# requests
 git+git://github.com/suchak1/hyperdrive@feature/cleanup
 # boto3
 pandas
