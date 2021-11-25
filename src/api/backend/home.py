@@ -25,12 +25,12 @@ def get_holding(*_):
     btc_df = pd.read_csv(btc_filename)
 
     # df = btc_df.merge(signals_df, on=C.TIME)[C.CLOSE, C.SIG]
-    close = btc_df[C.CLOSE].to_numpy()
+    # close = btc_df[C.CLOSE].to_numpy()
     # signals = df[C.SIG].to_numpy()
-    hist = Historian()
-    holding = hist.buy_and_hold(close)
-    holding_balances = list(holding.value())
-    holding_stats = dict(holding.stats())
+    # hist = Historian()
+    # holding = hist.buy_and_hold(close)
+    # holding_balances = list(holding.value())
+    # holding_stats = dict(holding.stats())
 
     # hyper = hist.create_portfolio(close, signals, 0.001)
     # hyper_balances = list(hyper.value())
@@ -50,7 +50,8 @@ def get_holding(*_):
     return {
         "statusCode": 200,
         "body": {
-            'holding': {'balances': holding_balances, 'stats': holding_stats},
+            'df': btc_df.to_dict(),
+            # 'holding': {'balances': holding_balances, 'stats': holding_stats},
             # 'hyper': {'balances': hyper_balances, 'stats': hyper_stats},
         },
         "headers": {"Access-Control-Allow-Origin": "*"}
