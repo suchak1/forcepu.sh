@@ -8,3 +8,4 @@ s3_prefix = "api"
 region = "us-east-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
+image_repositories = ["InferenceFunction=092475342352.dkr.ecr.us-east-1.amazonaws.com/api.forcepu.sh"]

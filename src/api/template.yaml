@@ -1,91 +1,46 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
-Description: >
-  forcepu.sh
 
-  Sample SAM Template for forcepu.sh
-Parameters:
-  S3Bucket:
-    Type: "String"
-    NoEcho: true
-  AWSAccessKeyId:
-    Type: "String"
-    NoEcho: true
-  AWSSecretAccessKey:
-    Type: "String"
-    NoEcho: true
-  AWSDefaultRegion:
-    Type: "String"
-    NoEcho: true
-  Dev:
-    Type: "String"
-    NoEcho: true
-
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
-    Runtime: python3.8
-    Environment:
-      Variables:
-        S3_BUCKET: !Ref S3Bucket
-        # AWS_ACCESS_KEY_ID: !Ref AWSAccessKeyId
-        # AWS_SECRET_ACCESS_KEY: !Ref AWSSecretAccessKey
-        # AWS_DEFAULT_REGION: !Ref AWSDefaultRegion
-        DEV: !Ref Dev
-    Timeout: 60
+    Timeout: 50
+    MemorySize: 5000
   Api:
-    Cors:
-      AllowMethods: "'*'"
-      AllowHeaders: "'*'"
-      AllowOrigin: "'*'"
+    BinaryMediaTypes:
+      - image/png
+      - image/jpg
+      - image/jpeg
 
 Resources:
-  ExerciseLogFunction:
+  InferenceFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: backend/
-      Handler: gym.get_exercise_log
+      PackageType: Image
+      # ImageConfig:
+      #   Command: [ "app.lambdaHandler" ]
+      # Architectures:
+      #   - x86_64
       Events:
-        ExerciseLog:
+        Inference:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /exercise_log
-            Method: get
-  HoldingFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      MemorySize: 4096
-      CodeUri: backend/
-      Handler: home.get_holding
-      # Layers:
-      #   - !Ref PandaDepLayer
-      Events:
-        Holding:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /holding
-            Method: get
-  HyperFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      MemorySize: 4096
-      CodeUri: backend/
-      Handler: home.get_hyper
-      # Layers:
-      #   - !Ref PandaDepLayer
-      Events:
-        Hyper:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /hyper
-            Method: get
-  # PandaDepLayer:
-  #   Type: AWS::Serverless::LayerVersion
-  #   Properties:
-  #     LayerName: sam-app-dependencies
-  #     Description: Dependencies for sam app [temp convert]
-  #     ContentUri: ./python/lib/python3.8/site-packages/
-  #     CompatibleRuntimes:
-  #       - python3.8
-  #     LicenseInfo: "MIT"
-  #     RetentionPolicy: Retain
+            Path: /classify_digit
+            Method: post
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./home
+      DockerTag: python3.8-v1
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  InferenceApi:
+    Description: "API Gateway endpoint URL for Prod stage for Inference function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/classify_digit/"
+  InferenceFunction:
+    Description: "Inference Lambda Function ARN"
+    Value: !GetAtt InferenceFunction.Arn
+  InferenceFunctionIamRole:
+    Description: "Implicit IAM Role created for Inference function"
+    Value: !GetAtt InferenceFunction.Arn
