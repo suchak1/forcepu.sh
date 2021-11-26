@@ -2,6 +2,7 @@ import os
 import boto3
 import pandas as pd
 import vectorbt as vbt
+import numpy as np
 # from hyperdrive import DataSource, FileOps, History, Constants as C
 # from FileOps import FileReader
 # from DataSource import IEXCloud, MarketData
@@ -16,6 +17,15 @@ metrics = [
     'Sharpe Ratio',
     'Sortino Ratio'
 ]
+
+if str(os.environ['INITIAL']).lower() == 'true':
+    num = 10000
+    r = range(num)
+    random_closes = np.random.rand(num) * 10
+    random_signals = np.random.choice([True, False], num)
+    random_pf = vbt.Portfolio.from_signals(
+        random_closes, random_signals, ~random_signals,
+        init_cash=1000, freq='D', fees=0.001)
 
 
 def get_hyper(*_):
