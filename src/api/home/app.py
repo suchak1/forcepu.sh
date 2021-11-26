@@ -8,7 +8,6 @@ import numpy as np
 # from DataSource import IEXCloud, MarketData
 # from History import Historian
 s3 = boto3.resource('s3')
-bucket = s3.Bucket(os.environ['S3_BUCKET'])
 metrics = [
     'Total Return [%]',
     'Max Drawdown [%]',
@@ -29,6 +28,7 @@ if str(os.environ['INITIAL']).lower() == 'true':
 
 
 def get_hyper(*_):
+    bucket = s3.Bucket(os.environ['S3_BUCKET'])
     filename = '/tmp/signals.csv'
     with open(filename, 'wb') as file:
         bucket.download_fileobj(
@@ -68,7 +68,7 @@ def get_holding(*_):
     #     pf = vbt.Portfolio.from_holding(price, init_cash=1000)
     #     print(pf.value())
     # print(os.environ)
-
+    bucket = s3.Bucket(os.environ['S3_BUCKET'])
     # filename = '/tmp/signals.csv'
     filename = '/tmp/BTC.csv'
     with open(filename, 'wb') as file:
