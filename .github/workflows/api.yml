@@ -1,8 +1,12 @@
 name: Deploy API
 
 on:
+  # pull_request:
+  #     branches: [master]
   push:
-    branches: [master]
+    branches: [master, feature/home]
+
+  workflow_dispatch:
 
 jobs:
   build:

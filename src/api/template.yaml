@@ -35,6 +35,14 @@ Resources:
       Environment:
         Variables:
           S3_BUCKET: !Ref S3Bucket
+      Policies:
+        - Statement:
+            - Sid: S3ReadPolicy
+              Effect: Allow
+              Action:
+                - s3:GetObject
+              Resource: !Sub "arn:aws:s3:::${S3Bucket}/*"
+
       PackageType: Image
       ImageConfig:
         Command: ["app.get_holding"]
@@ -54,6 +62,13 @@ Resources:
       Environment:
         Variables:
           S3_BUCKET: !Ref S3Bucket
+      Policies:
+        - Statement:
+            - Sid: S3ReadPolicy
+              Effect: Allow
+              Action:
+                - s3:GetObject
+              Resource: !Sub "arn:aws:s3:::${S3Bucket}/*"
       PackageType: Image
       ImageConfig:
         Command: ["app.get_hyper"]
