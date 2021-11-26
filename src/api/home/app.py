@@ -1,64 +1,129 @@
-import joblib
-import base64
-import numpy as np
-import json
-
-from io import BytesIO
-from PIL import Image
-from scipy.ndimage import interpolation
-
-model_file = '/opt/ml/model'
-model = joblib.load(model_file)
-
-
-# Functions to pre-process images (we used same preprocessing when training)
-
-def moments(image):
-    c0, c1 = np.mgrid[:image.shape[0], :image.shape[1]]
-    img_sum = np.sum(image)
-    
-    m0 = np.sum(c0 * image) / img_sum
-    m1 = np.sum(c1 * image) / img_sum
-    m00 = np.sum((c0-m0)**2 * image) / img_sum
-    m11 = np.sum((c1-m1)**2 * image) / img_sum
-    m01 = np.sum((c0-m0) * (c1-m1) * image) / img_sum
-    
-    mu_vector = np.array([m0,m1])
-    covariance_matrix = np.array([[m00, m01],[m01, m11]])
-    
-    return mu_vector, covariance_matrix
+import os
+import boto3
+import pandas as pd
+import vectorbt as vbt
+# from hyperdrive import DataSource, FileOps, History, Constants as C
+# from FileOps import FileReader
+# from DataSource import IEXCloud, MarketData
+# from History import Historian
+s3 = boto3.resource('s3')
+bucket = s3.Bucket(os.environ['S3_BUCKET'])
+metrics = [
+    'Total Return [%]',
+    'Max Drawdown [%]',
+    'Win Rate [%]',
+    'Profit Factor',
+    'Sharpe Ratio',
+    'Sortino Ratio'
+]
 
 
-def deskew(image):
-    c, v = moments(image)
-    alpha = v[0,1] / v[0,0]
-    affine = np.array([[1,0], [alpha,1]])
-    ocenter = np.array(image.shape) / 2.0
-    offset = c - np.dot(affine, ocenter)
-
-    return interpolation.affine_transform(image, affine, offset=offset)
-
-
-def get_np_image(image_bytes):
-    image = Image.open(BytesIO(base64.b64decode(image_bytes))).convert(mode='L')
-    image = image.resize((28, 28))
-
-    return np.array(image)
-
-
-# Lambda handler code
-
-def lambda_handler(event, context):
-    image_bytes = event['body'].encode('utf-8')
-    x = deskew(get_np_image(image_bytes))
-
-    prediction = int(model.predict(x.reshape(1, -1))[0])
-
-    return {
-        'statusCode': 200,
-        'body': json.dumps(
-            {
-                "predicted_label": prediction,
-            }
+def get_hyper(*_):
+    filename = '/tmp/signals.csv'
+    with open(filename, 'wb') as file:
+        bucket.download_fileobj(
+            'models/latest/signals.csv', file
         )
+    signals_df = pd.read_csv(filename)
+
+    filename = '/tmp/BTC.csv'
+    with open(filename, 'wb') as file:
+        bucket.download_fileobj(
+            'data/ohlc/polygon/X%3ABTCUSD.csv', file
+        )
+    btc_df = pd.read_csv(filename)
+
+    df = btc_df.merge(signals_df, on='Time')
+    close = df['Close'].to_numpy()
+    signals = df['Sig'].to_numpy()
+    pf = vbt.Portfolio.from_signals(
+        close, signals, ~signals, init_cash=1000, freq='D', fees=0.001)
+    balances = pf.value()
+    stats = pf.stats()
+    return {
+        "statusCode": 200,
+        "body": {
+            'balances': list(balances),
+            'stats': dict(stats[metrics]),
+            # 'close': btc_df.to_dict(),
+            # 'holding': {'balances': holding_balances, 'stats': holding_stats},
+            # 'hyper': {'balances': hyper_balances, 'stats': hyper_stats},
+        },
+        "headers": {"Access-Control-Allow-Origin": "*"}
     }
+
+
+def get_holding(*_):
+    #     price = vbt.YFData.download('BTC-USD').get('Close')
+    #     pf = vbt.Portfolio.from_holding(price, init_cash=1000)
+    #     print(pf.value())
+    # print(os.environ)
+
+    # filename = '/tmp/signals.csv'
+    filename = '/tmp/BTC.csv'
+    with open(filename, 'wb') as file:
+        bucket.download_fileobj(
+            'data/ohlc/polygon/X%3ABTCUSD.csv', file
+        )
+    df = pd.read_csv(filename)
+    df = df[df['Time'] > '2021-11-06']
+    pf = vbt.Portfolio.from_holding(df['Close'], init_cash=1000, freq='D')
+    balances = pf.value()
+    stats = pf.stats()
+
+    # md = MarketData()
+    # reader = md.reader
+    # finder = md.finder
+    # store = reader.store
+    # store.download_file(finder.get_signals_path(), '/tmp/')
+    # signals_filename = f'/tmp/{finder.get_signals_path()}'
+    # signals_df = pd.read_csv(signals_filename)
+
+    # symbol = C.POLY_CRYPTO_DICT['BTC']
+    # store.download_file(finder.get_ohlc_path(symbol, 'polygon'), '/tmp/')
+    # btc_filename = f'/tmp/{finder.get_ohlc_path(symbol, "polygon")}'
+    # btc_df = pd.read_csv(btc_filename)
+
+    # df = btc_df.merge(signals_df, on=C.TIME)[C.CLOSE, C.SIG]
+    # close = btc_df[C.CLOSE].to_numpy()
+    # signals = df[C.SIG].to_numpy()
+    # hist = Historian()
+    # holding = hist.buy_and_hold(close)
+    # holding_balances = list(holding.value())
+    # holding_stats = dict(holding.stats())
+
+    # hyper = hist.create_portfolio(close, signals, 0.001)
+    # hyper_balances = list(hyper.value())
+    # hyper_stats = dict(hyper.stats())
+
+    # df = md.get_ohlc(symbol='TSLA', timeframe='5d')
+    # reader = FileReader()
+    # df = reader.load_csv('models/latest/signals.csv')
+
+    # print(df)
+    # s3 = boto3.resource('s3')
+    # bucket = s3.Bucket('hyperdrive.pro')
+    # with open('/tmp/sig.csv', 'wb') as file:
+    #     bucket.download_fileobj(md.finder.get_signals_path(), file)
+    # df = pd.read_csv('/tmp/sig.csv')
+    # print(df)
+    return {
+        "statusCode": 200,
+        "body": {
+            'balances': list(balances),
+            'stats': dict(stats[metrics]),
+            # 'close': btc_df.to_dict(),
+            # 'holding': {'balances': holding_balances, 'stats': holding_stats},
+            # 'hyper': {'balances': hyper_balances, 'stats': hyper_stats},
+        },
+        "headers": {"Access-Control-Allow-Origin": "*"}
+    }
+
+# use env file locally
+# https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-using-invoke.html#serverless-sam-cli-using-invoke-environment-file
+# https://stackoverflow.com/questions/59706797/aws-sam-local-and-environment-parameters
+# https://stackoverflow.com/questions/48104665/aws-sam-local-environment-variables
+
+# for ci, put env vars as github secrets
+# and then use this actions step to dynamically construct env file
+# https://github.com/marketplace/actions/render-json
