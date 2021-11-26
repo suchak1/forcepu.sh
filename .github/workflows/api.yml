@@ -37,6 +37,14 @@ jobs:
         with:
           node-version: "16"
 
+      - name: Create parameters.env
+        uses: SpicyPizza/create-envfile@v1.2
+        with:
+          envkey_Dev: false
+          envkey_S3Bucket: ${{ secrets.AWS_S3_BUCKET }}
+          directory: src/api
+          file_name: parameters.env
+
       - name: Build API
         run: npm run build:api
 
