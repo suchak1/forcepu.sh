@@ -9,24 +9,38 @@ const { Title, Text } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 
 const Page = () => {
-  const [holding, setHolding] = useState(null);
+  const [holding, setHolding] = useState([]);
   const [hyper, setHyper] = useState({});
   const [loading, setLoading] = useState(true);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const url =
-  //       process.env.NODE_ENV === "development"
-  //         ? "/api/holding"
-  //         : "https://api.forcepu.sh/holding";
-  //     fetch(url, { method: "GET" })
+  useEffect(() => {
+    (async () => {
+      const url =
+        process.env.NODE_ENV === "development"
+          ? "/api/holding"
+          : "https://api.forcepu.sh/holding";
+      fetch(url, { method: "GET" })
+        .then((response) => response.json())
+        // .then(data => )
+        .then((res) =>
+          setHolding(
+            // res.data.map((datum) => {
+            //   datum.name = "holding";
+            //   return datum;
+            // })
+            res.data.map((datum) => {
+              return datum;
+            })
+          )
+        )
+        // .then((data) => setHolding({data: data.data.map(), stats: data.stats}))
+        .then(() => setLoading(false));
+    })();
+  }, []);
+
   //       .then((response) => response.text())
   //       .then((data) => data.replace(/\bNaN\b/g, "null"))
   //       .then((data) => setHolding(JSON.parse(data)))
-  //       // .then(() => holding.stats)
-  //       .then(() => setLoading(false));
-  //   })();
-  // }, []);
 
   // use df.to_json(orient='records')
 
@@ -45,51 +59,42 @@ const Page = () => {
   //   { year: "11/27/2021", value: 13 },
   // ];
 
-  const data = [];
-  const num = 5000;
-  for (let i = 0; i < num; i += 1) {
-    data.push({
-      year: moment()
-        .subtract(num - i, "days")
-        .calendar(),
-      // .format("M/D/YYYY"),
-      value: i,
-    });
-  }
+  // const data = [];
+  // const num = 5000;
+  // for (let i = 0; i < num; i += 1) {
+  //   data.push({
+  //     year: moment()
+  //       .subtract(num - i, "days")
+  //       // .calendar(),
+  //       .format("MM/DD/YY"),
+  //     value: i,
+  //   });
+  // }
 
-  let newData = [];
-  data.forEach((datum, idx) => {
-    const btc_datum = { ...datum };
-    btc_datum.name = "BTC";
-    newData.push(btc_datum);
-    datum.name = "hyperBTC";
-    datum.value = datum.value * idx;
-    newData.push(datum);
-  });
-  console.log(process.env);
+  // let newData = [];
+  // holding?.balances.forEach((datum, idx) => {
+  //   const btc_datum = { ...datum };
+  //   btc_datum.name = "BTC";
+  //   newData.push(btc_datum);
+  //   datum.name = "hyperBTC";
+  //   datum.value = datum.value * idx;
+  //   newData.push(datum);
+  // });
+  // console.log(process.env);
 
   const config = {
-    data: newData === [] ? data : newData,
+    data: holding,
     height: 400,
-    xField: "year",
-    yField: "value",
-    seriesField: "name",
+    xField: "Time",
+    yField: "Bal",
+    // seriesField: "name",
     smooth: true,
-    colorField: "name",
-    color: ({ name }) => {
-      if (name === "BTC") {
-        return "magenta";
-      }
-      return "#52e5ff";
-    },
-    // point: {
-    //   size: 5,
-    //   shape: "diamond",
-    // },
-    // label: {
-    //   style: {
-    //     fill: "#aaa",
-    //   },
+    // colorField: "name",
+    // color: ({ name }) => {
+    //   if (name === "BTC") {
+    //     return "magenta";
+    //   }
+    //   return "#52e5ff";
     // },
     area: {
       style: {
@@ -115,7 +120,7 @@ const Page = () => {
           <i style={{ color: "#52e5ff" }}>hyperdrive</i>
         </a>
       </Title>
-      {newData ? <Line {...config} /> : <Spin indicator={antIcon} />}
+      {holding ? <Line {...config} /> : <Spin indicator={antIcon} />}
 
       {/* {holding ? <Line {...config} /> : <Spin indicator={antIcon} />} */}
       {/* place strat stats here (sortino, return, drawdown, etc) */}
