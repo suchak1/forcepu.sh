@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Typography, Spin } from "antd";
+import { Typography, Spin, Table } from "antd";
 import { Line } from "@ant-design/charts";
 import { LoadingOutlined } from "@ant-design/icons";
 
@@ -8,10 +8,11 @@ const { Title, Text } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 
 const Page = () => {
-  const [holding, setHolding] = useState(null);
-  const [hyper, setHyper] = useState(null);
-  const [holdingLoading, setHoldingLoading] = useState(true);
-  const [hyperLoading, setHyperLoading] = useState(true);
+  const [holdingData, setHoldingData] = useState(null);
+  const [hyperData, setHyperData] = useState(null);
+  const [holdingStats, setHoldingStats] = useState(null);
+  const [hyperStats, setHyperStats] = useState(null);
+  const holdingLabel = "HODLing BTC";
 
   useEffect(() => {
     (async () => {
@@ -22,14 +23,14 @@ const Page = () => {
       fetch(url, { method: "GET" })
         .then((response) => response.json())
         .then((res) =>
-          setHolding(
-            res.data.map((datum) => {
-              datum.name = "BTC";
-              return datum;
-            })
-          )
-        )
-        .then(() => setHoldingLoading(false));
+          // setHoldingData(
+          //   res.data.map((datum) => {
+          //     datum.name = holdingLabel;
+          //     return datum;
+          //   })
+          // ) &&
+          setHoldingStats(res.stats)
+        );
     })();
     (async () => {
       const url =
@@ -39,19 +40,19 @@ const Page = () => {
       fetch(url, { method: "GET" })
         .then((response) => response.json())
         .then((res) =>
-          setHyper(
-            res.data.map((datum) => {
-              datum.name = "hyperBTC";
-              return datum;
-            })
-          )
-        )
-        .then(() => setHyperLoading(false));
+          // setHyperData(
+          //   res.data.map((datum) => {
+          //     datum.name = "trading BTC with hyperdrive";
+          //     return datum;
+          //   })
+          // ) &&
+          setHyperStats(res.stats)
+        );
     })();
   }, []);
 
   const config = {
-    data: holding && hyper ? holding.concat(hyper) : [],
+    data: holdingData && hyperData ? holdingData.concat(hyperData) : [],
     height: 400,
     xField: "Time",
     yField: "Bal",
@@ -59,7 +60,7 @@ const Page = () => {
     smooth: true,
     colorField: "name",
     color: ({ name }) => {
-      if (name === "BTC") {
+      if (name === holdingLabel) {
         return "magenta";
       }
       return "#52e5ff";
@@ -84,6 +85,40 @@ const Page = () => {
       },
     },
   };
+
+  // const dataSource =
+  //   holdingStats && hyperStats
+  //     ? Object.keys(holdingStats).map((key, idx) => {
+  //         return {
+  //           key: idx.toString(),
+  //           metric: key,
+  //           hodl: holdingStats[key],
+  //           hyperdrive: hyperStats[key],
+  //         };
+  //       })
+  //     : [];
+
+  // console.log(dataSource);
+
+  // const dataSource = [
+  //   {
+  //     key: "1",
+  //     metric: "Max Drawdown",
+  //     hodl: 1,
+  //     hyperdrive: 2,
+  //   },
+  //   {
+  //     key: "2",
+  //     metric: "Max Drawdown",
+  //     hodl: 1,
+  //     hyperdrive: 2,
+  //   },
+  // ];
+  const columns = [
+    { title: "Metric", dataIndex: "metric", key: "metric" },
+    { title: "HODL", dataIndex: "hodl", key: "hodl" },
+    { title: "hyperdrive", dataIndex: "hyperdrive", key: "hyperdrive" },
+  ];
   return (
     <>
       <Title>Leveraging AutoML to beat BTC</Title>
@@ -93,9 +128,36 @@ const Page = () => {
           <i style={{ color: "#52e5ff" }}>hyperdrive</i>
         </a>
       </Title>
-      {holding && hyper ? <Line {...config} /> : <Spin indicator={antIcon} />}
-
-      {/* {holding ? <Line {...config} /> : <Spin indicator={antIcon} />} */}
+      {holdingData && hyperData ? (
+        <Line {...config} />
+      ) : (
+        <Spin indicator={antIcon} />
+      )}
+      {holdingStats && hyperStats ? (
+        <Table
+          // dataSource={
+          //   holdingStats && hyperStats
+          //     ? Object.keys(holdingStats).map((key, idx) =>
+          //         console.log({
+          //           key: idx.toString(),
+          //           metric: key,
+          //           hodl: holdingStats[key],
+          //           hyperdrive: hyperStats[key],
+          //         })
+          //       )
+          //     : []
+          // }
+          dataSource={Object.keys(holdingStats).map((key, idx) => {
+            return {
+              key: idx.toString(),
+              metric: key,
+              hodl: holdingStats[key],
+              hyperdrive: hyperStats[key],
+            };
+          })}
+          columns={columns}
+        />
+      ) : null}
       {/* place strat stats here (sortino, return, drawdown, etc) */}
     </>
     // automated portfolio management
