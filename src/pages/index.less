@@ -1,3 +1,28 @@
+.parent {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.child {
+  height: 100%;
+  //   background: red;
+  flex: 1;
+  min-width: 25%;
+  //   border: 5px solid white;
+}
+
+@media (max-width: 700px) {
+  .child {
+    min-width: 51%;
+  }
+}
+
+// @media (max-width: 50rem) {
+//   .child {
+//     min-width: 51%;
+//   }
+// }
+
 .container {
   //   height: 100%;
   //   width: 100%;
@@ -11,19 +36,4 @@
   //   height: 100%;
   flex: 1;
   min-width: 25%;
-
-  //   height: 50px;
-  //   background: red;
-}
-
-@media (max-width: 700px) {
-  .item {
-    min-width: 33%;
-  }
-}
-
-@media (max-width: 400px) {
-  .item {
-    min-width: 66%;
-  }
 }

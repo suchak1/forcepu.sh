@@ -114,15 +114,15 @@ const Page = () => {
           <i style={{ color: "#52e5ff" }}>hyperdrive</i>
         </a>
       </Title>
-      <div className={styles.container}>
-        <div className={styles.item}>
+      <div className={styles.parent}>
+        <div className={styles.child}>
           {holdingData && hyperData ? (
             <Line {...config} />
           ) : (
             <Spin indicator={antIcon} />
           )}{" "}
         </div>
-        <div className={styles.item}>
+        <div className={styles.child}>
           {holdingStats && hyperStats ? (
             <Table
               dataSource={Object.keys(holdingStats).map((key, idx) => {
