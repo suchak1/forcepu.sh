@@ -1,7 +1,6 @@
 import React from "react";
-import moment from "moment";
 import { useState, useEffect } from "react";
-import { PageHeader, Typography, Spin } from "antd";
+import { Typography, Spin } from "antd";
 import { Line } from "@ant-design/charts";
 import { LoadingOutlined } from "@ant-design/icons";
 
@@ -9,9 +8,10 @@ const { Title, Text } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 
 const Page = () => {
-  const [holding, setHolding] = useState([]);
-  const [hyper, setHyper] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [holding, setHolding] = useState(null);
+  const [hyper, setHyper] = useState(null);
+  const [holdingLoading, setHoldingLoading] = useState(true);
+  const [hyperLoading, setHyperLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -21,81 +21,49 @@ const Page = () => {
           : "https://api.forcepu.sh/holding";
       fetch(url, { method: "GET" })
         .then((response) => response.json())
-        // .then(data => )
         .then((res) =>
           setHolding(
-            // res.data.map((datum) => {
-            //   datum.name = "holding";
-            //   return datum;
-            // })
             res.data.map((datum) => {
+              datum.name = "BTC";
               return datum;
             })
           )
         )
-        // .then((data) => setHolding({data: data.data.map(), stats: data.stats}))
-        .then(() => setLoading(false));
+        .then(() => setHoldingLoading(false));
+    })();
+    (async () => {
+      const url =
+        process.env.NODE_ENV === "development"
+          ? "/api/hyper"
+          : "https://api.forcepu.sh/hyper";
+      fetch(url, { method: "GET" })
+        .then((response) => response.json())
+        .then((res) =>
+          setHyper(
+            res.data.map((datum) => {
+              datum.name = "hyperBTC";
+              return datum;
+            })
+          )
+        )
+        .then(() => setHyperLoading(false));
     })();
   }, []);
 
-  //       .then((response) => response.text())
-  //       .then((data) => data.replace(/\bNaN\b/g, "null"))
-  //       .then((data) => setHolding(JSON.parse(data)))
-
-  // use df.to_json(orient='records')
-
-  // const data = [
-  //   {
-  //     year: "11/19/2021",
-  //     value: holding?.balances !== undefined ? holding?.balances[0] : 0,
-  //   },
-  //   { year: "11/20/2021", value: 4 },
-  //   { year: "11/21/2021", value: 3.5 },
-  //   { year: "11/22/2021", value: 5 },
-  //   { year: "11/23/2021", value: 4.9 },
-  //   { year: "11/24/2021", value: 6 },
-  //   { year: "11/25/2021", value: 7 },
-  //   { year: "11/26/2021", value: 9 },
-  //   { year: "11/27/2021", value: 13 },
-  // ];
-
-  // const data = [];
-  // const num = 5000;
-  // for (let i = 0; i < num; i += 1) {
-  //   data.push({
-  //     year: moment()
-  //       .subtract(num - i, "days")
-  //       // .calendar(),
-  //       .format("MM/DD/YY"),
-  //     value: i,
-  //   });
-  // }
-
-  // let newData = [];
-  // holding?.balances.forEach((datum, idx) => {
-  //   const btc_datum = { ...datum };
-  //   btc_datum.name = "BTC";
-  //   newData.push(btc_datum);
-  //   datum.name = "hyperBTC";
-  //   datum.value = datum.value * idx;
-  //   newData.push(datum);
-  // });
-  // console.log(process.env);
-
   const config = {
-    data: holding,
+    data: holding && hyper ? holding.concat(hyper) : [],
     height: 400,
     xField: "Time",
     yField: "Bal",
-    // seriesField: "name",
+    seriesField: "name",
     smooth: true,
-    // colorField: "name",
-    // color: ({ name }) => {
-    //   if (name === "BTC") {
-    //     return "magenta";
-    //   }
-    //   return "#52e5ff";
-    // },
+    colorField: "name",
+    color: ({ name }) => {
+      if (name === "BTC") {
+        return "magenta";
+      }
+      return "#52e5ff";
+    },
     area: {
       style: {
         fillOpacity: 0.15,
@@ -110,6 +78,11 @@ const Page = () => {
     xAxis: {
       tickCount: 10,
     },
+    yAxis: {
+      label: {
+        formatter: (v) => `$ ${v}`,
+      },
+    },
   };
   return (
     <>
@@ -120,7 +93,7 @@ const Page = () => {
           <i style={{ color: "#52e5ff" }}>hyperdrive</i>
         </a>
       </Title>
-      {holding ? <Line {...config} /> : <Spin indicator={antIcon} />}
+      {holding && hyper ? <Line {...config} /> : <Spin indicator={antIcon} />}
 
       {/* {holding ? <Line {...config} /> : <Spin indicator={antIcon} />} */}
       {/* place strat stats here (sortino, return, drawdown, etc) */}
