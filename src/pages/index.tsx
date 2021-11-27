@@ -114,22 +114,15 @@ const Page = () => {
           <i style={{ color: "#52e5ff" }}>hyperdrive</i>
         </a>
       </Title>
-      <div
-        style={{
-          height: "100%",
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        <span style={{ width: "100%", height: "100%" }}>
+      <div className={styles.container}>
+        <div className={styles.item}>
           {holdingData && hyperData ? (
             <Line {...config} />
           ) : (
             <Spin indicator={antIcon} />
           )}{" "}
-        </span>
-        <span style={{ width: "100%", height: "100%" }}>
+        </div>
+        <div className={styles.item}>
           {holdingStats && hyperStats ? (
             <Table
               dataSource={Object.keys(holdingStats).map((key, idx) => {
@@ -145,7 +138,7 @@ const Page = () => {
               loading={holdingLoading || hyperLoading}
             />
           ) : null}
-        </span>
+        </div>
       </div>
       {/* place strat stats here (sortino, return, drawdown, etc) */}
     </>
