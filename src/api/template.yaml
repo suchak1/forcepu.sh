@@ -11,8 +11,8 @@ Parameters:
 
 Globals:
   Function:
-    Timeout: 900
-    MemorySize: 10240
+    Timeout: 30
+    MemorySize: 512
 
 Resources:
   ExerciseLogFunction:
@@ -41,7 +41,7 @@ Resources:
               Effect: Allow
               Action:
                 - s3:GetObject
-              Resource: !Sub "arn:aws:s3:::${S3Bucket}/*"
+              Resource: !Sub "arn:aws:s3:::${S3Bucket}/data/api/*"
 
       PackageType: Image
       ImageConfig:
@@ -68,7 +68,7 @@ Resources:
               Effect: Allow
               Action:
                 - s3:GetObject
-              Resource: !Sub "arn:aws:s3:::${S3Bucket}/*"
+              Resource: !Sub "arn:aws:s3:::${S3Bucket}/data/api/*"
       PackageType: Image
       ImageConfig:
         Command: ["app.get_hyper"]
