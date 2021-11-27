@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Typography, Spin, Table } from "antd";
 import { Line } from "@ant-design/charts";
 import { LoadingOutlined } from "@ant-design/icons";
+import styles from "./index.less";
 
 const { Title, Text } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
@@ -115,8 +116,8 @@ const Page = () => {
       </Title>
       <div
         style={{
-          height: "70vh",
-          width: "calc(100% - 48px)",
+          height: "100%",
+          width: "100%",
           display: "flex",
           justifyContent: "center",
         }}
