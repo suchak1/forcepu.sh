@@ -88,8 +88,16 @@ const Page = () => {
 
   const columns = [
     { title: "Metric", dataIndex: "metric", key: "metric" },
-    { title: "HODL", dataIndex: "hodl", key: "hodl" },
-    { title: "hyperdrive", dataIndex: "hyperdrive", key: "hyperdrive" },
+    {
+      title: <span style={{ color: "#DF00DF" }}>HODL</span>,
+      dataIndex: "hodl",
+      key: "hodl",
+    },
+    {
+      title: <i style={{ color: "#52e5ff" }}>hyperdrive</i>,
+      dataIndex: "hyperdrive",
+      key: "hyperdrive",
+    },
   ];
   return (
     <>
