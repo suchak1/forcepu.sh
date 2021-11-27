@@ -1,21 +1,61 @@
 import React from "react";
-import { PageHeader, Typography } from "antd";
+import moment from "moment";
+import { useState, useEffect } from "react";
+import { PageHeader, Typography, Spin } from "antd";
 import { Line } from "@ant-design/charts";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const { Title, Text } = Typography;
+const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 
-function Page() {
-  const data = [
-    { year: "1991", value: 3 },
-    { year: "1992", value: 4 },
-    { year: "1993", value: 3.5 },
-    { year: "1994", value: 5 },
-    { year: "1995", value: 4.9 },
-    { year: "1996", value: 6 },
-    { year: "1997", value: 7 },
-    { year: "1998", value: 9 },
-    { year: "1999", value: 13 },
-  ];
+const Page = () => {
+  const [holding, setHolding] = useState(null);
+  const [hyper, setHyper] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const url =
+  //       process.env.NODE_ENV === "development"
+  //         ? "/api/holding"
+  //         : "https://api.forcepu.sh/holding";
+  //     fetch(url, { method: "GET" })
+  //       .then((response) => response.text())
+  //       .then((data) => data.replace(/\bNaN\b/g, "null"))
+  //       .then((data) => setHolding(JSON.parse(data)))
+  //       // .then(() => holding.stats)
+  //       .then(() => setLoading(false));
+  //   })();
+  // }, []);
+
+  // use df.to_json(orient='records')
+
+  // const data = [
+  //   {
+  //     year: "11/19/2021",
+  //     value: holding?.balances !== undefined ? holding?.balances[0] : 0,
+  //   },
+  //   { year: "11/20/2021", value: 4 },
+  //   { year: "11/21/2021", value: 3.5 },
+  //   { year: "11/22/2021", value: 5 },
+  //   { year: "11/23/2021", value: 4.9 },
+  //   { year: "11/24/2021", value: 6 },
+  //   { year: "11/25/2021", value: 7 },
+  //   { year: "11/26/2021", value: 9 },
+  //   { year: "11/27/2021", value: 13 },
+  // ];
+
+  const data = [];
+  const num = 5000;
+  for (let i = 0; i < num; i += 1) {
+    data.push({
+      year: moment()
+        .subtract(num - i, "days")
+        .calendar(),
+      // .format("M/D/YYYY"),
+      value: i,
+    });
+  }
 
   let newData = [];
   data.forEach((datum, idx) => {
@@ -26,8 +66,7 @@ function Page() {
     datum.value = datum.value * idx;
     newData.push(datum);
   });
-
-  console.log(newData);
+  console.log(process.env);
 
   const config = {
     data: newData === [] ? data : newData,
@@ -63,6 +102,9 @@ function Page() {
         duration: 5000,
       },
     },
+    xAxis: {
+      tickCount: 10,
+    },
   };
   return (
     <>
@@ -73,7 +115,9 @@ function Page() {
           <i style={{ color: "#52e5ff" }}>hyperdrive</i>
         </a>
       </Title>
-      {newData !== [] ? <Line {...config} /> : null}
+      {newData ? <Line {...config} /> : <Spin indicator={antIcon} />}
+
+      {/* {holding ? <Line {...config} /> : <Spin indicator={antIcon} />} */}
       {/* place strat stats here (sortino, return, drawdown, etc) */}
     </>
     // automated portfolio management
@@ -97,7 +141,7 @@ function Page() {
     // backend: make endpoint that returns btc close data (including most recent close - little hard) / might use alt source
     // frontend: make js fx that calculates acct balance given close array and signals array
   );
-}
+};
 
 Page.displayName = "Page";
 
