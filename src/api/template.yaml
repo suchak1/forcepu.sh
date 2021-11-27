@@ -12,7 +12,7 @@ Parameters:
 Globals:
   Function:
     Timeout: 30
-    MemorySize: 512
+    MemorySize: 4096
 
 Resources:
   ExerciseLogFunction:

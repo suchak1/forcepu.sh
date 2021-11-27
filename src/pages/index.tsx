@@ -22,15 +22,15 @@ const Page = () => {
           : "https://api.forcepu.sh/holding";
       fetch(url, { method: "GET" })
         .then((response) => response.json())
-        .then((res) =>
-          // setHoldingData(
-          //   res.data.map((datum) => {
-          //     datum.name = holdingLabel;
-          //     return datum;
-          //   })
-          // ) &&
-          setHoldingStats(res.stats)
-        );
+        .then((res) => {
+          setHoldingData(
+            res.data.map((datum) => {
+              datum.name = holdingLabel;
+              return datum;
+            })
+          );
+          setHoldingStats(res.stats);
+        });
     })();
     (async () => {
       const url =
@@ -39,15 +39,15 @@ const Page = () => {
           : "https://api.forcepu.sh/hyper";
       fetch(url, { method: "GET" })
         .then((response) => response.json())
-        .then((res) =>
-          // setHyperData(
-          //   res.data.map((datum) => {
-          //     datum.name = "trading BTC with hyperdrive";
-          //     return datum;
-          //   })
-          // ) &&
-          setHyperStats(res.stats)
-        );
+        .then((res) => {
+          setHyperData(
+            res.data.map((datum) => {
+              datum.name = "trading BTC with hyperdrive";
+              return datum;
+            })
+          );
+          setHyperStats(res.stats);
+        });
     })();
   }, []);
 
@@ -86,34 +86,6 @@ const Page = () => {
     },
   };
 
-  // const dataSource =
-  //   holdingStats && hyperStats
-  //     ? Object.keys(holdingStats).map((key, idx) => {
-  //         return {
-  //           key: idx.toString(),
-  //           metric: key,
-  //           hodl: holdingStats[key],
-  //           hyperdrive: hyperStats[key],
-  //         };
-  //       })
-  //     : [];
-
-  // console.log(dataSource);
-
-  // const dataSource = [
-  //   {
-  //     key: "1",
-  //     metric: "Max Drawdown",
-  //     hodl: 1,
-  //     hyperdrive: 2,
-  //   },
-  //   {
-  //     key: "2",
-  //     metric: "Max Drawdown",
-  //     hodl: 1,
-  //     hyperdrive: 2,
-  //   },
-  // ];
   const columns = [
     { title: "Metric", dataIndex: "metric", key: "metric" },
     { title: "HODL", dataIndex: "hodl", key: "hodl" },
@@ -135,18 +107,6 @@ const Page = () => {
       )}
       {holdingStats && hyperStats ? (
         <Table
-          // dataSource={
-          //   holdingStats && hyperStats
-          //     ? Object.keys(holdingStats).map((key, idx) =>
-          //         console.log({
-          //           key: idx.toString(),
-          //           metric: key,
-          //           hodl: holdingStats[key],
-          //           hyperdrive: hyperStats[key],
-          //         })
-          //       )
-          //     : []
-          // }
           dataSource={Object.keys(holdingStats).map((key, idx) => {
             return {
               key: idx.toString(),
