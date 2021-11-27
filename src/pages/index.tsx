@@ -13,6 +13,8 @@ const Page = () => {
   const [holdingStats, setHoldingStats] = useState(null);
   const [hyperStats, setHyperStats] = useState(null);
   const holdingLabel = "HODLing BTC";
+  const [holdingLoading, setHoldingLoading] = useState(true);
+  const [hyperLoading, setHyperLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -30,7 +32,8 @@ const Page = () => {
             })
           );
           setHoldingStats(res.stats);
-        });
+        })
+        .then(() => setHoldingLoading(false));
     })();
     (async () => {
       const url =
@@ -47,11 +50,13 @@ const Page = () => {
             })
           );
           setHyperStats(res.stats);
-        });
+        })
+        .then(() => setHyperLoading(false));
     })();
   }, []);
 
   const config = {
+    autoFit: true,
     data: holdingData && hyperData ? holdingData.concat(hyperData) : [],
     height: 400,
     xField: "Time",
@@ -108,24 +113,39 @@ const Page = () => {
           <i style={{ color: "#52e5ff" }}>hyperdrive</i>
         </a>
       </Title>
-      {holdingData && hyperData ? (
-        <Line {...config} />
-      ) : (
-        <Spin indicator={antIcon} />
-      )}
-      {holdingStats && hyperStats ? (
-        <Table
-          dataSource={Object.keys(holdingStats).map((key, idx) => {
-            return {
-              key: idx.toString(),
-              metric: key,
-              hodl: holdingStats[key],
-              hyperdrive: hyperStats[key],
-            };
-          })}
-          columns={columns}
-        />
-      ) : null}
+      <div
+        style={{
+          height: "70vh",
+          width: "calc(100% - 48px)",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <span style={{ width: "100%", height: "100%" }}>
+          {holdingData && hyperData ? (
+            <Line {...config} />
+          ) : (
+            <Spin indicator={antIcon} />
+          )}{" "}
+        </span>
+        <span style={{ width: "100%", height: "100%" }}>
+          {holdingStats && hyperStats ? (
+            <Table
+              dataSource={Object.keys(holdingStats).map((key, idx) => {
+                return {
+                  key: idx.toString(),
+                  metric: key,
+                  hodl: holdingStats[key],
+                  hyperdrive: hyperStats[key],
+                };
+              })}
+              columns={columns}
+              pagination={false}
+              loading={holdingLoading || hyperLoading}
+            />
+          ) : null}
+        </span>
+      </div>
       {/* place strat stats here (sortino, return, drawdown, etc) */}
     </>
     // automated portfolio management
