@@ -1,29 +1,57 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
-Description: >
-  forcepu.sh
+# add API w cloudwatch write role and custome domain to template
+Parameters:
+  S3Bucket:
+    Type: "String"
+    NoEcho: true
+  Dev:
+    Type: "String"
+    NoEcho: true
 
-  Sample SAM Template for forcepu.sh
-
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
-    Timeout: 10
-  Api:
-    Cors:
-      AllowMethods: "'*'"
-      AllowHeaders: "'*'"
-      AllowOrigin: "'*'"
+    Timeout: 30
+    MemorySize: 4096
+
 Resources:
   ExerciseLogFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: backend/
-      Handler: gym.get_exercise_log
-      Runtime: python3.8
+      PackageType: Image
       Events:
         ExerciseLog:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /exercise_log
             Method: get
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./gym
+      DockerTag: python3.8-v1
+  PreviewFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Environment:
+        Variables:
+          S3_BUCKET: !Ref S3Bucket
+      Policies:
+        - Statement:
+            - Sid: S3ReadPolicy
+              Effect: Allow
+              Action:
+                - s3:GetObject
+              Resource: !Sub "arn:aws:s3:::${S3Bucket}/data/api/*"
+      PackageType: Image
+      ImageConfig:
+        Command: ["app.get_preview"]
+      Events:
+        Inference:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /preview
+            Method: get
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./home
+      DockerTag: python3.8-v1

@@ -64,7 +64,7 @@ const GymPage = ({ dispatch, gym, _loading }) => {
   useEffect(() => {
     (async () => {
       const url =
-        process.env.REACT_APP_ENV === "dev"
+        process.env.NODE_ENV === "development"
           ? "/api/exercise_log"
           : "https://api.forcepu.sh/exercise_log";
       fetch(url, { method: "GET" })
