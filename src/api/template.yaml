@@ -29,34 +29,7 @@ Resources:
       Dockerfile: Dockerfile
       DockerContext: ./gym
       DockerTag: python3.8-v1
-  HoldingFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      Environment:
-        Variables:
-          S3_BUCKET: !Ref S3Bucket
-      Policies:
-        - Statement:
-            - Sid: S3ReadPolicy
-              Effect: Allow
-              Action:
-                - s3:GetObject
-              Resource: !Sub "arn:aws:s3:::${S3Bucket}/data/api/*"
-
-      PackageType: Image
-      ImageConfig:
-        Command: ["app.get_holding"]
-      Events:
-        Inference:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /holding
-            Method: get
-    Metadata:
-      Dockerfile: Dockerfile
-      DockerContext: ./home
-      DockerTag: python3.8-v1
-  HyperFunction:
+  PreviewFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       Environment:
@@ -71,12 +44,12 @@ Resources:
               Resource: !Sub "arn:aws:s3:::${S3Bucket}/data/api/*"
       PackageType: Image
       ImageConfig:
-        Command: ["app.get_hyper"]
+        Command: ["app.get_preview"]
       Events:
         Inference:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /hyper
+            Path: /preview
             Method: get
     Metadata:
       Dockerfile: Dockerfile

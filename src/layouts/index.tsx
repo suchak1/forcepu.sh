@@ -110,7 +110,13 @@ export default function Layout({ route, children }) {
         </span>
       </AntLayout.Header>
 
-      <AntLayout.Content style={{ padding: 24, marginTop: headerHeight }}>
+      <AntLayout.Content
+        style={{
+          padding: 24,
+          marginTop: headerHeight,
+          height: "calc(100vh - 64px)",
+        }}
+      >
         {children}
       </AntLayout.Content>
     </AntLayout>
