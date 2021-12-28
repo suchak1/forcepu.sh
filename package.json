@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build-dev:umi": "REACT_APP_ENV=dev umi build && cp -r assets/. dist",
     "build:umi": "REACT_APP_ENV=prod umi build && cp -r assets/. dist",
     "build:api": "cd src/api && sam build --use-container --cached --parallel",
     "build+start:api": "npm run build:api && npm run start:api",
