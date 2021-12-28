@@ -37,6 +37,9 @@ jobs:
         with:
           node-version: "16"
 
+      # add step to define env var AWS_S3_BUCKET (>> $GITHUB_ENVdepending on github.ref
+      # and then modify envkey_S3Bucket: ${{ env.AWS_S3_BUCKET }}
+
       - name: Create parameters.env
         uses: SpicyPizza/create-envfile@v1.2
         with:
