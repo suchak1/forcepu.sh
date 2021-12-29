@@ -41,7 +41,7 @@ jobs:
         uses: SpicyPizza/create-envfile@v1.2
         with:
           envkey_S3Bucket: ${{ secrets.HYPERDRIVE_BUCKET }}
-          envkey_Environment: prod
+          envkey_Stage: prod
           envkey_ApiUrl: api.forcepu.sh
           envkey_CertArn: ${{ secrets.CERT_ARN }}
           directory: src/api
@@ -52,7 +52,7 @@ jobs:
         uses: SpicyPizza/create-envfile@v1.2
         with:
           envkey_S3Bucket: ${{ secrets.HYPERDRIVE_DEV_BUCKET }}
-          envkey_Environment: dev
+          envkey_Stage: dev
           envkey_ApiUrl: api.dev.forcepu.sh
           envkey_CertArn: ${{ secrets.DEV_CERT_ARN }}
           directory: src/api

@@ -4,9 +4,8 @@ Transform: AWS::Serverless-2016-10-31
 Parameters:
   S3Bucket:
     Type: "String"
-    # Default: ""
     NoEcho: true
-  Environment:
+  Stage:
     Type: "String"
     NoEcho: true
     AllowedValues:
@@ -34,7 +33,7 @@ Resources:
   ApiGatewayApi:
     Type: AWS::Serverless::Api
     Properties:
-      StageName: !Ref Environment
+      StageName: !Ref Stage
   #     Domain:
   #       DomainName: !Ref ApiUrl
   #       CertificateArn: !Ref CertArn
