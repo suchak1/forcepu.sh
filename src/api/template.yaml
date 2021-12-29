@@ -19,7 +19,7 @@ Parameters:
     Type: "String"
     NoEcho: true
   HostedZoneId:
-    Type: String
+    Type: "String"
     NoEcho: true
 
 Globals:
