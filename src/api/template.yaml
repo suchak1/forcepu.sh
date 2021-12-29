@@ -9,14 +9,22 @@ Parameters:
     Type: "String"
     NoEcho: true
   Environment:
+    AllowedValues:
+      - prod
+      - dev
     Type: "String"
     NoEcho: true
+
+Conditions:
+  isProd: !Equals 
+    - !Ref Environment
+    - prod
 
 Globals:
   Function:
     Timeout: 30
     MemorySize: 4096
-# add custom domain to apigateway
+# add custom domain to apigateway, need condition or if exp, add secrets to gh, update params in api.yml, reference parameters here
 # specify stackname, s3 bucket, image repo in build and deploy cmds
 # use dev npm cmds in api.yml and use environment in parameters.env, delete dev parameter
 # keep using hyperdrive prod bucket for now
@@ -25,6 +33,27 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: !Ref Environment
+      Domain:
+        DomainName: 
+        !If
+          - isProd
+          -
+            - api.forcepu.sh
+          - api.dev.forcepu.sh
+        CertificateArn:
+        !If
+          - isProd
+          -
+            - prodArn
+          - devArn
+        EndpointConfiguration: EDGE
+        Route53:
+          HostedZoneName:
+          !If
+          - isProd
+          -
+            - api.forcepu.sh
+          - api.dev.forcepu.sh
   ExerciseLogFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
