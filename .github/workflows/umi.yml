@@ -37,13 +37,13 @@ jobs:
       - name: Install dependencies
         run: npm run ci
 
-      - name: Build prod app
+      - name: Build app [prod]
         run: npm run build:umi && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV
         env:
           AWS_S3_BUCKET: ${{ secrets.FORCEPUSH_BUCKET }}
         if: ${{ github.ref == 'refs/heads/master' }}
 
-      - name: Build dev app
+      - name: Build app [dev]
         run: npm run build-dev:umi && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV
         env:
           AWS_S3_BUCKET: ${{ secrets.FORCEPUSH_DEV_BUCKET }}
