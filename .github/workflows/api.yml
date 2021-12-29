@@ -44,6 +44,7 @@ jobs:
           envkey_Stage: prod
           envkey_ApiUrl: api.forcepu.sh
           envkey_CertArn: ${{ secrets.CERT_ARN }}
+          envkey_HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
           directory: src/api
           file_name: parameters.env
         if: ${{ github.ref == 'refs/heads/master' }}
@@ -55,8 +56,9 @@ jobs:
           envkey_Stage: dev
           envkey_ApiUrl: api.dev.forcepu.sh
           envkey_CertArn: ${{ secrets.DEV_CERT_ARN }}
+          envkey_HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
           directory: src/api
-          file_name: parameters.env
+          file_name: dev-parameters.env
         if: ${{ github.ref != 'refs/heads/master' }}
 
       - name: Build API
