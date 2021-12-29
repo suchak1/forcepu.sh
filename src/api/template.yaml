@@ -6,12 +6,12 @@ Parameters:
     Type: "String"
     # Default: ""
     NoEcho: true
-  # Environment:
-  #   Type: "String"
-  #   NoEcho: true
-  #   AllowedValues:
-  #     - dev
-  #     - prod
+  Environment:
+    Type: "String"
+    NoEcho: true
+    AllowedValues:
+      - dev
+      - prod
   # ApiUrl:
   #   Type: "String"
   #   NoEcho: true
@@ -31,10 +31,10 @@ Globals:
 # use dev npm cmds in api.yml and use environment in parameters.env, delete dev parameter
 # keep using hyperdrive prod bucket for now
 Resources:
-  # ApiGatewayApi:
-  #   Type: AWS::Serverless::Api
-  #   Properties:
-  #     StageName: !Ref Environment
+  ApiGatewayApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: !Ref Environment
   #     Domain:
   #       DomainName: !Ref ApiUrl
   #       CertificateArn: !Ref CertArn
