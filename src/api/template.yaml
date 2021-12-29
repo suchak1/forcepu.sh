@@ -6,15 +6,9 @@ Parameters:
     Type: "String"
     NoEcho: true
   Environment:
-    AllowedValues:
-      - prod
-      - dev
     Type: "String"
     NoEcho: true
   ApiUrl:
-    AllowedValues:
-      - api.forcepu.sh
-      - api.dev.forcepu.sh
     Type: "String"
     NoEcho: true
   CertArn:
