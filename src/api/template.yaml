@@ -5,15 +5,18 @@ Parameters:
   S3Bucket:
     Type: "String"
     NoEcho: true
-  Environment:
-    Type: "String"
-    NoEcho: true
-    AllowedValues:
-      - dev
-      - prod
+  # Environment:
+  #   Type: "String"
+  #   NoEcho: true
+  #   AllowedValues:
+  #     - dev
+  #     - prod
   # ApiUrl:
   #   Type: "String"
   #   NoEcho: true
+  #   AllowedValues:
+  #     - api.dev.forcepu.sh
+  #     - api.forcepu.sh
   # CertArn:
   #   Type: "String"
   #   NoEcho: true
@@ -27,16 +30,16 @@ Globals:
 # use dev npm cmds in api.yml and use environment in parameters.env, delete dev parameter
 # keep using hyperdrive prod bucket for now
 Resources:
-  ApiGatewayApi:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: !Ref Environment
-    #   Domain:
-    #     DomainName: !Ref ApiUrl
-    #     CertificateArn: !Ref CertArn
-    #     EndpointConfiguration: EDGE
-    #     Route53:
-    #       HostedZoneName: !Ref ApiUrl
+  # ApiGatewayApi:
+  #   Type: AWS::Serverless::Api
+  #   Properties:
+  #     StageName: !Ref Environment
+  #     Domain:
+  #       DomainName: !Ref ApiUrl
+  #       CertificateArn: !Ref CertArn
+  #       EndpointConfiguration: EDGE
+  #       Route53:
+  #         HostedZoneName: !Ref ApiUrl
   ExerciseLogFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -47,7 +50,7 @@ Resources:
           Properties:
             Path: /exercise_log
             Method: get
-            RestApiId: !Ref ApiGatewayApi
+            # RestApiId: !Ref ApiGatewayApi
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./gym
@@ -74,7 +77,7 @@ Resources:
           Properties:
             Path: /preview
             Method: get
-            RestApiId: !Ref ApiGatewayApi
+            # RestApiId: !Ref ApiGatewayApi
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./home
