@@ -26,10 +26,7 @@ Globals:
   Function:
     Timeout: 30
     MemorySize: 4096
-# add custom domain to apigateway, need condition or if exp, add secrets to gh, update params in api.yml, reference parameters here
-# specify stackname, s3 bucket, image repo in build and deploy cmds
-# use dev npm cmds in api.yml and use environment in parameters.env, delete dev parameter
-# keep using hyperdrive prod bucket for now
+
 Resources:
   ApiGatewayApi:
     Type: AWS::Serverless::Api
