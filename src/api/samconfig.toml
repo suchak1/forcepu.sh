@@ -1,7 +1,7 @@
 version = 0.1
-[default]
-[default.deploy]
-[default.deploy.parameters]
+[prod]
+[prod.deploy]
+[prod.deploy.parameters]
 stack_name = "api"
 s3_bucket = "api.forcepu.sh"
 s3_prefix = "api"
@@ -9,3 +9,14 @@ region = "us-east-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
 image_repository = "092475342352.dkr.ecr.us-east-1.amazonaws.com/api.forcepu.sh"
+
+[dev]
+[dev.deploy]
+[dev.deploy.parameters]
+stack_name = "api.dev"
+s3_bucket = "api.dev.forcepu.sh"
+s3_prefix = "api"
+region = "us-east-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+image_repository = "092475342352.dkr.ecr.us-east-1.amazonaws.com/api.dev.forcepu.sh"

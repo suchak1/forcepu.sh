@@ -1,8 +1,8 @@
 name: Deploy API
 
 on:
-  # pull_request:
-  #     branches: [master]
+  pull_request:
+    branches: [master]
   push:
     branches: [master]
 
@@ -40,19 +40,52 @@ jobs:
       # add step to define env var AWS_S3_BUCKET (>> $GITHUB_ENVdepending on github.ref
       # and then modify envkey_S3Bucket: ${{ env.AWS_S3_BUCKET }}
 
+      - name: Define env vars [prod]
+        run: |
+          echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV
+          echo "ENVIRONMENT=prod" >> $GITHUB_ENV
+          echo "API_URL=api.forcepu.sh" >> $GITHUB_ENV
+          echo "CERT_ARN=${CERT_ARN}" >> $GITHUB_ENV
+        env:
+          AWS_S3_BUCKET: ${{ secrets.HYPERDRIVE_BUCKET }}
+          CERT_ARN: ${{ secrets.CERT_ARN }}
+        if: ${{ github.ref == 'refs/heads/master' }}
+
+      - name: Define env vars [dev]
+        run: |
+          echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV
+          echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+          echo "API_URL=api.dev.forcepu.sh" >> $GITHUB_ENV
+          echo "CERT_ARN=${CERT_ARN}" >> $GITHUB_ENV
+        env:
+          # should be AWS_S3_BUCKET: ${{ secrets.HYPERDRIVE_DEV_BUCKET }}
+          AWS_S3_BUCKET: ${{ secrets.HYPERDRIVE_BUCKET }}
+          CERT_ARN: ${{ secrets.DEV_CERT_ARN }}
+        if: ${{ github.ref != 'refs/heads/master' }}
+
       - name: Create parameters.env
         uses: SpicyPizza/create-envfile@v1.2
         with:
-          envkey_Dev: false
-          envkey_S3Bucket: ${{ secrets.AWS_S3_BUCKET }}
+          envkey_S3Bucket: ${{ env.AWS_S3_BUCKET }}
+          envkey_Environment: ${{ env.ENVIRONMENT }}
+          envkey_ApiUrl: ${{ env.API_URL }}
+          envkey_CertArn: ${{ env.CERT_ARN }}
           directory: src/api
           file_name: parameters.env
 
       - name: Build API
         run: npm run build:api
 
-      - name: Deploy API
+      - name: Deploy prod API
         run: npm run deploy:api
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        if: ${{ github.ref == 'refs/heads/master' }}
+
+      - name: Deploy dev API
+        run: npm run deploy-dev:api
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        if: ${{ github.ref != 'refs/heads/master' }}

@@ -5,20 +5,21 @@ Parameters:
   S3Bucket:
     Type: "String"
     NoEcho: true
-  Dev:
-    Type: "String"
-    NoEcho: true
   Environment:
     AllowedValues:
       - prod
       - dev
     Type: "String"
     NoEcho: true
-
-Conditions:
-  isProd: !Equals 
-    - !Ref Environment
-    - prod
+  ApiUrl:
+    AllowedValues:
+      - api.forcepu.sh
+      - api.dev.forcepu.sh
+    Type: "String"
+    NoEcho: true
+  CertArn:
+    Type: "String"
+    NoEcho: true
 
 Globals:
   Function:
@@ -34,26 +35,11 @@ Resources:
     Properties:
       StageName: !Ref Environment
       Domain:
-        DomainName: 
-        !If
-          - isProd
-          -
-            - api.forcepu.sh
-          - api.dev.forcepu.sh
-        CertificateArn:
-        !If
-          - isProd
-          -
-            - prodArn
-          - devArn
+        DomainName: !Ref ApiUrl
+        CertificateArn: !Ref CertArn
         EndpointConfiguration: EDGE
         Route53:
-          HostedZoneName:
-          !If
-          - isProd
-          -
-            - api.forcepu.sh
-          - api.dev.forcepu.sh
+          HostedZoneName: !Ref ApiUrl
   ExerciseLogFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
