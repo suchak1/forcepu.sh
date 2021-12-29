@@ -8,12 +8,12 @@ Parameters:
   Environment:
     Type: "String"
     NoEcho: true
-  ApiUrl:
-    Type: "String"
-    NoEcho: true
-  CertArn:
-    Type: "String"
-    NoEcho: true
+  # ApiUrl:
+  #   Type: "String"
+  #   NoEcho: true
+  # CertArn:
+  #   Type: "String"
+  #   NoEcho: true
 
 Globals:
   Function:
@@ -28,12 +28,12 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: !Ref Environment
-      Domain:
-        DomainName: !Ref ApiUrl
-        CertificateArn: !Ref CertArn
-        EndpointConfiguration: EDGE
-        Route53:
-          HostedZoneName: !Ref ApiUrl
+      # Domain:
+      #   DomainName: !Ref ApiUrl
+      #   CertificateArn: !Ref CertArn
+      #   EndpointConfiguration: EDGE
+      #   Route53:
+      #     HostedZoneName: !Ref ApiUrl
   ExerciseLogFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
