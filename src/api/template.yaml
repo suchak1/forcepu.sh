@@ -5,9 +5,12 @@ Parameters:
   S3Bucket:
     Type: "String"
     NoEcho: true
-  # Environment:
-  #   Type: "String"
-  #   NoEcho: true
+  Environment:
+    Type: "String"
+    NoEcho: true
+    AllowedValues:
+      - dev
+      - prod
   # ApiUrl:
   #   Type: "String"
   #   NoEcho: true
@@ -26,8 +29,8 @@ Globals:
 Resources:
   ApiGatewayApi:
     Type: AWS::Serverless::Api
-    # Properties:
-    #   StageName: !Ref Environment
+    Properties:
+      StageName: !Ref Environment
     #   Domain:
     #     DomainName: !Ref ApiUrl
     #     CertificateArn: !Ref CertArn
