@@ -4,6 +4,7 @@ Transform: AWS::Serverless-2016-10-31
 Parameters:
   S3Bucket:
     Type: "String"
+    Default: ""
     NoEcho: true
   # Environment:
   #   Type: "String"
