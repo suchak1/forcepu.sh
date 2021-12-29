@@ -66,10 +66,11 @@ jobs:
       - name: Create parameters.env
         uses: SpicyPizza/create-envfile@v1.2
         with:
-          envkey_S3Bucket: ${{ env.AWS_S3_BUCKET }}
-          envkey_Environment: ${{ env.ENVIRONMENT }}
-          envkey_ApiUrl: ${{ env.API_URL }}
-          envkey_CertArn: ${{ env.CERT_ARN }}
+          envkey_S3Bucket: ${{ secrets.HYPERDRIVE_BUCKET }}
+          # envkey_S3Bucket: ${{ env.AWS_S3_BUCKET }}
+          # envkey_Environment: ${{ env.ENVIRONMENT }}
+          # envkey_ApiUrl: ${{ env.API_URL }}
+          # envkey_CertArn: ${{ env.CERT_ARN }}
           directory: src/api
           file_name: parameters.env
 
