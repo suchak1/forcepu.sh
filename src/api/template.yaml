@@ -1,11 +1,24 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
-# add API w cloudwatch write role and custome domain to template
+
 Parameters:
   S3Bucket:
     Type: "String"
     NoEcho: true
-  Dev:
+  Stage:
+    Type: "String"
+    AllowedValues:
+      - dev
+      - prod
+  ApiUrl:
+    Type: "String"
+    AllowedValues:
+      - api.dev.forcepu.sh
+      - api.forcepu.sh
+  CertArn:
+    Type: "String"
+    NoEcho: true
+  HostedZoneId:
     Type: "String"
     NoEcho: true
 
@@ -15,6 +28,16 @@ Globals:
     MemorySize: 4096
 
 Resources:
+  ApiGatewayApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: !Ref Stage
+      Domain:
+        DomainName: !Ref ApiUrl
+        CertificateArn: !Ref CertArn
+        EndpointConfiguration: EDGE
+        Route53:
+          HostedZoneId: !Ref HostedZoneId
   ExerciseLogFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -25,6 +48,7 @@ Resources:
           Properties:
             Path: /exercise_log
             Method: get
+            RestApiId: !Ref ApiGatewayApi
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./gym
@@ -51,6 +75,7 @@ Resources:
           Properties:
             Path: /preview
             Method: get
+            RestApiId: !Ref ApiGatewayApi
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./home
