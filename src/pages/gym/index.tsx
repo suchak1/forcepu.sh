@@ -2,17 +2,10 @@ import React from "react";
 import { connect } from "dva";
 import { format } from "date-fns";
 import { useState, useEffect } from "react";
-import { Layout, Typography, Table, Input } from "antd";
-import {
-  CheckOutlined,
-  StopOutlined,
-  LoadingOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
-// import FilterPanel from "@/components/FilterPanel";
+import { Typography, Table, Input } from "antd";
+import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 import styles from "./index.less";
-// import { GymService } from "./service";
-
+import { getApiUrl } from "@/utils";
 const { Title, Text } = Typography;
 
 const columns = [
@@ -66,7 +59,7 @@ const GymPage = ({ dispatch, gym, _loading }) => {
       const url =
         process.env.NODE_ENV === "development"
           ? "/api/exercise_log"
-          : "https://api.forcepu.sh/exercise_log";
+          : `${getApiUrl()}/exercise_log`;
       fetch(url, { method: "GET" })
         .then((response) => response.json())
         .then((data) => setLog(data))

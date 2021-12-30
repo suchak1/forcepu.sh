@@ -4,8 +4,8 @@ import { Typography, Spin, Table } from "antd";
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined } from "@ant-design/icons";
 import styles from "./index.less";
-
-const { Title, Text } = Typography;
+import { getApiUrl } from "@/utils";
+const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 
 const Page = () => {
@@ -19,7 +19,7 @@ const Page = () => {
       const url =
         process.env.NODE_ENV === "development"
           ? "/api/preview"
-          : "https://api.forcepu.sh/preview";
+          : `${getApiUrl()}/preview`;
       fetch(url, { method: "GET" })
         .then((response) => response.json())
         .then((data) => setPreviewData(data))
