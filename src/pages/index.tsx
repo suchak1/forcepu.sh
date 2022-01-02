@@ -147,7 +147,6 @@ const Page = () => {
   const config = {
     autoFit: true,
     data: previewData.data,
-    // height: 400,
     xField: "Time",
     yField: "Bal",
     seriesField: "Name",
@@ -213,21 +212,34 @@ const Page = () => {
           </a>
         </Title>
       </span>
-      <div className={styles.parent}>
-        <div className={styles.child}>
-          {!loading ? <Line {...config} /> : <Spin indicator={antIcon} />}{" "}
+      {loading ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "50%",
+          }}
+        >
+          <Spin indicator={antIcon} />
         </div>
-        <div className={styles.child}>
-          {!loading ? (
-            <Table
-              dataSource={previewData.stats}
-              columns={columns}
-              pagination={false}
-              loading={loading}
-            />
-          ) : null}
+      ) : (
+        <div className={styles.parent}>
+          <div className={styles.child}>
+            {!loading ? <Line {...config} /> : null}
+          </div>
+          <div className={styles.child}>
+            {!loading ? (
+              <Table
+                dataSource={previewData.stats}
+                columns={columns}
+                pagination={false}
+                loading={loading}
+              />
+            ) : null}
+          </div>
         </div>
-      </div>
+      )}
     </>
     // automated portfolio management
     // using momentum based strategy
