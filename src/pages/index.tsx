@@ -204,7 +204,11 @@ const Page = () => {
       >
         Leveraging AutoML to beat BTC
       </Title>
-      <Switch checkedChildren="₿TC" unCheckedChildren="$" defaultChecked />
+      <Switch
+        checkedChildren="BTC (₿)"
+        unCheckedChildren="USD ($)"
+        defaultChecked
+      />
       <span style={{ display: "flex" }}>
         <Title level={5} style={{ padding: "6px 0px 12px 0px" }}>
           a momentum trading strategy using{" "}

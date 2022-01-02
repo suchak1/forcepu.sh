@@ -18,7 +18,7 @@ export default defineConfig({
   },
   proxy: proxy[REACT_APP_ENV || 'prod'],
   // publicPath: 'assets/'
-  theme: {"switch-color": "#F7931A"},
+  theme: {'switch-color': '#F7931A'},
   metas: [
     {
       name: 'viewport',
