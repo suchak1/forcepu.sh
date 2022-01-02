@@ -258,7 +258,7 @@ const Page = () => {
           <div className={styles.child}>
             {!loading ? (
               <Table
-                dataSource={previewData.stats}
+                dataSource={toggle ? [] : previewData.stats}
                 columns={columns}
                 pagination={false}
                 loading={loading}
