@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Typography, Spin, Table } from "antd";
+import { Typography, Spin, Table, Switch } from "antd";
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined } from "@ant-design/icons";
 import styles from "./index.less";
@@ -204,6 +204,7 @@ const Page = () => {
       >
         Leveraging AutoML to beat BTC
       </Title>
+      <Switch checkedChildren="₿TC" unCheckedChildren="$" defaultChecked />
       <span style={{ display: "flex" }}>
         <Title level={5} style={{ padding: "6px 0px 12px 0px" }}>
           a momentum trading strategy using{" "}
