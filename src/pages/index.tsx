@@ -26,9 +26,7 @@ const Page = () => {
         .then(() => setLoading(false));
     })();
   }, []);
-  // implement api w 7 day delay - take df.head(len(df) - 7)
-  // use signals https://charts.ant.design/en/examples/line/basic#line-with-data-marker
-  // https://g2.antv.vision/en/examples/case/line#line8
+
   G2.registerShape("point", "breath-point", {
     draw(cfg, container) {
       const data = cfg.data;
@@ -200,13 +198,26 @@ const Page = () => {
   ];
   return (
     <>
-      <Title>Leveraging AutoML to beat BTC</Title>
-      <Title level={5} style={{ paddingBottom: 12, marginTop: -12 }}>
-        a momentum trading strategy using{" "}
-        <a href="https://github.com/suchak1/hyperdrive">
-          <i style={{ color: "#52e5ff" }}>{hyperdrive}</i>
-        </a>
+      <Title
+        style={{
+          // display: "flex",
+          marginBottom: 0,
+          marginTop: -10,
+          // marginBlockStart: 0,
+          // marginBlockEnd: 0,
+        }}
+      >
+        Leveraging AutoML to beat BTC
       </Title>
+      <span style={{ display: "flex" }}>
+        <Title level={5} style={{ paddingTop: 6, paddingBottom: 12 }}>
+          a momentum trading strategy using{" "}
+          <a href="https://github.com/suchak1/hyperdrive">
+            <i style={{ color: "#52e5ff" }}>{hyperdrive}</i>
+          </a>
+        </Title>{" "}
+        {/* a */}
+      </span>
       <div className={styles.parent}>
         <div className={styles.child}>
           {!loading ? <Line {...config} /> : <Spin indicator={antIcon} />}{" "}
@@ -222,7 +233,6 @@ const Page = () => {
           ) : null}
         </div>
       </div>
-      {/* place strat stats here (sortino, return, drawdown, etc) */}
     </>
     // automated portfolio management
     // using momentum based strategy
