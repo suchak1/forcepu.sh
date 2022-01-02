@@ -12,6 +12,7 @@ const Page = () => {
   const HODL = "HODL";
   const hyperdrive = "hyperdrive";
   const [previewData, setPreviewData] = useState({ data: [], stats: [] });
+  const [toggle, setToggle] = useState(true);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -146,7 +147,7 @@ const Page = () => {
   });
   const config = {
     autoFit: true,
-    data: previewData.data,
+    data: toggle ? [] : previewData.data,
     xField: "Time",
     yField: "Bal",
     seriesField: "Name",
@@ -197,33 +198,46 @@ const Page = () => {
   ];
   return (
     <>
-      <span
+      {/* <span
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "flex-start",
         }}
+      > */}
+      <Title
+        style={{
+          margin: "-10px 0px 0px",
+        }}
       >
-        <Title
-          style={{
-            margin: "-10px 0px 0px",
-          }}
-        >
-          Leveraging AutoML to beat BTC
-        </Title>
-        <Switch
+        Leveraging AutoML to beat BTC
+      </Title>
+      {/* <Switch
           checkedChildren="BTC (₿)"
           unCheckedChildren="USD ($)"
           defaultChecked
         />
-      </span>
-      <span style={{ display: "flex" }}>
-        <Title level={5} style={{ padding: "6px 0px 12px 0px" }}>
+      </span> */}
+      <span
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "6px 0px 12px 0px",
+        }}
+      >
+        <Title level={5}>
           a momentum trading strategy using{" "}
           <a href="https://github.com/suchak1/hyperdrive">
             <i style={{ color: "#52e5ff" }}>{hyperdrive}</i>
           </a>
         </Title>
+        <Switch
+          checkedChildren="BTC (₿)"
+          unCheckedChildren="USD ($)"
+          defaultChecked
+          onChange={(checked) => setToggle(checked)}
+        />
       </span>
       {loading ? (
         <div
