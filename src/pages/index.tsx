@@ -199,7 +199,7 @@ const Page = () => {
     <>
       <Title
         style={{
-          margin: "-10px 0px 0px",
+          margin: 0,
         }}
       >
         Leveraging AutoML to beat BTC
