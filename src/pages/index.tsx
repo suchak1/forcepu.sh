@@ -26,9 +26,7 @@ const Page = () => {
         .then(() => setLoading(false));
     })();
   }, []);
-  // implement api w 7 day delay - take df.head(len(df) - 7)
-  // use signals https://charts.ant.design/en/examples/line/basic#line-with-data-marker
-  // https://g2.antv.vision/en/examples/case/line#line8
+
   G2.registerShape("point", "breath-point", {
     draw(cfg, container) {
       const data = cfg.data;
@@ -149,7 +147,6 @@ const Page = () => {
   const config = {
     autoFit: true,
     data: previewData.data,
-    height: 400,
     xField: "Time",
     yField: "Bal",
     seriesField: "Name",
@@ -200,29 +197,49 @@ const Page = () => {
   ];
   return (
     <>
-      <Title>Leveraging AutoML to beat BTC</Title>
-      <Title level={5} style={{ paddingBottom: 12, marginTop: -12 }}>
-        a momentum trading strategy using{" "}
-        <a href="https://github.com/suchak1/hyperdrive">
-          <i style={{ color: "#52e5ff" }}>{hyperdrive}</i>
-        </a>
+      <Title
+        style={{
+          margin: 0,
+        }}
+      >
+        Leveraging AutoML to beat BTC
       </Title>
-      <div className={styles.parent}>
-        <div className={styles.child}>
-          {!loading ? <Line {...config} /> : <Spin indicator={antIcon} />}{" "}
+      <span style={{ display: "flex" }}>
+        <Title level={5} style={{ padding: "6px 0px 12px 0px" }}>
+          a momentum trading strategy using{" "}
+          <a href="https://github.com/suchak1/hyperdrive">
+            <i style={{ color: "#52e5ff" }}>{hyperdrive}</i>
+          </a>
+        </Title>
+      </span>
+      {loading ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "50%",
+          }}
+        >
+          <Spin indicator={antIcon} />
         </div>
-        <div className={styles.child}>
-          {!loading ? (
-            <Table
-              dataSource={previewData.stats}
-              columns={columns}
-              pagination={false}
-              loading={loading}
-            />
-          ) : null}
+      ) : (
+        <div className={styles.parent}>
+          <div className={styles.child}>
+            {!loading ? <Line {...config} /> : null}
+          </div>
+          <div className={styles.child}>
+            {!loading ? (
+              <Table
+                dataSource={previewData.stats}
+                columns={columns}
+                pagination={false}
+                loading={loading}
+              />
+            ) : null}
+          </div>
         </div>
-      </div>
-      {/* place strat stats here (sortino, return, drawdown, etc) */}
+      )}
     </>
     // automated portfolio management
     // using momentum based strategy

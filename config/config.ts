@@ -19,4 +19,10 @@ export default defineConfig({
   proxy: proxy[REACT_APP_ENV || 'prod'],
   // publicPath: 'assets/'
   // theme: {"primary-color": "#52e5ff"}
+  metas: [
+    {
+      name: 'viewport',
+      // content: "width=device-width,height=device-height,initial-scale=1.0"
+      content: 'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no'
+    }]
 });
