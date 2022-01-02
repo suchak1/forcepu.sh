@@ -147,7 +147,6 @@ const Page = () => {
   const config = {
     autoFit: true,
     data: previewData.data,
-    height: 400,
     xField: "Time",
     yField: "Bal",
     seriesField: "Name",
@@ -200,39 +199,47 @@ const Page = () => {
     <>
       <Title
         style={{
-          // display: "flex",
-          marginBottom: 0,
-          marginTop: -10,
-          // marginBlockStart: 0,
-          // marginBlockEnd: 0,
+          margin: 0,
         }}
       >
         Leveraging AutoML to beat BTC
       </Title>
       <span style={{ display: "flex" }}>
-        <Title level={5} style={{ paddingTop: 6, paddingBottom: 12 }}>
+        <Title level={5} style={{ padding: "6px 0px 12px 0px" }}>
           a momentum trading strategy using{" "}
           <a href="https://github.com/suchak1/hyperdrive">
             <i style={{ color: "#52e5ff" }}>{hyperdrive}</i>
           </a>
-        </Title>{" "}
-        {/* a */}
+        </Title>
       </span>
-      <div className={styles.parent}>
-        <div className={styles.child}>
-          {!loading ? <Line {...config} /> : <Spin indicator={antIcon} />}{" "}
+      {loading ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "50%",
+          }}
+        >
+          <Spin indicator={antIcon} />
         </div>
-        <div className={styles.child}>
-          {!loading ? (
-            <Table
-              dataSource={previewData.stats}
-              columns={columns}
-              pagination={false}
-              loading={loading}
-            />
-          ) : null}
+      ) : (
+        <div className={styles.parent}>
+          <div className={styles.child}>
+            {!loading ? <Line {...config} /> : null}
+          </div>
+          <div className={styles.child}>
+            {!loading ? (
+              <Table
+                dataSource={previewData.stats}
+                columns={columns}
+                pagination={false}
+                loading={loading}
+              />
+            ) : null}
+          </div>
         </div>
-      </div>
+      )}
     </>
     // automated portfolio management
     // using momentum based strategy

@@ -1,26 +1,19 @@
 .parent {
   display: flex;
   flex-wrap: wrap;
-  //   height: 100%;
 }
 
 .child {
-  //   height: calc(100vh - 191px);
-  //   background: red;
-  //   height: calc(100vh - 191px);
-
-  //   height: 100%;
   flex: 1;
-
+  height: 100%;
   min-width: 25%;
-  //   border: 5px solid white;
 }
 
 @media (max-width: 700px) {
   .child {
     min-width: 51%;
-    height: calc(100vh - 238px);
-    margin-bottom: 100px;
+    height: 100%;
+    margin-bottom: 50px;
   }
 }
 
@@ -32,23 +25,12 @@
   }
 }
 
-// @media (max-width: 50rem) {
-//   .child {
-//     min-width: 51%;
-//   }
-// }
-
 .container {
-  //   height: 100%;
-  //   width: 100%;
   display: flex;
-  //   justify-content: center;
   flex-wrap: wrap;
 }
 
 .item {
-  //   width: 100%;
-  //   height: 100%;
   flex: 1;
   min-width: 25%;
 }
