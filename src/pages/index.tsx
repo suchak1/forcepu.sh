@@ -197,18 +197,26 @@ const Page = () => {
   ];
   return (
     <>
-      <Title
+      <span
         style={{
-          margin: 0,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
         }}
       >
-        Leveraging AutoML to beat BTC
-      </Title>
-      <Switch
-        checkedChildren="BTC (₿)"
-        unCheckedChildren="USD ($)"
-        defaultChecked
-      />
+        <Title
+          style={{
+            margin: "-10px 0px 0px",
+          }}
+        >
+          Leveraging AutoML to beat BTC
+        </Title>
+        <Switch
+          checkedChildren="BTC (₿)"
+          unCheckedChildren="USD ($)"
+          defaultChecked
+        />
+      </span>
       <span style={{ display: "flex" }}>
         <Title level={5} style={{ padding: "6px 0px 12px 0px" }}>
           a momentum trading strategy using{" "}
