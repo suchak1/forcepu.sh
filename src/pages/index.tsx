@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Typography, Spin, Table } from "antd";
+import { Typography, Spin, Table, Switch } from "antd";
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined } from "@ant-design/icons";
 import styles from "./index.less";
@@ -11,9 +11,22 @@ const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 const Page = () => {
   const HODL = "HODL";
   const hyperdrive = "hyperdrive";
-  const [previewData, setPreviewData] = useState({ data: [], stats: [] });
+  const [previewData, setPreviewData] = useState({
+    BTC: { data: [], stats: [] },
+    USD: { data: [], stats: [] },
+  });
+  const [toggle, setToggle] = useState(true);
   const [loading, setLoading] = useState(true);
 
+  const formatBTC = (v) => `${Math.round(v * 10) / 10} ₿`;
+  const formatUSD = (v) => {
+    if (v < 1e3) {
+      return `$ ${v}`;
+    } else if (v < 1e6) {
+      return `$ ${v / 1e3}k`;
+    }
+    return `$ ${v / 1e6}M`;
+  };
   useEffect(() => {
     (async () => {
       const url =
@@ -55,71 +68,17 @@ const Page = () => {
           },
         });
 
-        const decorator1 = group.addShape("marker", {
+        group.addShape("marker", {
           attrs: {
             x: point.x,
             y: point.y,
             r: 5,
             fill,
-            opacity: 0.5,
+            opacity: 1,
             symbol,
           },
         });
-        const decorator2 = group.addShape("marker", {
-          attrs: {
-            x: point.x,
-            y: point.y,
-            r: 5,
-            fill,
-            opacity: 0.5,
-            symbol,
-          },
-        });
-        const decorator3 = group.addShape("marker", {
-          attrs: {
-            x: point.x,
-            y: point.y,
-            r: 5,
-            fill,
-            opacity: 0.5,
-            symbol,
-          },
-        });
-        decorator1.animate(
-          {
-            r: 10,
-            opacity: 0,
-          },
-          {
-            duration: 1800,
-            easing: "easeLinear",
-            repeat: true,
-          }
-        );
-        decorator2.animate(
-          {
-            r: 10,
-            opacity: 0,
-          },
-          {
-            duration: 1800,
-            easing: "easeLinear",
-            repeat: true,
-            delay: 600,
-          }
-        );
-        decorator3.animate(
-          {
-            r: 10,
-            opacity: 0,
-          },
-          {
-            duration: 1800,
-            easing: "easeLinear",
-            repeat: true,
-            delay: 1200,
-          }
-        );
+
         group.addShape("marker", {
           attrs: {
             x: point.x,
@@ -146,7 +105,7 @@ const Page = () => {
   });
   const config = {
     autoFit: true,
-    data: previewData.data,
+    data: toggle ? previewData.BTC.data : previewData.USD.data,
     xField: "Time",
     yField: "Bal",
     seriesField: "Name",
@@ -166,15 +125,31 @@ const Page = () => {
     animation: {
       appear: {
         animation: "wave-in",
-        duration: 5000,
+        duration: 4000,
       },
     },
     xAxis: {
       tickCount: 10,
+      grid: {
+        line: {
+          style: {
+            lineWidth: 0,
+            strokeOpacity: 0,
+          },
+        },
+      },
     },
     yAxis: {
       label: {
-        formatter: (v) => `$ ${v}`,
+        formatter: (v) => (toggle ? formatBTC(v) : formatUSD(v)),
+      },
+      grid: {
+        line: {
+          style: {
+            lineWidth: 0,
+            strokeOpacity: 0,
+          },
+        },
       },
     },
     point: {
@@ -198,19 +173,33 @@ const Page = () => {
   return (
     <>
       <Title
-        style={{
-          margin: 0,
-        }}
+      // style={{
+      //   margin: "-10px 0px 0px",
+      // }}
       >
         Leveraging AutoML to beat BTC
       </Title>
-      <span style={{ display: "flex" }}>
-        <Title level={5} style={{ padding: "6px 0px 12px 0px" }}>
+      <span
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          // padding: "6px 0px 12px 0px",
+          margin: "-12px 0px 12px 0px",
+        }}
+      >
+        <Title level={5}>
           a momentum trading strategy using{" "}
           <a href="https://github.com/suchak1/hyperdrive">
             <i style={{ color: "#52e5ff" }}>{hyperdrive}</i>
           </a>
         </Title>
+        <Switch
+          checkedChildren="BTC (₿)"
+          unCheckedChildren="USD ($)"
+          defaultChecked
+          onChange={(checked) => setToggle(checked)}
+        />
       </span>
       {loading ? (
         <div
@@ -231,7 +220,9 @@ const Page = () => {
           <div className={styles.child}>
             {!loading ? (
               <Table
-                dataSource={previewData.stats}
+                dataSource={
+                  toggle ? previewData.BTC.stats : previewData.USD.stats
+                }
                 columns={columns}
                 pagination={false}
                 loading={loading}
