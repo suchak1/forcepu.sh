@@ -19,6 +19,15 @@ const Page = () => {
   const [loading, setLoading] = useState(true);
   const [firstLoad, setFirstLoad] = useState(true);
 
+  const formatBTC = (v) => `${Math.round(v * 10) / 10} ₿`;
+  const formatUSD = (v) => {
+    if (v < 1e3) {
+      return `$ ${v}`;
+    } else if (v < 1e6) {
+      return `$ ${v / 1e3}k`;
+    }
+    return `$ ${v / 1e6}M`;
+  };
   useEffect(() => {
     (async () => {
       const url =
@@ -120,7 +129,8 @@ const Page = () => {
     animation: {
       appear: {
         animation: "wave-in",
-        duration: firstLoad ? 4000 : 0,
+        // duration: firstLoad ? 4000 : 0,
+        duration: 4000,
       },
     },
     xAxis: {
@@ -136,7 +146,7 @@ const Page = () => {
     },
     yAxis: {
       label: {
-        formatter: (v) => (toggle ? `${v} ₿` : `$ ${v}`),
+        formatter: (v) => (toggle ? formatBTC(v) : formatUSD(v)),
       },
       grid: {
         line: {
@@ -168,9 +178,9 @@ const Page = () => {
   return (
     <>
       <Title
-        style={{
-          margin: "-10px 0px 0px",
-        }}
+      // style={{
+      //   margin: "-10px 0px 0px",
+      // }}
       >
         Leveraging AutoML to beat BTC
       </Title>
@@ -179,7 +189,8 @@ const Page = () => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          padding: "6px 0px 12px 0px",
+          // padding: "6px 0px 12px 0px",
+          margin: "-12px 0px 12px 0px",
         }}
       >
         <Title level={5}>
