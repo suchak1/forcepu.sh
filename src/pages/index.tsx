@@ -17,6 +17,7 @@ const Page = () => {
   });
   const [toggle, setToggle] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [firstLoad, setFirstLoad] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -27,7 +28,10 @@ const Page = () => {
       fetch(url, { method: "GET" })
         .then((response) => response.json())
         .then((data) => setPreviewData(data))
-        .then(() => setLoading(false));
+        .then(() => {
+          setLoading(false);
+          setFirstLoad(true);
+        });
     })();
   }, []);
 
@@ -59,7 +63,6 @@ const Page = () => {
           },
         });
 
-        // const decorator1 =
         group.addShape("marker", {
           attrs: {
             x: point.x,
@@ -70,61 +73,7 @@ const Page = () => {
             symbol,
           },
         });
-        // const decorator2 = group.addShape("marker", {
-        //   attrs: {
-        //     x: point.x,
-        //     y: point.y,
-        //     r: 5,
-        //     fill,
-        //     opacity: 0.5,
-        //     symbol,
-        //   },
-        // });
-        // const decorator3 = group.addShape("marker", {
-        //   attrs: {
-        //     x: point.x,
-        //     y: point.y,
-        //     r: 5,
-        //     fill,
-        //     opacity: 0.5,
-        //     symbol,
-        //   },
-        // });
-        // decorator1.animate(
-        //   {
-        //     r: 10,
-        //     opacity: 0,
-        //   },
-        //   {
-        //     duration: 1800,
-        //     easing: "easeLinear",
-        //     repeat: true,
-        //   }
-        // );
-        // decorator2.animate(
-        //   {
-        //     r: 10,
-        //     opacity: 0,
-        //   },
-        //   {
-        //     duration: 1800,
-        //     easing: "easeLinear",
-        //     repeat: true,
-        //     delay: 600,
-        //   }
-        // );
-        // decorator3.animate(
-        //   {
-        //     r: 10,
-        //     opacity: 0,
-        //   },
-        //   {
-        //     duration: 1800,
-        //     easing: "easeLinear",
-        //     repeat: true,
-        //     delay: 1200,
-        //   }
-        // );
+
         group.addShape("marker", {
           attrs: {
             x: point.x,
@@ -171,15 +120,31 @@ const Page = () => {
     animation: {
       appear: {
         animation: "wave-in",
-        duration: 2500,
+        duration: firstLoad ? 4000 : 0,
       },
     },
     xAxis: {
       tickCount: 10,
+      grid: {
+        line: {
+          style: {
+            lineWidth: 0,
+            strokeOpacity: 0,
+          },
+        },
+      },
     },
     yAxis: {
       label: {
         formatter: (v) => (toggle ? `${v} ₿` : `$ ${v}`),
+      },
+      grid: {
+        line: {
+          style: {
+            lineWidth: 0,
+            strokeOpacity: 0,
+          },
+        },
       },
     },
     point: {
@@ -202,13 +167,6 @@ const Page = () => {
   ];
   return (
     <>
-      {/* <span
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-        }}
-      > */}
       <Title
         style={{
           margin: "-10px 0px 0px",
@@ -216,12 +174,6 @@ const Page = () => {
       >
         Leveraging AutoML to beat BTC
       </Title>
-      {/* <Switch
-          checkedChildren="BTC (₿)"
-          unCheckedChildren="USD ($)"
-          defaultChecked
-        />
-      </span> */}
       <span
         style={{
           display: "flex",
@@ -240,7 +192,10 @@ const Page = () => {
           checkedChildren="BTC (₿)"
           unCheckedChildren="USD ($)"
           defaultChecked
-          onChange={(checked) => setToggle(checked)}
+          onChange={(checked) => {
+            setToggle(checked);
+            setFirstLoad(false);
+          }}
         />
       </span>
       {loading ? (
