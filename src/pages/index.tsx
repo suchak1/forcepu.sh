@@ -17,7 +17,6 @@ const Page = () => {
   });
   const [toggle, setToggle] = useState(true);
   const [loading, setLoading] = useState(true);
-  const [firstLoad, setFirstLoad] = useState(true);
 
   const formatBTC = (v) => `${Math.round(v * 10) / 10} ₿`;
   const formatUSD = (v) => {
@@ -37,10 +36,7 @@ const Page = () => {
       fetch(url, { method: "GET" })
         .then((response) => response.json())
         .then((data) => setPreviewData(data))
-        .then(() => {
-          setLoading(false);
-          setFirstLoad(true);
-        });
+        .then(() => setLoading(false));
     })();
   }, []);
 
@@ -129,7 +125,6 @@ const Page = () => {
     animation: {
       appear: {
         animation: "wave-in",
-        // duration: firstLoad ? 4000 : 0,
         duration: 4000,
       },
     },
@@ -203,10 +198,7 @@ const Page = () => {
           checkedChildren="BTC (₿)"
           unCheckedChildren="USD ($)"
           defaultChecked
-          onChange={(checked) => {
-            setToggle(checked);
-            setFirstLoad(false);
-          }}
+          onChange={(checked) => setToggle(checked)}
         />
       </span>
       {loading ? (
