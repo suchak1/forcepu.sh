@@ -11,7 +11,10 @@ const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 const Page = () => {
   const HODL = "HODL";
   const hyperdrive = "hyperdrive";
-  const [previewData, setPreviewData] = useState({ data: [], stats: [] });
+  const [previewData, setPreviewData] = useState({
+    BTC: { data: [], stats: [] },
+    USD: { data: [], stats: [] },
+  });
   const [toggle, setToggle] = useState(true);
   const [loading, setLoading] = useState(true);
 
@@ -56,71 +59,72 @@ const Page = () => {
           },
         });
 
-        const decorator1 = group.addShape("marker", {
+        // const decorator1 =
+        group.addShape("marker", {
           attrs: {
             x: point.x,
             y: point.y,
             r: 5,
             fill,
-            opacity: 0.5,
+            opacity: 1,
             symbol,
           },
         });
-        const decorator2 = group.addShape("marker", {
-          attrs: {
-            x: point.x,
-            y: point.y,
-            r: 5,
-            fill,
-            opacity: 0.5,
-            symbol,
-          },
-        });
-        const decorator3 = group.addShape("marker", {
-          attrs: {
-            x: point.x,
-            y: point.y,
-            r: 5,
-            fill,
-            opacity: 0.5,
-            symbol,
-          },
-        });
-        decorator1.animate(
-          {
-            r: 10,
-            opacity: 0,
-          },
-          {
-            duration: 1800,
-            easing: "easeLinear",
-            repeat: true,
-          }
-        );
-        decorator2.animate(
-          {
-            r: 10,
-            opacity: 0,
-          },
-          {
-            duration: 1800,
-            easing: "easeLinear",
-            repeat: true,
-            delay: 600,
-          }
-        );
-        decorator3.animate(
-          {
-            r: 10,
-            opacity: 0,
-          },
-          {
-            duration: 1800,
-            easing: "easeLinear",
-            repeat: true,
-            delay: 1200,
-          }
-        );
+        // const decorator2 = group.addShape("marker", {
+        //   attrs: {
+        //     x: point.x,
+        //     y: point.y,
+        //     r: 5,
+        //     fill,
+        //     opacity: 0.5,
+        //     symbol,
+        //   },
+        // });
+        // const decorator3 = group.addShape("marker", {
+        //   attrs: {
+        //     x: point.x,
+        //     y: point.y,
+        //     r: 5,
+        //     fill,
+        //     opacity: 0.5,
+        //     symbol,
+        //   },
+        // });
+        // decorator1.animate(
+        //   {
+        //     r: 10,
+        //     opacity: 0,
+        //   },
+        //   {
+        //     duration: 1800,
+        //     easing: "easeLinear",
+        //     repeat: true,
+        //   }
+        // );
+        // decorator2.animate(
+        //   {
+        //     r: 10,
+        //     opacity: 0,
+        //   },
+        //   {
+        //     duration: 1800,
+        //     easing: "easeLinear",
+        //     repeat: true,
+        //     delay: 600,
+        //   }
+        // );
+        // decorator3.animate(
+        //   {
+        //     r: 10,
+        //     opacity: 0,
+        //   },
+        //   {
+        //     duration: 1800,
+        //     easing: "easeLinear",
+        //     repeat: true,
+        //     delay: 1200,
+        //   }
+        // );
         group.addShape("marker", {
           attrs: {
             x: point.x,
@@ -147,7 +151,7 @@ const Page = () => {
   });
   const config = {
     autoFit: true,
-    data: toggle ? [] : previewData.data,
+    data: toggle ? previewData.BTC.data : previewData.USD.data,
     xField: "Time",
     yField: "Bal",
     seriesField: "Name",
@@ -167,7 +171,7 @@ const Page = () => {
     animation: {
       appear: {
         animation: "wave-in",
-        duration: 5000,
+        duration: 2500,
       },
     },
     xAxis: {
@@ -175,7 +179,7 @@ const Page = () => {
     },
     yAxis: {
       label: {
-        formatter: (v) => `$ ${v}`,
+        formatter: (v) => (toggle ? `${v} ₿` : `$ ${v}`),
       },
     },
     point: {
@@ -258,7 +262,9 @@ const Page = () => {
           <div className={styles.child}>
             {!loading ? (
               <Table
-                dataSource={toggle ? [] : previewData.stats}
+                dataSource={
+                  toggle ? previewData.BTC.stats : previewData.USD.stats
+                }
                 columns={columns}
                 pagination={false}
                 loading={loading}
