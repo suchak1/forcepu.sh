@@ -4,11 +4,11 @@ import { Typography, Spin, Table, Switch } from "antd";
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined } from "@ant-design/icons";
 import "@aws-amplify/ui/dist/style.css";
-// import "./index.css";
-import "./index.less";
-
 import styles from "./index.less";
 import { getApiUrl } from "@/utils";
+import "./index.css";
+// import "./index.less";
+
 const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 import {
@@ -40,6 +40,12 @@ const theme = createTheme({
       colorMode: "dark",
       tokens: {
         colors: {
+          // brand: {
+          //   primary: {
+          //     ...defaultTheme.tokens.colors.brand.primary,
+          //     80: '#52e5ff',
+          //   },
+          // },
           neutral: {
             // flipping the neutral palette
             10: defaultTheme.tokens.colors.neutral[100],

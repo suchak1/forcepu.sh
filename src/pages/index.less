@@ -70,16 +70,21 @@
   background-color: black !important;
 }
 
+.amplify-tabs-item {
+  font-weight: 600 !important;
+}
+
 .amplify-tabs-item[data-state="active"] {
-  color: #52e5ff !important;
-  font-weight: 600;
+  color: white !important;
 }
 
 .amplify-tabs-item[data-state="inactive"] {
-  font-weight: 600;
+  color: rgba(255, 255, 255, 0.65);
 }
 
-// [data-amplify-authenticator] [data-state=inactive]
+.amplify-tabs-item:hover[data-state="inactive"] {
+  color: rgba(255, 255, 255, 0.65);
+}
 
 [data-amplify-authenticator] [data-state="inactive"] {
   background-color: #1f1f1f !important;
