@@ -7,6 +7,11 @@ import styles from "./index.less";
 import { getApiUrl } from "@/utils";
 const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
+import { Authenticator } from "@aws-amplify/ui-react";
+import "@aws-amplify/ui-react/styles.css";
+// test if local, then use amplify configure to override - actually idk this won't work
+// amplify checkout env dev
+// amplify pull
 
 const Page = () => {
   const HODL = "HODL";
@@ -188,6 +193,14 @@ const Page = () => {
           margin: "-12px 0px 12px 0px",
         }}
       >
+        <Authenticator>
+          {({ signOut, user }) => (
+            <main>
+              <h1>Hello {user.username}</h1>
+              <button onClick={signOut}>Sign out</button>
+            </main>
+          )}
+        </Authenticator>
         <Title level={5}>
           a momentum trading strategy using{" "}
           <a href="https://github.com/suchak1/hyperdrive">

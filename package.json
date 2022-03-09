@@ -16,13 +16,16 @@
     "umi": "npx umi",
     "test": "echo \"Error: no test specified\" && exit 1",
     "test:api": "cd src/api && sam local invoke PreviewFunction --parameter-overrides $(cat parameters.env)",
-    "ci": "rm -rf node_modules && yarn install --frozen-lockfile"
+    "ci": "rm -rf node_modules && yarn install --frozen-lockfile",
+    "amp": "amplify import auth"
   },
   "author": "Krish Suchak <suchak.krish@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "@ant-design/charts": "^1.2.14",
     "@ant-design/icons": "^4.6.2",
+    "@aws-amplify/cli": "^7.6.21",
+    "@aws-amplify/ui-react": "^2.5.0",
     "@nfte/react": "^1.0.4",
     "@umijs/plugin-antd": "^0.9.1",
     "@umijs/plugin-dva": "^0.12.0",
@@ -30,6 +33,7 @@
     "@umijs/plugin-request": "^2.5.2",
     "@wojtekmaj/react-hooks": "^1.11.1",
     "antd": "4.16.6",
+    "aws-amplify": "^4.3.14",
     "date-fns": "^2.21.2",
     "faker": "^5.5.3",
     "react-hover-video-player": "^9.4.0",
