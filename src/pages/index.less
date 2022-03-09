@@ -2,14 +2,17 @@
 
 // :root {
 //   --amplify-background-color: tomato;
+//   --amplify-components-button-link-color: red !important;
 // }
 
 // .amplify-authenticator {
-//   --background-color: green;
+//   --background-color: green !important;
+//   --amplify-colors-font-primary: pink !important;
 // }
 
 // :global(.amplify-authenticator) {
-//   --background-color: green;
+//   --background-color: green !important;
+//   --amplify-colors-font-primary: pink !important;
 // }
 
 /* :global(.amplify-button[data-variation= primary ]) { */
@@ -28,14 +31,14 @@
 // }
 
 // This one works in Dark Reader ext!
-.amplify-button {
-  font-size: 2rem;
-  padding: 1rem 2rem;
-  background: none;
-  border: 2px solid black;
-  background-color: red !important;
-  --amplify-colors-font-primary: pink;
-}
+// .amplify-button {
+//   font-size: 2rem;
+//   padding: 1rem 2rem;
+//   background: none;
+//   border: 2px solid black;
+//   background-color: red !important;
+//   --amplify-colors-font-primary: pink;
+// }
 
 // :global(.amplify-button) {
 //   font-size: 2rem;
@@ -45,6 +48,42 @@
 //   background-color: red !important;
 //   --amplify-colors-font-primary: pink;
 // }
+
+.amplify-button[data-variation="primary"] {
+  background-color: #52e5ff !important;
+  font-weight: 600;
+}
+
+/* .amplify-button:hover[data-variation= primary ] { */
+//   background-color: transparent !important;
+// }
+
+.amplify-button[data-variation="link"] {
+  color: #52e5ff !important;
+}
+
+.amplify-button:hover[data-variation="link"] {
+  background-color: transparent !important;
+}
+
+.federated-sign-in-button:hover {
+  background-color: black !important;
+}
+
+.amplify-tabs-item[data-state="active"] {
+  color: #52e5ff !important;
+  font-weight: 600;
+}
+
+.amplify-tabs-item[data-state="inactive"] {
+  font-weight: 600;
+}
+
+// [data-amplify-authenticator] [data-state=inactive]
+
+[data-amplify-authenticator] [data-state="inactive"] {
+  background-color: #1f1f1f !important;
+}
 
 @media (prefers-color-scheme: dark) {
   [data-amplify-color-mode="system"] {
