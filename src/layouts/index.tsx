@@ -114,7 +114,7 @@ export default function Layout({ route, children }) {
         style={{
           padding: 24,
           marginTop: headerHeight,
-          height: "calc(100vh - 64px)",
+          height: `calc(100vh - ${headerHeight}px)`,
         }}
       >
         {children}

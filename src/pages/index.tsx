@@ -7,11 +7,44 @@ import styles from "./index.less";
 import { getApiUrl } from "@/utils";
 const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
-import { Authenticator } from "@aws-amplify/ui-react";
+import {
+  Authenticator,
+  AmplifyProvider,
+  createTheme,
+  defaultTheme,
+} from "@aws-amplify/ui-react";
+import { Amplify } from "aws-amplify";
 import "@aws-amplify/ui-react/styles.css";
+import awsExports from "@/aws-exports";
+
+Amplify.configure(awsExports);
 // test if local, then use amplify configure to override - actually idk this won't work
 // amplify checkout env dev
 // amplify pull
+
+const theme = createTheme({
+  name: "dark-mode-theme",
+  overrides: [
+    {
+      colorMode: "dark",
+      tokens: {
+        colors: {
+          neutral: {
+            // flipping the neutral palette
+            10: defaultTheme.tokens.colors.neutral[100],
+            20: defaultTheme.tokens.colors.neutral[90],
+            40: defaultTheme.tokens.colors.neutral[80],
+            80: defaultTheme.tokens.colors.neutral[40],
+            90: defaultTheme.tokens.colors.neutral[20],
+            100: defaultTheme.tokens.colors.neutral[10],
+          },
+          black: { value: "#fff" },
+          white: { value: "#000" },
+        },
+      },
+    },
+  ],
+});
 
 const Page = () => {
   const HODL = "HODL";
@@ -193,14 +226,16 @@ const Page = () => {
           margin: "-12px 0px 12px 0px",
         }}
       >
-        <Authenticator>
-          {({ signOut, user }) => (
-            <main>
-              <h1>Hello {user.username}</h1>
-              <button onClick={signOut}>Sign out</button>
-            </main>
-          )}
-        </Authenticator>
+        <AmplifyProvider theme={theme} colorMode="dark">
+          <Authenticator>
+            {({ signOut, user }) => (
+              <main>
+                <h1>Hello {user.username}</h1>
+                <button onClick={signOut}>Sign out</button>
+              </main>
+            )}
+          </Authenticator>
+        </AmplifyProvider>
         <Title level={5}>
           a momentum trading strategy using{" "}
           <a href="https://github.com/suchak1/hyperdrive">
