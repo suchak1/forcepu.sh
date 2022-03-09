@@ -93,20 +93,35 @@ export default function Layout({ route, children }) {
               (pages.indexOf(window.location.pathname.slice(1)) + 1).toString(),
             ])}
           >
-            {routes.map((route, idx) => (
-              <Menu.Item
-                className={overrides}
-                key={idx}
-                style={
-                  idx === 0
-                    ? { backgroundColor: "transparent" }
-                    : { display: "flex", alignItems: "center" }
-                }
-              >
-                <NavLink to={route.to}>{route.text}</NavLink>
-              </Menu.Item>
-            ))}
+            <span
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                justifySelf: "space-between",
+                alignContent: "space-between",
+              }}
+            >
+              <span>
+                {routes.map((route, idx) => (
+                  <Menu.Item
+                    className={overrides}
+                    key={idx}
+                    style={
+                      idx === 0
+                        ? { backgroundColor: "transparent" }
+                        : { display: "flex", alignItems: "center" }
+                    }
+                  >
+                    <NavLink to={route.to}>{route.text}</NavLink>
+                  </Menu.Item>
+                ))}
+              </span>
+              <span>Unlock BUY/SELL signals</span>
+              {/* move to top right, make buy blue and sell magenta,  */}
+            </span>
           </Menu>
+          {/* test */}
         </span>
       </AntLayout.Header>
 

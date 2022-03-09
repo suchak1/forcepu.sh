@@ -1,11 +1,62 @@
+/* These don t do anything */
+
+// :root {
+//   --amplify-background-color: tomato;
+// }
+
+// .amplify-authenticator {
+//   --background-color: green;
+// }
+
+// :global(.amplify-authenticator) {
+//   --background-color: green;
+// }
+
+/* :global(.amplify-button[data-variation= primary ]) { */
+//   background-color: green;
+//   --amplify-colors-font-primary: pink;
+// }
+
+/* .amplify-button[data-variation= primary ] { */
+//   background-color: green;
+//   --amplify-colors-font-primary: pink;
+// }
+
+/* [data-amplify-theme= dark-mode-theme ] { */
+//   background-color: green;
+//   --amplify-colors-font-primary: pink;
+// }
+
+// This one works in Dark Reader ext!
+.amplify-button {
+  font-size: 2rem;
+  padding: 1rem 2rem;
+  background: none;
+  border: 2px solid black;
+  background-color: red !important;
+  --amplify-colors-font-primary: pink;
+}
+
+// :global(.amplify-button) {
+//   font-size: 2rem;
+//   padding: 1rem 2rem;
+//   background: none;
+//   border: 2px solid black;
+//   background-color: red !important;
+//   --amplify-colors-font-primary: pink;
+// }
+
 @media (prefers-color-scheme: dark) {
   [data-amplify-color-mode="system"] {
-    --amplify-colors-background-primary: black;
+    --amplify-colors-background-primary: red;
+    --amplify-components-button-primary-background-color: red;
   }
 }
 
 [data-amplify-color-mode="dark"] {
-  --amplify-colors-background-primary: black;
+  --amplify-colors-background-primary: red;
+  --amplify-colors-font-primary: red;
+  --amplify-components-button-primary-background-color: red;
 }
 
 .parent {

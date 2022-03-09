@@ -3,6 +3,10 @@ import { useState, useEffect } from "react";
 import { Typography, Spin, Table, Switch } from "antd";
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined } from "@ant-design/icons";
+import "@aws-amplify/ui/dist/style.css";
+// import "./index.css";
+import "./index.less";
+
 import styles from "./index.less";
 import { getApiUrl } from "@/utils";
 const { Title } = Typography;
@@ -24,6 +28,13 @@ Amplify.configure(awsExports);
 
 const theme = createTheme({
   name: "dark-mode-theme",
+  // tokens: {
+  //   colors: {
+  //     button: {
+  //       primary: { : "blue" },
+  //     },
+  //   },
+  // },
   overrides: [
     {
       colorMode: "dark",
@@ -227,7 +238,7 @@ const Page = () => {
         }}
       >
         <AmplifyProvider theme={theme} colorMode="dark">
-          <Authenticator>
+          <Authenticator style={{ "--amplify-background-color": "red" }}>
             {({ signOut, user }) => (
               <main>
                 <h1>Hello {user.username}</h1>
