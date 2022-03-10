@@ -19,6 +19,7 @@ const styles = {
 };
 // original: gym, art, docs, app
 const pages = [
+  "star",
   // "gym",
   // "art",
   // "docs"
@@ -99,8 +100,19 @@ export default function Layout({ route, children }) {
                 key={idx}
                 style={
                   idx === 0
-                    ? { backgroundColor: "transparent" }
-                    : { display: "flex", alignItems: "center" }
+                    ? {
+                        backgroundColor: "transparent",
+                        height: "10px !important",
+                        overflow: "clip",
+                        fontSize: "5px !important",
+                      }
+                    : {
+                        display: "flex",
+                        alignItems: "center",
+                        height: "10px !important",
+                        overflow: "clip",
+                        fontSize: "5px !important",
+                      }
                 }
               >
                 <NavLink to={route.to}>{route.text}</NavLink>
