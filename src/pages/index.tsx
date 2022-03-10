@@ -6,8 +6,8 @@ import { LoadingOutlined } from "@ant-design/icons";
 // import "@aws-amplify/ui/dist/style.css";
 // import styles from "./index.less";
 import { getApiUrl } from "@/utils";
-import "./index.css";
-// import "./index.less";
+// import "./index.css";
+import "./index.less";
 
 const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
