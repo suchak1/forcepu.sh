@@ -1,9 +1,10 @@
 // HOVER WHITE
 
 // google sign in button
-.federated-sign-in-button:focus,
-.federated-sign-in-button:hover {
-  background-color: #1f1f1f !important;
+.federated-sign-in-button:hover,
+.federated-sign-in-button:focus .federated-sign-in-button:active {
+  background-color: #1d1d1d !important;
+  border-color: transparent !important;
 }
 
 // inactive tab
@@ -30,6 +31,8 @@
 
   // forgot your password
   --amplify-components-button-link-hover-background-color: transparent !important;
+  --amplify-components-button-link-focus-background-color: transparent !important;
+  --amplify-components-button-link-active-background-color: transparent !important;
   --amplify-components-button-link-color: rgba(255, 255, 255, 0.65) !important;
 
   // reveal password button
@@ -39,11 +42,27 @@
   --amplify-components-button-hover-background-color: transparent !important;
   --amplify-components-button-focus-background-color: transparent !important;
   --amplify-components-button-active-background-color: transparent !important;
-  --amplify-components-button-hover-border-color: white !important;
-  --amplify-components-button-focus-border-color: white !important;
-  --amplify-components-button-active-border-color: white !important;
+  --amplify-components-button-hover-border-color: rgba(
+    255,
+    255,
+    255,
+    0.2
+  ) !important;
+  --amplify-components-button-focus-border-color: rgba(
+    255,
+    255,
+    255,
+    0.2
+  ) !important;
+  --amplify-components-button-active-border-color: rgba(
+    255,
+    255,
+    255,
+    0.2
+  ) !important;
 
-  --amplify-colors-border-primary: rgba(255, 255, 255, 0.25) !important;
+  // border outline for modal and inputs
+  --amplify-colors-border-primary: rgba(255, 255, 255, 0.2) !important;
 }
 
 // make eye blue on hover, focus, active
@@ -59,15 +78,15 @@
 // }
 
 // // inactive tab
-/* [data-amplify-authenticator] [data-state= inactive ] { */
+// [data-amplify-authenticator] [data-state= inactive ] {
 //   color: rgba(255, 255, 255, 0.65) !important;
 // }
 
-/* [data-amplify-authenticator] [data-state= inactive ]:hover { */
+// [data-amplify-authenticator] [data-state= inactive ]:hover {
 //   color: white !important;
 // }
 
-/* [data-amplify-theme= dark-mode-theme ] { */
+// [data-amplify-theme= dark-mode-theme ] {
 //   --amplify-colors-brand-primary-80: #52e5ff !important;
 //   --amplify-font-weights-bold: 600 !important;
 //   --amplify-colors-font-focus: #52e5ff !important;
@@ -91,6 +110,9 @@
 //   // sign in button
 //   --amplify-components-button-primary-background-color: white !important;
 //   --amplify-components-button-primary-hover-background-color: #52e5ff !important;
+
+// --amplify-colors-border-primary: rgba(255, 255, 255, 0.25) !important;
+
 // }
 
 .parent {
