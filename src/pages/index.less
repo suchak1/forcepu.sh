@@ -74,8 +74,16 @@
 //   background-color: transparent !important;
 // }
 
-// .federated-sign-in-button:hover {
-//   background-color: black !important;
+.federated-sign-in-button:hover {
+  background-color: #1f1f1f !important;
+}
+
+.federated-sign-in-button:focus {
+  background-color: #1f1f1f !important;
+}
+
+// .federated-sign-in-button:hover .amplify-text {
+//   color: black !important;
 // }
 
 // .amplify-tabs-item {
@@ -114,12 +122,17 @@
 [data-amplify-theme="dark-mode-theme"] {
   --amplify-colors-brand-primary-80: #52e5ff !important;
   --amplify-font-weights-bold: 600 !important;
-  --amplify-colors-font-focus: white !important;
-  --amplify-colors-font-hover: #52e5ff !important;
-  --amplify-colors-font-focus: white !important;
-  --amplify-colors-font-active: white !important;
-  --amplify-colors-background-secondary: #1f1f1f !important;
+  --amplify-colors-font-focus: #52e5ff !important;
+  --amplify-colors-font-hover: white !important;
+  --amplify-colors-font-active: #52e5ff !important;
+  --amplify-colors-background-secondary: transparent !important;
   --amplify-colors-font-secondary: rgba(255, 255, 255, 0.65) !important;
+  --amplify-components-button-link-hover-background-color: transparent !important;
+  --amplify-components-button-link-color: white !important;
+  --amplify-components-button-link-hover-color: #52e5ff !important;
+
+  --amplify-components-button-primary-background-color: white !important;
+  --amplify-components-button-primary-hover-background-color: #52e5ff !important;
 }
 
 .parent {
