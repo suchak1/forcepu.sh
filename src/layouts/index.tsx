@@ -1,13 +1,70 @@
 import React from "react";
 import { NavLink } from "umi";
-import { Layout as AntLayout, Menu, PageHeader, Typography, List } from "antd";
+import {
+  Layout as AntLayout,
+  Menu,
+  PageHeader,
+  Typography,
+  List,
+  Dropdown,
+  Button,
+} from "antd";
+import { DownOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  Authenticator,
+  AmplifyProvider,
+  createTheme,
+  defaultTheme,
+} from "@aws-amplify/ui-react";
+import { Amplify } from "aws-amplify";
+import "@aws-amplify/ui-react/styles.css";
+import awsExports from "@/aws-exports";
+
 import BTC from "../../assets/favicon.ico";
 import BTC_ICE from "../../assets/btc_ice.png";
+import overrides from "./index.less";
+import "./index.less";
 
 // import "antd/lib/menu/style/index.css";
 // import "antd/lib/menu/style/index.less";
+Amplify.configure(awsExports);
 
-import overrides from "./index.less";
+const theme = createTheme({
+  name: "dark-mode-theme",
+  // tokens: {
+  //   colors: {
+  //     button: {
+  //       primary: { : "blue" },
+  //     },
+  //   },
+  // },
+  overrides: [
+    {
+      colorMode: "dark",
+      tokens: {
+        colors: {
+          // brand: {
+          //   primary: {
+          //     ...defaultTheme.tokens.colors.brand.primary,
+          //     80: '#52e5ff',
+          //   },
+          // },
+          neutral: {
+            // flipping the neutral palette
+            10: defaultTheme.tokens.colors.neutral[100],
+            20: defaultTheme.tokens.colors.neutral[90],
+            40: defaultTheme.tokens.colors.neutral[80],
+            80: defaultTheme.tokens.colors.neutral[40],
+            90: defaultTheme.tokens.colors.neutral[20],
+            100: defaultTheme.tokens.colors.neutral[10],
+          },
+          black: { value: "#fff" },
+          white: { value: "#000" },
+        },
+      },
+    },
+  ],
+});
 
 // import Page from "@/pages";
 const styles = {
@@ -19,7 +76,7 @@ const styles = {
 };
 // original: gym, art, docs, app
 const pages = [
-  "get started",
+  // "get started",
   // "gym",
   // "art",
   // "docs"
@@ -69,7 +126,7 @@ export default function Layout({ route, children }) {
     <AntLayout>
       <AntLayout.Header
         style={{
-          // zIndex: 1000,
+          zIndex: 1000,
           width: "100%",
           position: "fixed",
           height: headerHeight,
@@ -113,6 +170,28 @@ export default function Layout({ route, children }) {
               </Menu.Item>
             ))}
           </Menu>
+          <Dropdown
+            // arrow={{ pointAtCenter: true }}
+            placement="bottomRight"
+            overlay={
+              <AmplifyProvider theme={theme} colorMode="dark">
+                <Authenticator>
+                  {({ signOut, user }) => (
+                    <main>
+                      <h1>Hello {user.username}</h1>
+                      <button onClick={signOut}>Sign out</button>
+                    </main>
+                  )}
+                </Authenticator>
+              </AmplifyProvider>
+            }
+          >
+            {/* maybe "Get signals" or "Get started" */}
+            <Button>
+              Get started
+              <DownOutlined />
+            </Button>
+          </Dropdown>
         </span>
       </AntLayout.Header>
 
