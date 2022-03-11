@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "umi";
-import { Layout as AntLayout, Menu, Dropdown, Button } from "antd";
+import { Layout as AntLayout, Menu, Dropdown, Button, Modal } from "antd";
 import { DownOutlined, UserOutlined } from "@ant-design/icons";
 import {
   Authenticator,
@@ -109,6 +109,8 @@ const headerHeight = 64;
 // remove menu and menu items?
 // or at least move these pieces out
 export default function Layout({ route, children }) {
+  const [showLogin, setShowLogin] = useState(false);
+
   return (
     <AntLayout>
       <AntLayout.Header
@@ -151,7 +153,28 @@ export default function Layout({ route, children }) {
               </Menu.Item>
             ))}
           </Menu>
-          <Dropdown
+          <Button onClick={() => setShowLogin(true)}>
+            {/* maybe "Get signals" or "Get started" */}
+            Get signals
+          </Button>
+          <Modal
+            // centered
+            visible={showLogin}
+            closable={false}
+            onCancel={() => setShowLogin(false)}
+          >
+            <AmplifyProvider theme={theme} colorMode="dark">
+              <Authenticator>
+                {({ signOut, user }) => (
+                  <main>
+                    <h1>Hello {user.username}</h1>
+                    <button onClick={signOut}>Sign out</button>
+                  </main>
+                )}
+              </Authenticator>
+            </AmplifyProvider>
+          </Modal>
+          {/* <Dropdown
             trigger={[trigger]}
             placement="bottomRight"
             overlay={
@@ -167,12 +190,11 @@ export default function Layout({ route, children }) {
               </AmplifyProvider>
             }
           >
-            {/* maybe "Get signals" or "Get started" */}
             <Button>
               Get signals
               {trigger === "hover" && <DownOutlined />}
             </Button>
-          </Dropdown>
+          </Dropdown> */}
         </span>
       </AntLayout.Header>
 
