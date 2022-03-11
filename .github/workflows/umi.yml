@@ -39,7 +39,7 @@ jobs:
 
       - name: Configure Amplify [dev]
         # run: APP_ID="${APP_ID}" ENV="dev" npm run amplify
-        run: APP_ID="${APP_ID}" ENV="dev" amplify/pull.sh
+        run: APP_ID="${APP_ID}" ENV="dev" npm run amp
         env:
           APP_ID: ${{ secrets.APP_ID }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -49,7 +49,7 @@ jobs:
 
       - name: Configure Amplify [prod]
         # run: APP_ID="${APP_ID}" ENV="prod" npm run amplify
-        run: APP_ID="${APP_ID}" ENV="prod" amplify/pull.sh
+        run: APP_ID="${APP_ID}" ENV="prod" npm run amp
         env:
           APP_ID: ${{ secrets.APP_ID }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
