@@ -19,7 +19,7 @@ const styles = {
 };
 // original: gym, art, docs, app
 const pages = [
-  "star",
+  "get started",
   // "gym",
   // "art",
   // "docs"
@@ -69,7 +69,7 @@ export default function Layout({ route, children }) {
     <AntLayout>
       <AntLayout.Header
         style={{
-          zIndex: 1000,
+          // zIndex: 1000,
           width: "100%",
           position: "fixed",
           height: headerHeight,
@@ -84,7 +84,7 @@ export default function Layout({ route, children }) {
             style={{ marginLeft: -30 }}
           ></img>
           <Menu
-            style={{ height: headerHeight }}
+            style={{ height: headerHeight, width: "100%" }}
             theme="dark"
             mode="horizontal"
             defaultSelectedKeys={["0"].concat([
@@ -102,16 +102,10 @@ export default function Layout({ route, children }) {
                   idx === 0
                     ? {
                         backgroundColor: "transparent",
-                        height: "10px !important",
-                        overflow: "clip",
-                        fontSize: "5px !important",
                       }
                     : {
                         display: "flex",
                         alignItems: "center",
-                        height: "10px !important",
-                        overflow: "clip",
-                        fontSize: "5px !important",
                       }
                 }
               >
