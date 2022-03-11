@@ -1,14 +1,6 @@
 import React from "react";
 import { NavLink } from "umi";
-import {
-  Layout as AntLayout,
-  Menu,
-  PageHeader,
-  Typography,
-  List,
-  Dropdown,
-  Button,
-} from "antd";
+import { Layout as AntLayout, Menu, Dropdown, Button } from "antd";
 import { DownOutlined, UserOutlined } from "@ant-design/icons";
 import {
   Authenticator,
@@ -20,7 +12,6 @@ import { Amplify } from "aws-amplify";
 import "@aws-amplify/ui-react/styles.css";
 import awsExports from "@/aws-exports";
 
-import BTC from "../../assets/favicon.ico";
 import BTC_ICE from "../../assets/btc_ice.png";
 import overrides from "./index.less";
 import "./index.less";
@@ -66,21 +57,17 @@ const theme = createTheme({
   ],
 });
 
-// import Page from "@/pages";
-const styles = {
-  ice: { color: "#52e5ff", fontWeight: 600 },
-  white: { color: "white", fontWeight: 600 },
-  // wrapper: {
-  //   overflow: "hidden",
-  // },
-};
 // original: gym, art, docs, app
-const pages = [
+const pages: string[] = [
   // "get started",
   // "gym",
   // "art",
   // "docs"
 ];
+
+const trigger = "click";
+// maybe make login open a modal
+// adjust "Get signals" colors - magenta or btc gold?
 
 // "docs" should be example of how to use library or service
 // resume should be in about section
@@ -89,7 +76,7 @@ const pages = [
 // "gym" should be hidden?
 // split gym, art/gallery to right side of nav
 
-const capitalize = (s) => s[0].toUpperCase() + s.slice(1);
+const capitalize = (s: string | any[]) => s[0].toUpperCase() + s.slice(1);
 
 const routes = [
   {
@@ -133,13 +120,7 @@ export default function Layout({ route, children }) {
         }}
       >
         <span style={{ display: "flex", alignItems: "center" }}>
-          <img
-            className="logo"
-            src={BTC_ICE}
-            width={24}
-            height={24}
-            style={{ marginLeft: -30 }}
-          ></img>
+          <img className="logo" src={BTC_ICE} width={24} height={24}></img>
           <Menu
             style={{ height: headerHeight, width: "100%" }}
             theme="dark"
@@ -153,7 +134,7 @@ export default function Layout({ route, children }) {
           >
             {routes.map((route, idx) => (
               <Menu.Item
-                className={overrides}
+                className={[overrides.white, overrides.ice].join(" ")}
                 key={idx}
                 style={
                   idx === 0
@@ -171,7 +152,7 @@ export default function Layout({ route, children }) {
             ))}
           </Menu>
           <Dropdown
-            // arrow={{ pointAtCenter: true }}
+            trigger={[trigger]}
             placement="bottomRight"
             overlay={
               <AmplifyProvider theme={theme} colorMode="dark">
@@ -188,8 +169,8 @@ export default function Layout({ route, children }) {
           >
             {/* maybe "Get signals" or "Get started" */}
             <Button>
-              Get started
-              <DownOutlined />
+              Get signals
+              {trigger === "hover" && <DownOutlined />}
             </Button>
           </Dropdown>
         </span>

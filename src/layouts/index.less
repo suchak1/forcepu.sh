@@ -1,20 +1,24 @@
-.ant-btn:hover,
-.ant-btn:focus,
-.ant-btn:active {
-  // color: #52e5ff;
-  color: white;
-  border-color: #52e5ff;
+:global(.ant-btn:hover),
+:global(.ant-btn:focus),
+:global(.ant-btn:active) {
+  color: #f7931a;
+  border-color: #f7931a;
+  // border-color: white;
 }
 
-// .ant-btn,
-// .ant-btn:hover,
-// .ant-btn:focus,
-// .ant-btn:active {
-//   border-color: transparent;
+// :global(.ant-btn:focus) {
+//   color: inherit;
+//   border-color: inherit;
+// }
+// :global(.ant-btn) {
+// color: white;
+// border-color: transparent;
 // }
 
 :global(.ant-layout-header) {
-  background: #1d1d1d;
+  // background: #1d1d1d;
+  padding: 0 24px 0 20px;
+  // change right align (2nd param) to 20px or left align (4th param) to 24px?
 }
 
 :global(.ant-menu.ant-menu-dark) {
