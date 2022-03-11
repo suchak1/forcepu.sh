@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { NavLink } from "umi";
-import { Layout as AntLayout, Menu, Dropdown, Button, Modal } from "antd";
-import { DownOutlined, UserOutlined } from "@ant-design/icons";
+import { Layout as AntLayout, Menu, Button, Modal } from "antd";
 import {
   Authenticator,
   AmplifyProvider,
@@ -16,30 +15,15 @@ import BTC_ICE from "../../assets/btc_ice.png";
 import overrides from "./index.less";
 import "./index.less";
 
-// import "antd/lib/menu/style/index.css";
-// import "antd/lib/menu/style/index.less";
 Amplify.configure(awsExports);
 
 const theme = createTheme({
   name: "dark-mode-theme",
-  // tokens: {
-  //   colors: {
-  //     button: {
-  //       primary: { : "blue" },
-  //     },
-  //   },
-  // },
   overrides: [
     {
       colorMode: "dark",
       tokens: {
         colors: {
-          // brand: {
-          //   primary: {
-          //     ...defaultTheme.tokens.colors.brand.primary,
-          //     80: '#52e5ff',
-          //   },
-          // },
           neutral: {
             // flipping the neutral palette
             10: defaultTheme.tokens.colors.neutral[100],
@@ -155,7 +139,7 @@ export default function Layout({ route, children }) {
           </Menu>
           <Button onClick={() => setShowLogin(true)}>
             {/* maybe "Get signals" or "Get started" */}
-            Get signals
+            Get started
           </Button>
           <Modal
             // centered
@@ -165,36 +149,18 @@ export default function Layout({ route, children }) {
           >
             <AmplifyProvider theme={theme} colorMode="dark">
               <Authenticator>
-                {({ signOut, user }) => (
-                  <main>
-                    <h1>Hello {user.username}</h1>
-                    <button onClick={signOut}>Sign out</button>
-                  </main>
-                )}
-              </Authenticator>
-            </AmplifyProvider>
-          </Modal>
-          {/* <Dropdown
-            trigger={[trigger]}
-            placement="bottomRight"
-            overlay={
-              <AmplifyProvider theme={theme} colorMode="dark">
-                <Authenticator>
-                  {({ signOut, user }) => (
+                {({ signOut, user }) => {
+                  console.log(user);
+                  return (
                     <main>
                       <h1>Hello {user.username}</h1>
                       <button onClick={signOut}>Sign out</button>
                     </main>
-                  )}
-                </Authenticator>
-              </AmplifyProvider>
-            }
-          >
-            <Button>
-              Get signals
-              {trigger === "hover" && <DownOutlined />}
-            </Button>
-          </Dropdown> */}
+                  );
+                }}
+              </Authenticator>
+            </AmplifyProvider>
+          </Modal>
         </span>
       </AntLayout.Header>
 

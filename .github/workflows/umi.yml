@@ -37,10 +37,24 @@ jobs:
       - name: Install dependencies
         run: npm run ci
 
-      - name: Build app [prod]
-        run: npm run build:umi && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV
+      - name: Configure Amplify [dev]
+        # run: APP_ID="${APP_ID}" ENV="dev" npm run amplify
+        run: APP_ID="${APP_ID}" ENV="dev" amplify/pull.sh
         env:
-          AWS_S3_BUCKET: ${{ secrets.FORCEPUSH_BUCKET }}
+          APP_ID: ${{ secrets.APP_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+        if: ${{ github.ref != 'refs/heads/master' }}
+
+      - name: Configure Amplify [prod]
+        # run: APP_ID="${APP_ID}" ENV="prod" npm run amplify
+        run: APP_ID="${APP_ID}" ENV="prod" amplify/pull.sh
+        env:
+          APP_ID: ${{ secrets.APP_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
         if: ${{ github.ref == 'refs/heads/master' }}
 
       - name: Build app [dev]
@@ -48,6 +62,12 @@ jobs:
         env:
           AWS_S3_BUCKET: ${{ secrets.FORCEPUSH_DEV_BUCKET }}
         if: ${{ github.ref != 'refs/heads/master' }}
+
+      - name: Build app [prod]
+        run: npm run build:umi && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV
+        env:
+          AWS_S3_BUCKET: ${{ secrets.FORCEPUSH_BUCKET }}
+        if: ${{ github.ref == 'refs/heads/master' }}
 
       - name: Deploy umi
         uses: jakejarvis/s3-sync-action@master

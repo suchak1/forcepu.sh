@@ -17,13 +17,14 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "test:api": "cd src/api && sam local invoke PreviewFunction --parameter-overrides $(cat parameters.env)",
     "ci": "rm -rf node_modules && yarn install --frozen-lockfile",
-    "amp": "amplify import auth"
+    "amp": "amplify import auth",
   },
   "author": "Krish Suchak <suchak.krish@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "@ant-design/charts": "^1.3.5",
     "@ant-design/icons": "^4.7.0",
+    "@aws-amplify/cli": "^7.6.23",
     "@aws-amplify/ui-react": "^2.9.0",
     "@nfte/react": "^1.0.4",
     "@umijs/plugin-antd": "^0.15.0",
