@@ -39,6 +39,8 @@ jobs:
 
       - name: Decrypt files
         run: FILE="amplify/team-provider-info.json" util/decrypt.sh
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Configure AWS credentials
         run: |
