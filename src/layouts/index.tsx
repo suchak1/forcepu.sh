@@ -4,6 +4,7 @@ import { Layout as AntLayout, Menu, Button, Modal } from "antd";
 import {
   Authenticator,
   AmplifyProvider,
+  useAuthenticator,
   createTheme,
   defaultTheme,
 } from "@aws-amplify/ui-react";
@@ -49,10 +50,6 @@ const pages: string[] = [
   // "docs"
 ];
 
-const trigger = "click";
-// maybe make login open a modal
-// adjust "Get signals" colors - magenta or btc gold?
-
 // "docs" should be example of how to use library or service
 // resume should be in about section
 // home page should be "app"
@@ -92,9 +89,17 @@ const headerHeight = 64;
 // add logo to forcepush div
 // remove menu and menu items?
 // or at least move these pieces out
-export default function Layout({ route, children }) {
-  const [showLogin, setShowLogin] = useState(false);
 
+const Layout = ({ route, children }) => {
+  const [showLogin, setShowLogin] = useState(false);
+  // const [signedIn, setSignedIn] = useState(false);
+  // const [name, setName] = useState("");
+  // const [signOutFx, setSignOutFx] = useState(() => {});
+  const { user, signOut } = useAuthenticator((context) => [context.user]);
+  const { route: r } = useAuthenticator((context) => [context.route]);
+  console.log(user);
+  console.log(signOut);
+  console.log(r);
   return (
     <AntLayout>
       <AntLayout.Header
@@ -137,12 +142,12 @@ export default function Layout({ route, children }) {
               </Menu.Item>
             ))}
           </Menu>
-          <Button onClick={() => setShowLogin(true)}>
+          <Button onClick={() => (user ? {} : setShowLogin(true))}>
             {/* maybe "Get signals" or "Get started" */}
-            Get started
+            {user ? `signed in as ${user?.attributes?.name}` : "Get started"}
           </Button>
+
           <Modal
-            // centered
             visible={showLogin}
             closable={false}
             onCancel={() => setShowLogin(false)}
@@ -150,10 +155,16 @@ export default function Layout({ route, children }) {
             <AmplifyProvider theme={theme} colorMode="dark">
               <Authenticator>
                 {({ signOut, user }) => {
-                  console.log(user);
+                  // setSignedIn(true);
+                  // setName(user.attributes?.name || user.attributes?.email);
+                  // setSignOutFx(signOut);
+
                   return (
                     <main>
-                      <h1>Hello {user.username}</h1>
+                      <h1>
+                        signed in as{" "}
+                        {user.attributes?.name || user.attributes?.email}
+                      </h1>
                       <button onClick={signOut}>Sign out</button>
                     </main>
                   );
@@ -161,6 +172,7 @@ export default function Layout({ route, children }) {
               </Authenticator>
             </AmplifyProvider>
           </Modal>
+          {user && <Button onClick={signOut}>Sign out</Button>}
         </span>
       </AntLayout.Header>
 
@@ -175,4 +187,10 @@ export default function Layout({ route, children }) {
       </AntLayout.Content>
     </AntLayout>
   );
-}
+};
+
+export default ({ route, children }) => (
+  <Authenticator.Provider>
+    <Layout route={route}>{children}</Layout>
+  </Authenticator.Provider>
+);
