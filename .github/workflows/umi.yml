@@ -37,6 +37,9 @@ jobs:
       - name: Install dependencies
         run: npm run ci
 
+      - name: Install Amplify CLI
+        run: npm install -g @aws-amplify/cli
+
       - name: Decrypt files
         run: FILE="amplify/team-provider-info.json" util/decrypt.sh
         env:
