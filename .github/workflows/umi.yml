@@ -37,25 +37,45 @@ jobs:
       - name: Install dependencies
         run: npm run ci
 
-      - name: Configure Amplify [dev]
-        # run: APP_ID="${APP_ID}" ENV="dev" npm run amplify
-        run: APP_ID="${APP_ID}" ENV="dev" npm run amp
+      - name: Decrypt files
+        run: FILE="amplify/team-provider-info.json" util/decrypt.sh
+
+      - name: Configure AWS credentials
+        run: |
+          mkdir -p ~/.aws
+
+          echo "[default]" > ~/.aws/config
+          echo "region = ${AWS_DEFAULT_REGION}" >> ~/.aws/config
+
+          echo "[default]" > ~/.aws/credentials
+          echo "aws_access_key_id = ${AWS_ACCESS_KEY_ID}" >> ~/.aws/credentials
+          echo "aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}" >> ~/.aws/credentials
+
         env:
-          APP_ID: ${{ secrets.APP_ID }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Configure Amplify [dev]
+        run: |
+          echo "{ \"projectPath\": \"${PWD}\", \"envName\": \"${ENV}\" }" > amplify/.config/local-env-info.json
+          amplify pull --appId "${APP_ID}" --envName "${ENV}"
+        env:
+          ENV: dev
+          APP_ID: ${{ secrets.APP_ID }}
         if: ${{ github.ref != 'refs/heads/master' }}
 
       - name: Configure Amplify [prod]
-        # run: APP_ID="${APP_ID}" ENV="prod" npm run amplify
-        run: APP_ID="${APP_ID}" ENV="prod" npm run amp
+        run: |
+          echo "{ \"projectPath\": \"${PWD}\", \"envName\": \"${ENV}\" }" > amplify/.config/local-env-info.json
+          amplify pull --appId "${APP_ID}" --envName "${ENV}"
         env:
+          ENV: prod
           APP_ID: ${{ secrets.APP_ID }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
         if: ${{ github.ref == 'refs/heads/master' }}
+
+      - name: Remove AWS credentials
+        run: rm -r ~/.aws
 
       - name: Build app [dev]
         run: npm run build-dev:umi && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV
