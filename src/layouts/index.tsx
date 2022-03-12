@@ -142,37 +142,32 @@ const Layout = ({ route, children }) => {
               </Menu.Item>
             ))}
           </Menu>
-          <Button onClick={() => (user ? {} : setShowLogin(true))}>
-            {/* maybe "Get signals" or "Get started" */}
-            {user ? `signed in as ${user?.attributes?.name}` : "Get started"}
-          </Button>
+          {!user && <Authenticator className={overrides.invisible} />}
+          {user && (
+            <span
+              style={{ whiteSpace: "nowrap", paddingRight: "20px" }}
+            >{`signed in as ${user?.attributes?.name ||
+              user?.attributes?.email}`}</span>
+          )}
+          {user ? (
+            <Button className="signOut" onClick={signOut}>
+              Sign out
+            </Button>
+          ) : (
+            // maybe "Get signals" or "Get started"
+            <Button onClick={() => setShowLogin(true)}>Get started</Button>
+          )}
 
           <Modal
-            visible={showLogin}
+            visible={!user && showLogin}
             closable={false}
             onCancel={() => setShowLogin(false)}
           >
             <AmplifyProvider theme={theme} colorMode="dark">
-              <Authenticator>
-                {({ signOut, user }) => {
-                  // setSignedIn(true);
-                  // setName(user.attributes?.name || user.attributes?.email);
-                  // setSignOutFx(signOut);
-
-                  return (
-                    <main>
-                      <h1>
-                        signed in as{" "}
-                        {user.attributes?.name || user.attributes?.email}
-                      </h1>
-                      <button onClick={signOut}>Sign out</button>
-                    </main>
-                  );
-                }}
-              </Authenticator>
+              <Authenticator />
             </AmplifyProvider>
           </Modal>
-          {user && <Button onClick={signOut}>Sign out</Button>}
+          {/* {user && <Button onClick={signOut}>Sign out</Button>} */}
         </span>
       </AntLayout.Header>
 
