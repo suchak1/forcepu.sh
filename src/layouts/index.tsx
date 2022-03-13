@@ -156,7 +156,7 @@ const Layout = ({ route, children }) => {
               </Menu.Item>
             ))}
           </Menu>
-          {!user && <Authenticator className={overrides.invisible} />}
+          {/* {!user && <Authenticator className={overrides.invisible} />} */}
           {user && (
             <span
               style={{ whiteSpace: "nowrap", paddingRight: "20px" }}
@@ -173,7 +173,9 @@ const Layout = ({ route, children }) => {
           )}
 
           <Modal
-            visible={!user && showLogin}
+            // visible={!user && showLogin}
+            style={!user && showLogin ? {} : { display: "none" }}
+            visible={true}
             closable={false}
             onCancel={() => setShowLogin(false)}
           >

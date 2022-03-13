@@ -5,9 +5,9 @@ import json
 def get_auth(*_):
     redirect_url = 'https://dev.forcepu.sh' if os.environ['ENV'] == 'dev' else 'https://forcepu.sh'
     config = {
-        'aws_project_region': os.environ['AWS_DEFAULT_REGION'],
+        'aws_project_region': os.environ['REGION'],
         'aws_cognito_identity_pool_id': os.environ['IDENTITY_POOL_ID'],
-        'aws_cognito_region': os.environ['AWS_DEFAULT_REGION'],
+        'aws_cognito_region': os.environ['REGION'],
         'aws_user_pools_id': os.environ['USER_POOL_ID'],
         'aws_user_pools_web_client_id': os.environ['WEB_CLIENT_ID'],
         'oauth': {

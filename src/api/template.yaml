@@ -74,7 +74,7 @@ Resources:
       Environment:
         Variables:
           ENV: !Ref Stage
-          AWS_DEFAULT_REGION: !Ref Region
+          REGION: !Ref Region
           IDENTITY_POOL_ID: !Ref IdentityPoolId
           USER_POOL_ID: !Ref UserPoolId
           WEB_CLIENT_ID: !Ref WebClientId
