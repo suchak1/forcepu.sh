@@ -15,19 +15,22 @@ import BTC_ICE from "../../assets/btc_ice.png";
 import overrides from "./index.less";
 import "./index.less";
 
-const isLocal = process.env.NODE_ENV === "development";
-// const isLocal = false;
+// const isLocal = process.env.NODE_ENV === "development";
+const isLocal = false;
 
 if (isLocal) {
   const config = require("@/aws-exports").default;
   Amplify.configure(config);
 } else {
-  const url = `${getApiUrl()}/auth`;
-  // const url = `https://api.dev.forcepu.sh/auth`;
+  // const url = `${getApiUrl()}/auth`;
+  const url = `https://api.dev.forcepu.sh/auth`;
   const getConfig = async () =>
     fetch(url, { method: "GET" })
       .then((response) => response.json())
-      .then((config) => Amplify.configure(config));
+      .then((config) => {
+        console.log(config);
+        Amplify.configure(config);
+      });
   getConfig();
 }
 
