@@ -21,21 +21,6 @@ Parameters:
   HostedZoneId:
     Type: "String"
     NoEcho: true
-  Region:
-    Type: "String"
-    NoEcho: true
-  IdentityPoolId:
-    Type: "String"
-    NoEcho: true
-  UserPoolId:
-    Type: "String"
-    NoEcho: true
-  WebClientId:
-    Type: "String"
-    NoEcho: true
-  OAuthDomain:
-    Type: "String"
-    NoEcho: true
 
 Globals:
   Function:
@@ -67,29 +52,6 @@ Resources:
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./gym
-      DockerTag: python3.8-v1
-  AuthConfigFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      Environment:
-        Variables:
-          ENV: !Ref Stage
-          REGION: !Ref Region
-          IDENTITY_POOL_ID: !Ref IdentityPoolId
-          USER_POOL_ID: !Ref UserPoolId
-          WEB_CLIENT_ID: !Ref WebClientId
-          OAUTH_DOMAIN: !Ref OAuthDomain
-      PackageType: Image
-      Events:
-        AuthConfig:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /auth
-            Method: get
-            RestApiId: !Ref ApiGatewayApi
-    Metadata:
-      Dockerfile: Dockerfile
-      DockerContext: ./auth
       DockerTag: python3.8-v1
   PreviewFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
