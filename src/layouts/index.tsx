@@ -26,7 +26,7 @@ const redirectUrl = isDev
 
 let configuration;
 if (isLocal) {
-  configuration = import("@/aws-exports");
+  configuration = require("@/aws-exports").default;
 } else {
   configuration = {
     aws_project_region: process.env.REACT_APP_REGION,
@@ -142,14 +142,8 @@ const headerHeight = 64;
 
 const Layout = ({ route, children }) => {
   const [showLogin, setShowLogin] = useState(false);
-  // const [signedIn, setSignedIn] = useState(false);
-  // const [name, setName] = useState("");
-  // const [signOutFx, setSignOutFx] = useState(() => {});
   const { user, signOut } = useAuthenticator((context) => [context.user]);
-  const { route: r } = useAuthenticator((context) => [context.route]);
-  console.log(user);
-  console.log(signOut);
-  console.log(r);
+
   return (
     <AntLayout>
       <AntLayout.Header
@@ -217,7 +211,6 @@ const Layout = ({ route, children }) => {
               <Authenticator />
             </AmplifyProvider>
           </Modal>
-          {/* {user && <Button onClick={signOut}>Sign out</Button>} */}
         </span>
       </AntLayout.Header>
 
