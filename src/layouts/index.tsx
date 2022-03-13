@@ -16,14 +16,6 @@ import overrides from "./index.less";
 import "./index.less";
 
 const isLocal = process.env.NODE_ENV === "development";
-// process.env.REACT_APP_ENV === "dev";
-// or process.env.NODE_ENV === "development"
-const prodHostname = "forcepu.sh";
-const devHostname = "dev.forcepu.sh";
-const isDev = window.location.hostname === devHostname;
-const redirectUrl = isDev
-  ? `https://${devHostname}`
-  : `https://${prodHostname}`;
 
 let config;
 if (isLocal) {
@@ -119,9 +111,7 @@ const headerHeight = 64;
 const Layout = ({ route, children }) => {
   const [showLogin, setShowLogin] = useState(false);
   const { user, signOut } = useAuthenticator((context) => [context.user]);
-  const { route: r } = useAuthenticator((context) => [context.route]);
-  console.log(r);
-  const loggedIn = r === "authenticated" || user;
+  const loggedIn = user;
   const showModal = !loggedIn && showLogin;
   const dummy = <Authenticator className={overrides.invisible} />;
 
@@ -129,6 +119,7 @@ const Layout = ({ route, children }) => {
     <AntLayout>
       <AntLayout.Header
         style={{
+          // this is so that header stays above toggle in fixed scrolling
           zIndex: 1000,
           width: "100%",
           position: "fixed",
@@ -183,40 +174,15 @@ const Layout = ({ route, children }) => {
             // maybe "Get signals" or "Get started"
             <Button onClick={() => setShowLogin(true)}>Get started</Button>
           )}
-          {/* <style jsx global>
-            {!user && showLogin ? `` : `.ant-modal-wrap {display: none;}`}
-          </style> */}
-          {/* WHAT IF wrap Modal with div w style display:none!! */}
-          {/* <div
-            className={!user && showLogin ? "" : overrides.noWrap}
-            style={
-              !user && showLogin
-                ? { zIndex: 1000 }
-                : { display: "none", zIndex: -1000 }
-            }
-          > */}
           <Modal
-            // visible={!user && showLogin}
-            // style={
-            //   !user && showLogin
-            //     ? { zIndex: 1000 }
-            //     : { display: "none", zIndex: -1000 }
-            // }
             visible={showModal}
             closable={false}
             onCancel={() => setShowLogin(false)}
-            // mask={!user && showLogin}
-            // maskStyle={
-            //   !user && showLogin
-            //     ? { zIndex: 1000 }
-            //     : { display: "none", zIndex: -1000 }
-            // }
           >
             <AmplifyProvider theme={theme} colorMode="dark">
               <Authenticator />
             </AmplifyProvider>
           </Modal>
-          {/* </div> */}
         </span>
       </AntLayout.Header>
 
