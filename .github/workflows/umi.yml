@@ -38,7 +38,7 @@ jobs:
         run: npm run ci
 
       - name: Create aws-exports.js file
-        run: touch aws-exports.js
+        run: touch src/aws-exports.js
 
       - name: Build app [dev]
         run: npm run build-dev:umi && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV
