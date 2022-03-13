@@ -14,7 +14,8 @@ import BTC_ICE from "../../assets/btc_ice.png";
 import overrides from "./index.less";
 import "./index.less";
 
-const isLocal = process.env.REACT_APP_ENV === "dev";
+const isLocal = process.env.NODE_ENV === "development";
+// process.env.REACT_APP_ENV === "dev";
 // or process.env.NODE_ENV === "development"
 const prodHostname = "forcepu.sh";
 const devHostname = "dev.forcepu.sh";
@@ -23,6 +24,7 @@ const redirectUrl = isDev
   ? `https://${devHostname}`
   : `https://${prodHostname}`;
 
+console.log(isLocal);
 const configuration = isLocal
   ? require("@/aws-exports")
   : {
