@@ -8,7 +8,7 @@ import {
   createTheme,
   defaultTheme,
 } from "@aws-amplify/ui-react";
-import { Amplify } from "aws-amplify";
+import { Amplify, Auth } from "aws-amplify";
 import { getApiUrl } from "@/utils";
 import "@aws-amplify/ui-react/styles.css";
 import BTC_ICE from "../../assets/btc_ice.png";
@@ -30,6 +30,7 @@ if (isLocal) {
       .then((config) => {
         console.log(config);
         Amplify.configure(config);
+        Amplify.register(Auth);
       });
   getConfig();
 }
