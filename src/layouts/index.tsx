@@ -30,7 +30,7 @@ if (isLocal) {
   config = require("@/aws-exports").default;
   Amplify.configure(config);
 } else {
-  const url = `${getApiUrl}/auth`;
+  const url = `${getApiUrl()}/auth`;
   const getConfig = async () =>
     fetch(url, { method: "GET" })
       .then((response) => response.json())
@@ -178,6 +178,8 @@ const Layout = ({ route, children }) => {
             visible={true}
             closable={false}
             onCancel={() => setShowLogin(false)}
+            mask={!user && showLogin}
+            maskStyle={!user && showLogin ? {} : { display: "none" }}
           >
             <AmplifyProvider theme={theme} colorMode="dark">
               <Authenticator />
