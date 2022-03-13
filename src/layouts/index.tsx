@@ -29,6 +29,12 @@ let config;
 if (isLocal) {
   config = require("@/aws-exports").default;
   Amplify.configure(config);
+  // const url = `https://api.dev.forcepu.sh/auth`;
+  // const getConfig = async () =>
+  //   fetch(url, { method: "GET" })
+  //     .then((response) => response.json())
+  //     .then((config) => Amplify.configure(config));
+  // getConfig();
 } else {
   const url = `${getApiUrl()}/auth`;
   const getConfig = async () =>
@@ -113,6 +119,11 @@ const headerHeight = 64;
 const Layout = ({ route, children }) => {
   const [showLogin, setShowLogin] = useState(false);
   const { user, signOut } = useAuthenticator((context) => [context.user]);
+  const { route: r } = useAuthenticator((context) => [context.route]);
+  console.log(r);
+  const loggedIn = r === "authenticated" || user;
+  const showModal = !loggedIn && showLogin;
+  const dummy = <Authenticator className={overrides.invisible} />;
 
   return (
     <AntLayout>
@@ -156,14 +167,15 @@ const Layout = ({ route, children }) => {
               </Menu.Item>
             ))}
           </Menu>
-          {/* {!user && <Authenticator className={overrides.invisible} />} */}
-          {user && (
+          {dummy}
+          {loggedIn && (
             <span
               style={{ whiteSpace: "nowrap", paddingRight: "20px" }}
-            >{`signed in as ${user?.attributes?.name ||
-              user?.attributes?.email}`}</span>
+            >{`signed in as ${
+              user?.attributes?.name || user?.attributes?.email
+            }`}</span>
           )}
-          {user ? (
+          {loggedIn ? (
             <Button className="signOut" onClick={signOut}>
               Sign out
             </Button>
@@ -171,20 +183,40 @@ const Layout = ({ route, children }) => {
             // maybe "Get signals" or "Get started"
             <Button onClick={() => setShowLogin(true)}>Get started</Button>
           )}
-
+          {/* <style jsx global>
+            {!user && showLogin ? `` : `.ant-modal-wrap {display: none;}`}
+          </style> */}
+          {/* WHAT IF wrap Modal with div w style display:none!! */}
+          {/* <div
+            className={!user && showLogin ? "" : overrides.noWrap}
+            style={
+              !user && showLogin
+                ? { zIndex: 1000 }
+                : { display: "none", zIndex: -1000 }
+            }
+          > */}
           <Modal
             // visible={!user && showLogin}
-            style={!user && showLogin ? {} : { display: "none" }}
-            visible={true}
+            // style={
+            //   !user && showLogin
+            //     ? { zIndex: 1000 }
+            //     : { display: "none", zIndex: -1000 }
+            // }
+            visible={showModal}
             closable={false}
             onCancel={() => setShowLogin(false)}
-            mask={!user && showLogin}
-            maskStyle={!user && showLogin ? {} : { display: "none" }}
+            // mask={!user && showLogin}
+            // maskStyle={
+            //   !user && showLogin
+            //     ? { zIndex: 1000 }
+            //     : { display: "none", zIndex: -1000 }
+            // }
           >
             <AmplifyProvider theme={theme} colorMode="dark">
               <Authenticator />
             </AmplifyProvider>
           </Modal>
+          {/* </div> */}
         </span>
       </AntLayout.Header>
 
