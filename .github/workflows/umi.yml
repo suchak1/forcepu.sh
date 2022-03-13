@@ -44,12 +44,22 @@ jobs:
         run: npm run build-dev:umi && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV
         env:
           AWS_S3_BUCKET: ${{ secrets.FORCEPUSH_DEV_BUCKET }}
+          UMI_APP_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          UMI_APP_IDENTITY_POOL_ID: ${{ secrets.DEV_IDENTITY_POOL_ID }}
+          UMI_APP_USER_POOL_ID: ${{ secrets.DEV_USER_POOL_ID }}
+          UMI_APP_WEB_CLIENT_ID: ${{ secrets.DEV_WEB_CLIENT_ID }}
+          UMI_APP_OAUTH_DOMAIN: ${{ secrets.DEV_OAUTH_DOMAIN }}
         if: ${{ github.ref != 'refs/heads/master' }}
 
       - name: Build app [prod]
         run: npm run build:umi && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV
         env:
           AWS_S3_BUCKET: ${{ secrets.FORCEPUSH_BUCKET }}
+          UMI_APP_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          UMI_APP_IDENTITY_POOL_ID: ${{ secrets.IDENTITY_POOL_ID }}
+          UMI_APP_USER_POOL_ID: ${{ secrets.USER_POOL_ID }}
+          UMI_APP_WEB_CLIENT_ID: ${{ secrets.WEB_CLIENT_ID }}
+          UMI_APP_OAUTH_DOMAIN: ${{ secrets.OAUTH_DOMAIN }}
         if: ${{ github.ref == 'refs/heads/master' }}
 
       - name: Deploy umi

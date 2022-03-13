@@ -1,6 +1,6 @@
 import { defineConfig } from 'umi';
-import proxy from './proxy';
-const { REACT_APP_ENV } = process.env;
+// import proxy from './proxy';
+// const { UMI_APP_ENV } = process.env;
 
 export default defineConfig({
   // presets: [
@@ -16,7 +16,7 @@ export default defineConfig({
     // default: 'us-EN',
     baseNavigator: true,
   },
-  proxy: proxy[REACT_APP_ENV || 'prod'],
+  // proxy: proxy[UMI_APP_ENV || 'prod'],
   // publicPath: 'assets/'
   theme: {'switch-color': '#F7931A'},
   metas: [

@@ -15,65 +15,57 @@ import BTC_ICE from "../../assets/btc_ice.png";
 import overrides from "./index.less";
 import "./index.less";
 
-// const isLocal = process.env.NODE_ENV === "development";
-const isLocal = false;
+let config;
+const isLocal = process.env.NODE_ENV === "development";
+const prodHostname = "forcepu.sh";
+const devHostname = "dev.forcepu.sh";
+const isDev = window.location.hostname === devHostname;
+const redirectUrl = isDev
+  ? `https://${devHostname}`
+  : `https://${prodHostname}`;
 
 if (isLocal) {
-  const config = require("@/aws-exports").default;
-  Amplify.configure(config);
+  config = require("@/aws-exports").default;
 } else {
-  // const url = `${getApiUrl()}/auth`;
-  const url = `https://api.dev.forcepu.sh/auth`;
-  const getConfig = async () => {
-    await fetch(url, { method: "GET" })
-      .then((response) => response.json())
-      .then((config) => config)
-      .then((config) => Amplify.configure(config));
+  config = {
+    aws_project_region: process.env.UMI_APP_REGION,
+    aws_cognito_identity_pool_id: process.env.UMI_APP_IDENTITY_POOL_ID,
+    aws_cognito_region: process.env.UMI_APP_REGION,
+    aws_user_pools_id: process.env.UMI_APP_USER_POOL_ID,
+    aws_user_pools_web_client_id: process.env.UMI_APP_WEB_CLIENT_ID,
+    oauth: {
+      domain: process.env.UMI_APP_OAUTH_DOMAIN,
+      scope: [
+        "phone",
+        "email",
+        "openid",
+        "profile",
+        "aws.cognito.signin.user.admin",
+      ],
+      redirectSignIn: redirectUrl,
+      redirectSignOut: redirectUrl,
+      responseType: "code",
+    },
+    federationTarget: "COGNITO_USER_POOLS",
+    aws_cognito_username_attributes: ["EMAIL"],
+    aws_cognito_social_providers: ["GOOGLE"],
+    aws_cognito_signup_attributes: ["EMAIL", "NAME", "PICTURE"],
+    aws_cognito_mfa_configuration: "OPTIONAL",
+    aws_cognito_mfa_types: ["TOTP"],
+    aws_cognito_password_protection_settings: {
+      passwordPolicyMinLength: 8,
+      passwordPolicyCharacters: [
+        "REQUIRES_LOWERCASE",
+        "REQUIRES_NUMBERS",
+        "REQUIRES_SYMBOLS",
+        "REQUIRES_UPPERCASE",
+      ],
+    },
+    aws_cognito_verification_mechanisms: ["EMAIL"],
   };
-  getConfig();
-  // Amplify.configure(getConfig().then((config) => config));
-
-  // const config = {
-  //   aws_project_region: "us-east-1",
-  //   aws_cognito_identity_pool_id:
-  //     "us-east-1:7ca9aa41-c652-49e9-bca8-ec9f9aa15656",
-  //   aws_cognito_region: "us-east-1",
-  //   aws_user_pools_id: "us-east-1_39SPX9fAC",
-  //   aws_user_pools_web_client_id: "47fs6be1f16egb5eqpvir9fu3u",
-  //   oauth: {
-  //     domain: "pzw1msarrwym-dev.auth.us-east-1.amazoncognito.com",
-  //     scope: [
-  //       "phone",
-  //       "email",
-  //       "openid",
-  //       "profile",
-  //       "aws.cognito.signin.user.admin",
-  //     ],
-  //     redirectSignIn: "https://dev.forcepu.sh",
-  //     redirectSignOut: "https://dev.forcepu.sh",
-  //     responseType: "code",
-  //   },
-  //   federationTarget: "COGNITO_USER_POOLS",
-  //   aws_cognito_username_attributes: ["EMAIL"],
-  //   aws_cognito_social_providers: ["GOOGLE"],
-  //   aws_cognito_signup_attributes: ["EMAIL", "NAME", "PICTURE"],
-  //   aws_cognito_mfa_configuration: "OPTIONAL",
-  //   aws_cognito_mfa_types: ["TOTP"],
-  //   aws_cognito_password_protection_settings: {
-  //     passwordPolicyMinLength: 8,
-  //     passwordPolicyCharacters: [
-  //       "REQUIRES_LOWERCASE",
-  //       "REQUIRES_NUMBERS",
-  //       "REQUIRES_SYMBOLS",
-  //       "REQUIRES_UPPERCASE",
-  //     ],
-  //   },
-  //   aws_cognito_verification_mechanisms: ["EMAIL"],
-  // };
-  // Amplify.configure(config);
 }
 
-// Amplify.configure(config);
+Amplify.configure(config);
 
 const theme = createTheme({
   name: "dark-mode-theme",
