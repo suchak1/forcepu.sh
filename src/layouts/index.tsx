@@ -25,7 +25,7 @@ const redirectUrl = isDev
   : `https://${prodHostname}`;
 
 const configuration = isLocal
-  ? await import("@/aws-exports")
+  ? import("@/aws-exports")
   : {
       aws_project_region: process.env.REACT_APP_REGION,
       aws_cognito_identity_pool_id: process.env.REACT_APP_IDENTITY_POOL_ID,
