@@ -71,7 +71,7 @@ if (isLocal) {
     aws_cognito_verification_mechanisms: ["EMAIL"],
   };
   Amplify.configure(config);
-  Amplify.register(Auth);
+  // Amplify.register(Auth);
 }
 
 const theme = createTheme({
