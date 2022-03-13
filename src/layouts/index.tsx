@@ -10,13 +10,59 @@ import {
 } from "@aws-amplify/ui-react";
 import { Amplify } from "aws-amplify";
 import "@aws-amplify/ui-react/styles.css";
-import awsExports from "@/aws-exports";
-
 import BTC_ICE from "../../assets/btc_ice.png";
 import overrides from "./index.less";
 import "./index.less";
 
-Amplify.configure(awsExports);
+const isLocal = process.env.REACT_APP_ENV === "dev";
+// or process.env.NODE_ENV === "development"
+const prodHostname = "forcepu.sh";
+const devHostname = "dev.forcepu.sh";
+const isDev = window.location.hostname === devHostname;
+const redirectUrl = isDev
+  ? `https://${devHostname}`
+  : `https://${prodHostname}`;
+
+const configuration = isLocal
+  ? require("@/aws-exports")
+  : {
+      aws_project_region: process.env.REACT_APP_REGION,
+      aws_cognito_identity_pool_id: process.env.REACT_APP_IDENTITY_POOL_ID,
+      aws_cognito_region: process.env.REACT_APP_REGION,
+      aws_user_pools_id: process.env.REACT_APP_USER_POOL_ID,
+      aws_user_pools_web_client_id: process.env.REACT_APP_WEB_CLIENT_ID,
+      oauth: {
+        domain: process.env.REACT_APP_OAUTH_DOMAIN,
+        scope: [
+          "phone",
+          "email",
+          "openid",
+          "profile",
+          "aws.cognito.signin.user.admin",
+        ],
+        redirectSignIn: redirectUrl,
+        redirectSignOut: redirectUrl,
+        responseType: "code",
+      },
+      federationTarget: "COGNITO_USER_POOLS",
+      aws_cognito_username_attributes: ["EMAIL"],
+      aws_cognito_social_providers: ["GOOGLE"],
+      aws_cognito_signup_attributes: ["EMAIL", "NAME", "PICTURE"],
+      aws_cognito_mfa_configuration: "OPTIONAL",
+      aws_cognito_mfa_types: ["TOTP"],
+      aws_cognito_password_protection_settings: {
+        passwordPolicyMinLength: 8,
+        passwordPolicyCharacters: [
+          "REQUIRES_LOWERCASE",
+          "REQUIRES_NUMBERS",
+          "REQUIRES_SYMBOLS",
+          "REQUIRES_UPPERCASE",
+        ],
+      },
+      aws_cognito_verification_mechanisms: ["EMAIL"],
+    };
+
+Amplify.configure(configuration);
 
 const theme = createTheme({
   name: "dark-mode-theme",

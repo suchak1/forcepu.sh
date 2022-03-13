@@ -37,61 +37,26 @@ jobs:
       - name: Install dependencies
         run: npm run ci
 
-      - name: Install Amplify CLI
-        run: npm install -g @aws-amplify/cli
-
-      - name: Decrypt files
-        run: FILE="amplify/team-provider-info.json" util/decrypt.sh
-        env:
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-
-      - name: Configure AWS credentials
-        run: |
-          mkdir -p ~/.aws
-
-          echo "[default]" > ~/.aws/config
-          echo "region = ${AWS_DEFAULT_REGION}" >> ~/.aws/config
-
-          echo "[default]" > ~/.aws/credentials
-          echo "aws_access_key_id = ${AWS_ACCESS_KEY_ID}" >> ~/.aws/credentials
-          echo "aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}" >> ~/.aws/credentials
-
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-
-      - name: Configure Amplify [dev]
-        run: |
-          echo "{ \"projectPath\": \"${PWD}\", \"envName\": \"${ENV}\" }" > amplify/.config/local-env-info.json
-          amplify pull --appId "${APP_ID}" --envName "${ENV}"
-        env:
-          ENV: dev
-          APP_ID: ${{ secrets.APP_ID }}
-        if: ${{ github.ref != 'refs/heads/master' }}
-
-      - name: Configure Amplify [prod]
-        run: |
-          echo "{ \"projectPath\": \"${PWD}\", \"envName\": \"${ENV}\" }" > amplify/.config/local-env-info.json
-          amplify pull --appId "${APP_ID}" --envName "${ENV}"
-        env:
-          ENV: prod
-          APP_ID: ${{ secrets.APP_ID }}
-        if: ${{ github.ref == 'refs/heads/master' }}
-
-      - name: Remove AWS credentials
-        run: rm -r ~/.aws
-
       - name: Build app [dev]
         run: npm run build-dev:umi && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV
         env:
           AWS_S3_BUCKET: ${{ secrets.FORCEPUSH_DEV_BUCKET }}
+          REACT_APP_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          REACT_APP_IDENTITY_POOL_ID: ${{ secrets.DEV_IDENTITY_POOL_ID }}
+          REACT_APP_USER_POOL_ID: ${{ secrets.DEV_USER_POOL_ID }}
+          REACT_APP_WEB_CLIENT_ID: ${{ secrets.DEV_WEB_CLIENT_ID }}
+          REACT_APP_OAUTH_DOMAIN: ${{ secrets.DEV_OAUTH_DOMAIN }}
         if: ${{ github.ref != 'refs/heads/master' }}
 
       - name: Build app [prod]
         run: npm run build:umi && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV
         env:
           AWS_S3_BUCKET: ${{ secrets.FORCEPUSH_BUCKET }}
+          REACT_APP_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          REACT_APP_IDENTITY_POOL_ID: ${{ secrets.IDENTITY_POOL_ID }}
+          REACT_APP_USER_POOL_ID: ${{ secrets.USER_POOL_ID }}
+          REACT_APP_WEB_CLIENT_ID: ${{ secrets.WEB_CLIENT_ID }}
+          REACT_APP_OAUTH_DOMAIN: ${{ secrets.OAUTH_DOMAIN }}
         if: ${{ github.ref == 'refs/heads/master' }}
 
       - name: Deploy umi

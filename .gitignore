@@ -41,13 +41,12 @@ build
 
 *.env
 
-amplify/.config/local-env-info.json
 amplify/team-provider-info.json
 amplify/backend/auth/*/*.json
 
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
-# amplify/.config/local-*
+amplify/.config/local-*
 amplify/logs
 amplify/mock-data
 amplify/backend/amplify-meta.json
