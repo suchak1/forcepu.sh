@@ -144,6 +144,10 @@ const Layout = ({ route, children }) => {
   const loggedIn = user;
   const showModal = !loggedIn && showLogin;
   const dummy = <Authenticator className={overrides.invisible} />;
+  const getAccountText = (user: string | undefined) => `signed in as ${user}`;
+  const account = getAccountText(
+    user?.attributes?.name || user?.attributes?.email
+  );
 
   return (
     <AntLayout>
@@ -189,30 +193,33 @@ const Layout = ({ route, children }) => {
             ))}
           </Menu>
           {dummy}
-          {loggedIn && (
-            <span
-              style={{ whiteSpace: "nowrap", paddingRight: "20px" }}
-            >{`signed in as ${
-              user?.attributes?.name || user?.attributes?.email
-            }`}</span>
-          )}
-          {loggedIn ? (
-            <Button className="signOut" onClick={signOut}>
-              Sign out
-            </Button>
-          ) : (
-            // maybe "Get signals" or "Get started"
-            <Button onClick={() => setShowLogin(true)}>Get started</Button>
-          )}
-          <Modal
-            visible={showModal}
-            closable={false}
-            onCancel={() => setShowLogin(false)}
+          <span
+            style={{
+              display: "flex",
+              width: "100%",
+              alignItems: "center",
+              justifyContent: "flex-end",
+            }}
           >
-            <AmplifyProvider theme={theme} colorMode="dark">
-              <Authenticator />
-            </AmplifyProvider>
-          </Modal>
+            {loggedIn && <span className={overrides.account}>{account}</span>}
+            {loggedIn ? (
+              <Button className="signOut" onClick={signOut}>
+                Sign out
+              </Button>
+            ) : (
+              // maybe "Get signals" or "Get started"
+              <Button onClick={() => setShowLogin(true)}>Get started</Button>
+            )}
+            <Modal
+              visible={showModal}
+              closable={false}
+              onCancel={() => setShowLogin(false)}
+            >
+              <AmplifyProvider theme={theme} colorMode="dark">
+                <Authenticator />
+              </AmplifyProvider>
+            </Modal>
+          </span>
         </span>
       </AntLayout.Header>
 

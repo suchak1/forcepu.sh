@@ -1,3 +1,17 @@
+.account {
+  padding-right: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+@media (max-width: 700px) {
+  .account {
+    display: none;
+    width: 0;
+  }
+}
+
 .signOut {
   border-left-color: magenta;
   border-right-color: magenta;
@@ -6,9 +20,17 @@
 }
 
 .signOut:hover,
-.signOut:focus,
 .signOut:active {
-  border-color: magenta;
+  border-color: magenta !important;
+  // box-shadow: none;
+  box-shadow: 0 0 5px magenta;
+}
+
+.signOut:focus {
+  border-left-color: magenta;
+  border-right-color: magenta;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
 }
 
 .invisible {
@@ -25,16 +47,17 @@
 }
 
 :global(.ant-btn) {
-  // this makes it look like page/tab is selected
-  border-top-color: #52e5ff;
-  border-bottom-color: #52e5ff;
-  border-left-color: transparent;
-  border-right-color: transparent;
+  border-color: #52e5ff;
 }
 
 :global(.ant-btn:hover),
-:global(.ant-btn:focus),
 :global(.ant-btn:active) {
+  border-color: #52e5ff !important;
+  box-shadow: 0 0 5px #52e5ff;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+:global(.ant-btn:focus) {
   border-color: #52e5ff;
   color: rgba(255, 255, 255, 0.85);
 }
