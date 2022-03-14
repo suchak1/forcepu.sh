@@ -1,0 +1,1 @@
+amplify pull --appId "${APP_ID}" --envName "${ENV}"

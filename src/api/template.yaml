@@ -80,3 +80,22 @@ Resources:
       Dockerfile: Dockerfile
       DockerContext: ./home
       DockerTag: python3.8-v1
+  # CognitoUserPool:
+  #   Type: AWS::Cognito::UserPool
+  #   Properties:
+  #     UserPoolName: !Ref CognitoUserPoolName
+  #     Policies:
+  #       PasswordPolicy:
+  #         MinimumLength: 8
+  #     UsernameAttributes:
+  #       - email
+  #     Schema:
+  #       - AttributeDataType: String
+  #         Name: email
+  #         Required: false
+  # CognitoUserPoolClient:
+  #   Type: AWS::Cognito::UserPoolClient
+  #   Properties:
+  #     UserPoolId: !Ref CognitoUserPool
+  #     ClientName: !Ref CognitoUserPoolClientName
+  #     GenerateSecret: false

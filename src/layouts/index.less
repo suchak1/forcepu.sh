@@ -1,3 +1,77 @@
+.account {
+  padding-right: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+@media (max-width: 700px) {
+  .account {
+    display: none;
+    width: 0;
+  }
+}
+
+.signOut {
+  border-left-color: magenta;
+  border-right-color: magenta;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+}
+
+.signOut:hover,
+.signOut:active {
+  border-color: magenta !important;
+  // box-shadow: none;
+  box-shadow: 0 0 5px magenta;
+}
+
+.signOut:focus {
+  border-left-color: magenta;
+  border-right-color: magenta;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+}
+
+.invisible {
+  display: none;
+  z-index: -1000 !important;
+}
+
+:global(.ant-modal-body) {
+  padding: 0;
+}
+
+:global(.ant-modal-footer) {
+  display: none;
+}
+
+:global(.ant-btn) {
+  border-color: #52e5ff;
+}
+
+:global(.ant-btn:hover),
+:global(.ant-btn:active) {
+  border-color: #52e5ff !important;
+  box-shadow: 0 0 5px #52e5ff;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+:global(.ant-btn:focus) {
+  border-color: #52e5ff;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+:global(.ant-layout-header) {
+  // background: #1d1d1d;
+  padding: 0 24px 0 20px;
+  // change right align (2nd param) to 20px or left align (4th param) to 24px?
+}
+
+:global(.ant-menu.ant-menu-dark) {
+  background: transparent !important;
+}
+
 // set menu item semi-bold font weight
 :global(.ant-menu.ant-menu-dark .ant-menu-item) {
   font-weight: 600;
@@ -27,4 +101,75 @@
 .white {
   color: white;
   font-weight: 600;
+}
+
+// HOVER WHITE
+
+// google sign in button
+.federated-sign-in-button:hover,
+.federated-sign-in-button:focus .federated-sign-in-button:active {
+  background-color: #1d1d1d !important;
+  border-color: transparent !important;
+}
+
+// inactive tab
+[data-amplify-authenticator] [data-state="inactive"] {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+[data-amplify-authenticator] [data-state="inactive"]:hover {
+  color: white !important;
+}
+
+[data-amplify-theme="dark-mode-theme"] {
+  --amplify-colors-brand-primary-80: #52e5ff !important;
+  --amplify-font-weights-bold: 600 !important;
+  --amplify-colors-font-hover: white !important;
+  --amplify-colors-font-focus: white !important;
+  --amplify-colors-font-active: white !important;
+
+  --amplify-components-tabs-item-active-color: white !important;
+
+  // inactive tab
+  --amplify-colors-background-secondary: transparent !important;
+  --amplify-components-fieldcontrol-focus-border-color: white !important;
+
+  // forgot your password
+  --amplify-components-button-link-hover-background-color: transparent !important;
+  --amplify-components-button-link-focus-background-color: transparent !important;
+  --amplify-components-button-link-active-background-color: transparent !important;
+  --amplify-components-button-link-color: rgba(255, 255, 255, 0.65) !important;
+
+  // reveal password button
+  --amplify-components-button-hover-color: #52e5ff !important;
+  --amplify-components-button-focus-color: #52e5ff !important;
+  --amplify-components-button-active-color: #52e5ff !important;
+  --amplify-components-button-hover-background-color: transparent !important;
+  --amplify-components-button-focus-background-color: transparent !important;
+  --amplify-components-button-active-background-color: transparent !important;
+  --amplify-components-button-hover-border-color: rgba(
+    255,
+    255,
+    255,
+    0.2
+  ) !important;
+  --amplify-components-button-focus-border-color: rgba(
+    255,
+    255,
+    255,
+    0.2
+  ) !important;
+  --amplify-components-button-active-border-color: rgba(
+    255,
+    255,
+    255,
+    0.2
+  ) !important;
+
+  // border outline for modal and inputs
+  --amplify-colors-border-primary: rgba(255, 255, 255, 0.2) !important;
+}
+
+[data-amplify-authenticator] [data-amplify-container] {
+  width: 100%;
 }

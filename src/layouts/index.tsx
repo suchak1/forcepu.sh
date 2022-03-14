@@ -1,24 +1,98 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "umi";
-import { Layout as AntLayout, Menu, PageHeader, Typography, List } from "antd";
-import BTC from "../../assets/favicon.ico";
+import { Layout as AntLayout, Menu, Button, Modal } from "antd";
+import {
+  Authenticator,
+  AmplifyProvider,
+  useAuthenticator,
+  createTheme,
+  defaultTheme,
+} from "@aws-amplify/ui-react";
+import { Amplify } from "aws-amplify";
+import "@aws-amplify/ui-react/styles.css";
 import BTC_ICE from "../../assets/btc_ice.png";
-
-// import "antd/lib/menu/style/index.css";
-// import "antd/lib/menu/style/index.less";
-
 import overrides from "./index.less";
+import "./index.less";
 
-// import Page from "@/pages";
-const styles = {
-  ice: { color: "#52e5ff", fontWeight: 600 },
-  white: { color: "white", fontWeight: 600 },
-  // wrapper: {
-  //   overflow: "hidden",
-  // },
-};
+let config;
+const isLocal = process.env.NODE_ENV === "development";
+const prodHostname = "forcepu.sh";
+const devHostname = "dev.forcepu.sh";
+const isDev = window.location.hostname === devHostname;
+const redirectUrl = isDev
+  ? `https://${devHostname}`
+  : `https://${prodHostname}`;
+
+if (isLocal) {
+  config = require("@/aws-exports").default;
+} else {
+  config = {
+    aws_project_region: process.env.UMI_APP_REGION,
+    aws_cognito_identity_pool_id: process.env.UMI_APP_IDENTITY_POOL_ID,
+    aws_cognito_region: process.env.UMI_APP_REGION,
+    aws_user_pools_id: process.env.UMI_APP_USER_POOL_ID,
+    aws_user_pools_web_client_id: process.env.UMI_APP_WEB_CLIENT_ID,
+    oauth: {
+      domain: process.env.UMI_APP_OAUTH_DOMAIN,
+      scope: [
+        "phone",
+        "email",
+        "openid",
+        "profile",
+        "aws.cognito.signin.user.admin",
+      ],
+      redirectSignIn: redirectUrl,
+      redirectSignOut: redirectUrl,
+      responseType: "code",
+    },
+    federationTarget: "COGNITO_USER_POOLS",
+    aws_cognito_username_attributes: ["EMAIL"],
+    aws_cognito_social_providers: ["GOOGLE"],
+    aws_cognito_signup_attributes: ["EMAIL", "NAME", "PICTURE"],
+    aws_cognito_mfa_configuration: "OPTIONAL",
+    aws_cognito_mfa_types: ["TOTP"],
+    aws_cognito_password_protection_settings: {
+      passwordPolicyMinLength: 8,
+      passwordPolicyCharacters: [
+        "REQUIRES_LOWERCASE",
+        "REQUIRES_NUMBERS",
+        "REQUIRES_SYMBOLS",
+        "REQUIRES_UPPERCASE",
+      ],
+    },
+    aws_cognito_verification_mechanisms: ["EMAIL"],
+  };
+}
+
+Amplify.configure(config);
+
+const theme = createTheme({
+  name: "dark-mode-theme",
+  overrides: [
+    {
+      colorMode: "dark",
+      tokens: {
+        colors: {
+          neutral: {
+            // flipping the neutral palette
+            10: defaultTheme.tokens.colors.neutral[100],
+            20: defaultTheme.tokens.colors.neutral[90],
+            40: defaultTheme.tokens.colors.neutral[80],
+            80: defaultTheme.tokens.colors.neutral[40],
+            90: defaultTheme.tokens.colors.neutral[20],
+            100: defaultTheme.tokens.colors.neutral[10],
+          },
+          black: { value: "#fff" },
+          white: { value: "#000" },
+        },
+      },
+    },
+  ],
+});
+
 // original: gym, art, docs, app
-const pages = [
+const pages: string[] = [
+  // "get started",
   // "gym",
   // "art",
   // "docs"
@@ -31,7 +105,7 @@ const pages = [
 // "gym" should be hidden?
 // split gym, art/gallery to right side of nav
 
-const capitalize = (s) => s[0].toUpperCase() + s.slice(1);
+const capitalize = (s: string | any[]) => s[0].toUpperCase() + s.slice(1);
 
 const routes = [
   {
@@ -63,11 +137,23 @@ const headerHeight = 64;
 // add logo to forcepush div
 // remove menu and menu items?
 // or at least move these pieces out
-export default function Layout({ route, children }) {
+
+const Layout = ({ route, children }) => {
+  const [showLogin, setShowLogin] = useState(false);
+  const { user, signOut } = useAuthenticator((context) => [context.user]);
+  const loggedIn = user;
+  const showModal = !loggedIn && showLogin;
+  const dummy = <Authenticator className={overrides.invisible} />;
+  const getAccountText = (user: string | undefined) => `signed in as ${user}`;
+  const account = getAccountText(
+    user?.attributes?.name || user?.attributes?.email
+  );
+
   return (
     <AntLayout>
       <AntLayout.Header
         style={{
+          // this is so that header stays above toggle in fixed scrolling
           zIndex: 1000,
           width: "100%",
           position: "fixed",
@@ -75,15 +161,9 @@ export default function Layout({ route, children }) {
         }}
       >
         <span style={{ display: "flex", alignItems: "center" }}>
-          <img
-            className="logo"
-            src={BTC_ICE}
-            width={24}
-            height={24}
-            style={{ marginLeft: -30 }}
-          ></img>
+          <img className="logo" src={BTC_ICE} width={24} height={24}></img>
           <Menu
-            style={{ height: headerHeight }}
+            style={{ height: headerHeight, width: "100%" }}
             theme="dark"
             mode="horizontal"
             defaultSelectedKeys={["0"].concat([
@@ -95,18 +175,51 @@ export default function Layout({ route, children }) {
           >
             {routes.map((route, idx) => (
               <Menu.Item
-                className={overrides}
+                className={[overrides.white, overrides.ice].join(" ")}
                 key={idx}
                 style={
                   idx === 0
-                    ? { backgroundColor: "transparent" }
-                    : { display: "flex", alignItems: "center" }
+                    ? {
+                        backgroundColor: "transparent",
+                      }
+                    : {
+                        display: "flex",
+                        alignItems: "center",
+                      }
                 }
               >
                 <NavLink to={route.to}>{route.text}</NavLink>
               </Menu.Item>
             ))}
           </Menu>
+          {dummy}
+          <span
+            style={{
+              display: "flex",
+              width: "100%",
+              alignItems: "center",
+              justifyContent: "flex-end",
+            }}
+          >
+            {loggedIn && <span className={overrides.account}>{account}</span>}
+            {loggedIn ? (
+              <Button className="signOut" onClick={signOut}>
+                Sign out
+              </Button>
+            ) : (
+              // maybe "Get signals" or "Get started"
+              <Button onClick={() => setShowLogin(true)}>Get started</Button>
+            )}
+            <Modal
+              visible={showModal}
+              closable={false}
+              onCancel={() => setShowLogin(false)}
+            >
+              <AmplifyProvider theme={theme} colorMode="dark">
+                <Authenticator />
+              </AmplifyProvider>
+            </Modal>
+          </span>
         </span>
       </AntLayout.Header>
 
@@ -114,11 +227,17 @@ export default function Layout({ route, children }) {
         style={{
           padding: 24,
           marginTop: headerHeight,
-          height: "calc(100vh - 64px)",
+          height: `calc(100vh - ${headerHeight}px)`,
         }}
       >
         {children}
       </AntLayout.Content>
     </AntLayout>
   );
-}
+};
+
+export default ({ route, children }) => (
+  <Authenticator.Provider>
+    <Layout route={route}>{children}</Layout>
+  </Authenticator.Provider>
+);

@@ -5,6 +5,7 @@ import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined } from "@ant-design/icons";
 import styles from "./index.less";
 import { getApiUrl } from "@/utils";
+
 const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 
