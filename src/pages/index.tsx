@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Typography, Spin, Table, Switch } from "antd";
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined } from "@ant-design/icons";
-// import "@aws-amplify/ui/dist/style.css";
+import { useAuthenticator } from "@aws-amplify/ui-react";
 import styles from "./index.less";
 import { getApiUrl } from "@/utils";
 // import "./index.css";
@@ -11,11 +11,9 @@ import { getApiUrl } from "@/utils";
 const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 
-// test if local, then use amplify configure to override - actually idk this won't work
-// amplify checkout env dev
-// amplify pull
-
 const Page = () => {
+  const { user, signOut } = useAuthenticator((context) => [context.user]);
+  console.log(user);
   const HODL = "HODL";
   const hyperdrive = "hyperdrive";
   const [previewData, setPreviewData] = useState({

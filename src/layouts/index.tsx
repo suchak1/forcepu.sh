@@ -8,8 +8,7 @@ import {
   createTheme,
   defaultTheme,
 } from "@aws-amplify/ui-react";
-import { Amplify, Auth } from "aws-amplify";
-import { getApiUrl } from "@/utils";
+import { Amplify } from "aws-amplify";
 import "@aws-amplify/ui-react/styles.css";
 import BTC_ICE from "../../assets/btc_ice.png";
 import overrides from "./index.less";

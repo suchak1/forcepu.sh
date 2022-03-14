@@ -14,8 +14,7 @@
         ],
         "signupAttributes": [
           "EMAIL",
-          "NAME",
-          "PICTURE"
+          "NAME"
         ],
         "passwordProtectionSettings": {
           "passwordPolicyMinLength": 8,
