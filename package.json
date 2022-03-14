@@ -1,7 +1,7 @@
 {
   "name": "forcepu.sh",
-  "version": "0.2.2",
-  "description": "",
+  "version": "0.3.2",
+  "description": "UmiJS app for forcepu.sh",
   "main": "index.js",
   "scripts": {
     "build-dev:umi": "UMI_APP_ENV=dev umi build && cp -r assets/. dist",
