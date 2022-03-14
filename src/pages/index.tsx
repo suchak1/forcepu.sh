@@ -3,17 +3,13 @@ import { useState, useEffect } from "react";
 import { Typography, Spin, Table, Switch } from "antd";
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined } from "@ant-design/icons";
-import { useAuthenticator } from "@aws-amplify/ui-react";
 import styles from "./index.less";
 import { getApiUrl } from "@/utils";
-// import "./index.css";
 
 const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 
 const Page = () => {
-  const { user, signOut } = useAuthenticator((context) => [context.user]);
-  console.log(user);
   const HODL = "HODL";
   const hyperdrive = "hyperdrive";
   const [previewData, setPreviewData] = useState({
@@ -36,7 +32,8 @@ const Page = () => {
     (async () => {
       const url =
         process.env.NODE_ENV === "development"
-          ? "/api/preview"
+          ? // ? "/api/preview"
+            "https://api.dev.forcepu.sh/preview"
           : `${getApiUrl()}/preview`;
       fetch(url, { method: "GET" })
         .then((response) => response.json())

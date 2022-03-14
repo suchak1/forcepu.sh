@@ -1,8 +1,3 @@
-.noWrap {
-  display: none;
-  z-index: -1000 !important;
-}
-
 .signOut {
   border-left-color: magenta;
   border-right-color: magenta;
@@ -18,6 +13,7 @@
 
 .invisible {
   display: none;
+  z-index: -1000 !important;
 }
 
 :global(.ant-modal-body) {
@@ -29,10 +25,11 @@
 }
 
 :global(.ant-btn) {
-  border-left-color: #52e5ff;
-  border-right-color: #52e5ff;
-  border-top-color: transparent;
-  border-bottom-color: transparent;
+  // this makes it look like page/tab is selected
+  border-top-color: #52e5ff;
+  border-bottom-color: #52e5ff;
+  border-left-color: transparent;
+  border-right-color: transparent;
 }
 
 :global(.ant-btn:hover),
