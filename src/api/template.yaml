@@ -128,19 +128,39 @@ Resources:
           Required: false
           Mutable: true
 
+        - AttributeDataType: String
+          Name: profile
+          Required: false
+          Mutable: true
       UsernameAttributes:
         - email
       UsernameConfiguration:
         CaseSensitive: false
-      # security options
-      # UserPoolAddOns:
       UserPoolName: !Sub "forcepush-${Stage}"
       UserPoolTags:
         Env: !Ref Stage
 
-  # CognitoUserPoolClient:
-  #   Type: AWS::Cognito::UserPoolClient
-  #   Properties:
-  #     UserPoolId: !Ref CognitoUserPool
-  #     ClientName: !Ref CognitoUserPoolClientName
-  #     GenerateSecret: false
+  CognitoUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      AllowedOAuthFlows:
+        - code
+      AllowedOAuthFlowsUserPoolClient: true
+      AllowedOAuthScopes:
+        - phone
+        - email
+        - openid
+        - profile
+        - aws.cognito.signin.user.admin
+      CallbackURLs:
+# get output refs for user pool and client
+# and use for /auth lambda
+# USE THIS (DependsOn:)
+# https://stackoverflow.com/questions/44503800/how-to-export-cognito-user-pool-settings-to-cloudformation-template
+
+# https://stackoverflow.com/questions/63924712/how-to-reference-the-output-of-one-nested-sam-application-from-another-applicati
+# https://www.reddit.com/r/aws/comments/be0ici/pass_cloudform_variables_to_lambda/
+# https://georgemao.medium.com/amazon-cognito-automation-with-cloudformation-is-kind-of-tricky-heres-a-quick-example-65bdc61d39f7
+#     UserPoolId: !Ref CognitoUserPool
+#     ClientName: !Ref CognitoUserPoolClientName
+#     GenerateSecret: false
