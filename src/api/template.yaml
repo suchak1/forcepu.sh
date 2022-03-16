@@ -80,19 +80,64 @@ Resources:
       Dockerfile: Dockerfile
       DockerContext: ./home
       DockerTag: python3.8-v1
-  # CognitoUserPool:
-  #   Type: AWS::Cognito::UserPool
-  #   Properties:
-  #     UserPoolName: !Ref CognitoUserPoolName
-  #     Policies:
-  #       PasswordPolicy:
-  #         MinimumLength: 8
-  #     UsernameAttributes:
-  #       - email
-  #     Schema:
-  #       - AttributeDataType: String
-  #         Name: email
-  #         Required: false
+  CognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      AliasAttributes:
+        # how users login
+        - email
+      AutoVerifiedAttributes:
+        # how users verify their accounts
+        - email
+      EnabledMfas:
+        # TOTP MFA
+        - SOFTWARE_TOKEN_MFA
+      MfaConfiguration:
+        - OPTIONAL
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: true
+          RequireUppercase: true
+          TemporaryPasswordValidityDays: 7
+      Schema:
+        - AttributeDataType: String
+          Name: email
+          Required: true
+          Mutable: false
+
+        - AttributeDataType: String
+          Name: name
+          Required: true
+          Mutable: true
+
+        - AttributeDataType: String
+          Name: picture
+          Required: false
+          Mutable: true
+
+        - AttributeDataType: String
+          Name: phone_number
+          Required: false
+          Mutable: true
+
+        - AttributeDataType: String
+          Name: birthdate
+          Required: false
+          Mutable: true
+
+      UsernameAttributes:
+        - email
+      UsernameConfiguration:
+        CaseSensitive: false
+      # security options
+      # UserPoolAddOns:
+      UserPoolName: !Sub "forcepush-${Stage}"
+      UserPoolTags:
+        Env: !Ref Stage
+
   # CognitoUserPoolClient:
   #   Type: AWS::Cognito::UserPoolClient
   #   Properties:
