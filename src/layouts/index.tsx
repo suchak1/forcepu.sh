@@ -133,6 +133,7 @@ const routes = [
 ].concat(pages.map((page) => ({ text: capitalize(page), to: page })));
 
 const headerHeight = 64;
+const footerHeight = headerHeight / 2;
 // add move fast; break everything to right side of header
 // add logo to forcepush div
 // remove menu and menu items?
@@ -227,11 +228,28 @@ const Layout = ({ route, children }) => {
         style={{
           padding: 24,
           marginTop: headerHeight,
-          height: `calc(100vh - ${headerHeight}px)`,
+          height: `calc(100vh - ${headerHeight + footerHeight}px)`,
         }}
       >
         {children}
       </AntLayout.Content>
+      <AntLayout.Footer
+        style={{
+          height: footerHeight,
+          display: "flex",
+          justifyContent: "space-between",
+          // alignItems: "flex-start",
+          // alignContent: "flex-start",
+        }}
+      >
+        <span className={overrides.footerLink}>_</span>
+        <span className={overrides.footerLink}>
+          move fast; break everything
+        </span>
+        <a href="/privacy-policy" className={overrides.footerLink}>
+          Privacy Policy
+        </a>
+      </AntLayout.Footer>
     </AntLayout>
   );
 };
