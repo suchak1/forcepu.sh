@@ -242,12 +242,11 @@ const Layout = ({ route, children }) => {
           // alignContent: "flex-start",
         }}
       >
-        <span className={overrides.footerLink}>_</span>
         <span className={overrides.footerLink}>
-          move fast; break everything
+          _move fast; break everything
         </span>
-        <a href="/privacy-policy" className={overrides.footerLink}>
-          Privacy Policy
+        <a href="/privacy" className={overrides.footerLink}>
+          Privacy
         </a>
       </AntLayout.Footer>
     </AntLayout>
