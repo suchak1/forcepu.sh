@@ -238,8 +238,6 @@ const Layout = ({ route, children }) => {
           height: footerHeight,
           display: "flex",
           justifyContent: "space-between",
-          // alignItems: "flex-start",
-          // alignContent: "flex-start",
         }}
       >
         <span className={overrides.footerLink}>
