@@ -133,7 +133,7 @@ const routes = [
 ].concat(pages.map((page) => ({ text: capitalize(page), to: page })));
 
 const headerHeight = 64;
-const footerHeight = headerHeight / 2;
+const footerHeight = headerHeight;
 // add move fast; break everything to right side of header
 // add logo to forcepush div
 // remove menu and menu items?
@@ -239,6 +239,8 @@ const Layout = ({ route, children }) => {
           height: footerHeight,
           display: "flex",
           justifyContent: "space-between",
+          backgroundColor: "#1f1f1f",
+          alignItems: "center",
         }}
       >
         <span className={overrides.footerLink}>
