@@ -229,6 +229,7 @@ const Layout = ({ route, children }) => {
           padding: 24,
           marginTop: headerHeight,
           height: `calc(100vh - ${headerHeight + footerHeight}px)`,
+          overflow: "auto",
         }}
       >
         {children}
