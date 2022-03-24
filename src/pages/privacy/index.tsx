@@ -5,7 +5,7 @@ const { Title } = Typography;
 
 const PrivacyPage = ({ dispatch, privacy, _loading }) => {
   return (
-    <>
+    <div style={{ wordWrap: "break-word" }}>
       <Title>Privacy Policy</Title>
       <p>Last updated: March 14, 2022</p>
       <p>
@@ -497,7 +497,7 @@ const PrivacyPage = ({ dispatch, privacy, _loading }) => {
       <ul>
         <li>By email: support@forcepu.sh</li>
       </ul>
-    </>
+    </div>
   );
 };
 
