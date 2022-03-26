@@ -140,7 +140,7 @@ const Layout = ({ route, children }) => {
   );
 
   return (
-    <AntLayout style={{ height: "100vh" }}>
+    <AntLayout>
       <AntLayout.Header
         style={{
           // this is so that header stays above toggle in fixed scrolling
@@ -217,6 +217,7 @@ const Layout = ({ route, children }) => {
         style={{
           padding: 24,
           marginTop: headerHeight,
+          minHeight: `calc(100vh - ${headerHeight + footerHeight}px)`,
           overflow: "auto",
         }}
       >
