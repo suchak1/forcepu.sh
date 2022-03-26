@@ -113,19 +113,8 @@ const routes = [
       <>
         <div style={{ fontSize: 20, marginLeft: -10 }}>
           <span className={overrides.white}>force</span>
-          {/* <span className={overrides.ice}>pu.sh</span> */}
           pu.sh
         </div>
-        {/* <div
-          style={{
-            marginTop: -35,
-            color: "grey",
-            fontWeight: "normal",
-            marginLeft: -10,
-          }}
-        >
-          move fast; break everything
-        </div> */}
       </>
     ),
     to: "",
@@ -151,7 +140,7 @@ const Layout = ({ route, children }) => {
   );
 
   return (
-    <AntLayout>
+    <AntLayout style={{ height: "100vh" }}>
       <AntLayout.Header
         style={{
           // this is so that header stays above toggle in fixed scrolling
@@ -228,7 +217,6 @@ const Layout = ({ route, children }) => {
         style={{
           padding: 24,
           marginTop: headerHeight,
-          height: `calc(100vh - ${headerHeight + footerHeight}px)`,
           overflow: "auto",
         }}
       >
