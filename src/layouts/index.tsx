@@ -113,19 +113,8 @@ const routes = [
       <>
         <div style={{ fontSize: 20, marginLeft: -10 }}>
           <span className={overrides.white}>force</span>
-          {/* <span className={overrides.ice}>pu.sh</span> */}
           pu.sh
         </div>
-        {/* <div
-          style={{
-            marginTop: -35,
-            color: "grey",
-            fontWeight: "normal",
-            marginLeft: -10,
-          }}
-        >
-          move fast; break everything
-        </div> */}
       </>
     ),
     to: "",
@@ -133,6 +122,7 @@ const routes = [
 ].concat(pages.map((page) => ({ text: capitalize(page), to: page })));
 
 const headerHeight = 64;
+const footerHeight = headerHeight;
 // add move fast; break everything to right side of header
 // add logo to forcepush div
 // remove menu and menu items?
@@ -227,11 +217,28 @@ const Layout = ({ route, children }) => {
         style={{
           padding: 24,
           marginTop: headerHeight,
-          height: `calc(100vh - ${headerHeight}px)`,
+          minHeight: `calc(100vh - ${headerHeight + footerHeight}px)`,
+          overflow: "auto",
         }}
       >
         {children}
       </AntLayout.Content>
+      <AntLayout.Footer
+        style={{
+          height: footerHeight,
+          display: "flex",
+          justifyContent: "space-between",
+          backgroundColor: "#1f1f1f",
+          alignItems: "center",
+        }}
+      >
+        <span className={overrides.footerLink}>
+          _move fast; break everything
+        </span>
+        <a href="/privacy" className={overrides.footerLink}>
+          Privacy
+        </a>
+      </AntLayout.Footer>
     </AntLayout>
   );
 };

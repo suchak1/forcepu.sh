@@ -32,7 +32,8 @@ const Page = () => {
     (async () => {
       const url =
         process.env.NODE_ENV === "development"
-          ? "/api/preview"
+          ? // ? "/api/preview"
+            "https://api.dev.forcepu.sh/preview"
           : `${getApiUrl()}/preview`;
       fetch(url, { method: "GET" })
         .then((response) => response.json())
