@@ -105,12 +105,12 @@ const ArtPage = ({ dispatch, art, _loading }) => {
       {nfts.map((nft) => (
         <Row>
           <Col flex={1}>
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <div className={styles.cardLeft}>
               {nftCard(nft[0].contract, nft[0].token)}
             </div>
           </Col>
           <Col flex={1}>
-            <div style={{ display: "flex", justifyContent: "flex-start" }}>
+            <div className={styles.cardRight}>
               {nftCard(nft[1].contract, nft[1].token)}
             </div>
           </Col>

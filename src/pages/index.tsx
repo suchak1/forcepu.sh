@@ -32,8 +32,7 @@ const Page = () => {
     (async () => {
       const url =
         process.env.NODE_ENV === "development"
-          ? // ? "/api/preview"
-            "https://api.dev.forcepu.sh/preview"
+          ? "/api/preview"
           : `${getApiUrl()}/preview`;
       fetch(url, { method: "GET" })
         .then((response) => response.json())
@@ -174,13 +173,7 @@ const Page = () => {
   ];
   return (
     <>
-      <Title
-      // style={{
-      //   margin: "-10px 0px 0px",
-      // }}
-      >
-        Leveraging AutoML to beat BTC
-      </Title>
+      <Title>Leveraging AutoML to beat BTC</Title>
       <span
         style={{
           display: "flex",
@@ -209,7 +202,7 @@ const Page = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            height: "50%",
+            height: "400px",
           }}
         >
           <Spin indicator={antIcon} />
