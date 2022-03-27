@@ -25,7 +25,6 @@ const nftCard = (contract, token) => (
           extra={<a href={data?.mediaPageUrl}>etherscan</a>}
           style={{ width: nftWidth + 48 }}
         >
-          {/* <img src={data?.media} width={nftWidth} /> */}
           <HoverVideoPlayer
             videoSrc={data?.metadata?.animation_url}
             loadingOverlay={<Spin indicator={antIcon} />}
@@ -35,7 +34,7 @@ const nftCard = (contract, token) => (
             style={{
               fontWeight: 600,
               display: "flex",
-              // justifyContent: "space-between",
+              justifyContent: "space-between",
               paddingTop: 16,
             }}
           >
