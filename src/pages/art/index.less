@@ -3,3 +3,24 @@
 }
 
 @primary-color: #52e5ff;
+
+.cardLeft {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cardRight {
+  display: flex;
+  justify-content: flex-start;
+}
+
+@media (max-width: 700px) {
+  .cardLeft {
+    display: flex;
+    justify-content: center;
+  }
+  .cardRight {
+    display: flex;
+    justify-content: center;
+  }
+}
