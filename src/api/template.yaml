@@ -38,6 +38,15 @@ Resources:
         EndpointConfiguration: EDGE
         Route53:
           HostedZoneId: !Ref HostedZoneId
+  ApiCognitoAuthorizer:
+    Type: AWS::ApiGateway::Authorizer
+    Properties:
+      IdentitySource: "method.request.header.Authorization"
+      Name: ApiCognitoAuthorizer
+      ProviderARNs:
+        - "arn:aws:cognito-idp:{region}:{userpoolIdentifier}"
+      RestApiId: !Ref ServerlessRestApi
+      Type: COGNITO_USER_POOLS
   ExerciseLogFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
