@@ -45,15 +45,6 @@ Resources:
         Authorizers:
           CognitoAuth:
             UserPoolArn: !Ref UserPoolArn
-  # ApiCognitoAuthorizer:
-  #   Type: AWS::ApiGateway::Authorizer
-  #   Properties:
-  #     IdentitySource: "method.request.header.Authorization"
-  #     Name: ApiCognitoAuthorizer
-  #     ProviderARNs:
-  #       - "arn:aws:cognito-idp:{region}:{userpoolIdentifier}"
-  #     RestApiId: !Ref ServerlessRestApi
-  #     Type: COGNITO_USER_POOLS
   ProtectedFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -67,6 +58,7 @@ Resources:
             RestApiId: !Ref ApiGatewayApi
             Auth:
               Authorizer: CognitoAuth
+              # header Authorization: id_token from /token endpoint
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./protected
