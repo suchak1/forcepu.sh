@@ -42,7 +42,6 @@ Resources:
         Route53:
           HostedZoneId: !Ref HostedZoneId
       Auth:
-        DefaultAuthorizer: CognitoAuth
         Authorizers:
           CognitoAuth:
             UserPoolArn: !Ref UserPoolArn
