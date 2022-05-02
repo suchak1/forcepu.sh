@@ -42,9 +42,9 @@ Resources:
         Route53:
           HostedZoneId: !Ref HostedZoneId
       Auth:
-        DefaultAuthorizer: CognitoAuthorizer
+        DefaultAuthorizer: CognitoAuth
         Authorizers:
-          CognitoAuthorizer:
+          CognitoAuth:
             UserPoolArn: !Ref UserPoolArn
   # ApiCognitoAuthorizer:
   #   Type: AWS::ApiGateway::Authorizer
@@ -67,7 +67,7 @@ Resources:
             Method: get
             RestApiId: !Ref ApiGatewayApi
             Auth:
-              Authorizer: CognitoAuthorizer
+              Authorizer: CognitoAuth
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./protected
