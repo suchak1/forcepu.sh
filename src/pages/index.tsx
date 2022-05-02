@@ -30,11 +30,7 @@ const Page = () => {
   };
   useEffect(() => {
     (async () => {
-      const url =
-        process.env.NODE_ENV === "development"
-          ? // ? "/api/preview"
-            "https://api.dev.forcepu.sh/preview"
-          : `${getApiUrl()}/preview`;
+      const url = `${getApiUrl()}/preview`;
       fetch(url, { method: "GET" })
         .then((response) => response.json())
         .then((data) => setPreviewData(data))

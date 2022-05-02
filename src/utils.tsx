@@ -1,4 +1,5 @@
 export const getApiUrl = () => {
   const hostname = window.location.hostname;
-  return `https://api.${hostname}`;
+  const url = hostname === "localhost" ? "/api" : `https://api.${hostname}`;
+  return url;
 };

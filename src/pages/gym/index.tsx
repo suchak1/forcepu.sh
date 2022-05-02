@@ -56,10 +56,7 @@ const GymPage = ({ dispatch, gym, _loading }) => {
 
   useEffect(() => {
     (async () => {
-      const url =
-        process.env.NODE_ENV === "development"
-          ? "/api/exercise_log"
-          : `${getApiUrl()}/exercise_log`;
+      const url = `${getApiUrl()}/exercise_log`;
       fetch(url, { method: "GET" })
         .then((response) => response.json())
         .then((data) => setLog(data))
