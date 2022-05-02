@@ -47,6 +47,21 @@ Resources:
         - "arn:aws:cognito-idp:{region}:{userpoolIdentifier}"
       RestApiId: !Ref ServerlessRestApi
       Type: COGNITO_USER_POOLS
+  ProtectedFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      PackageType: Image
+      Events:
+        Protected:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /protected
+            Method: get
+            RestApiId: !Ref ApiGatewayApi
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./protected
+      DockerTag: python3.8-v1
   ExerciseLogFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
