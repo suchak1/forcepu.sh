@@ -1,6 +1,7 @@
-def get_protected(event):
+def get_protected(*_):
     return {
         "statusCode": 200,
-        "body": event.requestContext.authorizer,
+        "body": _,
+        # event.requestContext.authorizer,
         "headers": {"Access-Control-Allow-Origin": "*"}
     }
