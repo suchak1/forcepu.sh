@@ -4,7 +4,10 @@ import json
 def handle_options():
     return {
         "statusCode": 200,
-        "headers": {"Access-Control-Allow-Origin": "*"}
+        "headers": {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": "true"
+        }
     }
 
 
