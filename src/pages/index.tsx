@@ -19,8 +19,8 @@ const Page = () => {
   const [toggle, setToggle] = useState(true);
   const [loading, setLoading] = useState(true);
 
-  const formatBTC = (v) => `${Math.round(v * 10) / 10} ₿`;
-  const formatUSD = (v) => {
+  const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
+  const formatUSD = (v: number) => {
     if (v < 1e3) {
       return `$ ${v}`;
     } else if (v < 1e6) {
@@ -139,7 +139,7 @@ const Page = () => {
     },
     yAxis: {
       label: {
-        formatter: (v) => (toggle ? formatBTC(v) : formatUSD(v)),
+        formatter: (v: any) => (toggle ? formatBTC(v) : formatUSD(v)),
       },
       grid: {
         line: {
@@ -153,7 +153,13 @@ const Page = () => {
     point: {
       shape: "breath-point",
     },
-    annotations: [],
+    annotations: [
+      {
+        type: "region",
+        start: (xScale: any) => {},
+        end: (xScale: any) => {},
+      },
+    ],
   };
 
   const columns = [
