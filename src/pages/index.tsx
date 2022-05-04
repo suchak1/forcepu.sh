@@ -33,7 +33,11 @@ const Page = () => {
       const url = `${getApiUrl()}/preview`;
       fetch(url, { method: "GET" })
         .then((response) => response.json())
-        .then((data) => setPreviewData(data))
+        .then((data) => {
+          const latestDate = data.BTC.data[data.BTC.data.length - 1].Time;
+          data.BTC.data.push({ Name: "HODL", Time: "1/15/2021", Bal: 1 });
+          setPreviewData(data);
+        })
         .then(() => setLoading(false));
     })();
   }, []);
@@ -156,8 +160,26 @@ const Page = () => {
     annotations: [
       {
         type: "region",
-        start: (xScale: any) => {},
-        end: (xScale: any) => {},
+        style: {
+          fill: "red",
+          fillOpacity: 1,
+        },
+        start: (xScale: any) => {
+          const ratio = xScale.ticks ? 1 / xScale.ticks.length : 1;
+          const x = xScale.scale("01/03/2022") - ratio / 2;
+          return [`${x * 100}%`, "0%"];
+          // return [`0%`, "0%"];
+        },
+        end: (xScale: any) => {
+          console.log(xScale);
+          console.log(xScale.ticks);
+          const ratio = xScale.ticks ? 1 / xScale.ticks.length : 1;
+          const x = xScale.scale("01/10/2022") + ratio / 2;
+          return [`${x * 100}%`, "100%"];
+          // return [`100%`, "0%"];
+        },
+        // Log in[blue and clicking will toggle login screen] to unlock the latest BUY[green] and SELL[red] signals.
+        // Unlock [blue and clicking will toggle login screen] the latest BUY[green] and SELL[red] signals.
       },
     ],
   };

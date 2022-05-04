@@ -33,7 +33,6 @@
     "@wojtekmaj/react-hooks": "^1.13.0",
     "antd": "4.19.1",
     "aws-amplify": "4.3.15",
-    "date-fns": "^2.28.0",
     "react-hover-video-player": "^9.4.0",
     "react-pdf": "^5.7.1",
     "umi": "3.5.21"
