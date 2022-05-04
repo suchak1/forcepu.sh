@@ -1,7 +1,14 @@
 import json
 
 
-def get_protected(event, context):
+def handle_options():
+    return {
+        "statusCode": 200,
+        "headers": {"Access-Control-Allow-Origin": "*"}
+    }
+
+
+def handle_get(event):
     claims = event['requestContext']['authorizer']['claims']
     email_verified = claims['email_verified']
     # ['email']
@@ -35,3 +42,12 @@ def get_protected(event, context):
         **response,
         "headers": {"Access-Control-Allow-Origin": "*"}
     }
+
+
+def get_protected(event, _):
+    if event['httpMethod'].upper() == 'OPTIONS':
+        response = handle_options()
+    else:
+        response = handle_get(event)
+
+    return response

@@ -59,6 +59,12 @@ Resources:
             Auth:
               Authorizer: CognitoAuth
               # header Authorization: id_token from /token endpoint
+        Options:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /protected
+            Method: options
+            RestApiId: !Ref ApiGatewayApi
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./protected
