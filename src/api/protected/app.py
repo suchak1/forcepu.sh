@@ -30,6 +30,7 @@ def get_protected(event, context):
             # {'message': 'The incoming token has expired'}
         }
 
+    response['body'] = json.dumps(response['body'])
     return {
         **response,
         "headers": {"Access-Control-Allow-Origin": "*"}
