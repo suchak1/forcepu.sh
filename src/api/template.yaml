@@ -21,6 +21,9 @@ Parameters:
   HostedZoneId:
     Type: "String"
     NoEcho: true
+  UserPoolArn:
+    Type: "String"
+    NoEcho: true
 
 Globals:
   Function:
@@ -38,6 +41,34 @@ Resources:
         EndpointConfiguration: EDGE
         Route53:
           HostedZoneId: !Ref HostedZoneId
+      Auth:
+        Authorizers:
+          CognitoAuth:
+            UserPoolArn: !Ref UserPoolArn
+  ProtectedFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      PackageType: Image
+      Events:
+        Protected:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /protected
+            Method: get
+            RestApiId: !Ref ApiGatewayApi
+            Auth:
+              Authorizer: CognitoAuth
+              # header Authorization: id_token from /token endpoint
+        Options:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /protected
+            Method: options
+            RestApiId: !Ref ApiGatewayApi
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./protected
+      DockerTag: python3.8-v1
   ExerciseLogFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:

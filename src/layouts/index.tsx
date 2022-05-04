@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "umi";
 import { Layout as AntLayout, Menu, Button, Modal } from "antd";
 import {
@@ -9,6 +9,7 @@ import {
   defaultTheme,
 } from "@aws-amplify/ui-react";
 import { Amplify } from "aws-amplify";
+import { getApiUrl } from "@/utils";
 import "@aws-amplify/ui-react/styles.css";
 import BTC_ICE from "../../assets/btc_ice.png";
 import overrides from "./index.less";
@@ -132,6 +133,17 @@ const Layout = ({ route, children }) => {
   const [showLogin, setShowLogin] = useState(false);
   const { user, signOut } = useAuthenticator((context) => [context.user]);
   const loggedIn = user;
+  useEffect(() => {
+    if (loggedIn) {
+      const { idToken } = user.signInUserSession;
+      const url = `${getApiUrl()}/protected`;
+      fetch(url, {
+        method: "GET",
+        headers: { Authorization: idToken.jwtToken },
+      }).then((response) => response.json());
+      // .then((data) => console.log(data));
+    }
+  }, [user]);
   const showModal = !loggedIn && showLogin;
   const dummy = <Authenticator className={overrides.invisible} />;
   const getAccountText = (user: string | undefined) => `signed in as ${user}`;
