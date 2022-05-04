@@ -134,13 +134,11 @@ const Layout = ({ route, children }) => {
   const { user, signOut } = useAuthenticator((context) => [context.user]);
   const loggedIn = user;
   if (loggedIn) {
-    console.log(user);
-    console.log(user.signInUserSession);
-    const { accessToken, idToken } = user.signInUserSession;
+    const { idToken } = user.signInUserSession;
     const url = `${getApiUrl()}/protected`;
     fetch(url, {
       method: "GET",
-      headers: { Authorization: accessToken.jwtToken },
+      headers: { Authorization: idToken.jwtToken },
     })
       .then((response) => response.json())
       .then((data) => console.log(data));
