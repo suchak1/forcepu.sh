@@ -153,6 +153,7 @@ const Page = () => {
     point: {
       shape: "breath-point",
     },
+    annotations: [],
   };
 
   const columns = [
