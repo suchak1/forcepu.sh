@@ -139,9 +139,8 @@ const Layout = ({ route, children }) => {
     fetch(url, {
       method: "GET",
       headers: { Authorization: idToken.jwtToken },
-    })
-      .then((response) => response.json())
-      .then((data) => console.log(data));
+    }).then((response) => response.json());
+    // .then((data) => console.log(data));
   }
   const showModal = !loggedIn && showLogin;
   const dummy = <Authenticator className={overrides.invisible} />;
