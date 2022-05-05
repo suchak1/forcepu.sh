@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext } from "react";
+import React, { useState, useEffect, createContext, cloneElement } from "react";
 import { NavLink } from "umi";
 import { Layout as AntLayout, Menu, Button, Modal } from "antd";
 import {
@@ -229,9 +229,10 @@ const Layout = ({ route, children }) => {
           overflow: "auto",
         }}
       >
-        <LoginContext.Provider value={{ showLogin, setShowLogin }}>
-          {children}
-        </LoginContext.Provider>
+        {/* <LoginContext.Provider value={{ showLogin, setShowLogin }}> */}
+        {/* {children} */}
+        {cloneElement(children, { setShowLogin, user })}
+        {/* </LoginContext.Provider> */}
       </AntLayout.Content>
 
       <AntLayout.Footer

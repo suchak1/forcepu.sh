@@ -10,7 +10,7 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 
-const Page = () => {
+const Page = ({ setShowLogin, user }) => {
   const HODL = "HODL";
   const hyperdrive = "hyperdrive";
   const [previewData, setPreviewData] = useState({
@@ -32,7 +32,7 @@ const Page = () => {
     }
     return `$ ${v / 1e6}M`;
   };
-  const { user } = useAuthenticator((context) => [context.user]);
+  // const { user } = useAuthenticator((context) => [context.user]);
   // const { showLogin, setShowLogin } = useContext(LoginContext);
   const popoverContent = (
     <span style={{ color: "#d9d9d9", fontWeight: "600" }}>
@@ -40,7 +40,7 @@ const Page = () => {
         "Signal API is coming soon..."
       ) : (
         <>
-          <a onClick={() => {}}>
+          <a onClick={() => setShowLogin(true)}>
             <i style={{ color: "#52e5ff" }}>{"Unlock"}</i>
           </a>
           {" the latest "}
