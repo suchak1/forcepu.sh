@@ -283,25 +283,25 @@ const Page = () => {
                 content={popoverContent}
                 color="#1f1f1f"
                 placement="bottom"
-                onVisibleChange={(visible) => {
-                  if (user) {
-                    if (visible && unlockIcon === "🔑") {
-                      setUnlockIcon("⏳");
-                    } else if (!visible && unlockIcon === "⏳") {
-                      setUnlockIcon("🔑");
-                    }
-                  } else {
-                    if (visible && lockIcon === "🔒") {
-                      setLockIcon("🔓");
-                    } else if (!visible && lockIcon === "🔓") {
-                      setLockIcon("🔒");
-                    }
-                  }
-                }}
-                // style={{backgroundColor: "#1f1f1f"}}
+                // onVisibleChange={(visible) => {
+                //   if (user) {
+                //     if (visible && unlockIcon === "🔑") {
+                //       setUnlockIcon("⏳");
+                //     } else if (!visible && unlockIcon === "⏳") {
+                //       setUnlockIcon("🔑");
+                //     }
+                //   } else {
+                //     if (visible && lockIcon === "🔒") {
+                //       setLockIcon("🔓");
+                //     } else if (!visible && lockIcon === "🔓") {
+                //       setLockIcon("🔒");
+                //     }
+                //   }
+                // }}
+                visible={true}
               >
                 {" "}
-                <Line {...config} />
+                <Line onMouseEnter={() => alert("enter mouse")} {...config} />
               </Popover>
             ) : // <Tooltip
             //   title={
