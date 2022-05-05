@@ -1,7 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import ReactDOMServer from "react-dom/server";
-import { Typography, Spin, Table, Switch, Popover, Button } from "antd";
+import { Typography, Spin, Table, Switch, Popover } from "antd";
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined, LockFilled } from "@ant-design/icons";
 import styles from "./index.less";
@@ -256,7 +255,31 @@ const Page = () => {
       ) : (
         <div className={styles.parent}>
           <div className={styles.child}>
-            {!loading ? <Line {...config} /> : null}
+            {!loading ? (
+              <>
+                <div style={{ zIndex: 2 }}>
+                  <Line {...config} />
+                </div>
+                <Popover
+                  content={
+                    "Unlock [blue and clicking will toggle login screen] the latest BUY[green] and SELL[red] signals."
+                  }
+                >
+                  <div
+                    style={{
+                      zIndex: 3,
+                      position: "relative",
+                      backgroundColor: "red",
+                      width: `calc(${(1 - lockRatio) * 100}% - 33px)`,
+                      height: "375px",
+                      bottom: "400px",
+                      left: "200px",
+                    }}
+                  ></div>
+                </Popover>
+                {/* <div style="z-index: 3; position: relative; background-color: red; width: 50%; height: 375px; bottom: 400px; left: 200px"></div> */}
+              </>
+            ) : null}
           </div>
           <div className={styles.child}>
             {!loading ? (
