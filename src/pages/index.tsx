@@ -1,10 +1,13 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Typography, Spin, Table, Switch, Popover, Tooltip } from "antd";
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined, LockFilled } from "@ant-design/icons";
 import styles from "./index.less";
 import { getApiUrl, getDateRange, convertShortISO } from "@/utils";
+import {
+  useAuthenticator,
+} from "@aws-amplify/ui-react";
 
 const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
@@ -19,6 +22,7 @@ const Page = () => {
   const [toggle, setToggle] = useState(true);
   const [loading, setLoading] = useState(true);
   const [lockRatio, setLockRatio] = useState(0);
+  const [lockIcon, setLockIcon] = useState('🔒')
   const lockSize = 50;
   const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
   const formatUSD = (v: number) => {
@@ -29,6 +33,9 @@ const Page = () => {
     }
     return `$ ${v / 1e6}M`;
   };
+  const { user } = useAuthenticator((context) => [context.user]);
+  const { showLogin, setShowLogin } = useContext(LoginContext);
+  const popoverContent = user ? 
   useEffect(() => {
     (async () => {
       const url = `${getApiUrl()}/preview`;
@@ -193,7 +200,7 @@ const Page = () => {
       },
       {
         type: "text",
-        content: "🔒",
+        content: user ? "🔒",
         position: [`${(lockRatio + (1 - lockRatio) / 2) * 100}%`, "50%"],
         style: {
           fontSize: lockSize,
@@ -258,9 +265,19 @@ const Page = () => {
             {!loading ? (
               <Popover
                 content={
-                  "Unlock [blue and clicking will toggle login screen] the latest BUY[green] and SELL[red] signals."
+                  <span style={{ color: "#d9d9d9" }}>
+                    <a onClick={() => }>
+            <i style={{ color: "#52e5ff" }}>{"Unlock"}</i>
+          </a>
+                    {
+                      "Unlock [blue and clicking will toggle login screen] the latest BUY[green] and SELL[red] signals."
+                    }
+                  </span>
                 }
-                color="1f1f1f"
+                color="#1f1f1f"
+                placement="bottom"
+                onVisibleChange={(visible) => console.log(visible)}
+                // style={{backgroundColor: "#1f1f1f"}}
               >
                 {" "}
                 <Line {...config} />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import { NavLink } from "umi";
 import { Layout as AntLayout, Menu, Button, Modal } from "antd";
 import {
@@ -131,6 +131,7 @@ const footerHeight = headerHeight;
 
 const Layout = ({ route, children }) => {
   const [showLogin, setShowLogin] = useState(false);
+  const LoginContext = createContext({ showLogin, setShowLogin });
   const { user, signOut } = useAuthenticator((context) => [context.user]);
   const loggedIn = user;
   useEffect(() => {
@@ -233,8 +234,11 @@ const Layout = ({ route, children }) => {
           overflow: "auto",
         }}
       >
-        {children}
+        <LoginContext.Provider value={{ showLogin, setShowLogin }}>
+          {children}
+        </LoginContext.Provider>
       </AntLayout.Content>
+
       <AntLayout.Footer
         style={{
           height: footerHeight,
