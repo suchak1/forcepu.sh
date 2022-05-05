@@ -1,8 +1,9 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Typography, Spin, Table, Switch } from "antd";
+import ReactDOMServer from "react-dom/server";
+import { Typography, Spin, Table, Switch, Popover, Button } from "antd";
 import { G2, Line } from "@ant-design/charts";
-import { LoadingOutlined } from "@ant-design/icons";
+import { LoadingOutlined, LockFilled } from "@ant-design/icons";
 import styles from "./index.less";
 import { getApiUrl, getDateRange, convertShortISO } from "@/utils";
 
@@ -36,7 +37,6 @@ const Page = () => {
         .then((response) => response.json())
         .then((data) => {
           const dataLen = data.BTC.data.length;
-          console.log(dataLen);
           const latestDate = data.BTC.data[dataLen - 1].Time;
 
           let lockedDates: Date[] | string[] = getDateRange(
@@ -183,7 +183,8 @@ const Page = () => {
         style: {
           // https://ant.design/docs/spec/colors#Neutral-Color-Palette
           // fill: "#595959",
-          fill: "#434343",
+          // fill: "#434343",
+          fill: "red",
           fillOpacity: 1,
           cursor: "not-allowed",
         },
@@ -210,14 +211,52 @@ const Page = () => {
       //   /** y 方向的偏移量 */
       //   offsetY: 40,
       // },
+      // {
+      //   type: "text",
+      //   content: "🔒",
+      //   position: [`${(lockRatio + (1 - lockRatio) / 2) * 100}%`, "50%"],
+      //   style: {
+      //     fontSize: lockSize,
+      //   },
+      //   offsetX: (lockSize * -1) / 2,
+      // },
       {
-        type: "text",
-        content: "🔒",
-        position: [`${(lockRatio + (1 - lockRatio) / 2) * 100}%`, "50%"],
-        style: {
-          fontSize: lockSize,
-        },
-        offsetX: (lockSize * -1) / 2,
+        type: "html",
+        html: ReactDOMServer.renderToStaticMarkup(
+          <div
+            style={{
+              color: "white",
+              fontSize: "100px",
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
+            <span>hello</span>
+            <Popover
+              content={
+                "Unlock [blue and clicking will toggle login screen] the latest BUY[green] and SELL[red] signals."
+              }
+              title={"ok"}
+            >
+              <LockFilled />
+              <Button onClick={() => alert("hi")}>hi</Button>
+            </Popover>
+            <Button onClick={() => alert("bye")}>bye</Button>
+          </div>
+        ),
+        // html:
+        //   '<span style="color: rgb(223, 0, 223); font-size: 100px;">HODL</span>',
+        // container: (
+        //   <div
+        //     dangerouslySetInnerHTML={{
+        //       __html:
+        //         '<span style="color: rgb(223, 0, 223); font-size: 100px;">HODL</span>',
+        //     }}
+        //   />
+        // ),
+        alignX: "middle",
+        alignY: "middle",
       },
     ],
   };
