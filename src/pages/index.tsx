@@ -4,7 +4,7 @@ import { Typography, Spin, Table, Switch } from "antd";
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined } from "@ant-design/icons";
 import styles from "./index.less";
-import { getApiUrl } from "@/utils";
+import { getApiUrl, getDateRange, convertShortISO } from "@/utils";
 
 const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
@@ -35,9 +35,27 @@ const Page = () => {
         .then((response) => response.json())
         .then((data) => {
           const latestDate = data.BTC.data[data.BTC.data.length - 1].Time;
-          data.BTC.data.push({ Name: "HODL", Time: "1/15/2021", Bal: 1 });
-          setPreviewData(data);
+          let dateRange: Date[] | string[] = getDateRange(
+            new Date(latestDate),
+            new Date()
+          );
+          // dateRange = dateRange.map((d) => d.toISOString().slice(0, 10));
+          dateRange.forEach((d) => {
+            const dateString = convertShortISO(d.toISOString().slice(0, 10));
+            data.BTC.data.push({
+              // Name: undefined,
+              Time: dateString,
+              // Bal: undefined,
+            });
+            data.USD.data.push({
+              // Name: undefined,
+              Time: dateString,
+              // Bal: undefined,
+            });
+          });
+          return data;
         })
+        .then((data) => setPreviewData(data))
         .then(() => setLoading(false));
     })();
   }, []);

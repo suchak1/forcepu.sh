@@ -4,57 +4,26 @@ export const getApiUrl = () => {
   return url;
 };
 
-// 1
+export const getDateRange = (
+  start: string | number | Date,
+  end: string | number | Date,
+  steps = 1
+) => {
+  const range = [];
+  let curr = new Date(start);
 
-var getDaysArray = function (start, end) {
-  for (
-    var arr = [], dt = new Date(start);
-    dt <= new Date(end);
-    dt.setDate(dt.getDate() + 1)
-  ) {
-    arr.push(new Date(dt));
-  }
-  return arr;
-};
-
-var daylist = getDaysArray(new Date("2022-04-15"), new Date());
-console.log(daylist.map((d) => d.toISOString().slice(0, 10)));
-
-// 2
-
-Date.prototype.addDays = function (days) {
-  var date = new Date(this.valueOf());
-  date.setDate(date.getDate() + days);
-  return date;
-};
-
-function getDates(startDate, stopDate) {
-  var dateArray = new Array();
-  var currentDate = startDate;
-  while (currentDate <= stopDate) {
-    dateArray.push(new Date(currentDate));
-    currentDate = currentDate.addDays(1);
-  }
-  return dateArray;
-}
-
-daylist = getDates(new Date("2022-04-15"), new Date());
-console.log(daylist.map((d) => d.toISOString().slice(0, 10)));
-
-// 3
-
-function dateRange(startDate, endDate, steps = 1) {
-  const dateArray = [];
-  let currentDate = new Date(startDate);
-
-  while (currentDate <= new Date(endDate)) {
-    dateArray.push(new Date(currentDate));
+  while (curr <= new Date(end)) {
+    range.push(new Date(curr));
     // Use UTC date to prevent problems with time zones and DST
-    currentDate.setUTCDate(currentDate.getUTCDate() + steps);
+    curr.setUTCDate(curr.getUTCDate() + steps);
   }
 
-  return dateArray;
-}
+  return range;
+};
 
-daylist = dateRange(new Date("2022-04-15"), new Date());
-console.log(daylist.map((d) => d.toISOString().slice(0, 10)));
+export const convertShortISO = (dateString: string) => {
+  const year = dateString.slice(0, 4);
+  const month = dateString.slice(5, 7);
+  const day = dateString.slice(8, 10);
+  return `${month}/${day}/${year}`;
+};
