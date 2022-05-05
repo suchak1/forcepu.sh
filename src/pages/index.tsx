@@ -40,8 +40,8 @@ const Page = ({ setShowLogin, user }) => {
         "Signal API is coming soon..."
       ) : (
         <>
-          <a onClick={() => setShowLogin(true)}>
-            <i style={{ color: "#52e5ff" }}>{"Unlock"}</i>
+          <a style={{ color: "#52e5ff" }} onClick={() => setShowLogin(true)}>
+            {"Log in and unlock"}
           </a>
           {" the latest "}
           <span style={{ color: "lime" }}>BUY</span>
