@@ -18,9 +18,8 @@ const Page = () => {
   });
   const [toggle, setToggle] = useState(true);
   const [loading, setLoading] = useState(true);
-  const [lockDates, setLockDates] = useState(["", ""]);
   const [lockRatio, setLockRatio] = useState(0);
-
+  const lockSize = 50;
   const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
   const formatUSD = (v: number) => {
     if (v < 1e3) {
@@ -182,13 +181,43 @@ const Page = () => {
       {
         type: "region",
         style: {
-          fill: "red",
+          // https://ant.design/docs/spec/colors#Neutral-Color-Palette
+          // fill: "#595959",
+          fill: "#434343",
           fillOpacity: 1,
+          cursor: "not-allowed",
         },
         start: [`${lockRatio * 100}%`, "0%"],
         end: ["100%", "100%"],
         // Log in[blue and clicking will toggle login screen] to unlock the latest BUY[green] and SELL[red] signals.
         // Unlock [blue and clicking will toggle login screen] the latest BUY[green] and SELL[red] signals.
+      },
+      // {
+      //   type: "image",
+      //   src:
+      //     "https://gw.alipayobjects.com/mdn/rms_2274c3/afts/img/A*ELYbTIVCgPoAAAAAAAAAAABkARQnAQ",
+      //   /** 位置 */
+      //   // position: [`${(lockRatio + (1 - lockRatio) / 2) * 100}%`, "50%"],
+      //   position: [`10%`, "50%"],
+
+      //   /** 图形样式属性 */
+      //   style: {
+      //     width: 50,
+      //     height: 50,
+      //   },
+      //   /** x 方向的偏移量 */
+      //   offsetX: -25,
+      //   /** y 方向的偏移量 */
+      //   offsetY: 40,
+      // },
+      {
+        type: "text",
+        content: "🔒",
+        position: [`${(lockRatio + (1 - lockRatio) / 2) * 100}%`, "50%"],
+        style: {
+          fontSize: lockSize,
+        },
+        offsetX: (lockSize * -1) / 2,
       },
     ],
   };
