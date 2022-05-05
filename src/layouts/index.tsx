@@ -259,6 +259,8 @@ const Layout = ({ route, children }) => {
   );
 };
 
+// export { LoginContext };
+
 export default ({ route, children }) => (
   <Authenticator.Provider>
     <Layout route={route}>{children}</Layout>
