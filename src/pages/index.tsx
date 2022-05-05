@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Typography, Spin, Table, Switch, Popover } from "antd";
+import { Typography, Spin, Table, Switch, Popover, Tooltip } from "antd";
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined, LockFilled } from "@ant-design/icons";
 import styles from "./index.less";
@@ -256,30 +256,23 @@ const Page = () => {
         <div className={styles.parent}>
           <div className={styles.child}>
             {!loading ? (
-              <>
-                <div style={{ zIndex: 2 }}>
-                  <Line {...config} />
-                </div>
-                <Popover
-                  content={
-                    "Unlock [blue and clicking will toggle login screen] the latest BUY[green] and SELL[red] signals."
-                  }
-                >
-                  <div
-                    style={{
-                      zIndex: 3,
-                      position: "relative",
-                      backgroundColor: "red",
-                      width: `calc(${(1 - lockRatio) * 100}% - 33px)`,
-                      height: "375px",
-                      bottom: "400px",
-                      left: "200px",
-                    }}
-                  ></div>
-                </Popover>
-                {/* <div style="z-index: 3; position: relative; background-color: red; width: 50%; height: 375px; bottom: 400px; left: 200px"></div> */}
-              </>
-            ) : null}
+              <Popover
+                content={
+                  "Unlock [blue and clicking will toggle login screen] the latest BUY[green] and SELL[red] signals."
+                }
+                color="1f1f1f"
+              >
+                {" "}
+                <Line {...config} />
+              </Popover>
+            ) : // <Tooltip
+            //   title={
+            //     <div style={{ color: "white", fontSize: "36px" }}>hello</div>
+            //   }
+            // >
+            //   <Line {...config} />
+            // </Tooltip>
+            null}
           </div>
           <div className={styles.child}>
             {!loading ? (
