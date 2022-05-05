@@ -50,10 +50,12 @@ const Page = () => {
             data.USD.data.push({ Time });
           });
 
-          const numUnlockedDates = dataLen / 2;
-          const numLockedDates = lockedDates.length;
-          setLockDates([lockedDates[0], lockedDates[numLockedDates - 1]]);
-          setLockRatio(numUnlockedDates / (numLockedDates + numLockedDates));
+          // This is because there are two data points for each day:
+          // HODL and hyperdrive
+          const numUnlockedDays = dataLen / 2;
+          const numLockedDays = lockedDates.length;
+          const totalNumDays = numUnlockedDays + numLockedDays;
+          setLockRatio(numUnlockedDays / totalNumDays);
           return data;
         })
         .then((data) => setPreviewData(data))
@@ -183,24 +185,6 @@ const Page = () => {
           fill: "red",
           fillOpacity: 1,
         },
-        // start: (xScale: any) => {
-        //   // const ratio = xScale.ticks ? 1 / xScale.ticks.length : 1;
-        //   // let x = xScale.scale(lockDates[0]) - ratio / 2;
-        //   // console.log(lockDates);
-        //   // console.log(x);
-        //   // x = 0.25;
-        //   // return [`${x * 100}%`, "0%"];
-        //   return [`${lockRatio * 100}%`, "0%"];
-        // },
-        // end: (xScale: any) => {
-        //   // console.log(xScale);
-        //   // console.log(xScale.ticks);
-        //   // const ratio = xScale.ticks ? 1 / xScale.ticks.length : 1;
-        //   // const x = xScale.scale(lockDates[1]) + ratio / 2;
-        //   // return [`${x * 100}%`, "100%"];
-        //   return [`100}%`, "100%"];
-        // },
-        // start: [lockDates[0], "0%"],
         start: [`${lockRatio * 100}%`, "0%"],
         end: ["100%", "100%"],
         // Log in[blue and clicking will toggle login screen] to unlock the latest BUY[green] and SELL[red] signals.
