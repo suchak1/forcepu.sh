@@ -183,8 +183,7 @@ const Page = () => {
         style: {
           // https://ant.design/docs/spec/colors#Neutral-Color-Palette
           // fill: "#595959",
-          // fill: "#434343",
-          fill: "red",
+          fill: "#434343",
           fillOpacity: 1,
           cursor: "not-allowed",
         },
@@ -193,70 +192,14 @@ const Page = () => {
         // Log in[blue and clicking will toggle login screen] to unlock the latest BUY[green] and SELL[red] signals.
         // Unlock [blue and clicking will toggle login screen] the latest BUY[green] and SELL[red] signals.
       },
-      // {
-      //   type: "image",
-      //   src:
-      //     "https://gw.alipayobjects.com/mdn/rms_2274c3/afts/img/A*ELYbTIVCgPoAAAAAAAAAAABkARQnAQ",
-      //   /** 位置 */
-      //   // position: [`${(lockRatio + (1 - lockRatio) / 2) * 100}%`, "50%"],
-      //   position: [`10%`, "50%"],
-
-      //   /** 图形样式属性 */
-      //   style: {
-      //     width: 50,
-      //     height: 50,
-      //   },
-      //   /** x 方向的偏移量 */
-      //   offsetX: -25,
-      //   /** y 方向的偏移量 */
-      //   offsetY: 40,
-      // },
-      // {
-      //   type: "text",
-      //   content: "🔒",
-      //   position: [`${(lockRatio + (1 - lockRatio) / 2) * 100}%`, "50%"],
-      //   style: {
-      //     fontSize: lockSize,
-      //   },
-      //   offsetX: (lockSize * -1) / 2,
-      // },
       {
-        type: "html",
-        html: ReactDOMServer.renderToStaticMarkup(
-          <div
-            style={{
-              color: "white",
-              fontSize: "100px",
-              width: "100%",
-              display: "flex",
-              justifyContent: "flex-end",
-            }}
-          >
-            <span>hello</span>
-            <Popover
-              content={
-                "Unlock [blue and clicking will toggle login screen] the latest BUY[green] and SELL[red] signals."
-              }
-              title={"ok"}
-            >
-              <LockFilled />
-              <Button onClick={() => alert("hi")}>hi</Button>
-            </Popover>
-            <Button onClick={() => alert("bye")}>bye</Button>
-          </div>
-        ),
-        // html:
-        //   '<span style="color: rgb(223, 0, 223); font-size: 100px;">HODL</span>',
-        // container: (
-        //   <div
-        //     dangerouslySetInnerHTML={{
-        //       __html:
-        //         '<span style="color: rgb(223, 0, 223); font-size: 100px;">HODL</span>',
-        //     }}
-        //   />
-        // ),
-        alignX: "middle",
-        alignY: "middle",
+        type: "text",
+        content: "🔒",
+        position: [`${(lockRatio + (1 - lockRatio) / 2) * 100}%`, "50%"],
+        style: {
+          fontSize: lockSize,
+        },
+        offsetX: (lockSize * -1) / 2,
       },
     ],
   };
