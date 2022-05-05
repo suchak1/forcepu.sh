@@ -18,6 +18,8 @@ const Page = () => {
   });
   const [toggle, setToggle] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [lockDates, setLockDates] = useState(["", ""]);
+  const [lockRatio, setLockRatio] = useState(0);
 
   const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
   const formatUSD = (v: number) => {
@@ -34,25 +36,24 @@ const Page = () => {
       fetch(url, { method: "GET" })
         .then((response) => response.json())
         .then((data) => {
-          const latestDate = data.BTC.data[data.BTC.data.length - 1].Time;
-          let dateRange: Date[] | string[] = getDateRange(
+          const dataLen = data.BTC.data.length;
+          console.log(dataLen);
+          const latestDate = data.BTC.data[dataLen - 1].Time;
+
+          let lockedDates: Date[] | string[] = getDateRange(
             new Date(latestDate),
             new Date()
-          );
-          // dateRange = dateRange.map((d) => d.toISOString().slice(0, 10));
-          dateRange.forEach((d) => {
-            const dateString = convertShortISO(d.toISOString().slice(0, 10));
-            data.BTC.data.push({
-              // Name: undefined,
-              Time: dateString,
-              // Bal: undefined,
-            });
-            data.USD.data.push({
-              // Name: undefined,
-              Time: dateString,
-              // Bal: undefined,
-            });
+          ).map((d) => convertShortISO(d.toISOString().slice(0, 10)));
+
+          lockedDates.forEach((Time) => {
+            data.BTC.data.push({ Time });
+            data.USD.data.push({ Time });
           });
+
+          const numUnlockedDates = dataLen / 2;
+          const numLockedDates = lockedDates.length;
+          setLockDates([lockedDates[0], lockedDates[numLockedDates - 1]]);
+          setLockRatio(numUnlockedDates / (numLockedDates + numLockedDates));
           return data;
         })
         .then((data) => setPreviewData(data))
@@ -182,20 +183,26 @@ const Page = () => {
           fill: "red",
           fillOpacity: 1,
         },
-        start: (xScale: any) => {
-          const ratio = xScale.ticks ? 1 / xScale.ticks.length : 1;
-          const x = xScale.scale("01/03/2022") - ratio / 2;
-          return [`${x * 100}%`, "0%"];
-          // return [`0%`, "0%"];
-        },
-        end: (xScale: any) => {
-          console.log(xScale);
-          console.log(xScale.ticks);
-          const ratio = xScale.ticks ? 1 / xScale.ticks.length : 1;
-          const x = xScale.scale("01/10/2022") + ratio / 2;
-          return [`${x * 100}%`, "100%"];
-          // return [`100%`, "0%"];
-        },
+        // start: (xScale: any) => {
+        //   // const ratio = xScale.ticks ? 1 / xScale.ticks.length : 1;
+        //   // let x = xScale.scale(lockDates[0]) - ratio / 2;
+        //   // console.log(lockDates);
+        //   // console.log(x);
+        //   // x = 0.25;
+        //   // return [`${x * 100}%`, "0%"];
+        //   return [`${lockRatio * 100}%`, "0%"];
+        // },
+        // end: (xScale: any) => {
+        //   // console.log(xScale);
+        //   // console.log(xScale.ticks);
+        //   // const ratio = xScale.ticks ? 1 / xScale.ticks.length : 1;
+        //   // const x = xScale.scale(lockDates[1]) + ratio / 2;
+        //   // return [`${x * 100}%`, "100%"];
+        //   return [`100}%`, "100%"];
+        // },
+        // start: [lockDates[0], "0%"],
+        start: [`${lockRatio * 100}%`, "0%"],
+        end: ["100%", "100%"],
         // Log in[blue and clicking will toggle login screen] to unlock the latest BUY[green] and SELL[red] signals.
         // Unlock [blue and clicking will toggle login screen] the latest BUY[green] and SELL[red] signals.
       },
