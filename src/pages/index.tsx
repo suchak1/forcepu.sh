@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { Typography, Spin, Table, Switch, Popover, Tooltip } from "antd";
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined, LockFilled } from "@ant-design/icons";
@@ -22,6 +22,7 @@ const Page = ({ setShowLogin, user }) => {
   const [lockRatio, setLockRatio] = useState(0);
   const [lockIcon, setLockIcon] = useState("🔒");
   const [unlockIcon, setUnlockIcon] = useState("🔑");
+  const chartRef = useRef();
   const lockSize = 50;
   const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
   const formatUSD = (v: number) => {
@@ -239,6 +240,14 @@ const Page = ({ setShowLogin, user }) => {
       key: hyperdrive,
     },
   ];
+  console.log(chartRef);
+  console.log(chartRef?.current);
+  console.log(chartRef?.current?.getChart());
+  console.log(chartRef?.current?.getChart()?.chart?.canvas?.cfg?.height);
+  console.log(chartRef?.current?.getChart()?.chart?.canvas?.cfg?.width);
+  console.log(chartRef?.current?.getChart()?.getChartSize());
+  // return {width, height}
+
   return (
     <>
       <Title>Leveraging AutoML to beat BTC</Title>
@@ -283,25 +292,30 @@ const Page = ({ setShowLogin, user }) => {
                 content={popoverContent}
                 color="#1f1f1f"
                 placement="bottom"
-                // onVisibleChange={(visible) => {
-                //   if (user) {
-                //     if (visible && unlockIcon === "🔑") {
-                //       setUnlockIcon("⏳");
-                //     } else if (!visible && unlockIcon === "⏳") {
-                //       setUnlockIcon("🔑");
-                //     }
-                //   } else {
-                //     if (visible && lockIcon === "🔒") {
-                //       setLockIcon("🔓");
-                //     } else if (!visible && lockIcon === "🔓") {
-                //       setLockIcon("🔒");
-                //     }
-                //   }
-                // }}
-                visible={true}
+                onVisibleChange={(visible) => {
+                  // console.log(visible);
+                  if (user) {
+                    if (visible && unlockIcon === "🔑") {
+                      setUnlockIcon("⏳");
+                    } else if (!visible && unlockIcon === "⏳") {
+                      setUnlockIcon("🔑");
+                    }
+                  } else {
+                    if (visible && lockIcon === "🔒") {
+                      setLockIcon("🔓");
+                    } else if (!visible && lockIcon === "🔓") {
+                      setLockIcon("🔒");
+                    }
+                  }
+                }}
+                // visible={true}
               >
                 {" "}
-                <Line onMouseEnter={() => alert("enter mouse")} {...config} />
+                <Line
+                  ref={chartRef}
+                  // onmouseenter={() => alert("enter mouse")}
+                  {...config}
+                />
               </Popover>
             ) : // <Tooltip
             //   title={
