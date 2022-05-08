@@ -12,6 +12,12 @@ export const getDateRange = (
   const range = [];
   let curr = new Date(start);
 
+  if (typeof end === "number") {
+    const tmp = new Date(start);
+    tmp.setUTCDate(tmp.getUTCDate() + end);
+    end = tmp;
+  }
+
   while (curr <= new Date(end)) {
     range.push(new Date(curr));
     // Use UTC date to prevent problems with time zones and DST

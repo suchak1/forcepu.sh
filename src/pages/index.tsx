@@ -72,16 +72,25 @@ const Page = ({ setShowLogin, user }) => {
   );
   useEffect(() => {
     (async () => {
-      const url = `${getApiUrl()}/preview`;
+      // const url = `${getApiUrl()}/preview`;
+      const url = `https://api.forcepu.sh/preview`;
       fetch(url, { method: "GET" })
         .then((response) => response.json())
         .then((data) => {
           const dataLen = data.BTC.data.length;
           const latestDate = data.BTC.data[dataLen - 1].Time;
+          // This is because there are two data points for each day:
+          // HODL and hyperdrive
+          const numUnlockedDays = dataLen / 2;
+          // proportion of space that lock should take up
+          const proposedLockRatio = 1 / 4;
+          const numUnlockedParts = 1 / proposedLockRatio - 1;
+          const numDaysToAdd = Math.round(numUnlockedDays / numUnlockedParts);
 
           let lockedDates: Date[] | string[] = getDateRange(
             new Date(latestDate),
-            new Date()
+            // new Date()
+            numDaysToAdd
           ).map((d) => convertShortISO(d.toISOString().slice(0, 10)));
 
           lockedDates.forEach((Time) => {
@@ -89,9 +98,6 @@ const Page = ({ setShowLogin, user }) => {
             data.USD.data.push({ Time });
           });
 
-          // This is because there are two data points for each day:
-          // HODL and hyperdrive
-          const numUnlockedDays = dataLen / 2;
           const numLockedDays = lockedDates.length;
           const totalNumDays = numUnlockedDays + numLockedDays;
           setLockRatio(numUnlockedDays / totalNumDays);
@@ -341,13 +347,18 @@ const Page = ({ setShowLogin, user }) => {
                   //   -0.375,
                   // ],
                   targetOffset: [
-                    -1 *
+                    // placement: bottom
+                    // -1 *
+                    //   (chartRef?.current?.getChart()?.getChartSize()?.width /
+                    //     2 -
+                    //     ((1 - lockRatio) *
+                    //       chartRef?.current?.getChart()?.getChartSize()
+                    //         ?.width) /
+                    //       2),
+                    // placement: bottomRight
+                    1 *
                       (chartRef?.current?.getChart()?.getChartSize()?.width /
-                        2 -
-                        ((1 - lockRatio) *
-                          chartRef?.current?.getChart()?.getChartSize()
-                            ?.width) /
-                          2),
+                        2),
                     chartRef?.current?.getChart()?.getChartSize()?.height *
                       0.375,
                   ],
@@ -355,11 +366,11 @@ const Page = ({ setShowLogin, user }) => {
                 zIndex={1}
                 content={popoverContent}
                 color="#1f1f1f"
-                placement="bottom"
+                // placement="bottom"
                 // visible
                 overlayClassName={styles.chartTooltip}
                 overlayInnerStyle={{ borderColor: "white", borderWidth: "1px" }}
-                // placement="bottomRight"
+                placement="bottomRight"
                 onVisibleChange={(visible) => {
                   // console.log(visible);
                   if (user) {
