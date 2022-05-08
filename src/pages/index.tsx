@@ -190,12 +190,13 @@ const Page = ({ setShowLogin, user }) => {
         fillOpacity: 0.15,
       },
     },
-    animation: {
-      appear: {
-        animation: "wave-in",
-        duration: 4000,
-      },
-    },
+    // animation: {
+    //   appear: {
+    //     animation: "wave-in",
+    //     duration: 0,
+    //   },
+    // },
+    animation: false,
     xAxis: {
       tickCount: 10,
       grid: {
@@ -225,7 +226,7 @@ const Page = ({ setShowLogin, user }) => {
     },
     annotations: [
       {
-        animate: false,
+        animation: false,
         type: "region",
         style: {
           // https://ant.design/docs/spec/colors#Neutral-Color-Palette
@@ -240,7 +241,7 @@ const Page = ({ setShowLogin, user }) => {
         // Unlock [blue and clicking will toggle login screen] the latest BUY[green] and SELL[red] signals.
       },
       {
-        animate: false,
+        animation: false,
         type: "text",
         content: user ? unlockIcon : lockIcon,
         position: [`${(lockRatio + (1 - lockRatio) / 2) * 100}%`, "50%"],
@@ -328,40 +329,40 @@ const Page = ({ setShowLogin, user }) => {
                 // }}
                 // overlayClassName="chartTooltip"
                 align={{
-                  // offset: [
-                  // lockRatio +
-                  //   (1 - lockRatio) / 2 -
-                  //   chartRef?.current?.getChart()?.getChartSize()?.width / 2,
-                  // -chartWidth / 2 + (1 - lockRatio) / 2,
-                  // chartWidth / 2,
-                  // +1 *
-                  //   (chartRef?.current?.getChart()?.getChartSize()?.width /
-                  //     2),
-                  // below works,
-                  // chartRef?.current?.getChart()?.getChartSize()?.width / 2 -
-                  //   ((1 - lockRatio) *
-                  //     chartRef?.current?.getChart()?.getChartSize()?.width) /
-                  //     2,
-                  // height
-                  // chartRef?.current?.getChart()?.getChartSize()?.height *
-                  //   -0.375,
-                  // ],
-                  targetOffset: [
-                    // placement: bottom
-                    -1 *
-                      (chartRef?.current?.getChart()?.getChartSize()?.width /
-                        2 -
-                        ((1 - lockRatio) *
-                          chartRef?.current?.getChart()?.getChartSize()
-                            ?.width) /
-                          2),
-                    // placement: bottomRight
-                    // 1 *
+                  offset: [
+                    // lockRatio +
+                    //   (1 - lockRatio) / 2 -
+                    //   chartRef?.current?.getChart()?.getChartSize()?.width / 2,
+                    // -chartWidth / 2 + (1 - lockRatio) / 2,
+                    // chartWidth / 2,
+                    // +1 *
                     //   (chartRef?.current?.getChart()?.getChartSize()?.width /
                     //     2),
+                    // below works,
+                    chartRef?.current?.getChart()?.getChartSize()?.width / 2 -
+                      ((1 - lockRatio) *
+                        chartRef?.current?.getChart()?.getChartSize()?.width) /
+                        2,
+                    // height
                     chartRef?.current?.getChart()?.getChartSize()?.height *
-                      0.375,
+                      -0.375,
                   ],
+                  // targetOffset: [
+                  //   // placement: bottom
+                  //   -1 *
+                  //     (chartRef?.current?.getChart()?.getChartSize()?.width /
+                  //       2 -
+                  //       ((1 - lockRatio) *
+                  //         chartRef?.current?.getChart()?.getChartSize()
+                  //           ?.width) /
+                  //         2),
+                  //   // placement: bottomRight
+                  //   // 1 *
+                  //   //   (chartRef?.current?.getChart()?.getChartSize()?.width /
+                  //   //     2),
+                  //   chartRef?.current?.getChart()?.getChartSize()?.height *
+                  //     0.375,
+                  // ],
                 }}
                 zIndex={1}
                 content={popoverContent}
