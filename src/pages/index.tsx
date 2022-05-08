@@ -6,10 +6,11 @@ import { LoadingOutlined, LockFilled } from "@ant-design/icons";
 import styles from "./index.less";
 import { getApiUrl, getDateRange, convertShortISO } from "@/utils";
 import { useAuthenticator } from "@aws-amplify/ui-react";
-
+// import "./index.less";
 const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
-
+console.log(styles);
+console.log(document.documentElement.style);
 const Page = ({ setShowLogin, user }) => {
   const HODL = "HODL";
   const hyperdrive = "hyperdrive";
@@ -23,6 +24,18 @@ const Page = ({ setShowLogin, user }) => {
   const [lockIcon, setLockIcon] = useState("🔒");
   const [unlockIcon, setUnlockIcon] = useState("🔑");
   const chartRef = useRef();
+  const tooltipRef = useRef();
+  let chartHeight, chartWidth;
+  if (chartRef?.current) {
+    ({
+      height: chartHeight,
+      width: chartWidth,
+    } = chartRef?.current?.getChart()?.getChartSize());
+    document.documentElement.style.chartWidth = chartWidth;
+    document.documentElement.style.chartHeight = chartHeight;
+    document.documentElement.style.lockRatio = lockRatio;
+  }
+
   const lockSize = 50;
   const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
   const formatUSD = (v: number) => {
@@ -40,16 +53,20 @@ const Page = ({ setShowLogin, user }) => {
       {user ? (
         "Signal API is coming soon..."
       ) : (
-        <>
-          <a style={{ color: "#52e5ff" }} onClick={() => setShowLogin(true)}>
-            {"Log in and unlock"}
-          </a>
-          {" the latest "}
-          <span style={{ color: "lime" }}>BUY</span>
-          {" and "}
-          <span style={{ color: "red" }}>SELL</span>
-          {" signals."}
-        </>
+        <div style={{ fontFamily: "monospace" }}>
+          <div>
+            <a style={{ color: "#52e5ff" }} onClick={() => setShowLogin(true)}>
+              <i>{"Log in and unlock"}</i>
+            </a>
+            {" the latest "}
+          </div>
+          <div>
+            <span style={{ color: "lime", fontFamily: "monospace" }}>BUY</span>
+            {" and "}
+            <span style={{ color: "red", fontFamily: "monospace" }}>SELL</span>
+            {" signals."}
+          </div>
+        </div>
       )}
     </span>
   );
@@ -202,6 +219,7 @@ const Page = ({ setShowLogin, user }) => {
     },
     annotations: [
       {
+        animate: false,
         type: "region",
         style: {
           // https://ant.design/docs/spec/colors#Neutral-Color-Palette
@@ -216,6 +234,7 @@ const Page = ({ setShowLogin, user }) => {
         // Unlock [blue and clicking will toggle login screen] the latest BUY[green] and SELL[red] signals.
       },
       {
+        animate: false,
         type: "text",
         content: user ? unlockIcon : lockIcon,
         position: [`${(lockRatio + (1 - lockRatio) / 2) * 100}%`, "50%"],
@@ -246,6 +265,7 @@ const Page = ({ setShowLogin, user }) => {
   console.log(chartRef?.current?.getChart()?.chart?.canvas?.cfg?.height);
   console.log(chartRef?.current?.getChart()?.chart?.canvas?.cfg?.width);
   console.log(chartRef?.current?.getChart()?.getChartSize());
+  console.log(tooltipRef?.current);
   // return {width, height}
 
   return (
@@ -287,11 +307,59 @@ const Page = ({ setShowLogin, user }) => {
       ) : (
         <div className={styles.parent}>
           <div className={styles.child}>
-            {!loading ? (
+            {!loading && (
               <Popover
+                // zIndex={11}
+                // overlayInnerStyle={{
+                //   // marginLeft: lockRatio + (1 - lockRatio) / 2 - chartWidth / 2,
+                //   // marginBottom: chartHeight * 0.25,
+                //   // zIndex: 11,
+                //   left: "222px",
+                // }}
+                // overlayStyle={{
+                //   // left: lockRatio + (1 - lockRatio) / 2 - chartWidth / 2,
+                //   left: "222px",
+                // }}
+                // overlayClassName="chartTooltip"
+                align={{
+                  // offset: [
+                  // lockRatio +
+                  //   (1 - lockRatio) / 2 -
+                  //   chartRef?.current?.getChart()?.getChartSize()?.width / 2,
+                  // -chartWidth / 2 + (1 - lockRatio) / 2,
+                  // chartWidth / 2,
+                  // +1 *
+                  //   (chartRef?.current?.getChart()?.getChartSize()?.width /
+                  //     2),
+                  // below works,
+                  // chartRef?.current?.getChart()?.getChartSize()?.width / 2 -
+                  //   ((1 - lockRatio) *
+                  //     chartRef?.current?.getChart()?.getChartSize()?.width) /
+                  //     2,
+                  // height
+                  // chartRef?.current?.getChart()?.getChartSize()?.height *
+                  //   -0.375,
+                  // ],
+                  targetOffset: [
+                    -1 *
+                      (chartRef?.current?.getChart()?.getChartSize()?.width /
+                        2 -
+                        ((1 - lockRatio) *
+                          chartRef?.current?.getChart()?.getChartSize()
+                            ?.width) /
+                          2),
+                    chartRef?.current?.getChart()?.getChartSize()?.height *
+                      0.375,
+                  ],
+                }}
+                zIndex={1}
                 content={popoverContent}
                 color="#1f1f1f"
                 placement="bottom"
+                // visible
+                overlayClassName={styles.chartTooltip}
+                overlayInnerStyle={{ borderColor: "white", borderWidth: "1px" }}
+                // placement="bottomRight"
                 onVisibleChange={(visible) => {
                   // console.log(visible);
                   if (user) {
@@ -317,17 +385,10 @@ const Page = ({ setShowLogin, user }) => {
                   {...config}
                 />
               </Popover>
-            ) : // <Tooltip
-            //   title={
-            //     <div style={{ color: "white", fontSize: "36px" }}>hello</div>
-            //   }
-            // >
-            //   <Line {...config} />
-            // </Tooltip>
-            null}
+            )}
           </div>
           <div className={styles.child}>
-            {!loading ? (
+            {!loading && (
               <Table
                 dataSource={
                   toggle ? previewData.BTC.stats : previewData.USD.stats
@@ -336,7 +397,7 @@ const Page = ({ setShowLogin, user }) => {
                 pagination={false}
                 loading={loading}
               />
-            ) : null}
+            )}
           </div>
         </div>
       )}
