@@ -348,17 +348,17 @@ const Page = ({ setShowLogin, user }) => {
                   // ],
                   targetOffset: [
                     // placement: bottom
-                    // -1 *
-                    //   (chartRef?.current?.getChart()?.getChartSize()?.width /
-                    //     2 -
-                    //     ((1 - lockRatio) *
-                    //       chartRef?.current?.getChart()?.getChartSize()
-                    //         ?.width) /
-                    //       2),
-                    // placement: bottomRight
-                    1 *
+                    -1 *
                       (chartRef?.current?.getChart()?.getChartSize()?.width /
-                        2),
+                        2 -
+                        ((1 - lockRatio) *
+                          chartRef?.current?.getChart()?.getChartSize()
+                            ?.width) /
+                          2),
+                    // placement: bottomRight
+                    // 1 *
+                    //   (chartRef?.current?.getChart()?.getChartSize()?.width /
+                    //     2),
                     chartRef?.current?.getChart()?.getChartSize()?.height *
                       0.375,
                   ],
@@ -366,11 +366,11 @@ const Page = ({ setShowLogin, user }) => {
                 zIndex={1}
                 content={popoverContent}
                 color="#1f1f1f"
-                // placement="bottom"
+                placement="bottom"
+                // placement="bottomRight"
                 // visible
                 overlayClassName={styles.chartTooltip}
                 overlayInnerStyle={{ borderColor: "white", borderWidth: "1px" }}
-                placement="bottomRight"
                 onVisibleChange={(visible) => {
                   // console.log(visible);
                   if (user) {
