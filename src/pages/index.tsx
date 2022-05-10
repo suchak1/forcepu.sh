@@ -12,7 +12,11 @@ const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 console.log(styles);
 console.log(document.documentElement.style);
-const Page = ({ setShowLogin, user }) => {
+const Page = ({
+  setShowLogin,
+  animationOpts: { animation, setAnimation, defaultAnimation },
+  user,
+}) => {
   const HODL = "HODL";
   const hyperdrive = "hyperdrive";
   const [previewData, setPreviewData] = useState({
@@ -25,13 +29,13 @@ const Page = ({ setShowLogin, user }) => {
   const [lockIcon, setLockIcon] = useState("🔒");
   const [unlockIcon, setUnlockIcon] = useState("🔑");
   const [firstLoad, setFirstLoad] = useState(true);
-  const defaultAnimation = {
-    appear: {
-      animation: "wave-in",
-      duration: 4000,
-    },
-  };
-  const [animation, setAnimation] = useState(defaultAnimation);
+  // const defaultAnimation = {
+  //   appear: {
+  //     animation: "wave-in",
+  //     duration: 4000,
+  //   },
+  // };
+  // const [animation, setAnimation] = useState(defaultAnimation);
   const width = useWindowWidth();
   console.log(width);
   const chartRef = useRef();

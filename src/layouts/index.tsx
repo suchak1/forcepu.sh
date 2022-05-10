@@ -133,6 +133,13 @@ const Layout = ({ route, children }) => {
   const [showLogin, setShowLogin] = useState(false);
   const LoginContext = createContext({ showLogin, setShowLogin });
   const { user, signOut } = useAuthenticator((context) => [context.user]);
+  const defaultAnimation = {
+    appear: {
+      animation: "wave-in",
+      duration: 4000,
+    },
+  };
+  const [animation, setAnimation] = useState(defaultAnimation);
   const loggedIn = user;
   useEffect(() => {
     if (loggedIn) {
@@ -187,7 +194,14 @@ const Layout = ({ route, children }) => {
                       display: "flex",
                       alignItems: "center",
                     },
-              label: <NavLink to={route.to}>{route.text}</NavLink>,
+              label: (
+                <NavLink
+                  onClick={() => setAnimation(defaultAnimation)}
+                  to={route.to}
+                >
+                  {route.text}
+                </NavLink>
+              ),
             }))}
           ></Menu>
           {dummy}
@@ -231,7 +245,11 @@ const Layout = ({ route, children }) => {
       >
         {/* <LoginContext.Provider value={{ showLogin, setShowLogin }}> */}
         {/* {children} */}
-        {cloneElement(children, { setShowLogin, user })}
+        {cloneElement(children, {
+          setShowLogin,
+          user,
+          animationOpts: { animation, setAnimation, defaultAnimation },
+        })}
         {/* </LoginContext.Provider> */}
       </AntLayout.Content>
 
