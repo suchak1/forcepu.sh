@@ -25,6 +25,13 @@ const Page = ({ setShowLogin, user }) => {
   const [lockIcon, setLockIcon] = useState("🔒");
   const [unlockIcon, setUnlockIcon] = useState("🔑");
   const [firstLoad, setFirstLoad] = useState(true);
+  const defaultAnimation = {
+    appear: {
+      animation: "wave-in",
+      duration: 4000,
+    },
+  };
+  const [animation, setAnimation] = useState(defaultAnimation);
   const width = useWindowWidth();
   console.log(width);
   const chartRef = useRef();
@@ -200,14 +207,15 @@ const Page = ({ setShowLogin, user }) => {
         fillOpacity: 0.15,
       },
     },
-    animation: firstLoad
-      ? {
-          appear: {
-            animation: "wave-in",
-            duration: 0,
-          },
-        }
-      : false,
+    animation,
+    // animation: firstLoad
+    //   ? {
+    //       appear: {
+    //         animation: "wave-in",
+    //         duration: 0,
+    //       },
+    //     }
+    //   : false,
     xAxis: {
       tickCount: 10,
       grid: {
@@ -308,7 +316,10 @@ const Page = ({ setShowLogin, user }) => {
           checkedChildren="BTC (₿)"
           unCheckedChildren="USD ($)"
           defaultChecked
-          onChange={(checked) => setToggle(checked)}
+          onChange={(checked) => {
+            setToggle(checked);
+            setAnimation(defaultAnimation);
+          }}
         />
       </span>
       {loading ? (
@@ -389,6 +400,16 @@ const Page = ({ setShowLogin, user }) => {
                 overlayInnerStyle={{ borderColor: "white", borderWidth: "1px" }}
                 onVisibleChange={(visible) => {
                   // console.log(visible);
+                  if (visible) {
+                    // if (
+                    //   !chartRef?.current?.getChart()?.chart?.canvas?.cfg
+                    //     ?.animating
+                    // ) {
+                    setAnimation(false);
+                    //   }
+                    // } else {
+                    //   setAnimation(defaultAnimation);
+                  }
                   if (user) {
                     if (visible && unlockIcon === "🔑") {
                       setUnlockIcon("⏳");
