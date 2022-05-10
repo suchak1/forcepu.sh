@@ -6,6 +6,7 @@ import { LoadingOutlined, LockFilled } from "@ant-design/icons";
 import styles from "./index.less";
 import { getApiUrl, getDateRange, convertShortISO } from "@/utils";
 import { useAuthenticator } from "@aws-amplify/ui-react";
+import { useWindowWidth } from "@wojtekmaj/react-hooks";
 // import "./index.less";
 const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
@@ -24,6 +25,8 @@ const Page = ({ setShowLogin, user }) => {
   const [lockIcon, setLockIcon] = useState("🔒");
   const [unlockIcon, setUnlockIcon] = useState("🔑");
   const [firstLoad, setFirstLoad] = useState(true);
+  const width = useWindowWidth();
+  console.log(width);
   const chartRef = useRef();
   const tooltipRef = useRef();
   let chartHeight, chartWidth;
@@ -345,10 +348,14 @@ const Page = ({ setShowLogin, user }) => {
                     //   (chartRef?.current?.getChart()?.getChartSize()?.width /
                     //     2),
                     // below works,
-                    chartRef?.current?.getChart()?.getChartSize()?.width / 2 -
-                      ((1 - lockRatio) *
-                        chartRef?.current?.getChart()?.getChartSize()?.width) /
-                        2,
+                    width <= 700
+                      ? 0
+                      : chartRef?.current?.getChart()?.getChartSize()?.width /
+                          2 -
+                        ((1 - lockRatio) *
+                          chartRef?.current?.getChart()?.getChartSize()
+                            ?.width) /
+                          2,
                     // height
                     chartRef?.current?.getChart()?.getChartSize()?.height *
                       -0.375,
@@ -375,7 +382,7 @@ const Page = ({ setShowLogin, user }) => {
                 color="#1f1f1f"
                 placement="bottom"
                 // placement="bottomRight"
-                visible
+                // visible
                 overlayClassName={styles.chartTooltip}
                 overlayInnerStyle={{ borderColor: "white", borderWidth: "1px" }}
                 onVisibleChange={(visible) => {
