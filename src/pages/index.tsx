@@ -23,6 +23,7 @@ const Page = ({ setShowLogin, user }) => {
   const [lockRatio, setLockRatio] = useState(0);
   const [lockIcon, setLockIcon] = useState("🔒");
   const [unlockIcon, setUnlockIcon] = useState("🔑");
+  const [firstLoad, setFirstLoad] = useState(true);
   const chartRef = useRef();
   const tooltipRef = useRef();
   let chartHeight, chartWidth;
@@ -104,7 +105,11 @@ const Page = ({ setShowLogin, user }) => {
           return data;
         })
         .then((data) => setPreviewData(data))
-        .then(() => setLoading(false));
+        .then(() => setLoading(false))
+        .then(() => {
+          const timer = setTimeout(() => setFirstLoad(false), 4000);
+          return () => clearTimeout(timer);
+        });
     })();
   }, []);
 
@@ -190,13 +195,14 @@ const Page = ({ setShowLogin, user }) => {
         fillOpacity: 0.15,
       },
     },
-    // animation: {
-    //   appear: {
-    //     animation: "wave-in",
-    //     duration: 0,
-    //   },
-    // },
-    animation: false,
+    animation: firstLoad
+      ? {
+          appear: {
+            animation: "wave-in",
+            duration: 0,
+          },
+        }
+      : false,
     xAxis: {
       tickCount: 10,
       grid: {
@@ -369,7 +375,7 @@ const Page = ({ setShowLogin, user }) => {
                 color="#1f1f1f"
                 placement="bottom"
                 // placement="bottomRight"
-                // visible
+                visible
                 overlayClassName={styles.chartTooltip}
                 overlayInnerStyle={{ borderColor: "white", borderWidth: "1px" }}
                 onVisibleChange={(visible) => {
