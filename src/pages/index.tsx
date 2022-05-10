@@ -53,11 +53,13 @@ const Page = ({ setShowLogin, user }) => {
   // const { user } = useAuthenticator((context) => [context.user]);
   // const { showLogin, setShowLogin } = useContext(LoginContext);
   const popoverContent = (
-    <span style={{ color: "#d9d9d9", fontWeight: "600" }}>
+    <span
+      style={{ color: "#d9d9d9", fontWeight: "600", fontFamily: "monospace" }}
+    >
       {user ? (
         "Signal API is coming soon..."
       ) : (
-        <div style={{ fontFamily: "monospace" }}>
+        <>
           <div>
             <a style={{ color: "#52e5ff" }} onClick={() => setShowLogin(true)}>
               <i>{"Log in and unlock"}</i>
@@ -70,7 +72,7 @@ const Page = ({ setShowLogin, user }) => {
             <span style={{ color: "red", fontFamily: "monospace" }}>SELL</span>
             {" signals."}
           </div>
-        </div>
+        </>
       )}
     </span>
   );
