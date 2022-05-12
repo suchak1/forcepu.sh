@@ -10,9 +10,10 @@ import { useWindowWidth } from "@wojtekmaj/react-hooks";
 // import "./index.less";
 const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
-console.log(styles);
-console.log(document.documentElement.style);
+
 const Page = ({
+  chartIsLoading,
+  waitForChart,
   setShowLogin,
   animationOpts: { animation, setAnimation, defaultAnimation },
   user,
@@ -28,7 +29,15 @@ const Page = ({
   const [lockRatio, setLockRatio] = useState(0);
   const [lockIcon, setLockIcon] = useState("🔒");
   const [unlockIcon, setUnlockIcon] = useState("🔑");
-  const [firstLoad, setFirstLoad] = useState(true);
+  // const [chartIsLoading, setChartIsLoading] = useState(true);
+  // const waitForChart = () => {
+  //   setChartIsLoading(true);
+  //   const timer = setTimeout(
+  //     () => setChartIsLoading(false),
+  //     defaultAnimation.appear.duration
+  //   );
+  //   return () => clearTimeout(timer);
+  // };
   // const defaultAnimation = {
   //   appear: {
   //     animation: "wave-in",
@@ -37,19 +46,19 @@ const Page = ({
   // };
   // const [animation, setAnimation] = useState(defaultAnimation);
   const width = useWindowWidth();
-  console.log(width);
+  console.log("chartIsLoading: ", chartIsLoading);
   const chartRef = useRef();
-  const tooltipRef = useRef();
-  let chartHeight, chartWidth;
-  if (chartRef?.current) {
-    ({
-      height: chartHeight,
-      width: chartWidth,
-    } = chartRef?.current?.getChart()?.getChartSize());
-    document.documentElement.style.chartWidth = chartWidth;
-    document.documentElement.style.chartHeight = chartHeight;
-    document.documentElement.style.lockRatio = lockRatio;
-  }
+  // const tooltipRef = useRef();
+  // let chartHeight, chartWidth;
+  // if (chartRef?.current) {
+  //   ({
+  //     height: chartHeight,
+  //     width: chartWidth,
+  //   } = chartRef?.current?.getChart()?.getChartSize());
+  //   document.documentElement.style.chartWidth = chartWidth;
+  //   document.documentElement.style.chartHeight = chartHeight;
+  //   document.documentElement.style.lockRatio = lockRatio;
+  // }
 
   const lockSize = 50;
   const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
@@ -122,10 +131,9 @@ const Page = ({
         })
         .then((data) => setPreviewData(data))
         .then(() => setLoading(false))
-        .then(() => {
-          const timer = setTimeout(() => setFirstLoad(false), 4000);
-          return () => clearTimeout(timer);
-        });
+        // .then(() => console.log(chartIsLoading))
+        .then(waitForChart);
+      // .then(() => console.log(chartIsLoading))
     })();
   }, []);
 
@@ -289,14 +297,6 @@ const Page = ({
       key: hyperdrive,
     },
   ];
-  console.log(chartRef);
-  console.log(chartRef?.current);
-  console.log(chartRef?.current?.getChart());
-  console.log(chartRef?.current?.getChart()?.chart?.canvas?.cfg?.height);
-  console.log(chartRef?.current?.getChart()?.chart?.canvas?.cfg?.width);
-  console.log(chartRef?.current?.getChart()?.getChartSize());
-  console.log(tooltipRef?.current);
-  // return {width, height}
 
   return (
     <>
@@ -323,6 +323,7 @@ const Page = ({
           onChange={(checked) => {
             setToggle(checked);
             setAnimation(defaultAnimation);
+            waitForChart();
           }}
         />
       </span>
@@ -403,7 +404,10 @@ const Page = ({
                 overlayClassName={styles.chartTooltip}
                 overlayInnerStyle={{ borderColor: "white", borderWidth: "1px" }}
                 onVisibleChange={(visible) => {
-                  // console.log(visible);
+                  console.log("visible: ", visible);
+                  if (chartIsLoading) {
+                    return;
+                  }
                   if (visible) {
                     // if (
                     //   !chartRef?.current?.getChart()?.chart?.canvas?.cfg

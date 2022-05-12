@@ -140,6 +140,18 @@ const Layout = ({ route, children }) => {
     },
   };
   const [animation, setAnimation] = useState(defaultAnimation);
+  const [chartIsLoading, setChartIsLoading] = useState(true);
+  const waitForChart = () => {
+    if (chartIsLoading) {
+      return;
+    }
+    setChartIsLoading(true);
+    const timer = setTimeout(
+      () => setChartIsLoading(false),
+      defaultAnimation.appear.duration
+    );
+    return () => clearTimeout(timer);
+  };
   const loggedIn = user;
   useEffect(() => {
     if (loggedIn) {
@@ -196,7 +208,10 @@ const Layout = ({ route, children }) => {
                     },
               label: (
                 <NavLink
-                  onClick={() => setAnimation(defaultAnimation)}
+                  onClick={() => {
+                    setAnimation(defaultAnimation);
+                    waitForChart();
+                  }}
                   to={route.to}
                 >
                   {route.text}
@@ -247,6 +262,8 @@ const Layout = ({ route, children }) => {
         {/* {children} */}
         {cloneElement(children, {
           setShowLogin,
+          chartIsLoading,
+          waitForChart,
           user,
           animationOpts: { animation, setAnimation, defaultAnimation },
         })}
