@@ -132,7 +132,7 @@ const Page = ({
         .then((data) => setPreviewData(data))
         .then(() => setLoading(false))
         // .then(() => console.log(chartIsLoading))
-        .then(waitForChart);
+        .then(waitForChart());
       // .then(() => console.log(chartIsLoading))
     })();
   }, []);
@@ -406,6 +406,7 @@ const Page = ({
                 onVisibleChange={(visible) => {
                   console.log("visible: ", visible);
                   if (chartIsLoading) {
+                    // setAnimation(false);
                     return;
                   }
                   if (visible) {
@@ -413,7 +414,7 @@ const Page = ({
                     //   !chartRef?.current?.getChart()?.chart?.canvas?.cfg
                     //     ?.animating
                     // ) {
-                    setAnimation(false);
+                    // setAnimation(false);
                     //   }
                     // } else {
                     //   setAnimation(defaultAnimation);

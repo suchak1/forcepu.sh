@@ -140,17 +140,19 @@ const Layout = ({ route, children }) => {
     },
   };
   const [animation, setAnimation] = useState(defaultAnimation);
-  const [chartIsLoading, setChartIsLoading] = useState(true);
+  const [chartIsLoading, setChartIsLoading] = useState(false);
+  let timer: NodeJS.Timeout;
   const waitForChart = () => {
     if (chartIsLoading) {
       return;
     }
     setChartIsLoading(true);
-    const timer = setTimeout(
-      () => setChartIsLoading(false),
-      defaultAnimation.appear.duration
-    );
-    return () => clearTimeout(timer);
+    // clearTimeout(timer);
+    console.log("got here");
+    timer = setTimeout(() => {
+      setAnimation(false);
+      setChartIsLoading(false);
+    }, defaultAnimation.appear.duration);
   };
   const loggedIn = user;
   useEffect(() => {
