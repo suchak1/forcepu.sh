@@ -136,7 +136,8 @@ const Layout = ({ route, children }) => {
   const defaultAnimation = {
     appear: {
       animation: "wave-in",
-      duration: 4000,
+      duration: 3000,
+      easing: "easeCircleInOut",
     },
   };
   const [animation, setAnimation] = useState(defaultAnimation);
