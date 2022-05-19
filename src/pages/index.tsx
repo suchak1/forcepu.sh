@@ -29,36 +29,8 @@ const Page = ({
   const [lockRatio, setLockRatio] = useState(0);
   const [lockIcon, setLockIcon] = useState("🔒");
   const [unlockIcon, setUnlockIcon] = useState("🔑");
-  // const [chartIsLoading, setChartIsLoading] = useState(true);
-  // const waitForChart = () => {
-  //   setChartIsLoading(true);
-  //   const timer = setTimeout(
-  //     () => setChartIsLoading(false),
-  //     defaultAnimation.appear.duration
-  //   );
-  //   return () => clearTimeout(timer);
-  // };
-  // const defaultAnimation = {
-  //   appear: {
-  //     animation: "wave-in",
-  //     duration: 4000,
-  //   },
-  // };
-  // const [animation, setAnimation] = useState(defaultAnimation);
   const width = useWindowWidth();
-  console.log("chartIsLoading: ", chartIsLoading);
   const chartRef = useRef();
-  // const tooltipRef = useRef();
-  // let chartHeight, chartWidth;
-  // if (chartRef?.current) {
-  //   ({
-  //     height: chartHeight,
-  //     width: chartWidth,
-  //   } = chartRef?.current?.getChart()?.getChartSize());
-  //   document.documentElement.style.chartWidth = chartWidth;
-  //   document.documentElement.style.chartHeight = chartHeight;
-  //   document.documentElement.style.lockRatio = lockRatio;
-  // }
 
   const lockSize = 50;
   const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
@@ -70,8 +42,7 @@ const Page = ({
     }
     return `$ ${v / 1e6}M`;
   };
-  // const { user } = useAuthenticator((context) => [context.user]);
-  // const { showLogin, setShowLogin } = useContext(LoginContext);
+
   const popoverContent = (
     <span
       style={{ color: "#d9d9d9", fontWeight: "600", fontFamily: "monospace" }}
@@ -98,8 +69,7 @@ const Page = ({
   );
   useEffect(() => {
     (async () => {
-      // const url = `${getApiUrl()}/preview`;
-      const url = `https://api.forcepu.sh/preview`;
+      const url = `${getApiUrl()}/preview`;
       fetch(url, { method: "GET" })
         .then((response) => response.json())
         .then((data) => {
@@ -115,7 +85,6 @@ const Page = ({
 
           let lockedDates: Date[] | string[] = getDateRange(
             new Date(latestDate),
-            // new Date()
             numDaysToAdd
           ).map((d) => convertShortISO(d.toISOString().slice(0, 10)));
 
@@ -131,9 +100,7 @@ const Page = ({
         })
         .then((data) => setPreviewData(data))
         .then(() => setLoading(false))
-        // .then(() => console.log(chartIsLoading))
         .then(waitForChart());
-      // .then(() => console.log(chartIsLoading))
     })();
   }, []);
 
@@ -220,14 +187,6 @@ const Page = ({
       },
     },
     animation,
-    // animation: firstLoad
-    //   ? {
-    //       appear: {
-    //         animation: "wave-in",
-    //         duration: 0,
-    //       },
-    //     }
-    //   : false,
     xAxis: {
       tickCount: 10,
       grid: {
@@ -261,15 +220,12 @@ const Page = ({
         type: "region",
         style: {
           // https://ant.design/docs/spec/colors#Neutral-Color-Palette
-          // fill: "#595959",
           fill: "#434343",
           fillOpacity: 1,
           cursor: "not-allowed",
         },
         start: [`${lockRatio * 100}%`, "0%"],
         end: ["100%", "100%"],
-        // Log in[blue and clicking will toggle login screen] to unlock the latest BUY[green] and SELL[red] signals.
-        // Unlock [blue and clicking will toggle login screen] the latest BUY[green] and SELL[red] signals.
       },
       {
         animation: false,
@@ -306,7 +262,6 @@ const Page = ({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          // padding: "6px 0px 12px 0px",
           margin: "-12px 0px 12px 0px",
         }}
       >
@@ -343,29 +298,8 @@ const Page = ({
           <div className={styles.child}>
             {!loading && (
               <Popover
-                // zIndex={11}
-                // overlayInnerStyle={{
-                //   // marginLeft: lockRatio + (1 - lockRatio) / 2 - chartWidth / 2,
-                //   // marginBottom: chartHeight * 0.25,
-                //   // zIndex: 11,
-                //   left: "222px",
-                // }}
-                // overlayStyle={{
-                //   // left: lockRatio + (1 - lockRatio) / 2 - chartWidth / 2,
-                //   left: "222px",
-                // }}
-                // overlayClassName="chartTooltip"
                 align={{
                   offset: [
-                    // lockRatio +
-                    //   (1 - lockRatio) / 2 -
-                    //   chartRef?.current?.getChart()?.getChartSize()?.width / 2,
-                    // -chartWidth / 2 + (1 - lockRatio) / 2,
-                    // chartWidth / 2,
-                    // +1 *
-                    //   (chartRef?.current?.getChart()?.getChartSize()?.width /
-                    //     2),
-                    // below works,
                     width <= 700
                       ? 0
                       : chartRef?.current?.getChart()?.getChartSize()?.width /
@@ -378,22 +312,6 @@ const Page = ({
                     chartRef?.current?.getChart()?.getChartSize()?.height *
                       -0.375,
                   ],
-                  // targetOffset: [
-                  //   // placement: bottom
-                  //   -1 *
-                  //     (chartRef?.current?.getChart()?.getChartSize()?.width /
-                  //       2 -
-                  //       ((1 - lockRatio) *
-                  //         chartRef?.current?.getChart()?.getChartSize()
-                  //           ?.width) /
-                  //         2),
-                  //   // placement: bottomRight
-                  //   // 1 *
-                  //   //   (chartRef?.current?.getChart()?.getChartSize()?.width /
-                  //   //     2),
-                  //   chartRef?.current?.getChart()?.getChartSize()?.height *
-                  //     0.375,
-                  // ],
                 }}
                 zIndex={1}
                 content={popoverContent}
@@ -404,20 +322,8 @@ const Page = ({
                 overlayClassName={styles.chartTooltip}
                 overlayInnerStyle={{ borderColor: "white", borderWidth: "1px" }}
                 onVisibleChange={(visible) => {
-                  console.log("visible: ", visible);
                   if (chartIsLoading) {
-                    // setAnimation(false);
                     return;
-                  }
-                  if (visible) {
-                    // if (
-                    //   !chartRef?.current?.getChart()?.chart?.canvas?.cfg
-                    //     ?.animating
-                    // ) {
-                    // setAnimation(false);
-                    //   }
-                    // } else {
-                    //   setAnimation(defaultAnimation);
                   }
                   if (user) {
                     if (visible && unlockIcon === "🔑") {
@@ -433,14 +339,9 @@ const Page = ({
                     }
                   }
                 }}
-                // visible={true}
               >
                 {" "}
-                <Line
-                  ref={chartRef}
-                  // onmouseenter={() => alert("enter mouse")}
-                  {...config}
-                />
+                <Line ref={chartRef} {...config} />
               </Popover>
             )}
           </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, cloneElement } from "react";
+import React, { useState, useEffect, cloneElement } from "react";
 import { NavLink } from "umi";
 import { Layout as AntLayout, Menu, Button, Modal } from "antd";
 import {
@@ -131,7 +131,6 @@ const footerHeight = headerHeight;
 
 const Layout = ({ route, children }) => {
   const [showLogin, setShowLogin] = useState(false);
-  const LoginContext = createContext({ showLogin, setShowLogin });
   const { user, signOut } = useAuthenticator((context) => [context.user]);
   const defaultAnimation = {
     appear: {
@@ -148,8 +147,6 @@ const Layout = ({ route, children }) => {
       return;
     }
     setChartIsLoading(true);
-    // clearTimeout(timer);
-    console.log("got here");
     timer = setTimeout(() => {
       setAnimation(false);
       setChartIsLoading(false);
@@ -164,7 +161,6 @@ const Layout = ({ route, children }) => {
         method: "GET",
         headers: { Authorization: idToken.jwtToken },
       }).then((response) => response.json());
-      // .then((data) => console.log(data));
     }
   }, [user]);
   const showModal = !loggedIn && showLogin;
@@ -261,8 +257,6 @@ const Layout = ({ route, children }) => {
           overflow: "auto",
         }}
       >
-        {/* <LoginContext.Provider value={{ showLogin, setShowLogin }}> */}
-        {/* {children} */}
         {cloneElement(children, {
           setShowLogin,
           chartIsLoading,
@@ -270,7 +264,6 @@ const Layout = ({ route, children }) => {
           user,
           animationOpts: { animation, setAnimation, defaultAnimation },
         })}
-        {/* </LoginContext.Provider> */}
       </AntLayout.Content>
 
       <AntLayout.Footer
@@ -292,8 +285,6 @@ const Layout = ({ route, children }) => {
     </AntLayout>
   );
 };
-
-// export { LoginContext };
 
 export default ({ route, children }) => (
   <Authenticator.Provider>
