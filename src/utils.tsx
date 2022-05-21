@@ -1,6 +1,33 @@
-export const getApiUrl = () => {
+export const getEnvironment = () => {
   const hostname = window.location.hostname;
-  const url = hostname === "localhost" ? "/api" : `https://api.${hostname}`;
+  switch (hostname) {
+    case "localhost":
+      return "local";
+    case "dev.forcepu.sh":
+      return "dev";
+    default:
+      return "prod";
+  }
+};
+
+export const getHostname = (env) => {
+  switch (env) {
+    case "local":
+      return "localhost";
+    case "dev":
+      return "dev.forcepu.sh";
+    case "prod":
+      return "forcepu.sh";
+    default:
+      return window.location.hostname;
+  }
+};
+
+export const getApiUrl = ({ localOverride }) => {
+  const isLocal = getEnvironment() === "local";
+  const useLocal = isLocal && !localOverride;
+  const hostname = getHostname(isLocal && localOverride);
+  const url = useLocal ? "/api" : `https://api.${hostname}`;
   return url;
 };
 

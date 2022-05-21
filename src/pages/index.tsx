@@ -68,8 +68,7 @@ const Page = ({
   );
   useEffect(() => {
     (async () => {
-      // const url = `${getApiUrl()}/preview`;
-      const url = `https://api.forcepu.sh/preview`;
+      const url = `${getApiUrl({ localOverride: "prod" })}/preview`;
       fetch(url, { method: "GET" })
         .then((response) => response.json())
         .then((data) => {
