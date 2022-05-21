@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { Typography, Spin, Table, Switch, Popover } from "antd";
 import { G2, Line } from "@ant-design/charts";
-import { LoadingOutlined, SecurityScanFilled } from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
 import styles from "./index.less";
 import { getApiUrl, getDateRange, convertShortISO } from "@/utils";
 import { useWindowWidth } from "@wojtekmaj/react-hooks";
@@ -28,10 +28,6 @@ const Page = ({
   const [lockRatio, setLockRatio] = useState(0);
   const [lockIcon, setLockIcon] = useState("🔒");
   const [unlockIcon, setUnlockIcon] = useState("🔑");
-  const [yAxisBTC, setYAxisBTC] = useState(0);
-  const [yAxisUSD, setYAxisUSD] = useState(0);
-  console.log(yAxisBTC);
-  console.log(yAxisUSD);
   const width = useWindowWidth();
   const chartRef = useRef();
   const isMobile = width <= 700;
@@ -99,23 +95,6 @@ const Page = ({
           const numLockedDays = lockedDates.length;
           const totalNumDays = numUnlockedDays + numLockedDays;
           setLockRatio(numUnlockedDays / totalNumDays);
-          return data;
-        })
-        .then((data) => {
-          let maxBTC = 0;
-          let maxUSD = 0;
-          data.BTC.data.forEach((datum: { Name: string; Bal: number }) => {
-            if (datum.Name === "hyperdrive" && datum.Bal > maxBTC) {
-              maxBTC = datum.Bal;
-            }
-          });
-          data.USD.data.forEach((datum: { Bal: number }) => {
-            if (datum.Bal > maxUSD) {
-              maxUSD = datum.Bal;
-            }
-          });
-          setYAxisBTC(maxBTC);
-          setYAxisUSD(maxUSD);
           return data;
         })
         .then((data) => setPreviewData(data))
@@ -219,7 +198,6 @@ const Page = ({
       },
     },
     yAxis: {
-      max: toggle ? yAxisBTC : yAxisUSD,
       label: {
         formatter: (v: any) => (toggle ? formatBTC(v) : formatUSD(v)),
       },
