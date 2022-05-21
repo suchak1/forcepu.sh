@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, cloneElement } from "react";
 import { NavLink } from "umi";
 import { Layout as AntLayout, Menu, Button, Modal } from "antd";
 import {
@@ -96,7 +96,7 @@ const pages: string[] = [
   // "get started",
   // "gym",
   // "art",
-  // "docs"
+  // "docs",
 ];
 
 // "docs" should be example of how to use library or service
@@ -132,6 +132,27 @@ const footerHeight = headerHeight;
 const Layout = ({ route, children }) => {
   const [showLogin, setShowLogin] = useState(false);
   const { user, signOut } = useAuthenticator((context) => [context.user]);
+  const defaultAnimation = {
+    appear: {
+      animation: "wave-in",
+      duration: 3000,
+      easing: "easeCircleInOut",
+    },
+  };
+  const [animation, setAnimation] = useState(defaultAnimation);
+  const [chartIsAnimating, setChartIsAnimating] = useState(false);
+  let timer: NodeJS.Timeout;
+  const waitForChart = () => {
+    if (chartIsAnimating) {
+      return;
+    }
+    clearTimeout(timer);
+    setChartIsAnimating(true);
+    timer = setTimeout(() => {
+      setAnimation(false);
+      setChartIsAnimating(false);
+    }, defaultAnimation.appear.duration);
+  };
   const loggedIn = user;
   useEffect(() => {
     if (loggedIn) {
@@ -141,7 +162,6 @@ const Layout = ({ route, children }) => {
         method: "GET",
         headers: { Authorization: idToken.jwtToken },
       }).then((response) => response.json());
-      // .then((data) => console.log(data));
     }
   }, [user]);
   const showModal = !loggedIn && showLogin;
@@ -174,26 +194,31 @@ const Layout = ({ route, children }) => {
             selectedKeys={["0"].concat([
               (pages.indexOf(window.location.pathname.slice(1)) + 1).toString(),
             ])}
-          >
-            {routes.map((route, idx) => (
-              <Menu.Item
-                className={[overrides.white, overrides.ice].join(" ")}
-                key={idx}
-                style={
-                  idx === 0
-                    ? {
-                        backgroundColor: "transparent",
-                      }
-                    : {
-                        display: "flex",
-                        alignItems: "center",
-                      }
-                }
-              >
-                <NavLink to={route.to}>{route.text}</NavLink>
-              </Menu.Item>
-            ))}
-          </Menu>
+            items={routes.map((route, idx) => ({
+              className: [overrides.white, overrides.ice].join(" "),
+              key: idx,
+              style:
+                idx === 0
+                  ? {
+                      backgroundColor: "transparent",
+                    }
+                  : {
+                      display: "flex",
+                      alignItems: "center",
+                    },
+              label: (
+                <NavLink
+                  onClick={() => {
+                    setAnimation(defaultAnimation);
+                    waitForChart();
+                  }}
+                  to={route.to}
+                >
+                  {route.text}
+                </NavLink>
+              ),
+            }))}
+          ></Menu>
           {dummy}
           <span
             style={{
@@ -233,8 +258,15 @@ const Layout = ({ route, children }) => {
           overflow: "auto",
         }}
       >
-        {children}
+        {cloneElement(children, {
+          setShowLogin,
+          chartIsAnimating,
+          waitForChart,
+          user,
+          animationOpts: { animation, setAnimation, defaultAnimation },
+        })}
       </AntLayout.Content>
+
       <AntLayout.Footer
         style={{
           height: footerHeight,

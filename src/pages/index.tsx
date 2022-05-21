@@ -1,15 +1,22 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import { Typography, Spin, Table, Switch } from "antd";
+import { useState, useEffect, useRef } from "react";
+import { Typography, Spin, Table, Switch, Popover } from "antd";
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined } from "@ant-design/icons";
 import styles from "./index.less";
-import { getApiUrl } from "@/utils";
-
+import { getApiUrl, getDateRange, convertShortISO } from "@/utils";
+import { useWindowWidth } from "@wojtekmaj/react-hooks";
+// import "./index.less";
 const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 
-const Page = () => {
+const Page = ({
+  chartIsAnimating,
+  waitForChart,
+  setShowLogin,
+  animationOpts: { animation, setAnimation, defaultAnimation },
+  user,
+}) => {
   const HODL = "HODL";
   const hyperdrive = "hyperdrive";
   const [previewData, setPreviewData] = useState({
@@ -18,9 +25,15 @@ const Page = () => {
   });
   const [toggle, setToggle] = useState(true);
   const [loading, setLoading] = useState(true);
-
-  const formatBTC = (v) => `${Math.round(v * 10) / 10} ₿`;
-  const formatUSD = (v) => {
+  const [lockRatio, setLockRatio] = useState(0);
+  const [lockIcon, setLockIcon] = useState("🔒");
+  const [unlockIcon, setUnlockIcon] = useState("🔑");
+  const width = useWindowWidth();
+  const chartRef = useRef();
+  const isMobile = width <= 700;
+  const lockSize = 50;
+  const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
+  const formatUSD = (v: number) => {
     if (v < 1e3) {
       return `$ ${v}`;
     } else if (v < 1e6) {
@@ -28,13 +41,65 @@ const Page = () => {
     }
     return `$ ${v / 1e6}M`;
   };
+
+  const popoverContent = (
+    <span
+      style={{ color: "#d9d9d9", fontWeight: "600", fontFamily: "monospace" }}
+    >
+      {user ? (
+        "Signal API is coming soon..."
+      ) : (
+        <>
+          <div>
+            <a style={{ color: "#52e5ff" }} onClick={() => setShowLogin(true)}>
+              <i>{"Log in and unlock"}</i>
+            </a>
+            {" the latest "}
+          </div>
+          <div>
+            <span style={{ color: "lime", fontFamily: "monospace" }}>BUY</span>
+            {" and "}
+            <span style={{ color: "red", fontFamily: "monospace" }}>SELL</span>
+            {" signals."}
+          </div>
+        </>
+      )}
+    </span>
+  );
   useEffect(() => {
     (async () => {
-      const url = `${getApiUrl()}/preview`;
+      const url = `${getApiUrl({ localOverride: "prod" })}/preview`;
       fetch(url, { method: "GET" })
         .then((response) => response.json())
+        .then((data) => {
+          const dataLen = data.BTC.data.length;
+          const latestDate = data.BTC.data[dataLen - 1].Time;
+          // This is because there are two data points for each day:
+          // HODL and hyperdrive
+          const numUnlockedDays = dataLen / 2;
+          // proportion of space that lock should take up
+          const proposedLockRatio = 1 / 4;
+          const numUnlockedParts = 1 / proposedLockRatio - 1;
+          const numDaysToAdd = Math.round(numUnlockedDays / numUnlockedParts);
+
+          let lockedDates: Date[] | string[] = getDateRange(
+            new Date(latestDate),
+            numDaysToAdd
+          ).map((d) => convertShortISO(d.toISOString().slice(0, 10)));
+
+          lockedDates.forEach((Time) => {
+            data.BTC.data.push({ Time });
+            data.USD.data.push({ Time });
+          });
+
+          const numLockedDays = lockedDates.length;
+          const totalNumDays = numUnlockedDays + numLockedDays;
+          setLockRatio(numUnlockedDays / totalNumDays);
+          return data;
+        })
         .then((data) => setPreviewData(data))
-        .then(() => setLoading(false));
+        .then(() => setLoading(false))
+        .then(waitForChart());
     })();
   }, []);
 
@@ -120,12 +185,7 @@ const Page = () => {
         fillOpacity: 0.15,
       },
     },
-    animation: {
-      appear: {
-        animation: "wave-in",
-        duration: 4000,
-      },
-    },
+    animation,
     xAxis: {
       tickCount: 10,
       grid: {
@@ -139,7 +199,7 @@ const Page = () => {
     },
     yAxis: {
       label: {
-        formatter: (v) => (toggle ? formatBTC(v) : formatUSD(v)),
+        formatter: (v: any) => (toggle ? formatBTC(v) : formatUSD(v)),
       },
       grid: {
         line: {
@@ -153,6 +213,30 @@ const Page = () => {
     point: {
       shape: "breath-point",
     },
+    annotations: [
+      {
+        animation: false,
+        type: "region",
+        style: {
+          // https://ant.design/docs/spec/colors#Neutral-Color-Palette
+          fill: "#434343",
+          fillOpacity: 1,
+          cursor: "not-allowed",
+        },
+        start: [`${lockRatio * 100}%`, "0%"],
+        end: ["100%", "100%"],
+      },
+      {
+        animation: false,
+        type: "text",
+        content: user ? unlockIcon : lockIcon,
+        position: [`${(lockRatio + (1 - lockRatio) / 2) * 100}%`, "50%"],
+        style: {
+          fontSize: lockSize,
+        },
+        offsetX: (lockSize * -1) / 2,
+      },
+    ],
   };
 
   const columns = [
@@ -168,6 +252,7 @@ const Page = () => {
       key: hyperdrive,
     },
   ];
+
   return (
     <>
       <Title>Leveraging AutoML to beat BTC</Title>
@@ -176,7 +261,6 @@ const Page = () => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          // padding: "6px 0px 12px 0px",
           margin: "-12px 0px 12px 0px",
         }}
       >
@@ -190,7 +274,11 @@ const Page = () => {
           checkedChildren="BTC (₿)"
           unCheckedChildren="USD ($)"
           defaultChecked
-          onChange={(checked) => setToggle(checked)}
+          onChange={(checked) => {
+            setToggle(checked);
+            setAnimation(defaultAnimation);
+            waitForChart();
+          }}
         />
       </span>
       {loading ? (
@@ -207,10 +295,55 @@ const Page = () => {
       ) : (
         <div className={styles.parent}>
           <div className={styles.child}>
-            {!loading ? <Line {...config} /> : null}
+            {!loading && (
+              <Popover
+                align={{
+                  offset: [
+                    isMobile
+                      ? 0
+                      : chartRef?.current?.getChart()?.getChartSize()?.width /
+                          2 -
+                        ((1 - lockRatio) *
+                          chartRef?.current?.getChart()?.getChartSize()
+                            ?.width) /
+                          2,
+                    // height
+                    chartRef?.current?.getChart()?.getChartSize()?.height *
+                      -0.375,
+                  ],
+                }}
+                zIndex={1}
+                content={popoverContent}
+                color="#1f1f1f"
+                placement={isMobile ? "bottomRight" : "bottom"}
+                overlayClassName={styles.chartTooltip}
+                overlayInnerStyle={{ borderColor: "white", borderWidth: "1px" }}
+                onVisibleChange={(visible) => {
+                  if (chartIsAnimating) {
+                    return;
+                  }
+                  if (user) {
+                    if (visible && unlockIcon === "🔑") {
+                      setUnlockIcon("⏳");
+                    } else if (!visible && unlockIcon === "⏳") {
+                      setUnlockIcon("🔑");
+                    }
+                  } else {
+                    if (visible && lockIcon === "🔒") {
+                      setLockIcon("🔓");
+                    } else if (!visible && lockIcon === "🔓") {
+                      setLockIcon("🔒");
+                    }
+                  }
+                }}
+              >
+                {" "}
+                <Line ref={chartRef} {...config} />
+              </Popover>
+            )}
           </div>
           <div className={styles.child}>
-            {!loading ? (
+            {!loading && (
               <Table
                 dataSource={
                   toggle ? previewData.BTC.stats : previewData.USD.stats
@@ -219,7 +352,7 @@ const Page = () => {
                 pagination={false}
                 loading={loading}
               />
-            ) : null}
+            )}
           </div>
         </div>
       )}
