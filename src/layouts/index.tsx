@@ -140,17 +140,17 @@ const Layout = ({ route, children }) => {
     },
   };
   const [animation, setAnimation] = useState(defaultAnimation);
-  const [chartIsLoading, setChartIsLoading] = useState(false);
+  const [chartIsAnimating, setChartIsAnimating] = useState(false);
   let timer: NodeJS.Timeout;
   const waitForChart = () => {
-    if (chartIsLoading) {
+    if (chartIsAnimating) {
       return;
     }
     clearTimeout(timer);
-    setChartIsLoading(true);
+    setChartIsAnimating(true);
     timer = setTimeout(() => {
       setAnimation(false);
-      setChartIsLoading(false);
+      setChartIsAnimating(false);
     }, defaultAnimation.appear.duration);
   };
   const loggedIn = user;
@@ -260,7 +260,7 @@ const Layout = ({ route, children }) => {
       >
         {cloneElement(children, {
           setShowLogin,
-          chartIsLoading,
+          chartIsAnimating,
           waitForChart,
           user,
           animationOpts: { animation, setAnimation, defaultAnimation },
