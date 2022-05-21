@@ -146,6 +146,7 @@ const Layout = ({ route, children }) => {
     if (chartIsLoading) {
       return;
     }
+    clearTimeout(timer);
     setChartIsLoading(true);
     timer = setTimeout(() => {
       setAnimation(false);

@@ -1,11 +1,10 @@
 import React from "react";
-import { useState, useEffect, useContext, useRef } from "react";
-import { Typography, Spin, Table, Switch, Popover, Tooltip } from "antd";
+import { useState, useEffect, useRef } from "react";
+import { Typography, Spin, Table, Switch, Popover } from "antd";
 import { G2, Line } from "@ant-design/charts";
-import { LoadingOutlined, LockFilled } from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
 import styles from "./index.less";
 import { getApiUrl, getDateRange, convertShortISO } from "@/utils";
-import { useAuthenticator } from "@aws-amplify/ui-react";
 import { useWindowWidth } from "@wojtekmaj/react-hooks";
 // import "./index.less";
 const { Title } = Typography;
@@ -31,7 +30,7 @@ const Page = ({
   const [unlockIcon, setUnlockIcon] = useState("🔑");
   const width = useWindowWidth();
   const chartRef = useRef();
-
+  const isMobile = width <= 700;
   const lockSize = 50;
   const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
   const formatUSD = (v: number) => {
@@ -69,7 +68,8 @@ const Page = ({
   );
   useEffect(() => {
     (async () => {
-      const url = `${getApiUrl()}/preview`;
+      // const url = `${getApiUrl()}/preview`;
+      const url = `https://api.forcepu.sh/preview`;
       fetch(url, { method: "GET" })
         .then((response) => response.json())
         .then((data) => {
@@ -300,7 +300,7 @@ const Page = ({
               <Popover
                 align={{
                   offset: [
-                    width <= 700
+                    isMobile
                       ? 0
                       : chartRef?.current?.getChart()?.getChartSize()?.width /
                           2 -
@@ -316,9 +316,7 @@ const Page = ({
                 zIndex={1}
                 content={popoverContent}
                 color="#1f1f1f"
-                placement="bottom"
-                // placement="bottomRight"
-                // visible
+                placement={isMobile ? "bottomRight" : "bottom"}
                 overlayClassName={styles.chartTooltip}
                 overlayInnerStyle={{ borderColor: "white", borderWidth: "1px" }}
                 onVisibleChange={(visible) => {
