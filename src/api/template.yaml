@@ -24,6 +24,22 @@ Parameters:
   UserPoolArn:
     Type: "String"
     NoEcho: true
+  DBUsername:
+    NoEcho: true
+    Description: Username for PostgreSQL database access
+    Type: "String"
+    MinLength: "1"
+    MaxLength: "16"
+    AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
+    ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
+  DBPassword:
+    NoEcho: true
+    Description: Password for PostgreSQL database access
+    Type: "String"
+    MinLength: "8"
+    MaxLength: "41"
+    AllowedPattern: "[a-zA-Z0-9]*"
+    ConstraintDescription: must contain only alphanumeric characters.
 
 Globals:
   Function:
@@ -111,22 +127,20 @@ Resources:
       Dockerfile: Dockerfile
       DockerContext: ./home
       DockerTag: python3.8-v1
-  # CognitoUserPool:
-  #   Type: AWS::Cognito::UserPool
-  #   Properties:
-  #     UserPoolName: !Ref CognitoUserPoolName
-  #     Policies:
-  #       PasswordPolicy:
-  #         MinimumLength: 8
-  #     UsernameAttributes:
-  #       - email
-  #     Schema:
-  #       - AttributeDataType: String
-  #         Name: email
-  #         Required: false
-  # CognitoUserPoolClient:
-  #   Type: AWS::Cognito::UserPoolClient
-  #   Properties:
-  #     UserPoolId: !Ref CognitoUserPool
-  #     ClientName: !Ref CognitoUserPoolClientName
-  #     GenerateSecret: false
+  RDSCluster:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      MasterUsername: !Ref DBUsername
+      MasterUserPassword: !Ref DBPassword
+      DBClusterIdentifier: !Sub "${Stage}-forcepush"
+      DatabaseName: "api"
+      Engine: aurora-postgresql
+      EngineVersion: "10.18"
+      EngineMode: serverless
+      ScalingConfiguration:
+        AutoPause: true
+        MinCapacity: 2
+        MaxCapacity: 16
+        SecondsUntilAutoPause: 300
+      EnableHttpEndpoint: true
+      BackupRetentionPeriod: 35
