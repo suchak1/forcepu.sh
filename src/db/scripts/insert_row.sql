@@ -1,0 +1,1 @@
+INSERT INTO users (email, permissions) VALUES('ks', '{"isAdmin": false}');
