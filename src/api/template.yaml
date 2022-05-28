@@ -127,6 +127,7 @@ Resources:
       Dockerfile: Dockerfile
       DockerContext: ./home
       DockerTag: python3.8-v1
+  # Not worth it - min $80 for Serverless
   RDSCluster:
     Type: AWS::RDS::DBCluster
     Properties:
