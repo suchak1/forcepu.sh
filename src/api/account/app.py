@@ -49,7 +49,7 @@ def handle_get(event):
     }
 
 
-def get_protected(event, _):
+def get_account(event, _):
     if event['httpMethod'].upper() == 'OPTIONS':
         response = handle_options()
     else:

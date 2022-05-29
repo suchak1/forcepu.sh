@@ -45,15 +45,15 @@ Resources:
         Authorizers:
           CognitoAuth:
             UserPoolArn: !Ref UserPoolArn
-  ProtectedFunction:
+  AccountFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       PackageType: Image
       Events:
-        Protected:
+        Account:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /protected
+            Path: /account
             Method: get
             RestApiId: !Ref ApiGatewayApi
             Auth:
@@ -62,12 +62,12 @@ Resources:
         Options:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /protected
+            Path: /account
             Method: options
             RestApiId: !Ref ApiGatewayApi
     Metadata:
       Dockerfile: Dockerfile
-      DockerContext: ./protected
+      DockerContext: ./account
       DockerTag: python3.8-v1
   ExerciseLogFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -131,3 +131,5 @@ Resources:
               KeyType: HASH
           Projection:
             ProjectionType: ALL
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true

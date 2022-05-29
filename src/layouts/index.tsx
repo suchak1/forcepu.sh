@@ -136,7 +136,7 @@ const Layout = ({ route, children }) => {
   useEffect(() => {
     if (loggedIn) {
       const { idToken } = user.signInUserSession;
-      const url = `${getApiUrl()}/protected`;
+      const url = `${getApiUrl()}/account`;
       fetch(url, {
         method: "GET",
         headers: { Authorization: idToken.jwtToken },
