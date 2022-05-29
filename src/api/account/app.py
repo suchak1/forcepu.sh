@@ -56,3 +56,7 @@ def handle_get(event):
         "body": json.dumps(body),
         "headers": {"Access-Control-Allow-Origin": "*"}
     }
+
+# to generate api key:
+# import secrets
+# secrets.token_urlsafe(64)
