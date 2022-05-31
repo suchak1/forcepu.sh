@@ -75,11 +75,11 @@ class Permissions(MapAttribute):
 
 
 def get_api_key():
-    continue_looping = True
-    while continue_looping:
+    key_already_exists = True
+    while key_already_exists:
         api_key = secrets.token_urlsafe(64)
         query_results = list(UserModel.api_key_index.query(api_key))
-        continue_looping = len(query_results)
+        key_already_exists = len(query_results)
     return api_key
 
 
