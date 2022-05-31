@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Typography, Spin, Table, Switch, Alert } from "antd";
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined } from "@ant-design/icons";
+import { useAuthenticator } from "@aws-amplify/ui-react";
 import styles from "./index.less";
 import { getApiUrl } from "@/utils";
 
@@ -18,6 +19,8 @@ const Page = () => {
   });
   const [toggle, setToggle] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [inClosedBeta, setInClosedBeta] = useState(false);
+  const { user: loggedIn } = useAuthenticator((context) => [context.user]);
 
   const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
   const formatUSD = (v: number) => {
@@ -37,6 +40,19 @@ const Page = () => {
         .then(() => setLoading(false));
     })();
   }, []);
+
+  useEffect(() => {
+    if (loggedIn) {
+      const { idToken } = loggedIn.signInUserSession;
+      const url = `${getApiUrl()}/account`;
+      fetch(url, {
+        method: "GET",
+        headers: { Authorization: idToken.jwtToken },
+      })
+        .then((response) => response.json())
+        .then((data) => setInClosedBeta(data["permissions"]["is_friend"]));
+    }
+  }, [loggedIn]);
 
   G2.registerShape("point", "breath-point", {
     draw(cfg, container) {
@@ -172,9 +188,18 @@ const Page = () => {
 
   return (
     <>
+      {/* {loggedIn && (<Alert
+        message={inClosedBeta ? "Congrats! You've been selected for the closed beta. 🎉": "You are not in the closed beta, but you may receive an invitation in the future. 📧"}
+        type={inClosedBeta ? "success" : "warning"}
+        showIcon
+        closable
+        style={{ marginBottom: "12px" }}
+      />)} */}
       <Alert
-        message="You are not in the closed beta, but you may receive an invitation in the future. 📧"
-        type="warning"
+        message={`Congrats! You've been selected for the closed beta. ${
+          toggle ? "🎉" : "🎊"
+        }`}
+        type="success"
         showIcon
         closable
         style={{ marginBottom: "12px" }}

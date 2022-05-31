@@ -131,25 +131,14 @@ const footerHeight = headerHeight;
 
 const Layout = ({ route, children }) => {
   const [showLogin, setShowLogin] = useState(false);
-  const { user, signOut } = useAuthenticator((context) => [context.user]);
-  const loggedIn = user;
-  useEffect(() => {
-    if (loggedIn) {
-      const { idToken } = user.signInUserSession;
-      const url = `${getApiUrl()}/account`;
-      fetch(url, {
-        method: "GET",
-        headers: { Authorization: idToken.jwtToken },
-      })
-        .then((response) => response.json())
-        .then((data) => console.log(data));
-    }
-  }, [user]);
+  const { user: loggedIn, signOut } = useAuthenticator((context) => [
+    context.user,
+  ]);
   const showModal = !loggedIn && showLogin;
   const dummy = <Authenticator className={overrides.invisible} />;
   const getAccountText = (user: string | undefined) => `signed in as ${user}`;
   const account = getAccountText(
-    user?.attributes?.name || user?.attributes?.email
+    loggedIn?.attributes?.name || loggedIn?.attributes?.email
   );
 
   return (
