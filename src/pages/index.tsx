@@ -173,7 +173,16 @@ const Page = () => {
   return (
     <>
       <Alert
-        message="You are not in the closed beta, but you may receive an invitation in the future. 🤔⏳📧"
+        message={
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <span>
+              {
+                "You are not in the closed beta, but you may receive an invitation in the future."
+              }
+            </span>{" "}
+            🤔⏳📧
+          </div>
+        }
         type="warning"
         showIcon
         closable
