@@ -23,7 +23,7 @@ export const getHostname = (env) => {
   }
 };
 
-export const getApiUrl = ({ localOverride }) => {
+export const getApiUrl = ({ localOverride } = { localOverride: "" }) => {
   const isLocal = getEnvironment() === "local";
   const useLocal = isLocal && !localOverride;
   const hostname = getHostname(isLocal && localOverride);
