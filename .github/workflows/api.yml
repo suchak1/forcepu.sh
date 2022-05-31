@@ -46,8 +46,6 @@ jobs:
           envkey_CertArn: ${{ secrets.CERT_ARN }}
           envkey_HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
           envkey_UserPoolArn: ${{ secrets.USER_POOL_ARN }}
-          envkey_DBUsername: ${{ secrets.DB_USERNAME }}
-          envkey_DBPassword: ${{ secrets.DB_PASSWORD }}
           directory: src/api
           file_name: parameters.env
         if: ${{ github.ref == 'refs/heads/master' }}
@@ -61,8 +59,6 @@ jobs:
           envkey_CertArn: ${{ secrets.DEV_CERT_ARN }}
           envkey_HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
           envkey_UserPoolArn: ${{ secrets.DEV_USER_POOL_ARN }}
-          envkey_DBUsername: ${{ secrets.DEV_DB_USERNAME }}
-          envkey_DBPassword: ${{ secrets.DEV_DB_PASSWORD }}
           directory: src/api
           file_name: dev-parameters.env
         if: ${{ github.ref != 'refs/heads/master' }}

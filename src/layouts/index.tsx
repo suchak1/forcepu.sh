@@ -205,7 +205,13 @@ const Layout = ({ route, children }) => {
           >
             {loggedIn && <span className={overrides.account}>{account}</span>}
             {loggedIn ? (
-              <Button className="signOut" onClick={signOut}>
+              <Button
+                className="signOut"
+                onClick={() => {
+                  setShowLogin(false);
+                  signOut();
+                }}
+              >
                 Sign out
               </Button>
             ) : (
