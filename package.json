@@ -17,7 +17,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "test:api": "cd src/api && sam local invoke PreviewFunction --parameter-overrides $(cat parameters.env)",
     "ci": "rm -rf node_modules && yarn install --frozen-lockfile",
-    "amp": "APP_ID=\"${APP_ID}\" ENV=\"${ENV}\" amplify/pull.sh"
+    "amp": "APP_ID=\"${APP_ID}\" ENV=\"${ENV}\" amplify/pull.sh",
+    "clean": "rm -rf node_modules && rm -rf src/.umi"
   },
   "author": "Krish Suchak <suchak.krish@gmail.com>",
   "license": "MIT",
@@ -31,9 +32,8 @@
     "@umijs/plugin-locale": "^0.15.2",
     "@umijs/plugin-request": "^2.8.1",
     "@wojtekmaj/react-hooks": "^1.13.0",
-    "antd": "4.19.1",
+    "antd": "4.20.2",
     "aws-amplify": "4.3.15",
-    "date-fns": "^2.28.0",
     "react-hover-video-player": "^9.4.0",
     "react-pdf": "^5.7.1",
     "umi": "3.5.21"
