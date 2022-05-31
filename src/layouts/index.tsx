@@ -141,7 +141,6 @@ const Layout = ({ route, children }) => {
         method: "GET",
         headers: { Authorization: idToken.jwtToken },
       }).then((response) => response.json());
-      // .then((data) => console.log(data));
     }
   }, [user]);
   const showModal = !loggedIn && showLogin;
@@ -174,26 +173,21 @@ const Layout = ({ route, children }) => {
             selectedKeys={["0"].concat([
               (pages.indexOf(window.location.pathname.slice(1)) + 1).toString(),
             ])}
-          >
-            {routes.map((route, idx) => (
-              <Menu.Item
-                className={[overrides.white, overrides.ice].join(" ")}
-                key={idx}
-                style={
-                  idx === 0
-                    ? {
-                        backgroundColor: "transparent",
-                      }
-                    : {
-                        display: "flex",
-                        alignItems: "center",
-                      }
-                }
-              >
-                <NavLink to={route.to}>{route.text}</NavLink>
-              </Menu.Item>
-            ))}
-          </Menu>
+            items={routes.map((route, idx) => ({
+              className: [overrides.white, overrides.ice].join(" "),
+              key: idx,
+              style:
+                idx === 0
+                  ? {
+                      backgroundColor: "transparent",
+                    }
+                  : {
+                      display: "flex",
+                      alignItems: "center",
+                    },
+              label: <NavLink to={route.to}>{route.text}</NavLink>,
+            }))}
+          ></Menu>
           {dummy}
           <span
             style={{
