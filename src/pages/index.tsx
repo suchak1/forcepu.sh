@@ -173,13 +173,11 @@ const Page = () => {
   return (
     <>
       <Alert
-        message="You are not in the closed beta, but you may receive an invitation in the future."
+        message="You are not in the closed beta, but you may receive an invitation in the future. 🤔⏳📧"
         type="warning"
-        // warning looks better
         showIcon
         closable
-        // banner
-        style={{ marginBottom: "10px" }}
+        style={{ marginBottom: "12px" }}
       />
       <Title>Leveraging AutoML to beat BTC</Title>
       <span
