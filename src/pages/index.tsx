@@ -19,8 +19,8 @@ const Page = () => {
   const [toggle, setToggle] = useState(true);
   const [loading, setLoading] = useState(true);
 
-  const formatBTC = (v) => `${Math.round(v * 10) / 10} ₿`;
-  const formatUSD = (v) => {
+  const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
+  const formatUSD = (v: number) => {
     if (v < 1e3) {
       return `$ ${v}`;
     } else if (v < 1e6) {
@@ -30,7 +30,7 @@ const Page = () => {
   };
   useEffect(() => {
     (async () => {
-      const url = `${getApiUrl()}/preview`;
+      const url = `${getApiUrl({ localOverride: "prod" })}/preview`;
       fetch(url, { method: "GET" })
         .then((response) => response.json())
         .then((data) => setPreviewData(data))
@@ -123,7 +123,8 @@ const Page = () => {
     animation: {
       appear: {
         animation: "wave-in",
-        duration: 4000,
+        duration: 3000,
+        easing: "easeCircleInOut",
       },
     },
     xAxis: {
@@ -139,7 +140,7 @@ const Page = () => {
     },
     yAxis: {
       label: {
-        formatter: (v) => (toggle ? formatBTC(v) : formatUSD(v)),
+        formatter: (v: any) => (toggle ? formatBTC(v) : formatUSD(v)),
       },
       grid: {
         line: {
@@ -168,6 +169,7 @@ const Page = () => {
       key: hyperdrive,
     },
   ];
+
   return (
     <>
       <Title>Leveraging AutoML to beat BTC</Title>
@@ -176,7 +178,6 @@ const Page = () => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          // padding: "6px 0px 12px 0px",
           margin: "-12px 0px 12px 0px",
         }}
       >
@@ -206,11 +207,9 @@ const Page = () => {
         </div>
       ) : (
         <div className={styles.parent}>
+          <div className={styles.child}>{!loading && <Line {...config} />}</div>
           <div className={styles.child}>
-            {!loading ? <Line {...config} /> : null}
-          </div>
-          <div className={styles.child}>
-            {!loading ? (
+            {!loading && (
               <Table
                 dataSource={
                   toggle ? previewData.BTC.stats : previewData.USD.stats
@@ -219,7 +218,7 @@ const Page = () => {
                 pagination={false}
                 loading={loading}
               />
-            ) : null}
+            )}
           </div>
         </div>
       )}
