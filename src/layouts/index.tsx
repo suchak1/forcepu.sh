@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "umi";
-import { Layout as AntLayout, Menu, Button, Modal } from "antd";
+import { Layout as AntLayout, Menu, Button, Modal, Alert } from "antd";
 import {
   Authenticator,
   AmplifyProvider,
@@ -140,7 +140,9 @@ const Layout = ({ route, children }) => {
       fetch(url, {
         method: "GET",
         headers: { Authorization: idToken.jwtToken },
-      }).then((response) => response.json());
+      })
+        .then((response) => response.json())
+        .then((data) => console.log(data));
     }
   }, [user]);
   const showModal = !loggedIn && showLogin;
@@ -151,107 +153,121 @@ const Layout = ({ route, children }) => {
   );
 
   return (
-    <AntLayout>
-      <AntLayout.Header
-        style={{
-          // this is so that header stays above toggle in fixed scrolling
-          zIndex: 1000,
-          width: "100%",
-          position: "fixed",
-          height: headerHeight,
-        }}
-      >
-        <span style={{ display: "flex", alignItems: "center" }}>
-          <img className="logo" src={BTC_ICE} width={24} height={24}></img>
-          <Menu
-            style={{ height: headerHeight, width: "100%" }}
-            theme="dark"
-            mode="horizontal"
-            defaultSelectedKeys={["0"].concat([
-              (pages.indexOf(window.location.pathname.slice(1)) + 1).toString(),
-            ])}
-            selectedKeys={["0"].concat([
-              (pages.indexOf(window.location.pathname.slice(1)) + 1).toString(),
-            ])}
-            items={routes.map((route, idx) => ({
-              className: [overrides.white, overrides.ice].join(" "),
-              key: idx,
-              style:
-                idx === 0
-                  ? {
-                      backgroundColor: "transparent",
-                    }
-                  : {
-                      display: "flex",
-                      alignItems: "center",
-                    },
-              label: <NavLink to={route.to}>{route.text}</NavLink>,
-            }))}
-          ></Menu>
-          {dummy}
-          <span
-            style={{
-              display: "flex",
-              width: "100%",
-              alignItems: "center",
-              justifyContent: "flex-end",
-            }}
-          >
-            {loggedIn && <span className={overrides.account}>{account}</span>}
-            {loggedIn ? (
-              <Button
-                className="signOut"
-                onClick={() => {
-                  setShowLogin(false);
-                  signOut();
-                }}
-              >
-                Sign out
-              </Button>
-            ) : (
-              // maybe "Get signals" or "Get started"
-              <Button onClick={() => setShowLogin(true)}>Get started</Button>
-            )}
-            <Modal
-              visible={showModal}
-              closable={false}
-              onCancel={() => setShowLogin(false)}
+    <>
+      {/* <Alert
+        message="You are not in the closed beta, but you may receive an invitation in the future."
+        type="warning"
+        // warning looks better
+        showIcon
+        closable
+        // banner
+      /> */}
+      <AntLayout>
+        <AntLayout.Header
+          style={{
+            // this is so that header stays above toggle in fixed scrolling
+            zIndex: 1000,
+            width: "100%",
+            position: "fixed",
+            height: headerHeight,
+          }}
+        >
+          <span style={{ display: "flex", alignItems: "center" }}>
+            <img className="logo" src={BTC_ICE} width={24} height={24}></img>
+            <Menu
+              style={{ height: headerHeight, width: "100%" }}
+              theme="dark"
+              mode="horizontal"
+              defaultSelectedKeys={["0"].concat([
+                (
+                  pages.indexOf(window.location.pathname.slice(1)) + 1
+                ).toString(),
+              ])}
+              selectedKeys={["0"].concat([
+                (
+                  pages.indexOf(window.location.pathname.slice(1)) + 1
+                ).toString(),
+              ])}
+              items={routes.map((route, idx) => ({
+                className: [overrides.white, overrides.ice].join(" "),
+                key: idx,
+                style:
+                  idx === 0
+                    ? {
+                        backgroundColor: "transparent",
+                      }
+                    : {
+                        display: "flex",
+                        alignItems: "center",
+                      },
+                label: <NavLink to={route.to}>{route.text}</NavLink>,
+              }))}
+            ></Menu>
+            {dummy}
+            <span
+              style={{
+                display: "flex",
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "flex-end",
+              }}
             >
-              <AmplifyProvider theme={theme} colorMode="dark">
-                <Authenticator />
-              </AmplifyProvider>
-            </Modal>
+              {loggedIn && <span className={overrides.account}>{account}</span>}
+              {loggedIn ? (
+                <Button
+                  className="signOut"
+                  onClick={() => {
+                    setShowLogin(false);
+                    signOut();
+                  }}
+                >
+                  Sign out
+                </Button>
+              ) : (
+                // maybe "Get signals" or "Get started"
+                <Button onClick={() => setShowLogin(true)}>Get started</Button>
+              )}
+              <Modal
+                visible={showModal}
+                closable={false}
+                onCancel={() => setShowLogin(false)}
+              >
+                <AmplifyProvider theme={theme} colorMode="dark">
+                  <Authenticator />
+                </AmplifyProvider>
+              </Modal>
+            </span>
           </span>
-        </span>
-      </AntLayout.Header>
+        </AntLayout.Header>
 
-      <AntLayout.Content
-        style={{
-          padding: 24,
-          marginTop: headerHeight,
-          minHeight: `calc(100vh - ${headerHeight + footerHeight}px)`,
-          overflow: "auto",
-        }}
-      >
-        {children}
-      </AntLayout.Content>
-      <AntLayout.Footer
-        style={{
-          height: footerHeight,
-          display: "flex",
-          justifyContent: "space-between",
-          backgroundColor: "#1f1f1f",
-          alignItems: "center",
-        }}
-      >
-        <span className={overrides.footerLink}>
-          _move fast; break everything
-        </span>
-        <a href="/privacy" className={overrides.footerLink}>
-          Privacy
-        </a>
-      </AntLayout.Footer>
-    </AntLayout>
+        <AntLayout.Content
+          style={{
+            padding: 24,
+            marginTop: headerHeight,
+            minHeight: `calc(100vh - ${headerHeight + footerHeight}px)`,
+            overflow: "auto",
+          }}
+        >
+          {children}
+        </AntLayout.Content>
+        <AntLayout.Footer
+          style={{
+            height: footerHeight,
+            display: "flex",
+            justifyContent: "space-between",
+            backgroundColor: "#1f1f1f",
+            alignItems: "center",
+          }}
+        >
+          <span className={overrides.footerLink}>
+            _move fast; break everything
+          </span>
+          <a href="/privacy" className={overrides.footerLink}>
+            Privacy
+          </a>
+        </AntLayout.Footer>
+      </AntLayout>
+    </>
   );
 };
 

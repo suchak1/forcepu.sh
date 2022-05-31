@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Typography, Spin, Table, Switch } from "antd";
+import { Typography, Spin, Table, Switch, Alert } from "antd";
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined } from "@ant-design/icons";
 import styles from "./index.less";
@@ -172,6 +172,15 @@ const Page = () => {
 
   return (
     <>
+      <Alert
+        message="You are not in the closed beta, but you may receive an invitation in the future."
+        type="warning"
+        // warning looks better
+        showIcon
+        closable
+        // banner
+        style={{ marginBottom: "10px" }}
+      />
       <Title>Leveraging AutoML to beat BTC</Title>
       <span
         style={{
