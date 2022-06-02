@@ -139,8 +139,7 @@ const Page = () => {
     animation: {
       appear: {
         animation: "wave-in",
-        duration: 3000,
-        easing: "easeCircleInOut",
+        duration: 4000,
       },
     },
     xAxis: {
@@ -188,22 +187,19 @@ const Page = () => {
 
   return (
     <>
-      {/* {loggedIn && (<Alert
-        message={inClosedBeta ? "Congrats! You've been selected for the closed beta. 🎉": "You are not in the closed beta, but you may receive an invitation in the future. 📧"}
-        type={inClosedBeta ? "success" : "warning"}
-        showIcon
-        closable
-        style={{ marginBottom: "12px" }}
-      />)} */}
-      <Alert
-        message={`Congrats! You've been selected for the closed beta. ${
-          toggle ? "🎉" : "🎊"
-        }`}
-        type="success"
-        showIcon
-        closable
-        style={{ marginBottom: "12px" }}
-      />
+      {loggedIn && (
+        <Alert
+          message={
+            inClosedBeta
+              ? "Congrats! You've been selected for the closed beta. 🎊"
+              : "You are not in the closed beta, but you may receive an invitation in the future."
+          }
+          type={inClosedBeta ? "success" : "warning"}
+          showIcon
+          closable
+          style={{ marginBottom: "12px" }}
+        />
+      )}
       <Title>Leveraging AutoML to beat BTC</Title>
       <span
         style={{
