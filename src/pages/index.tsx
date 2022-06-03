@@ -18,10 +18,13 @@ const Page = () => {
     USD: { data: [], stats: [] },
   });
   const [toggle, setToggle] = useState(true);
-  const [loading, setLoading] = useState(true);
-  const [account, setAccount] = useState();
+  const [previewLoading, setPreviewLoading] = useState(true);
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
-
+  const [accountLoading, setAccountLoading] = useState(false);
+  const [account, setAccount] = useState();
+  const loading = previewLoading || accountLoading;
+  console.log("accountLoading", accountLoading);
+  console.log("loading", loading);
   const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
   const formatUSD = (v: number) => {
     if (v < 1e3) {
@@ -37,12 +40,14 @@ const Page = () => {
       fetch(url, { method: "GET" })
         .then((response) => response.json())
         .then((data) => setPreviewData(data))
-        .then(() => setLoading(false));
+        .catch((err) => console.error(err))
+        .finally(() => setPreviewLoading(false));
     })();
   }, []);
 
   useEffect(() => {
     if (loggedIn) {
+      setAccountLoading(true);
       const { idToken } = loggedIn.signInUserSession;
       const url = `${getApiUrl()}/account`;
       fetch(url, {
@@ -50,7 +55,9 @@ const Page = () => {
         headers: { Authorization: idToken.jwtToken },
       })
         .then((response) => response.json())
-        .then((data) => setAccount(data));
+        .then((data) => setAccount(data))
+        .catch((err) => console.error(err))
+        .finally(() => setAccountLoading(false));
     }
   }, [loggedIn]);
 
