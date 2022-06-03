@@ -29,7 +29,7 @@
     "@nfte/react": "^1.0.4",
     "@umijs/plugin-antd": "^0.15.0",
     "@umijs/plugin-dva": "^0.13.1",
-    "@umijs/plugin-locale": "^0.15.2",
+    "@umijs/plugin-locale": "^0.16.0",
     "@umijs/plugin-request": "^2.8.1",
     "@wojtekmaj/react-hooks": "^1.13.0",
     "antd": "4.20.2",

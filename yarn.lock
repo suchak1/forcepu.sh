@@ -3611,10 +3611,10 @@
     dva-immer "1.0.0"
     dva-loading "^3.0.20"
 
-"@umijs/plugin-locale@^0.15.2":
-  version "0.15.2"
-  resolved "https://registry.npmjs.org/@umijs/plugin-locale/-/plugin-locale-0.15.2.tgz"
-  integrity sha512-/m3ik0NKbE/PHFPKPqSBEwGi5RUB6Dz2T7jepDXhU8ycV0zUPGbDbChUx1r/3t5zveZIND1s/7A49Apb+ujUmg==
+"@umijs/plugin-locale@^0.16.0":
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/@umijs/plugin-locale/-/plugin-locale-0.16.0.tgz#776a6e02f397a812145363ec04e70e4c35605137"
+  integrity sha512-X0MnfzDdaQqwk2RJiIQ1jVBa63BBwSA2hr2OSFSgn7jkdQ0T9sqOlRjkrspR8Yn9sOuJMo7HgaNR7w6SMWdePQ==
   dependencies:
     "@ant-design/icons" "^4.1.0"
     "@formatjs/intl-pluralrules" "^1.5.0"
@@ -6755,12 +6755,7 @@ ml-matrix@^6.5.0:
     is-any-array "^2.0.0"
     ml-array-rescale "^1.3.7"
 
-moment@^2.24.0, moment@^2.25.3, moment@^2.29.1:
-  version "2.29.1"
-  resolved "https://registry.npmjs.org/moment/-/moment-2.29.1.tgz"
-  integrity sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==
-
-moment@^2.29.2:
+moment@^2.24.0, moment@^2.25.3, moment@^2.29.1, moment@^2.29.2:
   version "2.29.3"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.3.tgz#edd47411c322413999f7a5940d526de183c031f3"
   integrity sha512-c6YRvhEo//6T2Jz/vVtYzqBzwvPT95JBQ+smCytzf7c50oMZRsR/a4w88aD34I+/QVSfnoAnSBFPJHItlOMJVw==
