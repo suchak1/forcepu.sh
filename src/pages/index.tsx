@@ -19,7 +19,7 @@ const Page = () => {
   });
   const [toggle, setToggle] = useState(true);
   const [loading, setLoading] = useState(true);
-  const [inClosedBeta, setInClosedBeta] = useState(false);
+  const [account, setAccount] = useState();
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
 
   const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
@@ -50,7 +50,7 @@ const Page = () => {
         headers: { Authorization: idToken.jwtToken },
       })
         .then((response) => response.json())
-        .then((data) => setInClosedBeta(data["permissions"]["is_friend"]));
+        .then((data) => setAccount(data));
     }
   }, [loggedIn]);
 
@@ -187,14 +187,14 @@ const Page = () => {
 
   return (
     <>
-      {loggedIn && (
+      {loggedIn && account && (
         <Alert
           message={
-            inClosedBeta
+            account?.permissions?.is_friend
               ? "Congrats! You've been selected for the closed beta. 🎊"
               : "You are not in the closed beta, but you may receive an invitation in the future."
           }
-          type={inClosedBeta ? "success" : "warning"}
+          type={account?.permissions?.is_friend ? "success" : "warning"}
           showIcon
           closable
           style={{ marginBottom: "12px" }}
