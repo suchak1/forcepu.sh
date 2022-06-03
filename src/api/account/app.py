@@ -71,7 +71,7 @@ def handle_get(event):
 
 class Permissions(MapAttribute):
     is_admin = BooleanAttribute(default=False)
-    is_friend = BooleanAttribute(default=False)
+    in_beta = BooleanAttribute(default=False)
 
 
 def get_api_key():

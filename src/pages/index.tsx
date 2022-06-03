@@ -190,11 +190,11 @@ const Page = () => {
       {loggedIn && account && (
         <Alert
           message={
-            account?.permissions?.is_friend
+            account?.permissions?.in_beta
               ? "Congrats! You've been selected for the closed beta. 🎊"
               : "You are not in the closed beta, but you may receive an invitation in the future."
           }
-          type={account?.permissions?.is_friend ? "success" : "warning"}
+          type={account?.permissions?.in_beta ? "success" : "warning"}
           showIcon
           closable
           style={{ marginBottom: "12px" }}
