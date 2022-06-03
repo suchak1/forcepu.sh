@@ -96,7 +96,7 @@ const pages: string[] = [
   // "get started",
   // "gym",
   // "art",
-  // "docs"
+  // "docs",
 ];
 
 // "docs" should be example of how to use library or service
@@ -131,24 +131,14 @@ const footerHeight = headerHeight;
 
 const Layout = ({ route, children }) => {
   const [showLogin, setShowLogin] = useState(false);
-  const { user, signOut } = useAuthenticator((context) => [context.user]);
-  const loggedIn = user;
-  useEffect(() => {
-    if (loggedIn) {
-      const { idToken } = user.signInUserSession;
-      const url = `${getApiUrl()}/protected`;
-      fetch(url, {
-        method: "GET",
-        headers: { Authorization: idToken.jwtToken },
-      }).then((response) => response.json());
-      // .then((data) => console.log(data));
-    }
-  }, [user]);
+  const { user: loggedIn, signOut } = useAuthenticator((context) => [
+    context.user,
+  ]);
   const showModal = !loggedIn && showLogin;
   const dummy = <Authenticator className={overrides.invisible} />;
   const getAccountText = (user: string | undefined) => `signed in as ${user}`;
   const account = getAccountText(
-    user?.attributes?.name || user?.attributes?.email
+    loggedIn?.attributes?.name || loggedIn?.attributes?.email
   );
 
   return (
@@ -174,26 +164,21 @@ const Layout = ({ route, children }) => {
             selectedKeys={["0"].concat([
               (pages.indexOf(window.location.pathname.slice(1)) + 1).toString(),
             ])}
-          >
-            {routes.map((route, idx) => (
-              <Menu.Item
-                className={[overrides.white, overrides.ice].join(" ")}
-                key={idx}
-                style={
-                  idx === 0
-                    ? {
-                        backgroundColor: "transparent",
-                      }
-                    : {
-                        display: "flex",
-                        alignItems: "center",
-                      }
-                }
-              >
-                <NavLink to={route.to}>{route.text}</NavLink>
-              </Menu.Item>
-            ))}
-          </Menu>
+            items={routes.map((route, idx) => ({
+              className: [overrides.white, overrides.ice].join(" "),
+              key: idx,
+              style:
+                idx === 0
+                  ? {
+                      backgroundColor: "transparent",
+                    }
+                  : {
+                      display: "flex",
+                      alignItems: "center",
+                    },
+              label: <NavLink to={route.to}>{route.text}</NavLink>,
+            }))}
+          ></Menu>
           {dummy}
           <span
             style={{
@@ -205,7 +190,13 @@ const Layout = ({ route, children }) => {
           >
             {loggedIn && <span className={overrides.account}>{account}</span>}
             {loggedIn ? (
-              <Button className="signOut" onClick={signOut}>
+              <Button
+                className="signOut"
+                onClick={() => {
+                  setShowLogin(false);
+                  signOut();
+                }}
+              >
                 Sign out
               </Button>
             ) : (

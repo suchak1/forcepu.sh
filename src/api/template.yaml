@@ -45,29 +45,36 @@ Resources:
         Authorizers:
           CognitoAuth:
             UserPoolArn: !Ref UserPoolArn
-  ProtectedFunction:
+  AccountFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref UsersTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UsersTable
       PackageType: Image
       Events:
-        Protected:
+        Account:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /protected
+            Path: /account
             Method: get
             RestApiId: !Ref ApiGatewayApi
             Auth:
               Authorizer: CognitoAuth
               # header Authorization: id_token from /token endpoint
+
         Options:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /protected
+            Path: /account
             Method: options
             RestApiId: !Ref ApiGatewayApi
     Metadata:
       Dockerfile: Dockerfile
-      DockerContext: ./protected
+      DockerContext: ./account
       DockerTag: python3.8-v1
   ExerciseLogFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -111,22 +118,25 @@ Resources:
       Dockerfile: Dockerfile
       DockerContext: ./home
       DockerTag: python3.8-v1
-  # CognitoUserPool:
-  #   Type: AWS::Cognito::UserPool
-  #   Properties:
-  #     UserPoolName: !Ref CognitoUserPoolName
-  #     Policies:
-  #       PasswordPolicy:
-  #         MinimumLength: 8
-  #     UsernameAttributes:
-  #       - email
-  #     Schema:
-  #       - AttributeDataType: String
-  #         Name: email
-  #         Required: false
-  # CognitoUserPoolClient:
-  #   Type: AWS::Cognito::UserPoolClient
-  #   Properties:
-  #     UserPoolId: !Ref CognitoUserPool
-  #     ClientName: !Ref CognitoUserPoolClientName
-  #     GenerateSecret: false
+  UsersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub "users-${Stage}"
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: email
+          AttributeType: S
+        - AttributeName: api_key
+          AttributeType: S
+      KeySchema:
+        - AttributeName: email
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: api_key_index
+          KeySchema:
+            - AttributeName: api_key
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true

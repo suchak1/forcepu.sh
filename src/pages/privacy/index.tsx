@@ -495,7 +495,7 @@ const PrivacyPage = ({ dispatch, privacy, _loading }) => {
         If you have any questions about this Privacy Policy, You can contact us:
       </p>
       <ul>
-        <li>By email: support@forcepu.sh</li>
+        <li>By email: support[at]forcepu[dot]sh</li>
       </ul>
     </div>
   );

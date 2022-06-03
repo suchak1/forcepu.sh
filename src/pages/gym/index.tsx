@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "dva";
-import { format } from "date-fns";
 import { useState, useEffect } from "react";
 import { Typography, Table, Input } from "antd";
 import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
@@ -14,9 +13,6 @@ const columns = [
     dataIndex: "Date",
     key: "Date",
     fixed: "left",
-    render(date: string) {
-      return format(Date.parse(date), "yyyy-MM-dd");
-    },
   },
   {
     title: "Id",
