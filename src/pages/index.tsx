@@ -11,6 +11,7 @@ const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 
 const Page = () => {
+  const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const HODL = "HODL";
   const hyperdrive = "hyperdrive";
   const [previewData, setPreviewData] = useState({
@@ -19,12 +20,9 @@ const Page = () => {
   });
   const [toggle, setToggle] = useState(true);
   const [previewLoading, setPreviewLoading] = useState(true);
-  const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const [accountLoading, setAccountLoading] = useState(false);
-  const [account, setAccount] = useState();
   const loading = previewLoading || accountLoading;
-  console.log("accountLoading", accountLoading);
-  console.log("loading", loading);
+  const [account, setAccount] = useState();
   const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
   const formatUSD = (v: number) => {
     if (v < 1e3) {
