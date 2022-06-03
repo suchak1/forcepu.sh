@@ -1,5 +1,4 @@
 import React from "react";
-import { useLocation } from "umi";
 import { useState, useEffect } from "react";
 import { Typography, Spin, Table, Switch, Alert } from "antd";
 import { G2, Line } from "@ant-design/charts";
@@ -12,15 +11,7 @@ const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 
 const Page = () => {
-  const {
-    user: loggedIn,
-    // route
-  } = useAuthenticator((context) => [
-    context.user,
-    // route,
-  ]);
-  // const { route } = useAuthenticator((context) => [context.route]);
-  // console.log(route);
+  const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const HODL = "HODL";
   const hyperdrive = "hyperdrive";
   const [previewData, setPreviewData] = useState({
@@ -31,20 +22,7 @@ const Page = () => {
   const [previewLoading, setPreviewLoading] = useState(true);
   const [accountLoading, setAccountLoading] = useState(false);
   const [signInLoading, setSignInLoading] = useState(false);
-
-  // const loading = previewLoading || accountLoading || route === "setup";
-  const location = useLocation();
-  // const {
-  //   search
-  //   // route
-  // } = useLocation((context: string) => [
-  //   context.search,
-  //   // route,
-  // ]);
   const loading = previewLoading || accountLoading || signInLoading;
-  // '/?code='
-  console.log("accountLoading", accountLoading);
-  console.log("signInLoading", signInLoading);
   const [account, setAccount] = useState();
   const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
   const formatUSD = (v: number) => {
@@ -82,16 +60,9 @@ const Page = () => {
     }
   }, [loggedIn]);
 
-  // useEffect(() => {
-  //   console.log(location);
-  //   setSignInLoading(location?.search?.indexOf("?code=") === 0);
-  // }, [location]);
-
   useEffect(() => {
     setSignInLoading(window.location?.search?.indexOf("?code=") === 0);
   });
-
-  console.log(window.location);
 
   G2.registerShape("point", "breath-point", {
     draw(cfg, container) {
