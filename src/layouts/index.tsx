@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, cloneElement } from "react";
 import { NavLink } from "umi";
 import { Layout as AntLayout, Menu, Button, Modal } from "antd";
 import {
@@ -9,7 +9,6 @@ import {
   defaultTheme,
 } from "@aws-amplify/ui-react";
 import { Amplify } from "aws-amplify";
-import { getApiUrl } from "@/utils";
 import "@aws-amplify/ui-react/styles.css";
 import BTC_ICE from "../../assets/btc_ice.png";
 import overrides from "./index.less";
@@ -131,6 +130,7 @@ const footerHeight = headerHeight;
 
 const Layout = ({ route, children }) => {
   const [showLogin, setShowLogin] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
   const { user: loggedIn, signOut } = useAuthenticator((context) => [
     context.user,
   ]);
@@ -140,6 +140,10 @@ const Layout = ({ route, children }) => {
   const account = getAccountText(
     loggedIn?.attributes?.name || loggedIn?.attributes?.email
   );
+
+  useEffect(() => {
+    setLoginLoading(window.location?.search?.indexOf("?code=") === 0);
+  });
 
   return (
     <AntLayout>
@@ -180,39 +184,41 @@ const Layout = ({ route, children }) => {
             }))}
           ></Menu>
           {dummy}
-          <span
-            style={{
-              display: "flex",
-              width: "100%",
-              alignItems: "center",
-              justifyContent: "flex-end",
-            }}
-          >
-            {loggedIn && <span className={overrides.account}>{account}</span>}
-            {loggedIn ? (
-              <Button
-                className="signOut"
-                onClick={() => {
-                  setShowLogin(false);
-                  signOut();
-                }}
-              >
-                Sign out
-              </Button>
-            ) : (
-              // maybe "Get signals" or "Get started"
-              <Button onClick={() => setShowLogin(true)}>Get started</Button>
-            )}
-            <Modal
-              visible={showModal}
-              closable={false}
-              onCancel={() => setShowLogin(false)}
+          {!loginLoading && (
+            <span
+              style={{
+                display: "flex",
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "flex-end",
+              }}
             >
-              <AmplifyProvider theme={theme} colorMode="dark">
-                <Authenticator />
-              </AmplifyProvider>
-            </Modal>
-          </span>
+              {loggedIn && <span className={overrides.account}>{account}</span>}
+              {loggedIn ? (
+                <Button
+                  className="signOut"
+                  onClick={() => {
+                    setShowLogin(false);
+                    signOut();
+                  }}
+                >
+                  Sign out
+                </Button>
+              ) : (
+                // maybe "Get signals" or "Get started"
+                <Button onClick={() => setShowLogin(true)}>Get started</Button>
+              )}
+              <Modal
+                visible={showModal}
+                closable={false}
+                onCancel={() => setShowLogin(false)}
+              >
+                <AmplifyProvider theme={theme} colorMode="dark">
+                  <Authenticator />
+                </AmplifyProvider>
+              </Modal>
+            </span>
+          )}
         </span>
       </AntLayout.Header>
 
@@ -224,7 +230,7 @@ const Layout = ({ route, children }) => {
           overflow: "auto",
         }}
       >
-        {children}
+        {cloneElement(children, { loggedIn, loginLoading })}
       </AntLayout.Content>
       <AntLayout.Footer
         style={{
