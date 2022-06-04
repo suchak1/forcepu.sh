@@ -22,11 +22,16 @@ updates:
       interval: "monthly"
 
   - package-ecosystem: "pip" # See documentation for possible values
-    directory: "/src/api/home" # Location of package manifests
+    directory: "/src/api/preview" # Location of package manifests
     schedule:
       interval: "monthly"
 
   - package-ecosystem: "pip" # See documentation for possible values
     directory: "/src/api/account" # Location of package manifests
+    schedule:
+      interval: "monthly"
+
+  - package-ecosystem: "pip" # See documentation for possible values
+    directory: "/src/api/signals" # Location of package manifests
     schedule:
       interval: "monthly"
