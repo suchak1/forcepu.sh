@@ -128,8 +128,11 @@ const footerHeight = headerHeight;
 // add logo to forcepush div
 // remove menu and menu items?
 // or at least move these pieces out
-
-const Layout = ({ route, children }) => {
+interface LayoutProps {
+  route: any;
+  children: any;
+}
+const Layout = ({ children }: LayoutProps) => {
   const [showLogin, setShowLogin] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
   const { user: loggedIn, signOut } = useAuthenticator((context) => [
@@ -251,7 +254,7 @@ const Layout = ({ route, children }) => {
   );
 };
 
-export default ({ route, children }) => (
+export default ({ route, children }: LayoutProps) => (
   <Authenticator.Provider>
     <Layout route={route}>{children}</Layout>
   </Authenticator.Provider>
