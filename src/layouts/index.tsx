@@ -1,4 +1,4 @@
-import React, { useState, useEffect, cloneElement } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "umi";
 import { Layout as AntLayout, Menu, Button, Modal } from "antd";
 import {
@@ -13,6 +13,7 @@ import "@aws-amplify/ui-react/styles.css";
 import BTC_ICE from "../../assets/btc_ice.png";
 import overrides from "./index.less";
 import "./index.less";
+import { useLoginLoading } from "@/utils";
 
 let config;
 const isLocal = process.env.NODE_ENV === "development";
@@ -141,9 +142,7 @@ const Layout = ({ route, children }) => {
     loggedIn?.attributes?.name || loggedIn?.attributes?.email
   );
 
-  useEffect(() => {
-    setLoginLoading(window.location?.search?.indexOf("?code=") === 0);
-  });
+  useEffect(useLoginLoading(setLoginLoading));
 
   return (
     <AntLayout>
@@ -230,7 +229,7 @@ const Layout = ({ route, children }) => {
           overflow: "auto",
         }}
       >
-        {cloneElement(children, { loggedIn, loginLoading })}
+        {children}
       </AntLayout.Content>
       <AntLayout.Footer
         style={{

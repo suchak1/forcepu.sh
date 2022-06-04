@@ -4,13 +4,13 @@ import { Typography, Spin, Table, Switch, Alert } from "antd";
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined } from "@ant-design/icons";
 import styles from "./index.less";
-import { getApiUrl } from "@/utils";
-
+import { getApiUrl, useLoginLoading } from "@/utils";
+import { useAuthenticator } from "@aws-amplify/ui-react";
 const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 
-const Page = ({ loggedIn, loginLoading }) => {
-  // const { user: loggedIn } = useAuthenticator((context) => [context.user]);
+const Page = () => {
+  const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const HODL = "HODL";
   const hyperdrive = "hyperdrive";
   const [previewData, setPreviewData] = useState({
@@ -20,6 +20,7 @@ const Page = ({ loggedIn, loginLoading }) => {
   const [toggle, setToggle] = useState(true);
   const [previewLoading, setPreviewLoading] = useState(true);
   const [accountLoading, setAccountLoading] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
   const loading = previewLoading || accountLoading || loginLoading;
   const [account, setAccount] = useState();
   const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
@@ -57,6 +58,8 @@ const Page = ({ loggedIn, loginLoading }) => {
         .finally(() => setAccountLoading(false));
     }
   }, [loggedIn]);
+
+  useEffect(useLoginLoading(setLoginLoading));
 
   G2.registerShape("point", "breath-point", {
     draw(cfg, container) {

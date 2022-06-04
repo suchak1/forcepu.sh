@@ -10,7 +10,7 @@ export const getEnvironment = () => {
   }
 };
 
-export const getHostname = (env) => {
+export const getHostname = (env: string | boolean) => {
   switch (env) {
     case "local":
       return "localhost";
@@ -59,4 +59,8 @@ export const convertShortISO = (dateString: string) => {
   const month = dateString.slice(5, 7);
   const day = dateString.slice(8, 10);
   return `${month}/${day}/${year}`;
+};
+
+export const useLoginLoading = (setLoginLoading) => () => {
+  setLoginLoading(window.location?.search?.indexOf("?code=") === 0);
 };
