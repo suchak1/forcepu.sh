@@ -5,9 +5,9 @@ s3 = boto3.client('s3')
 
 
 def get_signals(*_):
-    # first check api key and get user
+    # first get user by api key
     # if not in_beta:
-    #   hit verify_api_key endpoint (dummy endpoint connected to usage plan)
+    #   hit verify_api_key endpoint (dummy endpoint connected to usage plan, pass headers on from this fx)
     #   AND hit stripe subscription endpoint
     #       if verified (simple ok response) but not active sub:
     #           remove key from usage plan
@@ -16,8 +16,11 @@ def get_signals(*_):
     #           add key to usage plan
     #       elif not verified and not active:
     #           error out as This endpoint is for subscribers only.
-    #
-    #   proceed
+    # if in beta:
+    #   hit verify_api_key endpoint
+    #   if not verified (error response):
+    #       add key to usage plan
+    # proceed
 
     obj = s3.get_object(
         Bucket=os.environ['S3_BUCKET'], Key='models/latest/signals.csv')
