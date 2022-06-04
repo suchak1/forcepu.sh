@@ -17,7 +17,6 @@ const metadataWidth = nftWidth / 3;
 const nftCard = (contract, token) => (
   <NFTE contract={contract} tokenId={token} darkMode={true}>
     {({ data, className, style, darkMode, autoPlay }) => {
-      console.log(JSON.stringify(data));
       return (
         <Card
           title={data?.name}

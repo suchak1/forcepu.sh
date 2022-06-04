@@ -3,14 +3,14 @@ import { useState, useEffect } from "react";
 import { Typography, Spin, Table, Switch, Alert } from "antd";
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined } from "@ant-design/icons";
-import { useAuthenticator } from "@aws-amplify/ui-react";
 import styles from "./index.less";
-import { getApiUrl } from "@/utils";
-
+import { getApiUrl, useLoginLoading } from "@/utils";
+import { useAuthenticator } from "@aws-amplify/ui-react";
 const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 
 const Page = () => {
+  const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const HODL = "HODL";
   const hyperdrive = "hyperdrive";
   const [previewData, setPreviewData] = useState({
@@ -18,10 +18,11 @@ const Page = () => {
     USD: { data: [], stats: [] },
   });
   const [toggle, setToggle] = useState(true);
-  const [loading, setLoading] = useState(true);
+  const [previewLoading, setPreviewLoading] = useState(true);
+  const [accountLoading, setAccountLoading] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
+  const loading = previewLoading || accountLoading || loginLoading;
   const [account, setAccount] = useState();
-  const { user: loggedIn } = useAuthenticator((context) => [context.user]);
-
   const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
   const formatUSD = (v: number) => {
     if (v < 1e3) {
@@ -37,12 +38,14 @@ const Page = () => {
       fetch(url, { method: "GET" })
         .then((response) => response.json())
         .then((data) => setPreviewData(data))
-        .then(() => setLoading(false));
+        .catch((err) => console.error(err))
+        .finally(() => setPreviewLoading(false));
     })();
   }, []);
 
   useEffect(() => {
     if (loggedIn) {
+      setAccountLoading(true);
       const { idToken } = loggedIn.signInUserSession;
       const url = `${getApiUrl()}/account`;
       fetch(url, {
@@ -50,9 +53,13 @@ const Page = () => {
         headers: { Authorization: idToken.jwtToken },
       })
         .then((response) => response.json())
-        .then((data) => setAccount(data));
+        .then((data) => setAccount(data))
+        .catch((err) => console.error(err))
+        .finally(() => setAccountLoading(false));
     }
   }, [loggedIn]);
+
+  useEffect(useLoginLoading(setLoginLoading));
 
   G2.registerShape("point", "breath-point", {
     draw(cfg, container) {

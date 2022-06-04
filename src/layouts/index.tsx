@@ -9,11 +9,11 @@ import {
   defaultTheme,
 } from "@aws-amplify/ui-react";
 import { Amplify } from "aws-amplify";
-import { getApiUrl } from "@/utils";
 import "@aws-amplify/ui-react/styles.css";
 import BTC_ICE from "../../assets/btc_ice.png";
 import overrides from "./index.less";
 import "./index.less";
+import { useLoginLoading } from "@/utils";
 
 let config;
 const isLocal = process.env.NODE_ENV === "development";
@@ -128,9 +128,13 @@ const footerHeight = headerHeight;
 // add logo to forcepush div
 // remove menu and menu items?
 // or at least move these pieces out
-
-const Layout = ({ route, children }) => {
+interface LayoutProps {
+  route: any;
+  children: any;
+}
+const Layout = ({ children }: LayoutProps) => {
   const [showLogin, setShowLogin] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
   const { user: loggedIn, signOut } = useAuthenticator((context) => [
     context.user,
   ]);
@@ -140,6 +144,8 @@ const Layout = ({ route, children }) => {
   const account = getAccountText(
     loggedIn?.attributes?.name || loggedIn?.attributes?.email
   );
+
+  useEffect(useLoginLoading(setLoginLoading));
 
   return (
     <AntLayout>
@@ -180,39 +186,41 @@ const Layout = ({ route, children }) => {
             }))}
           ></Menu>
           {dummy}
-          <span
-            style={{
-              display: "flex",
-              width: "100%",
-              alignItems: "center",
-              justifyContent: "flex-end",
-            }}
-          >
-            {loggedIn && <span className={overrides.account}>{account}</span>}
-            {loggedIn ? (
-              <Button
-                className="signOut"
-                onClick={() => {
-                  setShowLogin(false);
-                  signOut();
-                }}
-              >
-                Sign out
-              </Button>
-            ) : (
-              // maybe "Get signals" or "Get started"
-              <Button onClick={() => setShowLogin(true)}>Get started</Button>
-            )}
-            <Modal
-              visible={showModal}
-              closable={false}
-              onCancel={() => setShowLogin(false)}
+          {!loginLoading && (
+            <span
+              style={{
+                display: "flex",
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "flex-end",
+              }}
             >
-              <AmplifyProvider theme={theme} colorMode="dark">
-                <Authenticator />
-              </AmplifyProvider>
-            </Modal>
-          </span>
+              {loggedIn && <span className={overrides.account}>{account}</span>}
+              {loggedIn ? (
+                <Button
+                  className="signOut"
+                  onClick={() => {
+                    setShowLogin(false);
+                    signOut();
+                  }}
+                >
+                  Sign out
+                </Button>
+              ) : (
+                // maybe "Get signals" or "Get started"
+                <Button onClick={() => setShowLogin(true)}>Get started</Button>
+              )}
+              <Modal
+                visible={showModal}
+                closable={false}
+                onCancel={() => setShowLogin(false)}
+              >
+                <AmplifyProvider theme={theme} colorMode="dark">
+                  <Authenticator />
+                </AmplifyProvider>
+              </Modal>
+            </span>
+          )}
         </span>
       </AntLayout.Header>
 
@@ -246,7 +254,7 @@ const Layout = ({ route, children }) => {
   );
 };
 
-export default ({ route, children }) => (
+export default ({ route, children }: LayoutProps) => (
   <Authenticator.Provider>
     <Layout route={route}>{children}</Layout>
   </Authenticator.Provider>
