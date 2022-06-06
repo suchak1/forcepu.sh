@@ -1,8 +1,9 @@
 import os
 import secrets
+from datetime import datetime
 from pynamodb.models import Model
 from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
-from pynamodb.attributes import UnicodeAttribute, MapAttribute, BooleanAttribute
+from pynamodb.attributes import UnicodeAttribute, MapAttribute, BooleanAttribute, ListAttribute, UTCDateTimeAttribute
 
 
 def query_by_api_key(api_key):
@@ -16,6 +17,10 @@ def get_api_key():
         query_results = query_by_api_key(api_key)
         key_already_exists = len(query_results)
     return api_key
+
+
+def get_default_access_queue():
+    return [datetime.fromisoformat('2020-01-01')] * 5
 
 
 class Permissions(MapAttribute):
@@ -46,5 +51,9 @@ class UserModel(Model):
         table_name = os.environ['TABLE_NAME']
     email = UnicodeAttribute(hash_key=True)
     api_key = UnicodeAttribute(default=get_api_key)
-    permissions = MapAttribute(attr_name="permissions", default=Permissions)
+    permissions = MapAttribute(default=Permissions)
+    access_queue = ListAttribute(
+        of=UTCDateTimeAttribute,
+        default=get_default_access_queue
+    )
     api_key_index = APIKeyIndex()
