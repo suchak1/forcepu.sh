@@ -1,6 +1,7 @@
 import os
 import json
 import boto3
+from datetime import datetime, timedelta
 from models.user import query_by_api_key
 
 s3 = boto3.client('s3')
@@ -39,11 +40,20 @@ def get_signals(event, _):
 
     # Notes: instead of using usage plan,
     # store list of last 5 access times
+    access_queue = user.access_queue
+    max_accesses = 5
+    reset_duration = timedelta(days=1)
     # if len(access_queue) >= 5:
-    #   if now - access_queue[0] >= 1 day:
-    #       access_queue = access_queue[1:5] + [curr time]
+    if len(user.access_queue) >= max_accesses:
+        #   if now - access_queue[0] >= 1 day:
+        now = datetime.utcnow()
+        if now - access_queue[0] >= reset_duration:
+            #       access_queue = access_queue[1:5] + [curr time]
+            access_queue = access_queue[1:5] + [now]
     #   else:
-    #       access_queue = access_queue[-5:]
+        else:
+            #       access_queue = access_queue[-5:]
+            access_queue = access_queue[-5:]
     #       return error
 
     obj = s3.get_object(
