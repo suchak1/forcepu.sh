@@ -54,10 +54,9 @@ def get_signals(event, _):
     # if len(access_queue) >= 5:
     if len(user.access_queue) >= max_accesses:
         #   if now - access_queue[0] >= 1 day:
-        # ERROR: can't subtract offset-naive and offset-aware datetimes
         if now - access_queue[-max_accesses] >= reset_duration:
             #       access_queue = access_queue[1:5] + [curr time]
-            access_queue = access_queue[-(max_accesses + 1):] + [now]
+            access_queue = access_queue[-max_accesses + 1:] + [now]
     #   else:
         else:
             #       access_queue = access_queue[-5:]
@@ -75,7 +74,7 @@ def get_signals(event, _):
     obj = s3.get_object(
         Bucket=os.environ['S3_BUCKET'], Key='models/latest/signals.csv')
 
-    lines = list(obj['Body'].iter_lines())
+    lines = [line.decode('utf-8') for line in list(obj['Body'].iter_lines())]
     header = lines[0]
     rows = lines[-7:]
     keys = header.split(',')
