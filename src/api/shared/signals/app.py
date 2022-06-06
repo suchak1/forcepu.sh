@@ -2,7 +2,7 @@ import os
 import json
 import boto3
 from datetime import datetime, timedelta
-from models.user import query_by_api_key
+from models.user import query_by_api_key, UserModel
 
 s3 = boto3.client('s3')
 
@@ -64,16 +64,15 @@ def get_signals(event, _):
         else:
             #       access_queue = access_queue[-5:]
             access_queue = access_queue[-max_accesses:]
-            return unauthorized_error(f'You have reached your quota of {max_accesses} requests / {duration_days} day(s).')
-            status_code = 403
-            body = json.dumps(
-                {'message': f'You have reached your quota of {max_accesses} requests / {duration_days} day(s).'})
+            return unauthorized_error(
+                f'You have reached your quota of {max_accesses} requests / {duration_days} day(s).'
+            )
     #       return error
     else:
         access_queue += [now]
 
     # update user model in db with new access_queue
-    # return
+    user.update(actions=[UserModel.access_queue.set(access_queue)])
 
     obj = s3.get_object(
         Bucket=os.environ['S3_BUCKET'], Key='models/latest/signals.csv')
@@ -85,7 +84,7 @@ def get_signals(event, _):
     return {
         "statusCode": status_code,
         "body": body,
-        "headers": {"Access-Control-Allow-Origin": "*"}
+        "headers": headers
     }
 
 
