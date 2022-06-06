@@ -51,6 +51,7 @@ def get_signals(event, _):
     duration_days = 1
     reset_duration = timedelta(days=duration_days)
     now = datetime.now(timezone.utc)
+    quota_reached = False
     # if len(access_queue) >= 5:
     if len(user.access_queue) >= max_accesses:
         #   if now - access_queue[0] >= 1 day:
@@ -61,26 +62,27 @@ def get_signals(event, _):
         else:
             #       access_queue = access_queue[-5:]
             access_queue = access_queue[-max_accesses:]
-            return unauthorized_error(
-                f'You have reached your quota of {max_accesses} requests / {duration_days} day(s).'
-            )
+            quota_reached = True
     #       return error
     else:
         access_queue += [now]
 
     # update user model in db with new access_queue
     user.update(actions=[UserModel.access_queue.set(access_queue)])
+    if quota_reached:
+        return unauthorized_error(
+            f'You have reached your quota of {max_accesses} requests / {duration_days} day(s).'
+        )
 
     obj = s3.get_object(
         Bucket=os.environ['S3_BUCKET'], Key='models/latest/signals.csv')
 
+    days_in_a_week = 7
     lines = [line.decode('utf-8') for line in list(obj['Body'].iter_lines())]
     header = lines[0]
-    rows = lines[-7:]
+    rows = lines[-days_in_a_week:]
     keys = header.split(',')
-    # vals = [signal.split(',') for signal in signals]
-    # lookup = { for key in }
-    # body
+
     response = []
     for row in rows:
         cols = row.split(',')
