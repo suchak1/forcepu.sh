@@ -6,6 +6,18 @@ from models.user import query_by_api_key
 
 s3 = boto3.client('s3')
 
+headers = {"Access-Control-Allow-Origin": "*"}
+
+
+def unauthorized_error(message):
+    return {
+        "statusCode": 403,
+        "body": json.dumps(
+            {'message': message}
+        ),
+        "headers": headers
+    }
+
 
 def get_signals(event, _):
     # first get user by api key
@@ -32,29 +44,36 @@ def get_signals(event, _):
         #           add key to usage plan
         #       elif not verified and not active:
         #           error out as 403, This endpoint is for subscribers only.
-        status_code = 403
-        body = json.dumps(
-            {'message': 'This endpoint is for subscribers only.'})
-
+        return unauthorized_error('This endpoint is for subscribers only.')
     # proceed
 
     # Notes: instead of using usage plan,
     # store list of last 5 access times
     access_queue = user.access_queue
     max_accesses = 5
-    reset_duration = timedelta(days=1)
+    duration_days = 1
+    reset_duration = timedelta(days=duration_days)
+    now = datetime.utcnow()
     # if len(access_queue) >= 5:
     if len(user.access_queue) >= max_accesses:
         #   if now - access_queue[0] >= 1 day:
-        now = datetime.utcnow()
-        if now - access_queue[0] >= reset_duration:
+        if now - access_queue[-max_accesses] >= reset_duration:
             #       access_queue = access_queue[1:5] + [curr time]
-            access_queue = access_queue[1:5] + [now]
+            access_queue = access_queue[-(max_accesses + 1):] + [now]
     #   else:
         else:
             #       access_queue = access_queue[-5:]
-            access_queue = access_queue[-5:]
+            access_queue = access_queue[-max_accesses:]
+            return unauthorized_error(f'You have reached your quota of {max_accesses} requests / {duration_days} day(s).')
+            status_code = 403
+            body = json.dumps(
+                {'message': f'You have reached your quota of {max_accesses} requests / {duration_days} day(s).'})
     #       return error
+    else:
+        access_queue += [now]
+
+    # update user model in db with new access_queue
+    # return
 
     obj = s3.get_object(
         Bucket=os.environ['S3_BUCKET'], Key='models/latest/signals.csv')
