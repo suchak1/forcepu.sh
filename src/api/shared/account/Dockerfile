@@ -1,7 +1,7 @@
 FROM public.ecr.aws/lambda/python:3.8
 
-COPY app.py requirements.txt ./
+COPY account/app.py account/requirements.txt models ./
 
 RUN python3.8 -m pip install -r requirements.txt -t .
 
-CMD ["app.lambda_handler"]
+CMD ["app.get_account"]
