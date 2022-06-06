@@ -1,6 +1,6 @@
 import os
 import secrets
-from datetime import datetime
+from datetime import datetime, timezone
 from pynamodb.models import Model
 from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
 from pynamodb.attributes import UnicodeAttribute, MapAttribute, BooleanAttribute, ListAttribute, UTCDateTimeAttribute
@@ -20,7 +20,7 @@ def get_api_key():
 
 
 def get_default_access_queue():
-    return [datetime.fromisoformat('2020-01-01')] * 5
+    return [datetime(2020, 1, 1, tzinfo=timezone.utc)] * 5
 
 
 class Permissions(MapAttribute):

@@ -1,7 +1,7 @@
 FROM public.ecr.aws/lambda/python:3.8
 
-COPY app.py requirements.txt ./
-COPY signals/app.py signals/requirements.txt account models ./
+COPY signals/app.py signals/requirements.txt ./
+COPY models models
 
 RUN python3.8 -m pip install -r requirements.txt -t .
 

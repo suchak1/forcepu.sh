@@ -124,7 +124,10 @@ Resources:
       Environment:
         Variables:
           S3_BUCKET: !Ref S3Bucket
+          TABLE_NAME: !Ref UsersTable
       Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UsersTable
         - Statement:
             - Sid: S3ReadPolicy
               Effect: Allow
