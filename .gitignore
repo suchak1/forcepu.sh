@@ -47,6 +47,13 @@ build
 amplify/team-provider-info.json
 amplify/backend/auth/*/*.json
 
+
+
+# local
+test*
+privacy-*
+assets/*:Zone.Identifier
+
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
 amplify/.config/local-*
@@ -67,9 +74,3 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
-
-
-# local
-test*
-privacy-*
-assets/*:Zone.Identifier

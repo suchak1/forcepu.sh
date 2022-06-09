@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Typography, Spin, Table, Switch, Alert } from "antd";
+import { Typography, Spin, Table, Switch, Alert, Card, Col } from "antd";
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined } from "@ant-design/icons";
 import styles from "./index.less";
@@ -23,6 +23,9 @@ const Page = () => {
   const [loginLoading, setLoginLoading] = useState(false);
   const loading = previewLoading || accountLoading || loginLoading;
   const [account, setAccount] = useState();
+  // TODO: uncomment this
+  // const inBeta = loggedIn && account?.permissions?.in_beta;
+  const inBeta = true;
   const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
   const formatUSD = (v: number) => {
     if (v < 1e3) {
@@ -192,22 +195,29 @@ const Page = () => {
     },
   ];
 
+  const Placeholder = () => (
+    (<Col>{(new Array(7)).fill(<Card hoverable style={{textAlign: 'center'}}>{(new Date()).getHours() + ":" + (new Date()).getMinutes() + ":" + (new Date()).getSeconds()}</Card>)}</Col>)
+  );
+  // const Placeholder = () => {
+  //   return (<Card> a </Card>)
+  // }
+
   return (
     <>
       {loggedIn && account && (
         <Alert
           message={
-            account?.permissions?.in_beta
+            inBeta
               ? "Congrats! You've been selected for the closed beta. 🎊"
               : "You are not in the closed beta, but you may receive an invitation in the future."
           }
-          type={account?.permissions?.in_beta ? "success" : "warning"}
+          type={inBeta ? "success" : "warning"}
           showIcon
           closable
           style={{ marginBottom: "12px" }}
         />
       )}
-      <Title>Leveraging AutoML to beat BTC</Title>
+      <Title>{inBeta ? "Fetch the latest signals" : "Leveraging AutoML to beat BTC"}</Title>
       <span
         style={{
           display: "flex",
@@ -242,7 +252,11 @@ const Page = () => {
         </div>
       ) : (
         <div className={styles.parent}>
-          <div className={styles.child}>{!loading && <Line {...config} />}</div>
+          <div className={styles.child}>
+            {inBeta && <Placeholder /> ||
+            !loading && <Line {...config} />
+            }
+          </div>
           <div className={styles.child}>
             {!loading && (
               <Table
