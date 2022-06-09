@@ -267,7 +267,7 @@ const Page = () => {
             <>
               <Input.Group>
                 <span style={{display: 'flex'}}>
-                  <Input addonBefore="API Key:" defaultValue="*****" readOnly />
+                  <Input.Password addonBefore="API Key:" defaultValue="*****" readOnly />
                   <Button icon={<CopyOutlined />} />
                   {/* show success or info alert for a few sec at top when Copy button is pressed */}
                 </span>
