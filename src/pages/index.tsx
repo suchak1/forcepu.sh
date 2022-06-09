@@ -264,12 +264,21 @@ const Page = () => {
           <div className={styles.child}>
             {inBeta ? 
             // <div style={{textAlign:'center'}}>a</div> 
-            <Input.Group>
-            <span style={{display: 'flex'}}>
-              <Input addonBefore="API Key:" defaultValue="*****" readOnly />
-              <Button icon={<CopyOutlined />} />
-            </span>
-            </Input.Group>
+            <>
+              <Input.Group>
+                <span style={{display: 'flex'}}>
+                  <Input addonBefore="API Key:" defaultValue="*****" readOnly />
+                  <Button icon={<CopyOutlined />} />
+                  {/* show success or info alert for a few sec at top when Copy button is pressed */}
+                </span>
+              </Input.Group>
+              <Input.Group>
+                <span style={{display: 'flex'}}>
+                  <Input addonBefore="API Key:" defaultValue="*****" readOnly addonAfter={<CopyOutlined />}/>
+                  {/* show success or info alert for a few sec at top when Copy button is pressed */}
+                </span>
+              </Input.Group>
+            </>
             :
             !loading && (
               <Table
