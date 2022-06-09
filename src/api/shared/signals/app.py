@@ -97,6 +97,7 @@ def get_signals(event, _):
         item['Day'] = datetime.strptime(
             item['Date'], '%Y-%m-%d').strftime('%A')[:3]
         item['Signal'] = 'BUY' if item['Signal'] == 'True' else 'SELL'
+        item['Asset'] = 'BTC'
         response.append(item)
     # Time -> Date
     # Sig -> Signal

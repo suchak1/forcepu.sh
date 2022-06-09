@@ -1,8 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Typography, Spin, Table, Switch, Alert, Card, Col } from "antd";
+import { Typography, Spin, Table, Switch, Alert, Card, Col, Input, Button } from "antd";
 import { G2, Line } from "@ant-design/charts";
-import { LoadingOutlined } from "@ant-design/icons";
+import { LoadingOutlined, CopyOutlined } from "@ant-design/icons";
 import styles from "./index.less";
 import { getApiUrl, useLoginLoading } from "@/utils";
 import { useAuthenticator } from "@aws-amplify/ui-react";
@@ -226,18 +226,22 @@ const Page = () => {
           margin: "-12px 0px 12px 0px",
         }}
       >
-        <Title level={5}>
-          a momentum trading strategy using{" "}
-          <a href="https://github.com/suchak1/hyperdrive">
-            <i style={{ color: "#52e5ff" }}>{hyperdrive}</i>
-          </a>
-        </Title>
-        <Switch
-          checkedChildren="BTC (₿)"
-          unCheckedChildren="USD ($)"
-          defaultChecked
-          onChange={(checked) => setToggle(checked)}
-        />
+        {!inBeta && (
+        <>
+          <Title level={5}>
+            a momentum trading strategy using{" "}
+            <a href="https://github.com/suchak1/hyperdrive">
+              <i style={{ color: "#52e5ff" }}>{hyperdrive}</i>
+            </a>
+          </Title>
+          <Switch
+            checkedChildren="BTC (₿)"
+            unCheckedChildren="USD ($)"
+            defaultChecked
+            onChange={(checked) => setToggle(checked)}
+          />
+        </>
+        )}
       </span>
       {loading ? (
         <div
@@ -258,7 +262,16 @@ const Page = () => {
             }
           </div>
           <div className={styles.child}>
-            {!loading && (
+            {inBeta ? 
+            // <div style={{textAlign:'center'}}>a</div> 
+            <Input.Group>
+            <span style={{display: 'flex'}}>
+              <Input addonBefore="API Key:" defaultValue="*****" readOnly />
+              <Button icon={<CopyOutlined />} />
+            </span>
+            </Input.Group>
+            :
+            !loading && (
               <Table
                 dataSource={
                   toggle ? previewData.BTC.stats : previewData.USD.stats
