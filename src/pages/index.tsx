@@ -15,7 +15,7 @@ import {
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined, CopyOutlined } from "@ant-design/icons";
 import styles from "./index.less";
-import swaggerSpec from "../../assets/swagger.yaml";
+import swaggerSpec from "../api/spec/swagger.json";
 import { getApiUrl, useLoginLoading } from "@/utils";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 const { Title } = Typography;
@@ -26,11 +26,11 @@ const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 
 const Page = () => {
   // console.log(swaggerSpec);
-  fetch(swaggerSpec)
-    .then((response) => response.text())
-    .then((textContent) => {
-      console.log(textContent);
-    });
+  // fetch(swaggerSpec)
+  //   .then((response) => response.text())
+  //   .then((textContent) => {
+  //     console.log(textContent);
+  //   });
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const HODL = "HODL";
   const hyperdrive = "hyperdrive";
@@ -345,7 +345,7 @@ const Page = () => {
                   </span>
                 </Input.Group>
                 {/* <SwaggerUI url="https://petstore.swagger.io/v2/swagger.json" /> */}
-                <SwaggerUI spec="https://petstore.swagger.io/v2/swagger.json" />
+                <SwaggerUI spec={swaggerSpec} />
                 {/* requestInterceptor => should inject api key if necessary, responseInterceptor => should reveal cards on left */}
               </>
             ) : (

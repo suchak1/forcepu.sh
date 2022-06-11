@@ -18,7 +18,9 @@
     "test:api": "cd src/api && sam local invoke PreviewFunction --parameter-overrides $(cat parameters.env)",
     "ci": "rm -rf node_modules && yarn install --frozen-lockfile",
     "amp": "APP_ID=\"${APP_ID}\" ENV=\"${ENV}\" amplify/pull.sh",
-    "clean": "rm -rf node_modules && rm -rf src/.umi"
+    "clean": "rm -rf node_modules && rm -rf src/.umi",
+    "swagger": "openapi-generator-cli generate -i src/api/spec/swagger.yaml -g openapi -o src/api/spec",
+    "swagger2": "swagger-cli bundle -o src/api/spec/swagger.json src/api/spec/swagger.yaml"
   },
   "author": "Krish Suchak <suchak.krish@gmail.com>",
   "license": "MIT",
@@ -41,10 +43,12 @@
     "umi": "3.5.21"
   },
   "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.5.1",
     "eslint": "^8.10.0",
     "eslint-plugin-import": "2.25.4",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "7.29.3",
-    "eslint-plugin-react-hooks": "4.3.0"
+    "eslint-plugin-react-hooks": "4.3.0",
+    "swagger-cli": "^4.0.4"
   }
 }
