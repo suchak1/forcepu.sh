@@ -210,7 +210,17 @@ const APIKey = styled(Input.Password)`
   input {
     pointer-events: none;
   }
+
+  .ant-input-affix-wrapper:hover, .ant-input-affix-wrapper:active {
+    border-color: #52e5ff;
+    box-shadow: 0 0 5px #52e5ff;
+  }
+
+  .ant-input-affix-wrapper:focus, .ant-input-affix-wrapper-focused {
+    border-color: #52e5ff;
+  }
 `;
+
   return (
     <>
       {loggedIn && account && (
