@@ -36,6 +36,7 @@
     "aws-amplify": "4.3.15",
     "react-hover-video-player": "^9.4.0",
     "react-pdf": "^5.7.1",
+    "styled-components": "^5.3.5",
     "umi": "3.5.21"
   },
   "devDependencies": {

@@ -7,6 +7,7 @@ import styles from "./index.less";
 import { getApiUrl, useLoginLoading } from "@/utils";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 const { Title } = Typography;
+import styled from 'styled-components';
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 
 const Page = () => {
@@ -203,7 +204,13 @@ const Page = () => {
   // const Placeholder = () => {
   //   return (<Card> a </Card>)
   // }
+{/* <StyledPassword placeholder="input password" value={'password'} /> */}
 
+const APIKey = styled(Input.Password)`
+  input {
+    pointer-events: none;
+  }
+`;
   return (
     <>
       {loggedIn && account && (
@@ -268,7 +275,10 @@ const Page = () => {
             <>
               <Input.Group>
                 <span style={{display: 'flex'}}>
-                  <Input.Password style={{pointerEvents: 'none'}} addonBefore="API Key" defaultValue={account?.api_key} readOnly />
+                  <APIKey 
+                  style={{userSelect: 'none'}} 
+                  // style={{pointerEvents: 'none'}} 
+                  addonBefore="API Key" defaultValue={account?.api_key} readOnly />
                   {/* change input focus color to cyan */}
                   <Button icon={<CopyOutlined />} />
                   {/* handle copying to clipboard */}
