@@ -247,7 +247,6 @@ const Page = () => {
     navigator.clipboard.writeText(val).then(
       () => message.success(`Copied ${name} to clipboard.`),
       () => message.error(`Did not copy ${name} to clipboard`)
-      // use Message or Notification
     );
 
   return (
