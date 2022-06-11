@@ -24,8 +24,8 @@ const Page = () => {
   const loading = previewLoading || accountLoading || loginLoading;
   const [account, setAccount] = useState();
   // TODO: uncomment this
-  // const inBeta = loggedIn && account?.permissions?.in_beta;
-  const inBeta = true;
+  const inBeta = loggedIn && account?.permissions?.in_beta;
+  // const inBeta = true;
   const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
   const formatUSD = (v: number) => {
     if (v < 1e3) {
@@ -51,6 +51,8 @@ const Page = () => {
       setAccountLoading(true);
       const { idToken } = loggedIn.signInUserSession;
       const url = `${getApiUrl()}/account`;
+      // remove this after debugging
+      setAccount({api_key: 'a'.repeat(86), permissions: {in_beta: true}})
       fetch(url, {
         method: "GET",
         headers: { Authorization: idToken.jwtToken },
@@ -263,18 +265,13 @@ const Page = () => {
           </div>
           <div className={styles.child}>
             {inBeta ? 
-            // <div style={{textAlign:'center'}}>a</div> 
             <>
               <Input.Group>
                 <span style={{display: 'flex'}}>
-                  <Input.Password addonBefore="API Key:" defaultValue="*****" readOnly />
+                  <Input.Password style={{pointerEvents: 'none'}} addonBefore="API Key" defaultValue={account?.api_key} readOnly />
+                  {/* change input focus color to cyan */}
                   <Button icon={<CopyOutlined />} />
-                  {/* show success or info alert for a few sec at top when Copy button is pressed */}
-                </span>
-              </Input.Group>
-              <Input.Group>
-                <span style={{display: 'flex'}}>
-                  <Input addonBefore="API Key:" defaultValue="*****" readOnly addonAfter={<CopyOutlined />}/>
+                  {/* handle copying to clipboard */}
                   {/* show success or info alert for a few sec at top when Copy button is pressed */}
                 </span>
               </Input.Group>

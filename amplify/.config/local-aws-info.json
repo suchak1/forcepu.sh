@@ -1,5 +1,10 @@
 {
-  "local": {
+  "prod": {
     "configLevel": "amplifyAdmin"
+  },
+  "local": {
+    "configLevel": "project",
+    "useProfile": true,
+    "profileName": "default"
   }
 }

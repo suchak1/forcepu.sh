@@ -10,7 +10,7 @@
     "config": {
       "SourceDir": "src",
       "DistributionDir": "dist",
-      "BuildCommand": "npm run build:umi",
+      "BuildCommand": "npm run build",
       "StartCommand": "npm start"
     }
   }
