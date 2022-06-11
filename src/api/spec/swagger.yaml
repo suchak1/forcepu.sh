@@ -1,0 +1,68 @@
+openapi: '3.0.2'
+info:
+  title: API
+  version: '1.0'
+servers:
+  - url: https://{env}.forcepu.sh
+    variables:
+      env:
+        default: api 
+        enum:
+          - api
+          - api.dev
+paths:
+  # /preview:
+  /signals:
+    get:
+      tags:
+        - algo
+      # security:
+      # - ApiKeyAuth: []
+      summary: Get the latest BUY / SELL signals
+      responses:
+        '200':
+          description: latest signals for the given asset
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SignalResponse'
+        '403':
+          description: Unauthorized Request (wrong api key OR user is not in beta)
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      # hopefully, API Gateway lowercases this
+  schemas:
+    SignalResponse:
+      type: object
+      required:
+        - Signal
+        - Date
+        - Day
+        - Asset
+      properties:
+        Signal:
+          type: string
+          enum: [BUY, SELL]
+          example: BUY
+        Date:
+          type: string
+          format: date-time
+          example: '2020-12-25'
+        Day:
+          type: string
+          enum: [Sun, Mon, Tue, Wed, Thu, Fri, Sat]
+          example: Fri
+        Asset:
+          type: string
+          enum: [BTC]
+          example: BTC
+security:
+  - ApiKeyAuth: []
+
+

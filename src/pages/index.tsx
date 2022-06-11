@@ -15,13 +15,22 @@ import {
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined, CopyOutlined } from "@ant-design/icons";
 import styles from "./index.less";
+import swaggerSpec from "../../assets/swagger.yaml";
 import { getApiUrl, useLoginLoading } from "@/utils";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 const { Title } = Typography;
 import styled from "styled-components";
+import SwaggerUI from "swagger-ui-react";
+import "swagger-ui-react/swagger-ui.css";
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 
 const Page = () => {
+  // console.log(swaggerSpec);
+  fetch(swaggerSpec)
+    .then((response) => response.text())
+    .then((textContent) => {
+      console.log(textContent);
+    });
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const HODL = "HODL";
   const hyperdrive = "hyperdrive";
@@ -226,6 +235,10 @@ const Page = () => {
   //   return (<Card> a </Card>)
   // }
 
+  // use Collapse and Cards
+  // OR
+  // Card with onClick to Card in Modal
+
   const APIKey = styled(Input.Password)`
     input {
       pointer-events: none;
@@ -331,6 +344,9 @@ const Page = () => {
                     {/* show success or info alert for a few sec at top when Copy button is pressed */}
                   </span>
                 </Input.Group>
+                {/* <SwaggerUI url="https://petstore.swagger.io/v2/swagger.json" /> */}
+                <SwaggerUI spec="https://petstore.swagger.io/v2/swagger.json" />
+                {/* requestInterceptor => should inject api key if necessary, responseInterceptor => should reveal cards on left */}
               </>
             ) : (
               !loading && (
