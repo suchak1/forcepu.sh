@@ -1,13 +1,23 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Typography, Spin, Table, Switch, Alert, Card, Col, Input, Button } from "antd";
+import {
+  Typography,
+  Spin,
+  Table,
+  Switch,
+  Alert,
+  Card,
+  Col,
+  Input,
+  Button,
+} from "antd";
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined, CopyOutlined } from "@ant-design/icons";
 import styles from "./index.less";
 import { getApiUrl, useLoginLoading } from "@/utils";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 const { Title } = Typography;
-import styled from 'styled-components';
+import styled from "styled-components";
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 
 const Page = () => {
@@ -53,7 +63,7 @@ const Page = () => {
       const { idToken } = loggedIn.signInUserSession;
       const url = `${getApiUrl()}/account`;
       // remove this after debugging
-      setAccount({api_key: 'a'.repeat(86), permissions: {in_beta: true}})
+      setAccount({ api_key: "a".repeat(86), permissions: { in_beta: true } });
       fetch(url, {
         method: "GET",
         headers: { Authorization: idToken.jwtToken },
@@ -199,27 +209,44 @@ const Page = () => {
   ];
 
   const Placeholder = () => (
-    (<Col>{(new Array(7)).fill(<Card hoverable style={{textAlign: 'center'}}>{(new Date()).getHours() + ":" + (new Date()).getMinutes() + ":" + (new Date()).getSeconds()}</Card>)}</Col>)
+    <Col>
+      {new Array(7).fill(
+        <Card hoverable style={{ textAlign: "center" }}>
+          {new Date().getHours() +
+            ":" +
+            new Date().getMinutes() +
+            ":" +
+            new Date().getSeconds()}
+        </Card>
+      )}
+    </Col>
   );
   // const Placeholder = () => {
   //   return (<Card> a </Card>)
   // }
-{/* <StyledPassword placeholder="input password" value={'password'} /> */}
 
-const APIKey = styled(Input.Password)`
-  input {
-    pointer-events: none;
-  }
+  const APIKey = styled(Input.Password)`
+    input {
+      pointer-events: none;
+    }
 
-  .ant-input-affix-wrapper:hover, .ant-input-affix-wrapper:active {
-    border-color: #52e5ff;
-    box-shadow: 0 0 5px #52e5ff;
-  }
+    .ant-input-affix-wrapper:hover,
+    .ant-input-affix-wrapper:active {
+      border-color: #52e5ff;
+      box-shadow: 0 0 5px #52e5ff;
+    }
 
-  .ant-input-affix-wrapper:focus, .ant-input-affix-wrapper-focused {
-    border-color: #52e5ff;
-  }
-`;
+    .ant-input-affix-wrapper:focus,
+    .ant-input-affix-wrapper-focused {
+      border-color: #52e5ff;
+    }
+  `;
+
+  const copyToClipboard = (val: string, name: string) =>
+    navigator.clipboard.writeText(val).then(
+      () => alert(`Copied ${name} to clipboard.`),
+      () => alert(`Did not copy ${name} to clipboard`)
+    );
 
   return (
     <>
@@ -236,7 +263,9 @@ const APIKey = styled(Input.Password)`
           style={{ marginBottom: "12px" }}
         />
       )}
-      <Title>{inBeta ? "Fetch the latest signals" : "Leveraging AutoML to beat BTC"}</Title>
+      <Title>
+        {inBeta ? "Fetch the latest signals" : "Leveraging AutoML to beat BTC"}
+      </Title>
       <span
         style={{
           display: "flex",
@@ -246,20 +275,20 @@ const APIKey = styled(Input.Password)`
         }}
       >
         {!inBeta && (
-        <>
-          <Title level={5}>
-            a momentum trading strategy using{" "}
-            <a href="https://github.com/suchak1/hyperdrive">
-              <i style={{ color: "#52e5ff" }}>{hyperdrive}</i>
-            </a>
-          </Title>
-          <Switch
-            checkedChildren="BTC (₿)"
-            unCheckedChildren="USD ($)"
-            defaultChecked
-            onChange={(checked) => setToggle(checked)}
-          />
-        </>
+          <>
+            <Title level={5}>
+              a momentum trading strategy using{" "}
+              <a href="https://github.com/suchak1/hyperdrive">
+                <i style={{ color: "#52e5ff" }}>{hyperdrive}</i>
+              </a>
+            </Title>
+            <Switch
+              checkedChildren="BTC (₿)"
+              unCheckedChildren="USD ($)"
+              defaultChecked
+              onChange={(checked) => setToggle(checked)}
+            />
+          </>
         )}
       </span>
       {loading ? (
@@ -276,36 +305,43 @@ const APIKey = styled(Input.Password)`
       ) : (
         <div className={styles.parent}>
           <div className={styles.child}>
-            {inBeta && <Placeholder /> ||
-            !loading && <Line {...config} />
-            }
+            {(inBeta && <Placeholder />) || (!loading && <Line {...config} />)}
           </div>
           <div className={styles.child}>
-            {inBeta ? 
-            <>
-              <Input.Group>
-                <span style={{display: 'flex'}}>
-                  <APIKey 
-                  style={{userSelect: 'none'}} 
-                  // style={{pointerEvents: 'none'}} 
-                  addonBefore="API Key" defaultValue={account?.api_key} readOnly />
-                  {/* change input focus color to cyan */}
-                  <Button icon={<CopyOutlined />} />
-                  {/* handle copying to clipboard */}
-                  {/* show success or info alert for a few sec at top when Copy button is pressed */}
-                </span>
-              </Input.Group>
-            </>
-            :
-            !loading && (
-              <Table
-                dataSource={
-                  toggle ? previewData.BTC.stats : previewData.USD.stats
-                }
-                columns={columns}
-                pagination={false}
-                loading={loading}
-              />
+            {inBeta ? (
+              <>
+                <Input.Group>
+                  <span style={{ display: "flex" }}>
+                    <APIKey
+                      style={{ userSelect: "none" }}
+                      // style={{pointerEvents: 'none'}}
+                      addonBefore="API Key"
+                      defaultValue={account?.api_key}
+                      readOnly
+                    />
+                    {/* change input focus color to cyan */}
+                    <Button
+                      onClick={() =>
+                        copyToClipboard(account?.api_key, "API Key")
+                      }
+                      icon={<CopyOutlined />}
+                    />
+                    {/* handle copying to clipboard */}
+                    {/* show success or info alert for a few sec at top when Copy button is pressed */}
+                  </span>
+                </Input.Group>
+              </>
+            ) : (
+              !loading && (
+                <Table
+                  dataSource={
+                    toggle ? previewData.BTC.stats : previewData.USD.stats
+                  }
+                  columns={columns}
+                  pagination={false}
+                  loading={loading}
+                />
+              )
             )}
           </div>
         </div>
