@@ -4,8 +4,8 @@
   "description": "UmiJS app for forcepu.sh",
   "main": "index.js",
   "scripts": {
-    "build-dev:umi": "UMI_APP_ENV=dev umi build && cp -r assets/. dist",
-    "build:umi": "UMI_APP_ENV=prod umi build && cp -r assets/. dist",
+    "build-dev:umi": "npm run swagger && UMI_APP_ENV=dev umi build && cp -r assets/. dist",
+    "build:umi": "npm run swagger && UMI_APP_ENV=prod umi build && cp -r assets/. dist",
     "build:api": "cd src/api && sam build --use-container --cached --parallel",
     "build+start:api": "npm run build:api && npm run start:api",
     "build+deploy:api": "npm run build:api && npm run deploy:api",
@@ -19,8 +19,7 @@
     "ci": "rm -rf node_modules && yarn install --frozen-lockfile",
     "amp": "APP_ID=\"${APP_ID}\" ENV=\"${ENV}\" amplify/pull.sh",
     "clean": "rm -rf node_modules && rm -rf src/.umi",
-    "swagger": "openapi-generator-cli generate -i src/api/spec/swagger.yaml -g openapi -o src/api/spec",
-    "swagger2": "swagger-cli bundle -o src/api/spec/swagger.json src/api/spec/swagger.yaml"
+    "swagger": "swagger-cli bundle -o src/api/spec/swagger.json src/api/spec/swagger.yaml"
   },
   "author": "Krish Suchak <suchak.krish@gmail.com>",
   "license": "MIT",
@@ -43,7 +42,6 @@
     "umi": "3.5.21"
   },
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "^2.5.1",
     "eslint": "^8.10.0",
     "eslint-plugin-import": "2.25.4",
     "eslint-plugin-jsx-a11y": "^6.5.1",

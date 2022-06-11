@@ -279,6 +279,13 @@ const Page = () => {
       )}
       <Title>
         {inBeta ? "Fetch the latest signals" : "Leveraging AutoML to beat BTC"}
+        {/* replace this with Latest signal: sliding BUY SELL HODL work (codepen.io) */}
+        {/* use latest signal from real data after api endpoint is called */}
+        {/* add squares / cards with colors based on results */}
+        {/* single row near the top? oldest to newest signal? */}
+        {/* if consecutive buy, then label BUY/HODL with green/orange diagonal split */}
+        {/* same if consecutive sell, then label SELL/HODL with red/orange diagonal split */}
+        {/* else keep solid color green or red */}
       </Title>
       <span
         style={{
@@ -346,7 +353,10 @@ const Page = () => {
                 </Input.Group>
                 {/* <SwaggerUI url="https://petstore.swagger.io/v2/swagger.json" /> */}
                 <SwaggerUI spec={swaggerSpec} />
+                {/* use signals_ui.pdf in downloads folder as guide, keep wide screen - better for mobile */}
+                {/* remove params wrapper div, remove info div, rename algo to Signals API or Algo API, ,  */}
                 {/* requestInterceptor => should inject api key if necessary, responseInterceptor => should reveal cards on left */}
+                {/* parameterize api vs api.dev and replace string in json after importing */}
               </>
             ) : (
               !loading && (

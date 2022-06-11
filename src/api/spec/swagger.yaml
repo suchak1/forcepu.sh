@@ -3,13 +3,13 @@ info:
   title: API
   version: '1.0'
 servers:
-  - url: https://{env}.forcepu.sh
-    variables:
-      env:
-        default: api 
-        enum:
-          - api
-          - api.dev
+  - url: https://api.forcepu.sh
+    # variables:
+    #   env:
+    #     default: api 
+    #     enum:
+    #       - api
+    #       - api.dev
 paths:
   # /preview:
   /signals:
