@@ -10,6 +10,7 @@ import {
   Col,
   Input,
   Button,
+  message,
 } from "antd";
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined, CopyOutlined } from "@ant-design/icons";
@@ -244,8 +245,9 @@ const Page = () => {
 
   const copyToClipboard = (val: string, name: string) =>
     navigator.clipboard.writeText(val).then(
-      () => alert(`Copied ${name} to clipboard.`),
-      () => alert(`Did not copy ${name} to clipboard`)
+      () => message.success(`Copied ${name} to clipboard.`),
+      () => message.error(`Did not copy ${name} to clipboard`)
+      // use Message or Notification
     );
 
   return (
