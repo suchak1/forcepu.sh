@@ -15,7 +15,7 @@ paths:
   /signals:
     get:
       tags:
-        - algo
+        - Algorithm
       # security:
       # - ApiKeyAuth: []
       summary: Get the latest BUY / SELL signals

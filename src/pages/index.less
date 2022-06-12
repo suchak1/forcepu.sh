@@ -26,3 +26,67 @@
   flex: 1;
   min-width: 25%;
 }
+
+@keyframes opacity {
+  0%, 100% {opacity:0;}
+  50% {opacity:1;}
+}
+
+@keyframes change {
+// alternate smoothly
+  0%, 21% {transform:translate3d(0,0,0);}
+  25%, 46% {transform:translate3d(0,-33%,0);}
+  50%, 71% {transform:translate3d(0,-66%,0);}
+  75%, 96% {transform:translate3d(0,-33%,0);}
+}
+
+
+// 4 is the number of animations.
+// Here, there are 3 items in the list: [BUY, HODL, SELL]
+
+// 1. BUY to HODL
+// 2. HODL to SELL
+// 3. SELL to HODL
+// 4. HODL to BUY
+
+
+// 4x + 4y = 100 (100% duration)
+
+// HERE : 
+// y = 4 -> Animation between two lines
+// x = 21 -> Time spent on a line
+
+// You can define a value and calculate the other if you want change speed or the number of lines
+
+// Swagger UI
+.swagger-ui .info {
+  display: none;
+}
+
+.swagger-ui .scheme-container {
+  background: inherit !important;
+}
+
+.swagger-ui .opblock-description-wrapper {
+  display: none;
+}
+
+.swagger-ui .opblock.opblock-get .opblock-summary-method {
+  background: #52e5ff !important;
+}
+
+.swagger-ui select {
+  background: inherit !important;
+}
+
+.swagger-ui .opblock .opblock-section-header {
+  background: #1F1F1F !important;
+}
+
+.swagger-ui .wrapper {
+  padding: 0 !important;
+}
+
+.swagger-ui .opblock-tag {
+  display: none !important;
+}

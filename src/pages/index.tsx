@@ -15,6 +15,7 @@ import {
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined, CopyOutlined } from "@ant-design/icons";
 import styles from "./index.less";
+import "./index.less";
 import swaggerSpec from "../api/spec/swagger.json";
 import { getApiUrl, useLoginLoading } from "@/utils";
 import { useAuthenticator } from "@aws-amplify/ui-react";
@@ -23,6 +24,8 @@ import styled from "styled-components";
 import SwaggerUI from "swagger-ui-react";
 import "swagger-ui-react/swagger-ui.css";
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
+
+swaggerSpec.servers[0].url = getApiUrl();
 
 const Page = () => {
   // console.log(swaggerSpec);
@@ -256,11 +259,14 @@ const Page = () => {
     }
   `;
 
-  const StyledSwagger = styled(SwaggerUI)`
-    .swagger-ui .info {
-      display: none;
-    }
-  `;
+  // const StyledSwagger = styled(SwaggerUI)``;
+  // .swagger-ui .opblock-description-wrapper {
+  //   display: none;
+  // }
+
+  // .swagger-ui .opblock.opblock-get .opblock-summary-method {
+  //   background: #52e5ff;
+  // }
 
   const copyToClipboard = (val: string, name: string) =>
     navigator.clipboard.writeText(val).then(
@@ -284,7 +290,7 @@ const Page = () => {
         />
       )}
       <Title>
-        {inBeta ? "Fetch the latest signals" : "Leveraging AutoML to beat BTC"}
+        {inBeta ? "Latest Signal: BUY?" : "Leveraging AutoML to beat BTC"}
         {/* replace this with Latest signal: sliding BUY SELL HODL work (codepen.io) */}
         {/* use latest signal from real data after api endpoint is called */}
         {/* add squares / cards with colors based on results */}
@@ -331,9 +337,9 @@ const Page = () => {
         </div>
       ) : (
         <div className={styles.parent}>
-          <div className={styles.child}>
+          {/* <div className={styles.child}>
             {(inBeta && <Placeholder />) || (!loading && <Line {...config} />)}
-          </div>
+          </div> */}
           <div className={styles.child}>
             {inBeta ? (
               <>
@@ -358,7 +364,7 @@ const Page = () => {
                   </span>
                 </Input.Group>
                 {/* <SwaggerUI url="https://petstore.swagger.io/v2/swagger.json" /> */}
-                <StyledSwagger spec={swaggerSpec} />
+                <SwaggerUI spec={swaggerSpec} />
                 {/* use signals_ui.pdf in downloads folder as guide, keep wide screen - better for mobile */}
                 {/* remove params wrapper div, remove info div, rename algo to Signals API or Algo API, ,  */}
                 {/* requestInterceptor => should inject api key if necessary, responseInterceptor => should reveal cards on left */}
