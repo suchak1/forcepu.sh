@@ -274,6 +274,33 @@ const Page = () => {
       () => message.error(`Did not copy ${name} to clipboard`)
     );
 
+  const betaTitlePrefix = "Latest Signal:";
+  const betaTitle = (
+    <div className={styles.content}>
+      <div className={styles.betaContainer}>
+        <div className={styles.text}>{betaTitlePrefix}</div>
+
+        <div className={styles.list}>
+          <div className={styles.betaItem}>
+            <span style={{ color: "lime" }}>&nbsp;BUY</span>
+          </div>
+          <div>
+            <span>{betaTitlePrefix}</span>
+            <span style={{ color: "#F7931A" }} className={styles.betaItem}>
+              &nbsp;HODL
+            </span>
+          </div>
+          <div>
+            <span>{betaTitlePrefix}</span>
+            <span style={{ color: "red" }} className={styles.betaItem}>
+              &nbsp;SELL
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <>
       {loggedIn && account && (
@@ -290,7 +317,8 @@ const Page = () => {
         />
       )}
       <Title>
-        {inBeta ? "Latest Signal: BUY?" : "Leveraging AutoML to beat BTC"}
+        {inBeta ? betaTitle : "Leveraging AutoML to beat BTC"}
+        {/* {inBeta ? "Latest Signal: BUY?" : "Leveraging AutoML to beat BTC"} */}
         {/* replace this with Latest signal: sliding BUY SELL HODL work (codepen.io) */}
         {/* use latest signal from real data after api endpoint is called */}
         {/* add squares / cards with colors based on results */}
