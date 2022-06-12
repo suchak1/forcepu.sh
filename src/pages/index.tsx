@@ -285,13 +285,13 @@ const Page = () => {
             <span style={{ color: "lime" }}>&nbsp;BUY</span>
           </div>
           <div>
-            <span>{betaTitlePrefix}</span>
+            <span style={{ opacity: 0 }}>{betaTitlePrefix}</span>
             <span style={{ color: "#F7931A" }} className={styles.betaItem}>
               &nbsp;HODL
             </span>
           </div>
           <div>
-            <span>{betaTitlePrefix}</span>
+            <span style={{ opacity: 0 }}>{betaTitlePrefix}</span>
             <span style={{ color: "red" }} className={styles.betaItem}>
               &nbsp;SELL
             </span>
