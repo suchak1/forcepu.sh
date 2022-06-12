@@ -256,6 +256,12 @@ const Page = () => {
     }
   `;
 
+  const StyledSwagger = styled(SwaggerUI)`
+    .swagger-ui .info {
+      display: none;
+    }
+  `;
+
   const copyToClipboard = (val: string, name: string) =>
     navigator.clipboard.writeText(val).then(
       () => message.success(`Copied ${name} to clipboard.`),
@@ -352,11 +358,14 @@ const Page = () => {
                   </span>
                 </Input.Group>
                 {/* <SwaggerUI url="https://petstore.swagger.io/v2/swagger.json" /> */}
-                <SwaggerUI spec={swaggerSpec} />
+                <StyledSwagger spec={swaggerSpec} />
                 {/* use signals_ui.pdf in downloads folder as guide, keep wide screen - better for mobile */}
                 {/* remove params wrapper div, remove info div, rename algo to Signals API or Algo API, ,  */}
                 {/* requestInterceptor => should inject api key if necessary, responseInterceptor => should reveal cards on left */}
                 {/* parameterize api vs api.dev and replace string in json after importing */}
+                {/* split up pages: */}
+                {/* 1. cards w colors and data on home page after login */}
+                {/* 2. API swagger docs on separate Page called Docs with NavLink in header */}
               </>
             ) : (
               !loading && (
