@@ -18,7 +18,15 @@ import {
 } from "antd";
 // import { useWindowWidth } from "@wojtekmaj/react-hooks";
 import { G2, Line } from "@ant-design/charts";
-import { LoadingOutlined, CopyOutlined } from "@ant-design/icons";
+import {
+  LoadingOutlined,
+  CopyOutlined,
+  DownOutlined,
+  UpOutlined,
+  CaretDownFilled,
+  CaretUpFilled,
+  QuestionOutlined,
+} from "@ant-design/icons";
 import styles from "./index.less";
 import layoutStyles from "../layouts/index.less";
 import "./index.less";
@@ -68,6 +76,7 @@ const Page = () => {
     BUY: "🚀",
     SELL: "💥",
   };
+  const caretIconSize = "20px";
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const HODL = "HODL";
   const hyperdrive = "hyperdrive";
@@ -626,16 +635,16 @@ const Page = () => {
                             }}
                             // headStyle={{ background: cardHeaderColors[datum.Day] }}
                             bodyStyle={{
-                              background:
-                                datum.Signal === "BUY" && !signalLoading
-                                  ? // ? "lime"
-                                    "#13a8a8"
-                                  : // ? "#52e5ff"
-                                  datum.Signal === "SELL" && !signalLoading
-                                  ? // ? "red"
-                                    "#cb2b83"
-                                  : // ? "magenta"
-                                    "inherit",
+                              // background:
+                              //   datum.Signal === "BUY" && !signalLoading
+                              //     ? // ? "lime"
+                              //       "#13a8a8"
+                              //     : // ? "#52e5ff"
+                              //     datum.Signal === "SELL" && !signalLoading
+                              //     ? // ? "red"
+                              //       "#cb2b83"
+                              //     : // ? "magenta"
+                              //       "inherit",
                               display: "flex",
                               justifyContent: "center",
                               height: "100%",
@@ -660,6 +669,32 @@ const Page = () => {
                               //   }
                               // />
                             )}
+                            {!signalLoading &&
+                              (datum.Signal === "BUY" ? (
+                                // ? "lime"
+                                <UpOutlined
+                                  // fill="lime"
+                                  style={{
+                                    fontSize: caretIconSize,
+                                    color: "lime",
+                                  }}
+                                />
+                              ) : // ? "#52e5ff"
+                              datum.Signal === "SELL" ? (
+                                // ? "red"
+                                <DownOutlined
+                                  // fill="red"
+                                  style={{
+                                    fontSize: caretIconSize,
+                                    color: "red",
+                                  }}
+                                />
+                              ) : (
+                                // ? "magenta"
+                                <QuestionOutlined
+                                  style={{ fontSize: caretIconSize }}
+                                />
+                              ))}
                             {/* <Skeleton loading={signalLoading} active /> */}
                           </Card>
                         </Badge.Ribbon>
