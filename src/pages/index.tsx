@@ -12,11 +12,13 @@ import {
   Input,
   Button,
   Badge,
+  Modal,
   message,
 } from "antd";
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined, CopyOutlined } from "@ant-design/icons";
 import styles from "./index.less";
+import layoutStyles from "../layouts/index.less";
 import "./index.less";
 import swaggerSpec from "../api/spec/swagger.json";
 import { getApiUrl, useLoginLoading, getDateRange, addDays } from "@/utils";
@@ -36,7 +38,7 @@ const Page = () => {
   //   .then((textContent) => {
   //     console.log(textContent);
   //   });
-  const dayColors = {
+  const ribbonColors = {
     Sun: "red",
     Mon: "yellow",
     Tue: "blue",
@@ -44,6 +46,15 @@ const Page = () => {
     Thu: "green",
     Fri: "cyan",
     Sat: "orange",
+  };
+  const cardHeaderColors = {
+    Sun: "#D32029",
+    Mon: "#D8BD14",
+    Tue: "#177DDC",
+    Wed: "#CB2B83",
+    Thu: "#49AA19",
+    Fri: "#13A8A8",
+    Sat: "#D87A16",
   };
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const HODL = "HODL";
@@ -70,12 +81,13 @@ const Page = () => {
   const [toggle, setToggle] = useState(true);
   const [previewLoading, setPreviewLoading] = useState(true);
   const [accountLoading, setAccountLoading] = useState(false);
+  const [signalLoading, setSignalLoading] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
+  const [showSignalCard, setShowSignalCard] = useState(false);
+  const [signalCardData, setSignalCardData] = useState(defaultSignals[0]);
   const loading = previewLoading || accountLoading || loginLoading;
   const [account, setAccount] = useState();
-  // TODO: uncomment this
   const inBeta = loggedIn && account?.permissions?.in_beta;
-  // const inBeta = true;
   const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
   const formatUSD = (v: number) => {
     if (v < 1e3) {
@@ -86,14 +98,12 @@ const Page = () => {
     return `$ ${v / 1e6}M`;
   };
   useEffect(() => {
-    (async () => {
-      const url = `${getApiUrl({ localOverride: "prod" })}/preview`;
-      fetch(url, { method: "GET" })
-        .then((response) => response.json())
-        .then((data) => setPreviewData(data))
-        .catch((err) => console.error(err))
-        .finally(() => setPreviewLoading(false));
-    })();
+    const url = `${getApiUrl({ localOverride: "prod" })}/preview`;
+    fetch(url, { method: "GET" })
+      .then((response) => response.json())
+      .then((data) => setPreviewData(data))
+      .catch((err) => console.error(err))
+      .finally(() => setPreviewLoading(false));
   }, []);
 
   useEffect(() => {
@@ -116,6 +126,14 @@ const Page = () => {
 
   useEffect(useLoginLoading(setLoginLoading));
 
+  const fetchSignals = () => {
+    const url = `${getApiUrl({ localOverride: "prod" })}/signals`;
+    fetch(url, { method: "GET" })
+      .then((response) => response.json())
+      .then((data) => setSignalData(data))
+      .catch((err) => console.error(err))
+      .finally(() => setSignalLoading(false));
+  };
   G2.registerShape("point", "breath-point", {
     draw(cfg, container) {
       const data = cfg.data;
@@ -300,7 +318,7 @@ const Page = () => {
       () => message.error(`Did not copy ${name} to clipboard`)
     );
 
-  const betaTitlePrefix = "Latest Signal:";
+  const betaTitlePrefix = "New Signal:";
   const betaTitle = (
     <div className={styles.content}>
       <div className={styles.betaContainer}>
@@ -349,14 +367,11 @@ const Page = () => {
       )}
       <Title>
         {inBeta ? betaTitle : "Leveraging AutoML to beat BTC"}
-        {/* {inBeta ? "Latest Signal: BUY?" : "Leveraging AutoML to beat BTC"} */}
-        {/* replace this with Latest signal: sliding BUY SELL HODL work (codepen.io) */}
         {/* use latest signal from real data after api endpoint is called */}
-        {/* add squares / cards with colors based on results */}
-        {/* single row near the top? oldest to newest signal? */}
         {/* if consecutive buy, then label BUY/HODL with green/orange diagonal split */}
         {/* same if consecutive sell, then label SELL/HODL with red/orange diagonal split */}
-        {/* else keep solid color green or red */}
+        {/* have "Fetch latest signals" or "Get latest signals" button */}
+        {/* on the right of latest signal title or  below latest signals title but above squares row*/}
       </Title>
       <span
         style={{
@@ -396,17 +411,66 @@ const Page = () => {
         </div>
       ) : (
         <div className={styles.parent}>
-          {/* <div className={styles.child}>
-            {(inBeta && <Placeholder />) || (!loading && <Line {...config} />)}
-          </div> */}
+          <div className={styles.child}>
+            {(inBeta && null) || (!loading && <Line {...config} />)}
+          </div>
           <div className={styles.child}>
             {inBeta ? (
               <>
+                <Modal
+                  visible={showSignalCard}
+                  closable={false}
+                  onCancel={() => setShowSignalCard(false)}
+                >
+                  <Card
+                    headStyle={{
+                      background: cardHeaderColors[signalCardData.Day],
+                    }}
+                    title={signalCardData.Day.toUpperCase()}
+                  >
+                    <div>
+                      <span>
+                        <b>{"Signal: "}</b>
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: "monospace",
+                          color:
+                            signalCardData.Signal === "BUY" ? "lime" : "red",
+                        }}
+                      >
+                        {signalCardData.Signal}
+                      </span>
+                    </div>
+                    <div>
+                      <span>
+                        <b>{"Date: "}</b>
+                      </span>
+                      <span style={{ fontFamily: "monospace" }}>
+                        {signalCardData.Date}
+                      </span>
+                    </div>
+                    <div>
+                      <span>
+                        <b>{"Asset: "}</b>
+                      </span>
+                      <span style={{ fontFamily: "monospace" }}>
+                        {"BTC ("}
+                        <span style={{ color: "#F7931A" }}>{"₿"}</span>
+                        {")"}
+                      </span>
+                    </div>
+                    {/* {`Signal: ${signalCardData.Signal}`}
+                    {`Date: ${signalCardData.Date}`}
+                    {"Asset: BTC (₿)"} */}
+                  </Card>
+                </Modal>
                 <div
                   style={{
                     width: "100%",
                     display: "flex",
                     justifyContent: "center",
+                    marginBottom: "36px",
                   }}
                 >
                   <Row style={{ width: "100%" }}>
@@ -415,10 +479,16 @@ const Page = () => {
                     {signalData.map((datum, idx) => (
                       <Col flex={1}>
                         <Badge.Ribbon
-                          color={dayColors[datum.Day]}
-                          text={datum.Day.toUpperCase()}
+                          color={ribbonColors[datum.Day]}
+                          text={<b>{datum.Day.toUpperCase()}</b>}
                         >
                           <Card
+                            hoverable
+                            onClick={() => {
+                              setSignalCardData(datum);
+                              setShowSignalCard(true);
+                            }}
+                            // headStyle={{ background: cardHeaderColors[datum.Day] }}
                             bodyStyle={{
                               background: idx < 3 ? "red" : "lime",
                               display: "flex",
@@ -441,6 +511,20 @@ const Page = () => {
                         </Badge.Ribbon>
                       </Col>
                     ))}
+                    <Col flex={1}>
+                      <span
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "100%",
+                        }}
+                      >
+                        <Button className={layoutStyles.start}>
+                          Fetch the latest signals
+                        </Button>
+                      </span>
+                    </Col>
                     {/* use card loading state after signals req */}
                   </Row>
                 </div>
