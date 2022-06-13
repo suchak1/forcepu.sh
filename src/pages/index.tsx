@@ -76,7 +76,7 @@ const Page = () => {
     BUY: "🚀",
     SELL: "💥",
   };
-  const caretIconSize = "20px";
+  const caretIconSize = 50;
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const HODL = "HODL";
   const hyperdrive = "hyperdrive";
@@ -648,6 +648,7 @@ const Page = () => {
                               display: "flex",
                               justifyContent: "center",
                               height: "100%",
+                              alignItems: "center",
                             }}
                             // title={datum.Day.toUpperCase()}
                           >
@@ -672,27 +673,29 @@ const Page = () => {
                             {!signalLoading &&
                               (datum.Signal === "BUY" ? (
                                 // ? "lime"
-                                <UpOutlined
+                                <CaretUpFilled
                                   // fill="lime"
                                   style={{
-                                    fontSize: caretIconSize,
-                                    color: "cyan",
+                                    fontSize: `${caretIconSize}px`,
+                                    color: "lime",
+                                    marginBottom: `${caretIconSize / 2}px`,
                                   }}
                                 />
                               ) : // ? "#52e5ff"
                               datum.Signal === "SELL" ? (
                                 // ? "red"
-                                <DownOutlined
+                                <CaretDownFilled
                                   // fill="red"
                                   style={{
-                                    fontSize: caretIconSize,
-                                    color: "magenta",
+                                    fontSize: `${caretIconSize}px`,
+                                    color: "red",
+                                    marginTop: `${caretIconSize / 2}px`,
                                   }}
                                 />
                               ) : (
                                 // ? "magenta"
                                 <QuestionOutlined
-                                  style={{ fontSize: caretIconSize }}
+                                  style={{ fontSize: `${caretIconSize}px` }}
                                 />
                               ))}
                             {/* <Skeleton loading={signalLoading} active /> */}
