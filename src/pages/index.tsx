@@ -13,6 +13,7 @@ import {
   Button,
   Badge,
   Modal,
+  Skeleton,
   message,
 } from "antd";
 import { G2, Line } from "@ant-design/charts";
@@ -127,12 +128,21 @@ const Page = () => {
   useEffect(useLoginLoading(setLoginLoading));
 
   const fetchSignals = () => {
-    const url = `${getApiUrl({ localOverride: "prod" })}/signals`;
-    fetch(url, { method: "GET" })
-      .then((response) => response.json())
-      .then((data) => setSignalData(data))
-      .catch((err) => console.error(err))
-      .finally(() => setSignalLoading(false));
+    setSignalLoading(true);
+    setTimeout(() => {
+      signalData.forEach(
+        (datum) => (datum.Signal = Math.random() > 0.5 ? "BUY" : "SELL")
+      );
+      setSignalData(signalData);
+      setSignalLoading(false);
+    }, 2000);
+
+    // const url = `${getApiUrl({ localOverride: "prod" })}/signals`;
+    // fetch(url, { method: "GET" })
+    //   .then((response) => response.json())
+    //   .then((data) => setSignalData(data))
+    //   .catch((err) => console.error(err))
+    //   .finally(() => setSignalLoading(false));
   };
   G2.registerShape("point", "breath-point", {
     draw(cfg, container) {
@@ -412,6 +422,7 @@ const Page = () => {
       ) : (
         <div className={styles.parent}>
           <div className={styles.child}>
+            {/* fix this condition */}
             {(inBeta && null) || (!loading && <Line {...config} />)}
           </div>
           <div className={styles.child}>
@@ -490,23 +501,28 @@ const Page = () => {
                             }}
                             // headStyle={{ background: cardHeaderColors[datum.Day] }}
                             bodyStyle={{
-                              background: idx < 3 ? "red" : "lime",
+                              background:
+                                datum.Signal === "BUY" && !signalLoading
+                                  ? "lime"
+                                  : datum.Signal === "SELL" && !signalLoading
+                                  ? "red"
+                                  : "inherit",
                               display: "flex",
                               justifyContent: "center",
                             }}
                             // title={datum.Day.toUpperCase()}
                           >
-                            <span
-                            // style={{
-                            //   fontFamily: "monospace",
-                            //   display: "flex",
-                            //   justifyContent: "center",
-                            // }}
-                            >
-                              {/* don't display any text in body - when user clicks, then modal opens*/}
-                              {/* {idx < 3 ? "SELL" : "BUY"} */}
-                              {/* {`₿ Signal: ${datum.Signal}`} */}
-                            </span>
+                            {signalLoading && (
+                              <Spin
+                                indicator={
+                                  <LoadingOutlined
+                                    style={{ fontSize: 25 }}
+                                    spin
+                                  />
+                                }
+                              />
+                            )}
+                            {/* <Skeleton loading={signalLoading} active /> */}
                           </Card>
                         </Badge.Ribbon>
                       </Col>
@@ -520,7 +536,10 @@ const Page = () => {
                           height: "100%",
                         }}
                       >
-                        <Button className={layoutStyles.start}>
+                        <Button
+                          className={layoutStyles.start}
+                          onClick={fetchSignals}
+                        >
                           Fetch the latest signals
                         </Button>
                       </span>
@@ -528,28 +547,28 @@ const Page = () => {
                     {/* use card loading state after signals req */}
                   </Row>
                 </div>
-                <Input.Group>
-                  <span style={{ display: "flex" }}>
-                    <APIKey
-                      style={{ userSelect: "none" }}
-                      // style={{pointerEvents: 'none'}}
-                      addonBefore="API Key"
-                      defaultValue={account?.api_key}
-                      readOnly
-                    />
-                    {/* change input focus color to cyan */}
-                    <Button
-                      onClick={() =>
-                        copyToClipboard(account?.api_key, "API Key")
-                      }
-                      icon={<CopyOutlined />}
-                    />
-                    {/* handle copying to clipboard */}
-                    {/* show success or info alert for a few sec at top when Copy button is pressed */}
-                  </span>
-                </Input.Group>
+                {/* <Input.Group> */}
+                {/* <span style={{ display: "flex" }}> */}
+                {/* <APIKey */}
+                {/* style={{ userSelect: "none" }} */}
+                {/* // style={{pointerEvents: 'none'}} */}
+                {/* addonBefore="API Key" */}
+                {/* defaultValue={account?.api_key} */}
+                {/* readOnly */}
+                {/* /> */}
+                {/* change input focus color to cyan */}
+                {/* <Button */}
+                {/* onClick={() => */}
+                {/* copyToClipboard(account?.api_key, "API Key") */}
+                {/* } */}
+                {/* icon={<CopyOutlined />} */}
+                {/* /> */}
+                {/* handle copying to clipboard */}
+                {/* show success or info alert for a few sec at top when Copy button is pressed */}
+                {/* </span> */}
+                {/* </Input.Group> */}
                 {/* <SwaggerUI url="https://petstore.swagger.io/v2/swagger.json" /> */}
-                <SwaggerUI spec={swaggerSpec} />
+                {/* <SwaggerUI spec={swaggerSpec} /> */}
                 {/* use signals_ui.pdf in downloads folder as guide, keep wide screen - better for mobile */}
                 {/* remove params wrapper div, remove info div, rename algo to Signals API or Algo API, ,  */}
                 {/* requestInterceptor => should inject api key if necessary, responseInterceptor => should reveal cards on left */}
