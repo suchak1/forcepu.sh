@@ -613,7 +613,7 @@ const Page = () => {
                     {/* <Card></Card> */}
                     {/* use Row of cards that expand to model when clicked */}
                     {signalData.map((datum, idx) => (
-                      <Col key={JSON.stringify(datum)} flex={1}>
+                      <Col key={idx} flex={1}>
                         <Badge.Ribbon
                           color={ribbonColors[datum.Day]}
                           text={<b>{datum.Day.toUpperCase()}</b>}
