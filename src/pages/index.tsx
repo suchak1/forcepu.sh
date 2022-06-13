@@ -676,7 +676,7 @@ const Page = () => {
                                   // fill="lime"
                                   style={{
                                     fontSize: caretIconSize,
-                                    color: "lime",
+                                    color: "cyan",
                                   }}
                                 />
                               ) : // ? "#52e5ff"
@@ -686,7 +686,7 @@ const Page = () => {
                                   // fill="red"
                                   style={{
                                     fontSize: caretIconSize,
-                                    color: "red",
+                                    color: "magenta",
                                   }}
                                 />
                               ) : (
