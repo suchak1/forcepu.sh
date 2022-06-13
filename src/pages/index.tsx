@@ -407,16 +407,22 @@ const Page = () => {
                       <Col flex={1}>
                         <Badge.Ribbon text={datum.Day.toUpperCase()}>
                           <Card
-                          // title={datum.Day.toUpperCase()}
+                            bodyStyle={{
+                              background: idx < 3 ? "red" : "lime",
+                              display: "flex",
+                              justifyContent: "center",
+                            }}
+                            // title={datum.Day.toUpperCase()}
                           >
                             <span
-                              style={{
-                                fontFamily: "monospace",
-                                display: "flex",
-                                justifyContent: "center",
-                              }}
+                            // style={{
+                            //   fontFamily: "monospace",
+                            //   display: "flex",
+                            //   justifyContent: "center",
+                            // }}
                             >
-                              {idx < 3 ? "SELL" : "BUY"}
+                              {/* don't display any text in body - when user clicks, then modal opens*/}
+                              {/* {idx < 3 ? "SELL" : "BUY"} */}
                               {/* {`₿ Signal: ${datum.Signal}`} */}
                             </span>
                           </Card>
