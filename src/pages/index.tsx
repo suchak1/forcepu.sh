@@ -16,7 +16,7 @@ import {
   Skeleton,
   message,
 } from "antd";
-import { useWindowWidth } from "@wojtekmaj/react-hooks";
+// import { useWindowWidth } from "@wojtekmaj/react-hooks";
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined, CopyOutlined } from "@ant-design/icons";
 import styles from "./index.less";
@@ -75,7 +75,8 @@ const Page = () => {
     BTC: { data: [], stats: [] },
     USD: { data: [], stats: [] },
   });
-  const width = useWindowWidth();
+  // const width = useWindowWidth();
+  const width = 391;
   // (get utc date - 1 to 7 days before).reversed()
   // that should be default signal data w Asset: BTC and Signal: ?, and proper Date formatting
   // YYYY-MM-DD and Day formatting .slice(0, 3)
@@ -353,85 +354,93 @@ const Page = () => {
         {/* fix this actually show real signal after loading */}
         <div className={styles.list}>
           <div>
-            <span
-              style={{
-                color: haveNewSignal
-                  ? signalColors[signalData[signalData.length - 1].Signal]
-                  : "lime",
-              }}
-              className={styles.betaItem}
-            >
-              &nbsp;
-              {haveNewSignal ? signalData[signalData.length - 1].Signal : "BUY"}
+            <span style={{ fontSize: "30px" }}>
+              <span
+                style={{
+                  color: haveNewSignal
+                    ? signalColors[signalData[signalData.length - 1].Signal]
+                    : "lime",
+                }}
+                className={styles.betaItem}
+              >
+                &nbsp;
+                {haveNewSignal
+                  ? signalData[signalData.length - 1].Signal
+                  : "BUY"}
+              </span>
+              {haveNewSignal && width > 390 && (
+                <>
+                  {signalData[signalData.length - 1].Signal === "BUY" && (
+                    <span>&nbsp;</span>
+                  )}
+                  <span>
+                    &nbsp;
+                    {signalEmojis[signalData[signalData.length - 1].Signal]}
+                  </span>
+                </>
+              )}
+              {!haveNewSignal && <span>&nbsp;&nbsp;&nbsp;?</span>}
             </span>
-            {haveNewSignal && width > 390 && (
-              <>
-                {signalData[signalData.length - 1].Signal === "BUY" && (
-                  <span>&nbsp;</span>
-                )}
-                <span>
-                  &nbsp;
-                  {signalEmojis[signalData[signalData.length - 1].Signal]}
-                </span>
-              </>
-            )}
-            {!haveNewSignal && <span>&nbsp;&nbsp;&nbsp;?</span>}
           </div>
           <div>
             <span style={{ opacity: 0 }}>{betaTitlePrefix}</span>
-            <span
-              style={{
-                color: haveNewSignal
-                  ? signalColors[signalData[signalData.length - 1].Signal]
-                  : "#F7931A",
-              }}
-              className={styles.betaItem}
-            >
-              &nbsp;
-              {haveNewSignal
-                ? signalData[signalData.length - 1].Signal
-                : "HODL"}
+            <span style={{ fontSize: "30px" }}>
+              <span
+                style={{
+                  color: haveNewSignal
+                    ? signalColors[signalData[signalData.length - 1].Signal]
+                    : "#F7931A",
+                }}
+                className={styles.betaItem}
+              >
+                &nbsp;
+                {haveNewSignal
+                  ? signalData[signalData.length - 1].Signal
+                  : "HODL"}
+              </span>
+              {haveNewSignal && width > 390 && (
+                <>
+                  {signalData[signalData.length - 1].Signal === "BUY" && (
+                    <span>&nbsp;</span>
+                  )}
+                  <span>
+                    &nbsp;
+                    {signalEmojis[signalData[signalData.length - 1].Signal]}
+                  </span>
+                </>
+              )}
+              {!haveNewSignal && <span>&nbsp;?</span>}
             </span>
-            {haveNewSignal && width > 390 && (
-              <>
-                {signalData[signalData.length - 1].Signal === "BUY" && (
-                  <span>&nbsp;</span>
-                )}
-                <span>
-                  &nbsp;
-                  {signalEmojis[signalData[signalData.length - 1].Signal]}
-                </span>
-              </>
-            )}
-            {!haveNewSignal && <span>&nbsp;?</span>}
           </div>
           <div>
             <span style={{ opacity: 0 }}>{betaTitlePrefix}</span>
-            <span
-              style={{
-                color: haveNewSignal
-                  ? signalColors[signalData[signalData.length - 1].Signal]
-                  : "red",
-              }}
-              className={styles.betaItem}
-            >
-              &nbsp;
-              {haveNewSignal
-                ? signalData[signalData.length - 1].Signal
-                : "SELL"}
+            <span style={{ fontSize: "30px" }}>
+              <span
+                style={{
+                  color: haveNewSignal
+                    ? signalColors[signalData[signalData.length - 1].Signal]
+                    : "red",
+                }}
+                className={styles.betaItem}
+              >
+                &nbsp;
+                {haveNewSignal
+                  ? signalData[signalData.length - 1].Signal
+                  : "SELL"}
+              </span>
+              {haveNewSignal && width > 390 && (
+                <>
+                  {signalData[signalData.length - 1].Signal === "BUY" && (
+                    <span>&nbsp;</span>
+                  )}
+                  <span>
+                    &nbsp;
+                    {signalEmojis[signalData[signalData.length - 1].Signal]}
+                  </span>
+                </>
+              )}
+              {!haveNewSignal && <span>&nbsp;?</span>}
             </span>
-            {haveNewSignal && width > 390 && (
-              <>
-                {signalData[signalData.length - 1].Signal === "BUY" && (
-                  <span>&nbsp;</span>
-                )}
-                <span>
-                  &nbsp;
-                  {signalEmojis[signalData[signalData.length - 1].Signal]}
-                </span>
-              </>
-            )}
-            {!haveNewSignal && <span>&nbsp;?</span>}
           </div>
         </div>
       </div>
@@ -604,7 +613,7 @@ const Page = () => {
                     {/* <Card></Card> */}
                     {/* use Row of cards that expand to model when clicked */}
                     {signalData.map((datum, idx) => (
-                      <Col flex={1}>
+                      <Col key={JSON.stringify(datum)} flex={1}>
                         <Badge.Ribbon
                           color={ribbonColors[datum.Day]}
                           text={<b>{datum.Day.toUpperCase()}</b>}
