@@ -36,6 +36,15 @@ const Page = () => {
   //   .then((textContent) => {
   //     console.log(textContent);
   //   });
+  const dayColors = {
+    Sun: "red",
+    Mon: "yellow",
+    Tue: "blue",
+    Wed: "pink",
+    Thu: "green",
+    Fri: "cyan",
+    Sat: "orange",
+  };
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const HODL = "HODL";
   const hyperdrive = "hyperdrive";
@@ -405,7 +414,10 @@ const Page = () => {
                     {/* use Row of cards that expand to model when clicked */}
                     {signalData.map((datum, idx) => (
                       <Col flex={1}>
-                        <Badge.Ribbon text={datum.Day.toUpperCase()}>
+                        <Badge.Ribbon
+                          color={dayColors[datum.Day]}
+                          text={datum.Day.toUpperCase()}
+                        >
                           <Card
                             bodyStyle={{
                               background: idx < 3 ? "red" : "lime",
