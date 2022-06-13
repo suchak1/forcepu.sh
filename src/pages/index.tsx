@@ -376,7 +376,35 @@ const Page = () => {
         />
       )}
       <Title>
-        {inBeta ? betaTitle : "Leveraging AutoML to beat BTC"}
+        {inBeta ? (
+          <div className={styles.parent}>
+            <div className={styles.child} style={{ marginBottom: "0px" }}>
+              {betaTitle}
+            </div>
+            <div
+              className={styles.child}
+              style={{
+                marginBottom: "0px",
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "center",
+                height: "45px",
+              }}
+            >
+              {
+                <Button
+                  loading={signalLoading}
+                  className={layoutStyles.start}
+                  onClick={fetchSignals}
+                >
+                  Fetch the latest signals
+                </Button>
+              }
+            </div>
+          </div>
+        ) : (
+          "Leveraging AutoML to beat BTC"
+        )}
         {/* use latest signal from real data after api endpoint is called */}
         {/* if consecutive buy, then label BUY/HODL with green/orange diagonal split */}
         {/* same if consecutive sell, then label SELL/HODL with red/orange diagonal split */}
@@ -491,47 +519,46 @@ const Page = () => {
                     {/* use Row of cards that expand to model when clicked */}
                     {signalData.map((datum, idx) => (
                       <Col flex={1}>
-                        {datum.Signal === "BUY" ? (
-                          <Badge.Ribbon
-                            color={ribbonColors[datum.Day]}
-                            text={<b>{datum.Day.toUpperCase()}</b>}
+                        <Badge.Ribbon
+                          color={ribbonColors[datum.Day]}
+                          text={<b>{datum.Day.toUpperCase()}</b>}
+                        >
+                          <Card
+                            hoverable
+                            onClick={() => {
+                              setSignalCardData(datum);
+                              setShowSignalCard(true);
+                            }}
+                            // headStyle={{ background: cardHeaderColors[datum.Day] }}
+                            bodyStyle={{
+                              background:
+                                datum.Signal === "BUY" && !signalLoading
+                                  ? // ? "lime"
+                                    "#52e5ff"
+                                  : datum.Signal === "SELL" && !signalLoading
+                                  ? // ? "red"
+                                    "magenta"
+                                  : "inherit",
+                              display: "flex",
+                              justifyContent: "center",
+                              height: "100%",
+                            }}
+                            // title={datum.Day.toUpperCase()}
                           >
-                            <Card
-                              hoverable
-                              onClick={() => {
-                                setSignalCardData(datum);
-                                setShowSignalCard(true);
-                              }}
-                              // headStyle={{ background: cardHeaderColors[datum.Day] }}
-                              bodyStyle={{
-                                background:
-                                  datum.Signal === "BUY" && !signalLoading
-                                    ? "lime"
-                                    : datum.Signal === "SELL" && !signalLoading
-                                    ? "red"
-                                    : "inherit",
-                                display: "flex",
-                                justifyContent: "center",
-                                height: "100%",
-                              }}
-                              // title={datum.Day.toUpperCase()}
-                            >
-                              {signalLoading && (
-                                <Spin
-                                  indicator={
-                                    <LoadingOutlined
-                                      style={{ fontSize: 25 }}
-                                      spin
-                                    />
-                                  }
-                                />
-                              )}
-                              {/* <Skeleton loading={signalLoading} active /> */}
-                            </Card>
-                          </Badge.Ribbon>
-                        ) : (
-                          <Card />
-                        )}
+                            {signalLoading && (
+                              <Skeleton loading active />
+                              // <Spin
+                              //   indicator={
+                              //     <LoadingOutlined
+                              //       style={{ fontSize: 25 }}
+                              //       spin
+                              //     />
+                              //   }
+                              // />
+                            )}
+                            {/* <Skeleton loading={signalLoading} active /> */}
+                          </Card>
+                        </Badge.Ribbon>
                       </Col>
                     ))}
                     {/* <Col flex={1}>
@@ -544,6 +571,7 @@ const Page = () => {
                         }}
                       >
                         <Button
+                          loading={signalLoading}
                           className={layoutStyles.start}
                           onClick={fetchSignals}
                         >
@@ -551,140 +579,6 @@ const Page = () => {
                         </Button>
                       </span>
                     </Col> */}
-                    {/* use card loading state after signals req */}
-                  </Row>
-                  <Row style={{ width: "100%" }}>
-                    {/* <Card></Card> */}
-                    {/* use Row of cards that expand to model when clicked */}
-                    {signalData.map((datum, idx) => (
-                      <Col flex={1}>
-                        {datum.Signal === "?" ? (
-                          <Badge.Ribbon
-                            color={ribbonColors[datum.Day]}
-                            text={<b>{datum.Day.toUpperCase()}</b>}
-                          >
-                            <Card
-                              hoverable
-                              onClick={() => {
-                                setSignalCardData(datum);
-                                setShowSignalCard(true);
-                              }}
-                              // headStyle={{ background: cardHeaderColors[datum.Day] }}
-                              bodyStyle={{
-                                background:
-                                  datum.Signal === "BUY" && !signalLoading
-                                    ? "lime"
-                                    : datum.Signal === "SELL" && !signalLoading
-                                    ? "red"
-                                    : "inherit",
-                                display: "flex",
-                                justifyContent: "center",
-                                height: "100%",
-                              }}
-                              // title={datum.Day.toUpperCase()}
-                            >
-                              {signalLoading && (
-                                <Spin
-                                  indicator={
-                                    <LoadingOutlined
-                                      style={{ fontSize: 25 }}
-                                      spin
-                                    />
-                                  }
-                                />
-                              )}
-                              {/* <Skeleton loading={signalLoading} active /> */}
-                            </Card>
-                          </Badge.Ribbon>
-                        ) : (
-                          <Card />
-                        )}
-                      </Col>
-                    ))}
-                    {/* <Col flex={1}>
-                      <span
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          height: "100%",
-                        }}
-                      >
-                        <Button
-                          className={layoutStyles.start}
-                          onClick={fetchSignals}
-                        >
-                          Fetch the latest signals
-                        </Button>
-                      </span>
-                    </Col> */}
-                    {/* use card loading state after signals req */}
-                  </Row>
-                  <Row style={{ width: "100%" }}>
-                    {/* <Card></Card> */}
-                    {/* use Row of cards that expand to model when clicked */}
-                    {signalData.map((datum, idx) => (
-                      <Col flex={1}>
-                        {datum.Signal === "SELL" ? (
-                          <Badge.Ribbon
-                            color={ribbonColors[datum.Day]}
-                            text={<b>{datum.Day.toUpperCase()}</b>}
-                          >
-                            <Card
-                              hoverable
-                              onClick={() => {
-                                setSignalCardData(datum);
-                                setShowSignalCard(true);
-                              }}
-                              // headStyle={{ background: cardHeaderColors[datum.Day] }}
-                              bodyStyle={{
-                                background:
-                                  datum.Signal === "BUY" && !signalLoading
-                                    ? "lime"
-                                    : datum.Signal === "SELL" && !signalLoading
-                                    ? "red"
-                                    : "inherit",
-                                display: "flex",
-                                justifyContent: "center",
-                                height: "100%",
-                              }}
-                              // title={datum.Day.toUpperCase()}
-                            >
-                              {signalLoading && (
-                                <Spin
-                                  indicator={
-                                    <LoadingOutlined
-                                      style={{ fontSize: 25 }}
-                                      spin
-                                    />
-                                  }
-                                />
-                              )}
-                              {/* <Skeleton loading={signalLoading} active /> */}
-                            </Card>
-                          </Badge.Ribbon>
-                        ) : (
-                          <Card />
-                        )}
-                      </Col>
-                    ))}
-                    <Col flex={1}>
-                      <span
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          height: "100%",
-                        }}
-                      >
-                        <Button
-                          className={layoutStyles.start}
-                          onClick={fetchSignals}
-                        >
-                          Fetch the latest signals
-                        </Button>
-                      </span>
-                    </Col>
                     {/* use card loading state after signals req */}
                   </Row>
                 </div>
