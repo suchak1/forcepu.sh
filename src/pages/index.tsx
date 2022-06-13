@@ -9,13 +9,14 @@ import {
   Card,
   Row,
   Col,
-  Input,
+  // Input,
   Button,
   Badge,
   Modal,
   Skeleton,
   message,
 } from "antd";
+import { useWindowWidth } from "@wojtekmaj/react-hooks";
 import { G2, Line } from "@ant-design/charts";
 import { LoadingOutlined, CopyOutlined } from "@ant-design/icons";
 import styles from "./index.less";
@@ -57,6 +58,16 @@ const Page = () => {
     Fri: "#13A8A8",
     Sat: "#D87A16",
   };
+  const signalColors = {
+    BUY: "lime",
+    SELL: "red",
+    HODL: "#F7931A",
+  };
+
+  const signalEmojis = {
+    BUY: "🚀",
+    SELL: "💥",
+  };
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const HODL = "HODL";
   const hyperdrive = "hyperdrive";
@@ -64,6 +75,7 @@ const Page = () => {
     BTC: { data: [], stats: [] },
     USD: { data: [], stats: [] },
   });
+  const width = useWindowWidth();
   // (get utc date - 1 to 7 days before).reversed()
   // that should be default signal data w Asset: BTC and Signal: ?, and proper Date formatting
   // YYYY-MM-DD and Day formatting .slice(0, 3)
@@ -86,6 +98,7 @@ const Page = () => {
   const [loginLoading, setLoginLoading] = useState(false);
   const [showSignalCard, setShowSignalCard] = useState(false);
   const [signalCardData, setSignalCardData] = useState(defaultSignals[0]);
+  const [haveNewSignal, setHaveNewSignal] = useState(false);
   const loading = previewLoading || accountLoading || loginLoading;
   const [account, setAccount] = useState();
   const inBeta = loggedIn && account?.permissions?.in_beta;
@@ -134,13 +147,17 @@ const Page = () => {
         (datum) => (datum.Signal = Math.random() > 0.5 ? "BUY" : "SELL")
       );
       setSignalData(signalData);
+      setHaveNewSignal(true);
       setSignalLoading(false);
-    }, 2000);
+    }, 5000);
 
     // const url = `${getApiUrl({ localOverride: "prod" })}/signals`;
-    // fetch(url, { method: "GET" })
+    //   fetch(url, { method: "GET",
+    //   headers: { 'X-API-Key': account?.api_key },
+    //  })
     //   .then((response) => response.json())
     //   .then((data) => setSignalData(data))
+    //   .then(() => setHaveNewSignal(true))
     //   .catch((err) => console.error(err))
     //   .finally(() => setSignalLoading(false));
   };
@@ -226,7 +243,7 @@ const Page = () => {
         fillOpacity: 0.15,
       },
     },
-    animation: {
+    animation: !inBeta && {
       appear: {
         animation: "wave-in",
         duration: 4000,
@@ -275,19 +292,19 @@ const Page = () => {
     },
   ];
 
-  const Placeholder = () => (
-    <Col>
-      {new Array(7).fill(
-        <Card hoverable style={{ textAlign: "center" }}>
-          {new Date().getHours() +
-            ":" +
-            new Date().getMinutes() +
-            ":" +
-            new Date().getSeconds()}
-        </Card>
-      )}
-    </Col>
-  );
+  // const Placeholder = () => (
+  //   <Col>
+  //     {new Array(7).fill(
+  //       <Card hoverable style={{ textAlign: "center" }}>
+  //         {new Date().getHours() +
+  //           ":" +
+  //           new Date().getMinutes() +
+  //           ":" +
+  //           new Date().getSeconds()}
+  //       </Card>
+  //     )}
+  //   </Col>
+  // );
   // const Placeholder = () => {
   //   return (<Card> a </Card>)
   // }
@@ -296,22 +313,22 @@ const Page = () => {
   // OR
   // Card with onClick to Card in Modal
 
-  const APIKey = styled(Input.Password)`
-    input {
-      pointer-events: none;
-    }
+  // const APIKey = styled(Input.Password)`
+  //   input {
+  //     pointer-events: none;
+  //   }
 
-    .ant-input-affix-wrapper:hover,
-    .ant-input-affix-wrapper:active {
-      border-color: #52e5ff;
-      box-shadow: 0 0 5px #52e5ff;
-    }
+  //   .ant-input-affix-wrapper:hover,
+  //   .ant-input-affix-wrapper:active {
+  //     border-color: #52e5ff;
+  //     box-shadow: 0 0 5px #52e5ff;
+  //   }
 
-    .ant-input-affix-wrapper:focus,
-    .ant-input-affix-wrapper-focused {
-      border-color: #52e5ff;
-    }
-  `;
+  //   .ant-input-affix-wrapper:focus,
+  //   .ant-input-affix-wrapper-focused {
+  //     border-color: #52e5ff;
+  //   }
+  // `;
 
   // const StyledSwagger = styled(SwaggerUI)``;
   // .swagger-ui .opblock-description-wrapper {
@@ -322,38 +339,99 @@ const Page = () => {
   //   background: #52e5ff;
   // }
 
-  const copyToClipboard = (val: string, name: string) =>
-    navigator.clipboard.writeText(val).then(
-      () => message.success(`Copied ${name} to clipboard.`),
-      () => message.error(`Did not copy ${name} to clipboard`)
-    );
+  // const copyToClipboard = (val: string, name: string) =>
+  //   navigator.clipboard.writeText(val).then(
+  //     () => message.success(`Copied ${name} to clipboard.`),
+  //     () => message.error(`Did not copy ${name} to clipboard`)
+  //   );
 
   const betaTitlePrefix = "New Signal:";
   const betaTitle = (
     <div className={styles.content}>
       <div className={styles.betaContainer}>
         <div className={styles.text}>{betaTitlePrefix}</div>
-
+        {/* fix this actually show real signal after loading */}
         <div className={styles.list}>
           <div>
-            <span style={{ color: "lime" }} className={styles.betaItem}>
-              &nbsp;BUY
+            <span
+              style={{
+                color: haveNewSignal
+                  ? signalColors[signalData[signalData.length - 1].Signal]
+                  : "lime",
+              }}
+              className={styles.betaItem}
+            >
+              &nbsp;
+              {haveNewSignal ? signalData[signalData.length - 1].Signal : "BUY"}
             </span>
-            &nbsp;&nbsp;&nbsp;?
+            {haveNewSignal && width > 390 && (
+              <>
+                {signalData[signalData.length - 1].Signal === "BUY" && (
+                  <span>&nbsp;</span>
+                )}
+                <span>
+                  &nbsp;
+                  {signalEmojis[signalData[signalData.length - 1].Signal]}
+                </span>
+              </>
+            )}
+            {!haveNewSignal && <span>&nbsp;&nbsp;&nbsp;?</span>}
           </div>
           <div>
             <span style={{ opacity: 0 }}>{betaTitlePrefix}</span>
-            <span style={{ color: "#F7931A" }} className={styles.betaItem}>
-              &nbsp;HODL
+            <span
+              style={{
+                color: haveNewSignal
+                  ? signalColors[signalData[signalData.length - 1].Signal]
+                  : "#F7931A",
+              }}
+              className={styles.betaItem}
+            >
+              &nbsp;
+              {haveNewSignal
+                ? signalData[signalData.length - 1].Signal
+                : "HODL"}
             </span>
-            &nbsp;?
+            {haveNewSignal && width > 390 && (
+              <>
+                {signalData[signalData.length - 1].Signal === "BUY" && (
+                  <span>&nbsp;</span>
+                )}
+                <span>
+                  &nbsp;
+                  {signalEmojis[signalData[signalData.length - 1].Signal]}
+                </span>
+              </>
+            )}
+            {!haveNewSignal && <span>&nbsp;?</span>}
           </div>
           <div>
             <span style={{ opacity: 0 }}>{betaTitlePrefix}</span>
-            <span style={{ color: "red" }} className={styles.betaItem}>
-              &nbsp;SELL
+            <span
+              style={{
+                color: haveNewSignal
+                  ? signalColors[signalData[signalData.length - 1].Signal]
+                  : "red",
+              }}
+              className={styles.betaItem}
+            >
+              &nbsp;
+              {haveNewSignal
+                ? signalData[signalData.length - 1].Signal
+                : "SELL"}
             </span>
-            &nbsp;?
+            {haveNewSignal && width > 390 && (
+              <>
+                {signalData[signalData.length - 1].Signal === "BUY" && (
+                  <span>&nbsp;</span>
+                )}
+                <span>
+                  &nbsp;
+                  {signalEmojis[signalData[signalData.length - 1].Signal]}
+                </span>
+              </>
+            )}
+            {!haveNewSignal && <span>&nbsp;?</span>}
           </div>
         </div>
       </div>
@@ -394,6 +472,7 @@ const Page = () => {
               {
                 <Button
                   loading={signalLoading}
+                  style={{ width: "100%" }}
                   className={layoutStyles.start}
                   onClick={fetchSignals}
                 >
@@ -475,7 +554,11 @@ const Page = () => {
                         style={{
                           fontFamily: "monospace",
                           color:
-                            signalCardData.Signal === "BUY" ? "lime" : "red",
+                            signalCardData.Signal === "BUY"
+                              ? "lime"
+                              : signalCardData.Signal === "SELL"
+                              ? "red"
+                              : "inherit",
                         }}
                       >
                         {signalCardData.Signal}
@@ -546,7 +629,14 @@ const Page = () => {
                             // title={datum.Day.toUpperCase()}
                           >
                             {signalLoading && (
-                              <Skeleton loading active />
+                              <Skeleton
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                                loading
+                                active
+                              />
                               // <Spin
                               //   indicator={
                               //     <LoadingOutlined
