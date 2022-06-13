@@ -11,6 +11,7 @@ import {
   Col,
   Input,
   Button,
+  Badge,
   message,
 } from "antd";
 import { G2, Line } from "@ant-design/charts";
@@ -392,17 +393,34 @@ const Page = () => {
           <div className={styles.child}>
             {inBeta ? (
               <>
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                  <Row>
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Row style={{ width: "100%" }}>
                     {/* <Card></Card> */}
                     {/* use Row of cards that expand to model when clicked */}
-                    {signalData.map((datum) => (
-                      <Col>
-                        <Card
-                        // title={datum.Day}
-                        >
-                          {/* {`₿ Signal: ${datum.Signal}`} */}
-                        </Card>
+                    {signalData.map((datum, idx) => (
+                      <Col flex={1}>
+                        <Badge.Ribbon text={datum.Day.toUpperCase()}>
+                          <Card
+                          // title={datum.Day.toUpperCase()}
+                          >
+                            <span
+                              style={{
+                                fontFamily: "monospace",
+                                display: "flex",
+                                justifyContent: "center",
+                              }}
+                            >
+                              {idx < 3 ? "SELL" : "BUY"}
+                              {/* {`₿ Signal: ${datum.Signal}`} */}
+                            </span>
+                          </Card>
+                        </Badge.Ribbon>
                       </Col>
                     ))}
                     {/* use card loading state after signals req */}
