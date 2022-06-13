@@ -218,6 +218,7 @@ const Layout = ({ children }: LayoutProps) => {
               <Modal
                 visible={showModal}
                 closable={false}
+                centered
                 onCancel={() => setShowLogin(false)}
               >
                 <AmplifyProvider theme={theme} colorMode="dark">

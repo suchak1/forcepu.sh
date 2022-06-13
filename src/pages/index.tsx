@@ -456,7 +456,7 @@ const Page = () => {
       <Title>
         {inBeta ? (
           <div className={styles.parent}>
-            <div className={styles.child} style={{ marginBottom: "0px" }}>
+            <div className={styles.child} style={{ marginBottom: "10px" }}>
               {betaTitle}
             </div>
             <div
@@ -476,7 +476,7 @@ const Page = () => {
                   className={layoutStyles.start}
                   onClick={fetchSignals}
                 >
-                  Fetch the latest signals
+                  Get the latest signals
                 </Button>
               }
             </div>
@@ -489,6 +489,8 @@ const Page = () => {
         {/* same if consecutive sell, then label SELL/HODL with red/orange diagonal split */}
         {/* have "Fetch latest signals" or "Get latest signals" button */}
         {/* on the right of latest signal title or  below latest signals title but above squares row*/}
+        {/* #0C2226 background color of chart - cyan*/}
+        {/* #2C2246 background color of chart - magenta*/}
       </Title>
       <span
         style={{
@@ -539,6 +541,7 @@ const Page = () => {
                   visible={showSignalCard}
                   closable={false}
                   onCancel={() => setShowSignalCard(false)}
+                  centered
                 >
                   <Card
                     headStyle={{
@@ -617,11 +620,13 @@ const Page = () => {
                               background:
                                 datum.Signal === "BUY" && !signalLoading
                                   ? // ? "lime"
-                                    "#52e5ff"
-                                  : datum.Signal === "SELL" && !signalLoading
+                                    "#13a8a8"
+                                  : // ? "#52e5ff"
+                                  datum.Signal === "SELL" && !signalLoading
                                   ? // ? "red"
-                                    "magenta"
-                                  : "inherit",
+                                    "#cb2b83"
+                                  : // ? "magenta"
+                                    "inherit",
                               display: "flex",
                               justifyContent: "center",
                               height: "100%",
