@@ -7,6 +7,7 @@ import {
   Switch,
   Alert,
   Card,
+  Row,
   Col,
   Input,
   Button,
@@ -17,7 +18,7 @@ import { LoadingOutlined, CopyOutlined } from "@ant-design/icons";
 import styles from "./index.less";
 import "./index.less";
 import swaggerSpec from "../api/spec/swagger.json";
-import { getApiUrl, useLoginLoading } from "@/utils";
+import { getApiUrl, useLoginLoading, getDateRange, addDays } from "@/utils";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 const { Title } = Typography;
 import styled from "styled-components";
@@ -41,6 +42,21 @@ const Page = () => {
     BTC: { data: [], stats: [] },
     USD: { data: [], stats: [] },
   });
+  // (get utc date - 1 to 7 days before).reversed()
+  // that should be default signal data w Asset: BTC and Signal: ?, and proper Date formatting
+  // YYYY-MM-DD and Day formatting .slice(0, 3)
+  const numDaysInAWeek = 7;
+  const signalDates = getDateRange(
+    addDays(new Date(), -numDaysInAWeek),
+    numDaysInAWeek - 1
+  );
+  const defaultSignals = signalDates.map((date) => ({
+    Date: date.toISOString().slice(0, 10),
+    Day: date.toDateString().slice(0, 3),
+    Signal: "?",
+    Asset: "BTC",
+  }));
+  const [signalData, setSignalData] = useState(defaultSignals);
   const [toggle, setToggle] = useState(true);
   const [previewLoading, setPreviewLoading] = useState(true);
   const [accountLoading, setAccountLoading] = useState(false);
@@ -376,6 +392,22 @@ const Page = () => {
           <div className={styles.child}>
             {inBeta ? (
               <>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <Row>
+                    {/* <Card></Card> */}
+                    {/* use Row of cards that expand to model when clicked */}
+                    {signalData.map((datum) => (
+                      <Col>
+                        <Card
+                        // title={datum.Day}
+                        >
+                          {/* {`₿ Signal: ${datum.Signal}`} */}
+                        </Card>
+                      </Col>
+                    ))}
+                    {/* use card loading state after signals req */}
+                  </Row>
+                </div>
                 <Input.Group>
                   <span style={{ display: "flex" }}>
                     <APIKey
