@@ -281,20 +281,25 @@ const Page = () => {
         <div className={styles.text}>{betaTitlePrefix}</div>
 
         <div className={styles.list}>
-          <div className={styles.betaItem}>
-            <span style={{ color: "lime" }}>&nbsp;BUY</span>
+          <div>
+            <span style={{ color: "lime" }} className={styles.betaItem}>
+              &nbsp;BUY
+            </span>
+            &nbsp;&nbsp;&nbsp;?
           </div>
           <div>
             <span style={{ opacity: 0 }}>{betaTitlePrefix}</span>
             <span style={{ color: "#F7931A" }} className={styles.betaItem}>
               &nbsp;HODL
             </span>
+            &nbsp;?
           </div>
           <div>
             <span style={{ opacity: 0 }}>{betaTitlePrefix}</span>
             <span style={{ color: "red" }} className={styles.betaItem}>
               &nbsp;SELL
             </span>
+            &nbsp;?
           </div>
         </div>
       </div>
