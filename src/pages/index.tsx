@@ -84,11 +84,6 @@ const Page = () => {
     BTC: { data: [], stats: [] },
     USD: { data: [], stats: [] },
   });
-  // const width = useWindowWidth();
-  const width = 391;
-  // (get utc date - 1 to 7 days before).reversed()
-  // that should be default signal data w Asset: BTC and Signal: ?, and proper Date formatting
-  // YYYY-MM-DD and Day formatting .slice(0, 3)
   const numDaysInAWeek = 7;
   const signalDates = getDateRange(
     addDays(new Date(), -numDaysInAWeek),
@@ -109,7 +104,8 @@ const Page = () => {
   const [showSignalCard, setShowSignalCard] = useState(false);
   const [signalCardData, setSignalCardData] = useState(defaultSignals[0]);
   const [haveNewSignal, setHaveNewSignal] = useState(false);
-  const loading = previewLoading || accountLoading || loginLoading;
+  const loading =
+    previewLoading || accountLoading || loginLoading || signalLoading;
   const [account, setAccount] = useState();
   const inBeta = loggedIn && account?.permissions?.in_beta;
   const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
@@ -360,7 +356,6 @@ const Page = () => {
     <div className={styles.content}>
       <div className={styles.betaContainer}>
         <div className={styles.text}>{betaTitlePrefix}</div>
-        {/* fix this actually show real signal after loading */}
         <div className={styles.list}>
           <div>
             <span style={{ fontSize: "30px" }}>
@@ -377,7 +372,7 @@ const Page = () => {
                   ? signalData[signalData.length - 1].Signal
                   : "BUY"}
               </span>
-              {haveNewSignal && width > 390 && (
+              {haveNewSignal && (
                 <>
                   {signalData[signalData.length - 1].Signal === "BUY" && (
                     <span>&nbsp;</span>
@@ -407,7 +402,7 @@ const Page = () => {
                   ? signalData[signalData.length - 1].Signal
                   : "HODL"}
               </span>
-              {haveNewSignal && width > 390 && (
+              {haveNewSignal && (
                 <>
                   {signalData[signalData.length - 1].Signal === "BUY" && (
                     <span>&nbsp;</span>
@@ -437,7 +432,7 @@ const Page = () => {
                   ? signalData[signalData.length - 1].Signal
                   : "SELL"}
               </span>
-              {haveNewSignal && width > 390 && (
+              {haveNewSignal && (
                 <>
                   {signalData[signalData.length - 1].Signal === "BUY" && (
                     <span>&nbsp;</span>
@@ -471,70 +466,73 @@ const Page = () => {
           style={{ marginBottom: "12px" }}
         />
       )}
-      <Title>
-        {inBeta ? (
-          <div className={styles.parent}>
-            <div className={styles.child} style={{ marginBottom: "10px" }}>
-              {betaTitle}
-            </div>
-            <div
-              className={styles.child}
-              style={{
-                marginBottom: "0px",
-                display: "flex",
-                justifyContent: "flex-end",
-                alignItems: "center",
-                height: "45px",
-              }}
-            >
-              {
-                <Button
-                  loading={signalLoading}
-                  style={{ width: "100%" }}
-                  className={layoutStyles.start}
-                  onClick={fetchSignals}
+      {!loading && (
+        <>
+          <Title>
+            {inBeta ? (
+              <div className={styles.parent}>
+                <div className={styles.child} style={{ marginBottom: "10px" }}>
+                  {betaTitle}
+                </div>
+                <div
+                  className={styles.child}
+                  style={{
+                    marginBottom: "0px",
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                    height: "45px",
+                  }}
                 >
-                  Get the latest signals
-                </Button>
-              }
-            </div>
-          </div>
-        ) : (
-          "Leveraging AutoML to beat BTC"
-        )}
-        {/* use latest signal from real data after api endpoint is called */}
-        {/* if consecutive buy, then label BUY/HODL with green/orange diagonal split */}
-        {/* same if consecutive sell, then label SELL/HODL with red/orange diagonal split */}
-        {/* have "Fetch latest signals" or "Get latest signals" button */}
-        {/* on the right of latest signal title or  below latest signals title but above squares row*/}
-        {/* #0C2226 background color of chart - cyan*/}
-        {/* #2C2246 background color of chart - magenta*/}
-      </Title>
-      <span
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          margin: "-12px 0px 12px 0px",
-        }}
-      >
-        {!inBeta && (
-          <>
-            <Title level={5}>
-              a momentum trading strategy using{" "}
-              <a href="https://github.com/suchak1/hyperdrive">
-                <i style={{ color: "#52e5ff" }}>{hyperdrive}</i>
-              </a>
-            </Title>
-            <Switch
-              checkedChildren="BTC (₿)"
-              unCheckedChildren="USD ($)"
-              defaultChecked
-              onChange={(checked) => setToggle(checked)}
-            />
-          </>
-        )}
-      </span>
+                  {
+                    <Button
+                      loading={signalLoading}
+                      style={{ width: "100%" }}
+                      className={layoutStyles.start}
+                      onClick={fetchSignals}
+                    >
+                      Get the latest signals
+                    </Button>
+                  }
+                </div>
+              </div>
+            ) : (
+              "Leveraging AutoML to beat BTC"
+            )}
+            {/* use latest signal from real data after api endpoint is called */}
+            {/* if consecutive buy, then label BUY/HODL with green/orange diagonal split */}
+            {/* same if consecutive sell, then label SELL/HODL with red/orange diagonal split */}
+            {/* on the right of latest signal title or  below latest signals title but above squares row*/}
+            {/* #0C2226 background color of chart - cyan*/}
+            {/* #2C2246 background color of chart - magenta*/}
+          </Title>
+          <span
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              margin: "-12px 0px 12px 0px",
+            }}
+          >
+            {!inBeta && (
+              <>
+                <Title level={5}>
+                  a momentum trading strategy using{" "}
+                  <a href="https://github.com/suchak1/hyperdrive">
+                    <i style={{ color: "#52e5ff" }}>{hyperdrive}</i>
+                  </a>
+                </Title>
+                <Switch
+                  checkedChildren="BTC (₿)"
+                  unCheckedChildren="USD ($)"
+                  defaultChecked
+                  onChange={(checked) => setToggle(checked)}
+                />
+              </>
+            )}
+          </span>
+        </>
+      )}
       {loading ? (
         <div
           style={{
@@ -548,10 +546,11 @@ const Page = () => {
         </div>
       ) : (
         <div className={styles.parent}>
-          <div className={styles.child}>
-            {/* fix this condition */}
-            {(inBeta && null) || (!loading && <Line {...config} />)}
-          </div>
+          {!inBeta && !loading && (
+            <div className={styles.child}>
+              <Line {...config} />
+            </div>
+          )}
           <div style={{ height: "400px" }} className={styles.child}>
             {inBeta ? (
               <>
