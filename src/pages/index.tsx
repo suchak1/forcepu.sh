@@ -147,25 +147,24 @@ const Page = () => {
   useEffect(useLoginLoading(setLoginLoading));
 
   const fetchSignals = () => {
-    setSignalLoading(true);
-    setTimeout(() => {
-      signalData.forEach(
-        (datum) => (datum.Signal = Math.random() > 0.5 ? "BUY" : "SELL")
-      );
-      setSignalData(signalData);
-      setHaveNewSignal(true);
-      setSignalLoading(false);
-    }, 5000);
+    // setSignalLoading(true);
+    // setTimeout(() => {
+    //   signalData.forEach(
+    //     (datum) => (datum.Signal = Math.random() > 0.5 ? "BUY" : "SELL")
+    //   );
+    //   setSignalData(signalData);
+    //   setHaveNewSignal(true);
+    //   setSignalLoading(false);
+    // }, 5000);
 
-    // const url = `${getApiUrl({ localOverride: "prod" })}/signals`;
-    //   fetch(url, { method: "GET",
-    //   headers: { 'X-API-Key': account?.api_key },
-    //  })
-    //   .then((response) => response.json())
-    //   .then((data) => setSignalData(data))
-    //   .then(() => setHaveNewSignal(true))
-    //   .catch((err) => console.error(err))
-    //   .finally(() => setSignalLoading(false));
+    const url = `${getApiUrl({ localOverride: "prod" })}/signals`;
+    fetch(url, { method: "GET", headers: { "X-API-Key": account?.api_key } })
+      .then((response) => response.json())
+      .then((data) => setSignalData(data))
+      .then(() => setHaveNewSignal(true))
+      .catch((err) => console.error(err))
+      //   use message if get a 403 and display message as error
+      .finally(() => setSignalLoading(false));
   };
   G2.registerShape("point", "breath-point", {
     draw(cfg, container) {
