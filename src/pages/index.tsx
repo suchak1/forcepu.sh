@@ -159,7 +159,21 @@ const Page = () => {
 
     const url = `${getApiUrl({ localOverride: "prod" })}/signals`;
     fetch(url, { method: "GET", headers: { "X-API-Key": account?.api_key } })
-      .then((response) => response.json())
+      // .then((response) => {
+      //   response.status = 403;
+      //   response.json = () => (
+      //     {message: 'You have reached your quota of 5 requests / 1 day(s).'}
+      //   );
+      //   return response;
+      // })
+      .then((response) => [response.status, response.json()])
+      .then(([statusCode, data]) => {
+        if (statusCode === 403) {
+          message.error(data["message"], 10);
+          throw new Error(data["message"]);
+        }
+        return data;
+      })
       .then((data) => setSignalData(data))
       .then(() => setHaveNewSignal(true))
       .catch((err) => console.error(err))
