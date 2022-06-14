@@ -147,7 +147,7 @@ const Page = () => {
   useEffect(useLoginLoading(setLoginLoading));
 
   const fetchSignals = () => {
-    // setSignalLoading(true);
+    setSignalLoading(true);
     // setTimeout(() => {
     //   signalData.forEach(
     //     (datum) => (datum.Signal = Math.random() > 0.5 ? "BUY" : "SELL")
