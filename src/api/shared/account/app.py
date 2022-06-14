@@ -1,6 +1,6 @@
 import json
 from models.user import UserModel
-
+from shared.utils import handle_options
 
 def get_account(event, _):
     if event['httpMethod'].upper() == 'OPTIONS':
@@ -10,17 +10,6 @@ def get_account(event, _):
 
     return response
 
-
-def handle_options():
-    return {
-        "statusCode": 200,
-        "headers": {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Credentials": "true",
-            "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
-            "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-        }
-    }
 
 
 def verify_user(claims):

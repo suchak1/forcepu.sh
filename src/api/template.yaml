@@ -144,6 +144,12 @@ Resources:
             Path: /signals
             Method: get
             RestApiId: !Ref ApiGatewayApi
+        Options:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /signals
+            Method: options
+            RestApiId: !Ref ApiGatewayApi
     Metadata:
       Dockerfile: signals/Dockerfile
       DockerContext: ./shared

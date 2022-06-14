@@ -3,10 +3,19 @@ import json
 import boto3
 from datetime import datetime, timedelta, timezone
 from models.user import query_by_api_key, UserModel
+from shared.utils import handle_options
 
 s3 = boto3.client('s3')
 
 headers = {"Access-Control-Allow-Origin": "*"}
+
+def get_signals(event, _):
+    if event['httpMethod'].upper() == 'OPTIONS':
+        response = handle_options()
+    else:
+        response = handle_get(event)
+
+    return response
 
 
 def unauthorized_error(message):
@@ -19,7 +28,7 @@ def unauthorized_error(message):
     }
 
 
-def get_signals(event, _):
+def handle_get(event):
     # first get user by api key
     api_key = event['headers']['x-api-key']
     user = query_by_api_key(api_key)[0]
