@@ -74,7 +74,7 @@ Resources:
             RestApiId: !Ref ApiGatewayApi
     Metadata:
       Dockerfile: account/Dockerfile
-      DockerContext: ./shared
+      DockerContext: ./
       DockerTag: python3.8-v1
   ExerciseLogFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -152,7 +152,7 @@ Resources:
             RestApiId: !Ref ApiGatewayApi
     Metadata:
       Dockerfile: signals/Dockerfile
-      DockerContext: ./shared
+      DockerContext: ./
       DockerTag: python3.8-v1
   UsersTable:
     Type: AWS::DynamoDB::Table

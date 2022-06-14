@@ -2,7 +2,7 @@ import os
 import json
 import boto3
 from datetime import datetime, timedelta, timezone
-from models.user import query_by_api_key, UserModel
+from shared.models import query_by_api_key, UserModel
 from shared.utils import handle_options
 
 s3 = boto3.client('s3')

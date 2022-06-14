@@ -47,6 +47,8 @@ build
 amplify/team-provider-info.json
 amplify/backend/auth/*/*.json
 
+# Swagger
+swagger.json
 
 
 # local

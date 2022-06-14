@@ -1,5 +1,5 @@
 import json
-from models.user import UserModel
+from shared.models import UserModel
 from shared.utils import handle_options
 
 def get_account(event, _):
