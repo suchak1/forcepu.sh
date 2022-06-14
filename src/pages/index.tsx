@@ -487,11 +487,10 @@ const Page = () => {
                   {
                     <Button
                       loading={signalLoading}
-                      style={{ width: "100%" }}
-                      className={layoutStyles.start}
+                      className={`${layoutStyles.start} ${styles.signals}`}
                       onClick={fetchSignals}
                     >
-                      Get the latest signals
+                      Fetch the latest signals
                     </Button>
                   }
                 </div>
