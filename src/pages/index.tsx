@@ -9,12 +9,10 @@ import {
   Card,
   Row,
   Col,
-  // Input,
   Button,
   Badge,
   Modal,
   Skeleton,
-  message,
   notification,
 } from "antd";
 import { G2, Line } from "@ant-design/charts";
@@ -162,13 +160,19 @@ const Page = () => {
       .then((response) => response.json())
       .then((data) => {
         if ("message" in data) {
+          const { message } = data;
+          const pattern = /^(.[^\d]*)(.*)$/;
+          const match = message.match(pattern);
           setQuotaReached(true);
-          message.error(data.message, 10);
           notification.error({
-            // placement: "top",
             duration: 10,
             message: "Quota Reached",
-            description: data.message,
+            description: (
+              <>
+                <div>{match[1]}</div>
+                <div>{match[2]}</div>
+              </>
+            ),
           });
           setTimeout(() => {
             setQuotaReached(false);
