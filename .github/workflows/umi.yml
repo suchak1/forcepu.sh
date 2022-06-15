@@ -41,7 +41,7 @@ jobs:
         run: touch src/aws-exports.js
 
       - name: Build app [dev]
-        run: npm run build-dev:umi && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV
+        run: npm run build-dev:umi && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV && echo "CF_DISTRO_ID=${CF_DISTRO_ID}" >> $GITHUB_ENV
         env:
           AWS_S3_BUCKET: ${{ secrets.FORCEPUSH_DEV_BUCKET }}
           UMI_APP_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
@@ -49,10 +49,11 @@ jobs:
           UMI_APP_USER_POOL_ID: ${{ secrets.DEV_USER_POOL_ID }}
           UMI_APP_WEB_CLIENT_ID: ${{ secrets.DEV_WEB_CLIENT_ID }}
           UMI_APP_OAUTH_DOMAIN: ${{ secrets.DEV_OAUTH_DOMAIN }}
+          CF_DISTRO_ID: ${{ secrets.DEV_CF_DISTRO_ID }}
         if: ${{ github.ref != 'refs/heads/master' }}
 
       - name: Build app [prod]
-        run: npm run build:umi && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV
+        run: npm run build:umi && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV && echo "CF_DISTRO_ID=${CF_DISTRO_ID}" >> $GITHUB_ENV
         env:
           AWS_S3_BUCKET: ${{ secrets.FORCEPUSH_BUCKET }}
           UMI_APP_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
@@ -60,6 +61,7 @@ jobs:
           UMI_APP_USER_POOL_ID: ${{ secrets.USER_POOL_ID }}
           UMI_APP_WEB_CLIENT_ID: ${{ secrets.WEB_CLIENT_ID }}
           UMI_APP_OAUTH_DOMAIN: ${{ secrets.OAUTH_DOMAIN }}
+          CF_DISTRO_ID: ${{ secrets.CF_DISTRO_ID }}
         if: ${{ github.ref == 'refs/heads/master' }}
 
       - name: Deploy umi
@@ -70,3 +72,10 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           SOURCE_DIR: "dist"
+
+      - name: Invalidate cache
+        run: aws cloudfront create-invalidation --distribution-id "${CF_DISTRO_ID}" --paths "/*"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_EC2_METADATA_DISABLED: true

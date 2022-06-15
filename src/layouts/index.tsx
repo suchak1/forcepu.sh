@@ -208,11 +208,17 @@ const Layout = ({ children }: LayoutProps) => {
                 </Button>
               ) : (
                 // maybe "Get signals" or "Get started"
-                <Button onClick={() => setShowLogin(true)}>Get started</Button>
+                <Button
+                  className={overrides.start}
+                  onClick={() => setShowLogin(true)}
+                >
+                  Get started
+                </Button>
               )}
               <Modal
                 visible={showModal}
                 closable={false}
+                centered
                 onCancel={() => setShowLogin(false)}
               >
                 <AmplifyProvider theme={theme} colorMode="dark">

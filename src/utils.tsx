@@ -32,7 +32,7 @@ export const getApiUrl = ({ localOverride } = { localOverride: "" }) => {
 };
 
 export const getDateRange = (
-  start: string | number | Date,
+  start: string | Date,
   end: string | number | Date,
   steps = 1
 ) => {
@@ -52,6 +52,12 @@ export const getDateRange = (
   }
 
   return range;
+};
+
+export const addDays = (date: string | Date, steps = 0) => {
+  const newDate = new Date(date);
+  newDate.setUTCDate(newDate.getUTCDate() + steps);
+  return newDate;
 };
 
 export const convertShortISO = (dateString: string) => {
