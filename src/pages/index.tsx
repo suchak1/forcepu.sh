@@ -104,6 +104,7 @@ const Page = () => {
   const [showSignalCard, setShowSignalCard] = useState(false);
   const [signalCardData, setSignalCardData] = useState(defaultSignals[0]);
   const [haveNewSignal, setHaveNewSignal] = useState(false);
+  const [quotaReached, setQuotaReached] = useState(false);
   const loading = previewLoading || accountLoading || loginLoading;
   const [account, setAccount] = useState();
   const inBeta = loggedIn && account?.permissions?.in_beta;
@@ -168,7 +169,11 @@ const Page = () => {
       .then((response) => response.json())
       .then((data) => {
         if ("message" in data) {
+          setQuotaReached(true);
           message.error(data.message, 10);
+          setTimeout(() => {
+            setQuotaReached(false);
+          }, 10000);
           throw new Error(data.message);
         }
         return data;
@@ -510,8 +515,11 @@ const Page = () => {
                 >
                   {
                     <Button
+                      disabled={quotaReached}
                       loading={signalLoading}
-                      className={`${layoutStyles.start} ${styles.signals}`}
+                      className={`${layoutStyles.start} ${styles.signals} ${
+                        quotaReached && styles.disabled
+                      }`}
                       onClick={fetchSignals}
                     >
                       Fetch the latest signals
