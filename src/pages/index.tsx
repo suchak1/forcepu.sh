@@ -15,14 +15,11 @@ import {
   Modal,
   Skeleton,
   message,
+  notification,
 } from "antd";
-// import { useWindowWidth } from "@wojtekmaj/react-hooks";
 import { G2, Line } from "@ant-design/charts";
 import {
   LoadingOutlined,
-  CopyOutlined,
-  DownOutlined,
-  UpOutlined,
   CaretDownFilled,
   CaretUpFilled,
   QuestionOutlined,
@@ -42,12 +39,6 @@ const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 swaggerSpec.servers[0].url = getApiUrl();
 
 const Page = () => {
-  // console.log(swaggerSpec);
-  // fetch(swaggerSpec)
-  //   .then((response) => response.text())
-  //   .then((textContent) => {
-  //     console.log(textContent);
-  //   });
   const ribbonColors = {
     Sun: "red",
     Mon: "yellow",
@@ -118,13 +109,15 @@ const Page = () => {
     return `$ ${v / 1e6}M`;
   };
   useEffect(() => {
+    // find a way to not load this for in_beta
+    // simple if !inBeta or checking accountLoading and loginLoading doesn't work
     const url = `${getApiUrl({ localOverride: "prod" })}/preview`;
     fetch(url, { method: "GET" })
       .then((response) => response.json())
       .then((data) => setPreviewData(data))
       .catch((err) => console.error(err))
       .finally(() => setPreviewLoading(false));
-  }, []);
+  }, [inBeta]);
 
   useEffect(() => {
     if (loggedIn) {
@@ -171,6 +164,12 @@ const Page = () => {
         if ("message" in data) {
           setQuotaReached(true);
           message.error(data.message, 10);
+          notification.error({
+            // placement: "top",
+            duration: 10,
+            message: "Quota Reached",
+            description: data.message,
+          });
           setTimeout(() => {
             setQuotaReached(false);
           }, 10000);
