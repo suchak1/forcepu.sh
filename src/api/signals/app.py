@@ -29,59 +29,54 @@ def unauthorized_error(message):
 
 
 def handle_get(event):
-    # uncomment this block
-    # # first get user by api key
-    # api_key = event['headers']['x-api-key']
-    # user = query_by_api_key(api_key)[0]
+    # first get user by api key
+    api_key = event['headers']['x-api-key']
+    user = query_by_api_key(api_key)[0]
 
-    # # if in beta:
-    # if user.permissions.in_beta:
-    #     #   hit verify_api_key endpoint
-    #     #   if not verified (error response):
-    #     #       add key to usage plan
-    #     pass
-    # # if not in_beta:
-    # else:
-    #     #   hit verify_api_key endpoint (dummy endpoint connected to usage plan, pass headers on from this fx)
-    #     #   AND hit stripe subscription endpoint
-    #     #       if verified (simple ok response) but not active sub:
-    #     #           remove key from usage plan
-    #     #           error out as 403, inactive subscription / renew sub
-    #     #       elif not verified (error response) but active sub:
-    #     #           add key to usage plan
-    #     #       elif not verified and not active:
-    #     #           error out as 403, This endpoint is for subscribers only.
-    #     return unauthorized_error('This endpoint is for subscribers only.')
-    # # proceed
+    # if in beta:
+    if user.permissions.in_beta:
+        #   hit verify_api_key endpoint
+        #   if not verified (error response):
+        #       add key to usage plan
+        pass
+    # if not in_beta:
+    else:
+        #   hit verify_api_key endpoint (dummy endpoint connected to usage plan, pass headers on from this fx)
+        #   AND hit stripe subscription endpoint
+        #       if verified (simple ok response) but not active sub:
+        #           remove key from usage plan
+        #           error out as 403, inactive subscription / renew sub
+        #       elif not verified (error response) but active sub:
+        #           add key to usage plan
+        #       elif not verified and not active:
+        #           error out as 403, This endpoint is for subscribers only.
+        return unauthorized_error('This endpoint is for subscribers only.')
+    # proceed
 
-    # # Notes: instead of using usage plan,
-    # # store list of last 5 access times
-    # access_queue = user.access_queue
-    # max_accesses = 5
-    # duration_days = 1
-    # reset_duration = timedelta(days=duration_days)
-    # now = datetime.now(timezone.utc)
-    # quota_reached = False
+    # Notes: instead of using usage plan,
+    # store list of last 5 access times
+    access_queue = user.access_queue
+    max_accesses = 5
+    duration_days = 1
+    reset_duration = timedelta(days=duration_days)
+    now = datetime.now(timezone.utc)
+    quota_reached = False
 
-    # if len(user.access_queue) >= max_accesses:
-    #     if now - access_queue[-max_accesses] >= reset_duration:
-    #         access_queue = access_queue[-max_accesses + 1:] + [now]
-    #     else:
-    #         access_queue = access_queue[-max_accesses:]
-    #         quota_reached = True
-    # else:
-    #     access_queue += [now]
+    if len(user.access_queue) >= max_accesses:
+        if now - access_queue[-max_accesses] >= reset_duration:
+            access_queue = access_queue[-max_accesses + 1:] + [now]
+        else:
+            access_queue = access_queue[-max_accesses:]
+            quota_reached = True
+    else:
+        access_queue += [now]
 
-    # # update user model in db with new access_queue
-    # user.update(actions=[UserModel.access_queue.set(access_queue)])
-    # if quota_reached:
-    #     return unauthorized_error(
-    #         f'You have reached your quota of {max_accesses} requests / {duration_days} day(s).'
-    #     )
-    # delete this test line
-    return unauthorized_error(
-        f'You have reached your quota of 5 requests / 1 day(s).'
-    )
+    # update user model in db with new access_queue
+    user.update(actions=[UserModel.access_queue.set(access_queue)])
+    if quota_reached:
+        return unauthorized_error(
+            f'You have reached your quota of {max_accesses} requests / {duration_days} day(s).'
+        )
 
     obj = s3.get_object(
         Bucket=os.environ['S3_BUCKET'], Key='models/latest/signals.csv')

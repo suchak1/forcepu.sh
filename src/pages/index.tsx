@@ -119,19 +119,19 @@ const Page = () => {
 
   useEffect(() => {
     if (loggedIn) {
-      // setAccountLoading(true);
-      // const { idToken } = loggedIn.signInUserSession;
-      // const url = `${getApiUrl()}/account`;
+      setAccountLoading(true);
+      const { idToken } = loggedIn.signInUserSession;
+      const url = `${getApiUrl()}/account`;
       // remove this after debugging
-      setAccount({ api_key: "a".repeat(86), permissions: { in_beta: true } });
-      // fetch(url, {
-      //   method: "GET",
-      //   headers: { Authorization: idToken.jwtToken },
-      // })
-      //   .then((response) => response.json())
-      //   .then((data) => setAccount(data))
-      //   .catch((err) => console.error(err))
-      //   .finally(() => setAccountLoading(false));
+      // setAccount({ api_key: "a".repeat(86), permissions: { in_beta: true } });
+      fetch(url, {
+        method: "GET",
+        headers: { Authorization: idToken.jwtToken },
+      })
+        .then((response) => response.json())
+        .then((data) => setAccount(data))
+        .catch((err) => console.error(err))
+        .finally(() => setAccountLoading(false));
     }
   }, [loggedIn]);
 
@@ -139,24 +139,8 @@ const Page = () => {
 
   const fetchSignals = () => {
     setSignalLoading(true);
-    // setTimeout(() => {
-    //   signalData.forEach(
-    //     (datum) => (datum.Signal = Math.random() > 0.5 ? "BUY" : "SELL")
-    //   );
-    //   setSignalData(signalData);
-    //   setHaveNewSignal(true);
-    //   setSignalLoading(false);
-    // }, 5000);
-
     const url = `${getApiUrl()}/signals`;
     fetch(url, { method: "GET", headers: { "X-API-Key": account?.api_key } })
-      // .then((response) => {
-      //   response.status = 403;
-      //   response.json = () => (
-      //     {message: 'You have reached your quota of 5 requests / 1 day(s).'}
-      //   );
-      //   return response;
-      // })
       .then((response) => response.json())
       .then((data) => {
         if ("message" in data) {
@@ -181,22 +165,9 @@ const Page = () => {
         }
         return data;
       })
-      // .then((response) => [response.status, response.json()])
-      // .then(([status, data]) => {
-      //   // const data = response.json();
-      //   console.log(data);
-      //   if (status === 403) {
-      //     message.error(data.message, 10);
-      //     // message.error(data["message"], 10);
-      //     throw new Error(data["message"]);
-      //   }
-      //   setSignalData(data);
-      //   setHaveNewSignal(true);
-      // })
       .then((data) => setSignalData(data))
       .then(() => setHaveNewSignal(true))
       .catch((err) => console.error(err))
-      //   use message if get a 403 and display message as error
       .finally(() => setSignalLoading(false));
   };
   G2.registerShape("point", "breath-point", {
@@ -329,27 +300,6 @@ const Page = () => {
       key: hyperdrive,
     },
   ];
-
-  // const Placeholder = () => (
-  //   <Col>
-  //     {new Array(7).fill(
-  //       <Card hoverable style={{ textAlign: "center" }}>
-  //         {new Date().getHours() +
-  //           ":" +
-  //           new Date().getMinutes() +
-  //           ":" +
-  //           new Date().getSeconds()}
-  //       </Card>
-  //     )}
-  //   </Col>
-  // );
-  // const Placeholder = () => {
-  //   return (<Card> a </Card>)
-  // }
-
-  // use Collapse and Cards
-  // OR
-  // Card with onClick to Card in Modal
 
   // const APIKey = styled(Input.Password)`
   //   input {
@@ -533,7 +483,6 @@ const Page = () => {
             ) : (
               "Leveraging AutoML to beat BTC"
             )}
-            {/* use latest signal from real data after api endpoint is called */}
             {/* if consecutive buy, then label BUY/HODL with green/orange diagonal split */}
             {/* same if consecutive sell, then label SELL/HODL with red/orange diagonal split */}
             {/* on the right of latest signal title or  below latest signals title but above squares row*/}
@@ -636,9 +585,6 @@ const Page = () => {
                         {")"}
                       </span>
                     </div>
-                    {/* {`Signal: ${signalCardData.Signal}`}
-                    {`Date: ${signalCardData.Date}`}
-                    {"Asset: BTC (₿)"} */}
                   </Card>
                 </Modal>
                 <div
@@ -652,8 +598,6 @@ const Page = () => {
                   }}
                 >
                   <Row style={{ width: "100%" }}>
-                    {/* <Card></Card> */}
-                    {/* use Row of cards that expand to model when clicked */}
                     {signalData.map((datum, idx) => (
                       <Col key={idx} flex={1}>
                         <Badge.Ribbon
@@ -666,24 +610,12 @@ const Page = () => {
                               setSignalCardData(datum);
                               setShowSignalCard(true);
                             }}
-                            // headStyle={{ background: cardHeaderColors[datum.Day] }}
                             bodyStyle={{
-                              // background:
-                              //   datum.Signal === "BUY" && !signalLoading
-                              //     ? // ? "lime"
-                              //       "#13a8a8"
-                              //     : // ? "#52e5ff"
-                              //     datum.Signal === "SELL" && !signalLoading
-                              //     ? // ? "red"
-                              //       "#cb2b83"
-                              //     : // ? "magenta"
-                              //       "inherit",
                               display: "flex",
                               justifyContent: "center",
                               height: "100%",
                               alignItems: "center",
                             }}
-                            // title={datum.Day.toUpperCase()}
                           >
                             {signalLoading && (
                               <Skeleton
@@ -694,31 +626,18 @@ const Page = () => {
                                 loading
                                 active
                               />
-                              // <Spin
-                              //   indicator={
-                              //     <LoadingOutlined
-                              //       style={{ fontSize: 25 }}
-                              //       spin
-                              //     />
-                              //   }
-                              // />
                             )}
                             {!signalLoading &&
                               (datum.Signal === "BUY" ? (
-                                // ? "lime"
                                 <CaretUpFilled
-                                  // fill="lime"
                                   style={{
                                     fontSize: `${caretIconSize}px`,
                                     color: "lime",
                                     marginBottom: `${caretIconSize / 2}px`,
                                   }}
                                 />
-                              ) : // ? "#52e5ff"
-                              datum.Signal === "SELL" ? (
-                                // ? "red"
+                              ) : datum.Signal === "SELL" ? (
                                 <CaretDownFilled
-                                  // fill="red"
                                   style={{
                                     fontSize: `${caretIconSize}px`,
                                     color: "red",
@@ -726,35 +645,14 @@ const Page = () => {
                                   }}
                                 />
                               ) : (
-                                // ? "magenta"
                                 <QuestionOutlined
                                   style={{ fontSize: `${caretIconSize}px` }}
                                 />
                               ))}
-                            {/* <Skeleton loading={signalLoading} active /> */}
                           </Card>
                         </Badge.Ribbon>
                       </Col>
                     ))}
-                    {/* <Col flex={1}>
-                      <span
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          height: "100%",
-                        }}
-                      >
-                        <Button
-                          loading={signalLoading}
-                          className={layoutStyles.start}
-                          onClick={fetchSignals}
-                        >
-                          Fetch the latest signals
-                        </Button>
-                      </span>
-                    </Col> */}
-                    {/* use card loading state after signals req */}
                   </Row>
                 </div>
                 {/* <Input.Group> */}
