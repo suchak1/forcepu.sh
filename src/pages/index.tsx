@@ -165,13 +165,9 @@ const Page = () => {
       //   );
       //   return response;
       // })
-      .then((response) => {
-        const statusCode = response.status;
-        return { status: statusCode, ...response.json() };
-      })
+      .then((response) => response.json())
       .then((data) => {
-        if (data.status === 403) {
-          // const errorMessage = JSON.stringify(response);
+        if ("message" in data) {
           message.error(data.message, 10);
           throw new Error(data.message);
         }
