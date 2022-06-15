@@ -115,7 +115,7 @@ const Page = () => {
       .then((data) => setPreviewData(data))
       .catch((err) => console.error(err))
       .finally(() => setPreviewLoading(false));
-  }, [inBeta]);
+  }, []);
 
   useEffect(() => {
     if (loggedIn) {
@@ -143,7 +143,7 @@ const Page = () => {
     fetch(url, { method: "GET", headers: { "X-API-Key": account?.api_key } })
       .then((response) => response.json())
       .then((data) => {
-        if ("message" in data) {
+        if (!("data" in data)) {
           const { message } = data;
           const pattern = /^(.[^\d]*)(.*)$/;
           const match = message.match(pattern);
@@ -161,11 +161,19 @@ const Page = () => {
           setTimeout(() => {
             setQuotaReached(false);
           }, 10000);
-          throw new Error(data.message);
+          throw new Error(message);
         }
         return data;
       })
-      .then((data) => setSignalData(data))
+      .then((response) => {
+        const { message, data } = response;
+        notification.warning({
+          duration: 5,
+          message: "Quota",
+          description: message,
+        });
+        setSignalData(data);
+      })
       .then(() => setHaveNewSignal(true))
       .catch((err) => console.error(err))
       .finally(() => setSignalLoading(false));

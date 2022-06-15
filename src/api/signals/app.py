@@ -27,6 +27,8 @@ def unauthorized_error(message):
         "headers": headers
     }
 
+def enough_time_has_passed(start, end, delta):
+    return end - start >= delta
 
 def handle_get(event):
     # first get user by api key
@@ -53,7 +55,7 @@ def handle_get(event):
         return unauthorized_error('This endpoint is for subscribers only.')
     # proceed
 
-    # Notes: instead of using usage plan,
+    # Notes: Instead of using usage plan,
     # store list of last 5 access times
     access_queue = user.access_queue
     max_accesses = 5
@@ -62,8 +64,10 @@ def handle_get(event):
     now = datetime.now(timezone.utc)
     quota_reached = False
 
+    # Update access queue
     if len(user.access_queue) >= max_accesses:
-        if now - access_queue[-max_accesses] >= reset_duration:
+        start = access_queue[-max_accesses]
+        if enough_time_has_passed(start, now, reset_duration):
             access_queue = access_queue[-max_accesses + 1:] + [now]
         else:
             access_queue = access_queue[-max_accesses:]
@@ -71,12 +75,22 @@ def handle_get(event):
     else:
         access_queue += [now]
 
-    # update user model in db with new access_queue
+    # Update user model in db with new access_queue
     user.update(actions=[UserModel.access_queue.set(access_queue)])
     if quota_reached:
         return unauthorized_error(
             f'You have reached your quota of {max_accesses} requests / {duration_days} day(s).'
         )
+    
+    # Find out how many requests are left
+    remaining = 0
+    for access in access_queue:
+        if enough_time_has_passed(access, now, reset_duration):
+            remaining += 1
+        else:
+            break
+    # This is to cover the case that len(access_queue) < max_accesses
+    remaining += max_accesses - len(access_queue)
 
     obj = s3.get_object(
         Bucket=os.environ['S3_BUCKET'], Key='models/latest/signals.csv')
@@ -87,7 +101,7 @@ def handle_get(event):
     rows = lines[-days_in_a_week:]
     keys = header.split(',')
 
-    response = []
+    response = {'message': None, 'data': []}
     for row in rows:
         cols = row.split(',')
         item = {}
@@ -102,7 +116,7 @@ def handle_get(event):
             item['Date'], '%Y-%m-%d').strftime('%A')[:3]
         item['Signal'] = 'BUY' if item['Signal'] == 'True' else 'SELL'
         item['Asset'] = 'BTC'
-        response.append(item)
+        response['data'].append(item)
     # Time -> Date
     # Sig -> Signal
 
@@ -111,6 +125,7 @@ def handle_get(event):
     # each item {Date: 2022-06-23, Day: Mon, Tue, (3 letter slice) Signal: BUY or SELL}
     # obj['Body'].read()
     status_code = 200
+    response['message'] = f'You have {remaining} requests left / {duration_days} day(s).'
     body = json.dumps(response)
     return {
         "statusCode": status_code,
