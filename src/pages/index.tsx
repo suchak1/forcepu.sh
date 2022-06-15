@@ -104,8 +104,7 @@ const Page = () => {
   const [showSignalCard, setShowSignalCard] = useState(false);
   const [signalCardData, setSignalCardData] = useState(defaultSignals[0]);
   const [haveNewSignal, setHaveNewSignal] = useState(false);
-  const loading =
-    previewLoading || accountLoading || loginLoading || signalLoading;
+  const loading = previewLoading || accountLoading || loginLoading;
   const [account, setAccount] = useState();
   const inBeta = loggedIn && account?.permissions?.in_beta;
   const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
@@ -128,19 +127,19 @@ const Page = () => {
 
   useEffect(() => {
     if (loggedIn) {
-      setAccountLoading(true);
-      const { idToken } = loggedIn.signInUserSession;
-      const url = `${getApiUrl()}/account`;
+      // setAccountLoading(true);
+      // const { idToken } = loggedIn.signInUserSession;
+      // const url = `${getApiUrl()}/account`;
       // remove this after debugging
-      // setAccount({ api_key: "a".repeat(86), permissions: { in_beta: true } });
-      fetch(url, {
-        method: "GET",
-        headers: { Authorization: idToken.jwtToken },
-      })
-        .then((response) => response.json())
-        .then((data) => setAccount(data))
-        .catch((err) => console.error(err))
-        .finally(() => setAccountLoading(false));
+      setAccount({ api_key: "a".repeat(86), permissions: { in_beta: true } });
+      // fetch(url, {
+      //   method: "GET",
+      //   headers: { Authorization: idToken.jwtToken },
+      // })
+      //   .then((response) => response.json())
+      //   .then((data) => setAccount(data))
+      //   .catch((err) => console.error(err))
+      //   .finally(() => setAccountLoading(false));
     }
   }, [loggedIn]);
 
@@ -157,7 +156,7 @@ const Page = () => {
     //   setSignalLoading(false);
     // }, 5000);
 
-    const url = `${getApiUrl({ localOverride: "prod" })}/signals`;
+    const url = `${getApiUrl()}/signals`;
     fetch(url, { method: "GET", headers: { "X-API-Key": account?.api_key } })
       // .then((response) => {
       //   response.status = 403;
@@ -166,14 +165,30 @@ const Page = () => {
       //   );
       //   return response;
       // })
-      .then((response) => [response.status, response.json()])
-      .then(([statusCode, data]) => {
-        if (statusCode === 403) {
-          message.error(data["message"], 10);
-          throw new Error(data["message"]);
+      .then((response) => {
+        const statusCode = response.status;
+        return { status: statusCode, ...response.json() };
+      })
+      .then((data) => {
+        if (data.status === 403) {
+          // const errorMessage = JSON.stringify(response);
+          message.error(data.message, 10);
+          throw new Error(data.message);
         }
         return data;
       })
+      // .then((response) => [response.status, response.json()])
+      // .then(([status, data]) => {
+      //   // const data = response.json();
+      //   console.log(data);
+      //   if (status === 403) {
+      //     message.error(data.message, 10);
+      //     // message.error(data["message"], 10);
+      //     throw new Error(data["message"]);
+      //   }
+      //   setSignalData(data);
+      //   setHaveNewSignal(true);
+      // })
       .then((data) => setSignalData(data))
       .then(() => setHaveNewSignal(true))
       .catch((err) => console.error(err))
