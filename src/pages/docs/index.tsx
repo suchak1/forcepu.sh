@@ -1,5 +1,5 @@
 import React from "react";
-import { connect } from "dva";
+// import { connect } from "dva";
 import { useState, useEffect } from "react";
 import { Layout, Typography, Table, Input } from "antd";
 import { Document, Page, pdfjs } from "react-pdf";
@@ -10,7 +10,7 @@ import styles from "./index.less";
 
 const { Title, Text } = Typography;
 
-const DocsPage = ({ dispatch, docs, _loading }) => {
+const DocsPage = () => {
   const [log, setLog] = useState([]);
   const [loading, setLoading] = useState(true);
   const width = useWindowWidth();
@@ -44,7 +44,4 @@ const DocsPage = ({ dispatch, docs, _loading }) => {
 
 DocsPage.displayName = "Docs";
 
-export default connect(({ docs, loading }) => ({
-  docs,
-  // loading: loading.models.docs,
-}))(DocsPage);
+export default DocsPage;
