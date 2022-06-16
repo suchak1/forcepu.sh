@@ -448,7 +448,7 @@ const Page = () => {
           message={
             inBeta
               ? "Congrats! You've been selected for the closed beta. 🎊"
-              : "You are not in the closed beta, but you may receive an invitation in the future."
+              : "You are not in the closed beta, but you may receive an invitation in the future. 📧"
           }
           type={inBeta ? "success" : "warning"}
           showIcon
