@@ -70,3 +70,25 @@ export const convertShortISO = (dateString: string) => {
 export const useLoginLoading = (setLoginLoading: any) => () => {
   setLoginLoading(window.location?.search?.indexOf("?code=") === 0);
 };
+
+export const useAccount = (
+  loggedIn: any,
+  setAccount: any,
+  setAccountLoading: any
+) => () => {
+  if (loggedIn) {
+    setAccountLoading(true);
+    const { idToken } = loggedIn.signInUserSession;
+    const url = `${getApiUrl()}/account`;
+    // remove this after debugging
+    // setAccount({ api_key: "a".repeat(86), permissions: { in_beta: true } });
+    fetch(url, {
+      method: "GET",
+      headers: { Authorization: idToken.jwtToken },
+    })
+      .then((response) => response.json())
+      .then((data) => setAccount(data))
+      .catch((err) => console.error(err))
+      .finally(() => setAccountLoading(false));
+  }
+};
