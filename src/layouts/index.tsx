@@ -96,7 +96,7 @@ const pages: string[] = [
   // "get started",
   // "gym",
   // "art",
-  // "docs",
+  "docs",
 ];
 
 // "docs" should be example of how to use library or service
