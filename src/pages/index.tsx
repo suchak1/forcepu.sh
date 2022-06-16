@@ -25,16 +25,10 @@ import {
 import styles from "./index.less";
 import layoutStyles from "../layouts/index.less";
 import "./index.less";
-import swaggerSpec from "../api/spec/swagger.json";
 import { getApiUrl, useLoginLoading, getDateRange, addDays } from "@/utils";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 const { Title } = Typography;
-import styled from "styled-components";
-import SwaggerUI from "swagger-ui-react";
-import "swagger-ui-react/swagger-ui.css";
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
-
-swaggerSpec.servers[0].url = getApiUrl();
 
 const Page = () => {
   const ribbonColors = {
