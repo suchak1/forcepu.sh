@@ -7,7 +7,7 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 import { CopyOutlined } from "@ant-design/icons";
 import SwaggerUI from "swagger-ui-react";
 import "swagger-ui-react/swagger-ui.css";
-import styles from "./index.less";
+import "./index.less";
 import styled from "styled-components";
 
 const { Title, Text } = Typography;
@@ -52,6 +52,7 @@ const DocsPage = () => {
       {/* add message when req fails that you need a valid api key */}
       {/* login and fetch account */}
       {/* hide api key component or indicate that you can login to get one */}
+      {/* CHOOSE LATTER ^ */}
       <Input.Group>
         <span style={{ display: "flex" }}>
           <APIKey

@@ -1,5 +1,67 @@
-.react-pdf__Page__canvas {
-  margin: 0 auto;
-  width: 80% !important;
-  height: 100% !important;
+// Swagger UI
+.swagger-ui .info {
+  display: none;
 }
+
+.swagger-ui .scheme-container {
+  background: inherit !important;
+}
+
+// Parameters block
+.swagger-ui .opblock-description-wrapper {
+  display: none;
+}
+
+.swagger-ui .opblock.opblock-get .opblock-summary-method {
+  background: #52e5ff !important;
+}
+
+.swagger-ui select {
+  background: inherit !important;
+}
+
+.swagger-ui .opblock .opblock-section-header {
+  background: #1F1F1F !important;
+}
+
+.swagger-ui .wrapper {
+  // reassess
+  padding: 0 !important;
+}
+
+.swagger-ui .opblock-tag {
+  display: none !important;
+}
+
+// Allow api path width to take up more space
+.swagger-ui .opblock .opblock-summary-path {
+  max-width: unset;
+}
+
+// Don't make api path font size small on mobile
+@media (max-width: 700px) {
+  .swagger-ui .opblock .opblock-summary-path {
+    font-size: unset;
+  }
+}
+
+// Remove Links column
+.swagger-ui .response-col_links {
+  display: none;
+}
+
+// JSON response key color
+.hljs-attr {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+// application/json response val select border
+.swagger-ui .response-control-media-type--accept-controller select {
+  border-color: #49cc90;
+}
+
+// description below Accept response header select
+.swagger-ui .response-control-media-type__accept-message {
+  color: #49cc90;
+}
+
