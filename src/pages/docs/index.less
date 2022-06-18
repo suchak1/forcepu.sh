@@ -27,6 +27,9 @@
 .swagger-ui .wrapper {
   // reassess
   padding: 0 !important;
+  color:rgba(255, 255, 255, 0.85);
+  font-family: inherit;
+  fill: rgba(255, 255, 255, 0.85);
 }
 
 .swagger-ui .opblock-tag {
@@ -35,6 +38,7 @@
 
 // Allow api path width to take up more space
 .swagger-ui .opblock .opblock-summary-path {
+  color: #52e5ff;
   max-width: unset;
 }
 
@@ -50,9 +54,9 @@
   display: none;
 }
 
-// JSON response key color
-.hljs-attr {
-  color: rgba(255, 255, 255, 0.85);
+// JSON response color
+.swagger-ui .opblock-body pre.microlight {
+  color: rgba(255, 255, 255, 0.85) !important;
 }
 
 // application/json response val select border
@@ -65,3 +69,109 @@
   color: #49cc90;
 }
 
+// general UI
+.swagger-ui {
+  color:rgba(255, 255, 255, 0.85);
+  font-family: inherit !important;
+}
+
+.swagger-ui section.models h4 {
+  font-family: inherit;
+  color:rgba(255, 255, 255, 0.85);
+}
+
+.swagger-ui div {
+  color:inherit;
+}
+
+// api path description
+.swagger-ui .opblock .opblock-summary-description {
+  color: inherit;
+  font-family: inherit;
+}
+
+// Parameters and Response headers
+.swagger-ui .opblock .opblock-section-header h4 {
+  color: inherit;
+  font-family: inherit;
+}
+
+// Response Status code column
+.swagger-ui .response-col_status {
+  color: inherit;
+  font-family: inherit;
+}
+
+// Response Description column
+.swagger-ui table thead tr td {
+  color: inherit;
+  font-family: inherit;
+}
+
+// Example and Schema text
+.swagger-ui .tab li {
+  color: inherit;
+  font-family: inherit;
+}
+
+// Unlock icon
+.swagger-ui .authorization__btn {
+  fill: #49cc90;
+}
+
+.swagger-ui .authorization__btn.unlocked {
+  opacity: unset;
+}
+
+// Response schema example
+.swagger-ui .model .property.primitive {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.swagger-ui .model {
+  color: inherit;
+}
+
+.swagger-ui .model-title {
+  color: inherit;
+  font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.swagger-ui .prop-format {
+  color:rgba(255, 255, 255, 0.65);
+}
+
+.swagger-ui .arrow {
+  fill: rgba(255,255, 255, 0.85);
+}
+
+// Try it now button
+.swagger-ui .btn {
+  color: inherit;
+  font-family: inherit;
+}
+
+// Code background
+.swagger-ui .opblock-body pre.microlight {
+  background: #1f1f1f !important;
+}
+
+// api path section
+.swagger-ui .opblock.opblock-get {
+  background: inherit;
+  border: none;
+}
+
+.swagger-ui .opblock.opblock-get .opblock-summary {
+  border: none;
+}
+
+// Response headers
+.swagger-ui .responses-inner h4, .swagger-ui .responses-inner h5 {
+  color: rgba(255, 255, 255, 0.65);
+  font-family: inherit;
+}
+
+.swagger-ui .opblock-summary-control:focus {
+  outline: none;
+}
