@@ -1,6 +1,15 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Layout, Typography, Table, Input, message, Button } from "antd";
+import {
+  Layout,
+  Typography,
+  Table,
+  Input,
+  message,
+  Button,
+  Tooltip,
+  Popover,
+} from "antd";
 import { getApiUrl, useAccount } from "@/utils";
 import swaggerSpec from "../../api/spec/swagger.json";
 import { useAuthenticator } from "@aws-amplify/ui-react";
@@ -13,11 +22,14 @@ import styled from "styled-components";
 const { Title, Text } = Typography;
 swaggerSpec.servers[0].url = getApiUrl();
 
+//  input {
+//    pointer-events: none;
+//  }
 const APIKey = styled(Input.Password)`
   input {
-    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
   }
-
   .ant-input-affix-wrapper:hover,
   .ant-input-affix-wrapper:active {
     border-color: #52e5ff;
@@ -53,15 +65,46 @@ const DocsPage = () => {
       {/* login and fetch account */}
       {/* hide api key component or indicate that you can login to get one */}
       {/* CHOOSE LATTER ^ */}
+      {/* <Title level={2}>Auth</Title>
+      <>
+        <div>{"Use this key to authenticate your API requests"}</div>
+        <div>
+          <span>{"(header: "}</span>
+          <span style={{ fontFamily: "monospace" }}>{"X-API-Key"}</span>
+          <span>{")."}</span>
+        </div>
+      </> */}
       <Input.Group>
         <span style={{ display: "flex" }}>
-          <APIKey
-            style={{ userSelect: "none" }}
-            // style={{pointerEvents: 'none'}}
-            addonBefore="API Key"
-            defaultValue={account?.api_key}
-            readOnly
-          />
+          {/* use tooltip and/or message above explaining that this is needed to access endpoint */}
+          {/* and header is X-API-Key */}
+          <Tooltip
+            title={
+              <>
+                <span>
+                  {"Use this key to authenticate your API requests (header: "}
+                </span>
+                <span style={{ fontFamily: "monospace" }}>{"X-API-Key"}</span>
+                <span>{")"}</span>
+              </>
+            }
+            placement="bottom"
+          >
+            <APIKey
+              // style={{
+              //   userSelect: "none",
+              //   "-webkit-user-select": "none",
+              //   "user-select": "none",
+              // }}
+              style={{ userSelect: "none" }}
+              addonBefore="API Key"
+              // defaultValue={account?.api_key}
+              defaultValue={"aaaaaa"}
+              readOnly
+              // this isn't working?
+              // onClick={() => copyToClipboard(account?.api_key, "API Key")}
+            />
+          </Tooltip>
           {/* change input focus color to cyan */}
           <Button
             onClick={() => copyToClipboard(account?.api_key, "API Key")}
@@ -71,6 +114,8 @@ const DocsPage = () => {
           {/* show success or info alert for a few sec at top when Copy button is pressed */}
         </span>
       </Input.Group>
+      {/* <Title level={2}>API</Title> */}
+
       <SwaggerUI spec={swaggerSpec} />
     </>
     // </Layout.Content>

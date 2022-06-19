@@ -81,7 +81,7 @@ export const useAccount = (
     const { idToken } = loggedIn.signInUserSession;
     const url = `${getApiUrl()}/account`;
     // remove this after debugging
-    // setAccount({ api_key: "a".repeat(86), permissions: { in_beta: true } });
+    setAccount({ api_key: "a".repeat(86), permissions: { in_beta: true } });
     fetch(url, {
       method: "GET",
       headers: { Authorization: idToken.jwtToken },
