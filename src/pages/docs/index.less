@@ -40,14 +40,15 @@
 .swagger-ui .opblock .opblock-summary-path {
   color: #52e5ff;
   max-width: unset;
+  font-size: unset;
 }
 
-// Don't make api path font size small on mobile
-@media (max-width: 700px) {
-  .swagger-ui .opblock .opblock-summary-path {
-    font-size: unset;
-  }
-}
+// // Don't make api path font size small on mobile
+// @media (max-width: 700px) {
+//   .swagger-ui .opblock .opblock-summary-path {
+//     font-size: unset;
+//   }
+// }
 
 // Remove Links column
 .swagger-ui .response-col_links {
@@ -78,6 +79,8 @@
 .swagger-ui section.models h4 {
   font-family: inherit;
   color:rgba(255, 255, 255, 0.85);
+  border: 2px solid #1f1f1f;
+  border-radius: 5px;
 }
 
 .swagger-ui div {
@@ -162,16 +165,58 @@
   border: none;
 }
 
-.swagger-ui .opblock.opblock-get .opblock-summary {
-  border: none;
-}
-
 // Response headers
 .swagger-ui .responses-inner h4, .swagger-ui .responses-inner h5 {
   color: rgba(255, 255, 255, 0.65);
   font-family: inherit;
 }
 
+// Borders of sections
+.swagger-ui .opblock.opblock-get .opblock-summary {
+  border: 2px solid #1f1f1f;
+  border-radius: 5px;
+}
+
+.swagger-ui .opblock-summary-control {
+  border: none;
+}
+
 .swagger-ui .opblock-summary-control:focus {
   outline: none;
 }
+
+.swagger-ui .models-control {
+  border: none;
+}
+
+.swagger-ui .models-control:focus {
+  outline: none;
+}
+
+// Schema arrow
+.swagger-ui .model-toggle:after {
+  background: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" fill="rgba(255, 255, 255, 0.85)" width="24" height="24"><path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>') 50% no-repeat;
+}
+
+.swagger-ui button:active {
+  outline: none;
+}
+
+// Schema button
+
+.swagger-ui .model-box-control {
+  outline: none !important;
+}
+
+// Schema open
+.swagger-ui section.models.is-open h4 {
+  border-bottom: 2px solid #1f1f1f;
+}
+
+// .swagger-ui .opblock-body {
+
+// }
+
+// .swagger-ui .opblock .opblock-get .is-open {
+//   border: 1px solid rgba(59,65,81,.3);
+// }
