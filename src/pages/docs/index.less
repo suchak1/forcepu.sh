@@ -79,8 +79,6 @@
 .swagger-ui section.models h4 {
   font-family: inherit;
   color:rgba(255, 255, 255, 0.85);
-  border: 2px solid #1f1f1f;
-  border-radius: 5px;
 }
 
 .swagger-ui div {
@@ -162,7 +160,8 @@
 // api path section
 .swagger-ui .opblock.opblock-get {
   background: inherit;
-  border: none;
+  border-color: #1f1f1f;
+  border-radius: 5px;
 }
 
 // Response headers
@@ -173,7 +172,7 @@
 
 // Borders of sections
 .swagger-ui .opblock.opblock-get .opblock-summary {
-  border: 2px solid #1f1f1f;
+  border: 2px solid #52E5FF;
   border-radius: 5px;
 }
 
@@ -208,15 +207,17 @@
   outline: none !important;
 }
 
-// Schema open
-.swagger-ui section.models.is-open h4 {
-  border-bottom: 2px solid #1f1f1f;
+// Schema border
+.swagger-ui section.models {
+  border: 2px solid #1f1f1f;
+  border-radius: 5px;
 }
 
-// .swagger-ui .opblock-body {
+.swagger-ui section.models.is-open h4 {
+  border-bottom: unset;
+}
 
-// }
-
-// .swagger-ui .opblock .opblock-get .is-open {
-//   border: 1px solid rgba(59,65,81,.3);
-// }
+// Parameters
+.swagger-ui .opblock-title {
+  display: none;
+}
