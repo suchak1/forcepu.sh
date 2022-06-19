@@ -56,6 +56,16 @@ const DocsPage = () => {
       () => message.error(`Did not copy ${name} to clipboard`)
     );
 
+  // TODO:
+  // 1. remove account debugging line
+  // 2. Add helpful message to /signals API for invalid api key (missing from db)
+  // 3. Make API key uncopyable - combo of user-select: none and pointer-events:none?
+  // (Make sure that pointer events doesn't ruin tooltip hint)
+  // 4. Fix css styles of modal
+  // 5. Intercept request send and display message or notification about wrong api key if api key exists
+  // 6. Intercept response and display message or notification that request succeeded if 200 status code
+  // 7. Find a way to collapse Schema at mount
+
   return (
     // <Layout>
     // <Layout.Content style={{ padding: 24 }}>
@@ -65,29 +75,20 @@ const DocsPage = () => {
       {/* login and fetch account */}
       {/* hide api key component or indicate that you can login to get one */}
       {/* CHOOSE LATTER ^ */}
-      {/* <Title level={2}>Auth</Title>
-      <>
-        <div>{"Use this key to authenticate your API requests"}</div>
+      <Title level={2}>Auth</Title>
+      <div style={{ paddingBottom: "22px", marginTop: "-4px" }}>
+        <div>{"Use this key to authenticate your API requests."}</div>
         <div>
-          <span>{"(header: "}</span>
+          <span>{"Header: "}</span>
           <span style={{ fontFamily: "monospace" }}>{"X-API-Key"}</span>
-          <span>{")."}</span>
         </div>
-      </> */}
-      <Input.Group>
+      </div>
+      <Input.Group style={{ paddingBottom: "26px" }}>
         <span style={{ display: "flex" }}>
           {/* use tooltip and/or message above explaining that this is needed to access endpoint */}
           {/* and header is X-API-Key */}
           <Tooltip
-            title={
-              <>
-                <span>
-                  {"Use this key to authenticate your API requests (header: "}
-                </span>
-                <span style={{ fontFamily: "monospace" }}>{"X-API-Key"}</span>
-                <span>{")"}</span>
-              </>
-            }
+            title="Use the button on the right to copy."
             placement="bottom"
           >
             <APIKey
@@ -114,9 +115,13 @@ const DocsPage = () => {
           {/* show success or info alert for a few sec at top when Copy button is pressed */}
         </span>
       </Input.Group>
-      {/* <Title level={2}>API</Title> */}
+      <Title level={2}>API</Title>
 
-      <SwaggerUI spec={swaggerSpec} />
+      <SwaggerUI
+        spec={swaggerSpec}
+        // docExpansion="full"
+        defaultModelExpandDepth={-1}
+      />
     </>
     // </Layout.Content>
     // </Layout>
