@@ -66,6 +66,7 @@ const DocsPage = () => {
   // (Make sure that pointer events doesn't ruin tooltip hint)
   // 4. Intercept response and display message or notification that request succeeded if 200 status code
   // 5. Move Docs tab to the right? and remove signed in as User text
+  // 6. UI should distinguish notification error as 403 Forbidden and 401 Unauthorized
 
   return (
     <>
@@ -141,6 +142,25 @@ const DocsPage = () => {
             });
           }
           return req;
+        }}
+        responseInterceptor={(res: Response) => {
+          console.log(res);
+          const { ok } = res;
+          if (ok) {
+            notification.success({
+              duration: 10,
+              message: "Success",
+              // Modify description to say "New signal: BUY or SELL" lime or red monospace
+              description: "Your request succeeded.",
+            });
+          } else {
+            console.log(res.json());
+            notification.error({
+              duration: 10,
+              message: "Unauthorized",
+              description: "Your request failed. Check the error message.",
+            });
+          }
         }}
       />
     </>
