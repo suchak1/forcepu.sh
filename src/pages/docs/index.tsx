@@ -63,11 +63,9 @@ const DocsPage = () => {
   // 2. Add helpful message to /signals API for invalid api key (missing from db)
   // 3. Make API key uncopyable - combo of user-select: none and pointer-events:none?
   // (Make sure that pointer events doesn't ruin tooltip hint)
-  // 4. Fix css styles of modal
-  // 5. Intercept request send and display message or notification about wrong api key if api key exists
-  // 6. Intercept response and display message or notification that request succeeded if 200 status code
-  // 7. Find a way to collapse Schema at mount
-  // 8. Change input default text to "Login to receive your API key" if not loggedIn
+  // 4. Intercept request send and display message or notification about wrong api key if api key exists
+  // 5. Intercept response and display message or notification that request succeeded if 200 status code
+  // 6. Find a way to collapse Schema at mount
 
   return (
     // <Layout>
