@@ -27,9 +27,11 @@ swaggerSpec.servers[0].url = getApiUrl();
 //  }
 const APIKey = styled(Input.Password)`
   input {
+    font-family: monospace;
     user-select: none;
     -webkit-user-select: none;
   }
+
   .ant-input-affix-wrapper:hover,
   .ant-input-affix-wrapper:active {
     border-color: #52e5ff;
@@ -65,6 +67,7 @@ const DocsPage = () => {
   // 5. Intercept request send and display message or notification about wrong api key if api key exists
   // 6. Intercept response and display message or notification that request succeeded if 200 status code
   // 7. Find a way to collapse Schema at mount
+  // 8. Change input default text to "Login to receive your API key" if not loggedIn
 
   return (
     // <Layout>
@@ -99,8 +102,9 @@ const DocsPage = () => {
               // }}
               style={{ userSelect: "none" }}
               addonBefore="API Key"
-              // defaultValue={account?.api_key}
-              defaultValue={"aaaaaa"}
+              defaultValue={
+                loggedIn ? account?.api_key : "Log in to receive your API key."
+              }
               readOnly
               // this isn't working?
               // onClick={() => copyToClipboard(account?.api_key, "API Key")}
@@ -120,7 +124,6 @@ const DocsPage = () => {
       <SwaggerUI
         spec={swaggerSpec}
         // docExpansion="full"
-        defaultModelExpandDepth={-1}
       />
     </>
     // </Layout.Content>
