@@ -9,6 +9,7 @@ import {
   Button,
   Tooltip,
   Popover,
+  notification,
 } from "antd";
 import { getApiUrl, useAccount } from "@/utils";
 import swaggerSpec from "../../api/spec/swagger.json";
@@ -65,6 +66,7 @@ const DocsPage = () => {
   // (Make sure that pointer events doesn't ruin tooltip hint)
   // 4. Intercept request send and display message or notification about wrong api key if api key exists
   // 5. Intercept response and display message or notification that request succeeded if 200 status code
+  // 6. Move Docs tab to the right? and remove signed in as User text
 
   return (
     <>
@@ -113,7 +115,27 @@ const DocsPage = () => {
       </Input.Group>
       <Title level={2}>API</Title>
 
-      <SwaggerUI spec={swaggerSpec} defaultModelsExpandDepth={0} />
+      <SwaggerUI
+        spec={swaggerSpec}
+        defaultModelsExpandDepth={0}
+        requestInterceptor={(req: Request) => {
+          const { headers } = req;
+          if (!("X-API-Key" in headers)) {
+            notification.error({
+              duration: 10,
+              message: "Auth",
+              description: "Missing API Key",
+            });
+          } else if (headers["X-API-Key"] !== account?.api_key) {
+            notification.error({
+              duration: 10,
+              message: "Auth",
+              description: "Wrong API Key",
+            });
+          }
+          return req;
+        }}
+      />
     </>
   );
 };

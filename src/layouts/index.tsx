@@ -253,6 +253,7 @@ const Layout = ({ children }: LayoutProps) => {
           _move fast; break everything
         </span>
         <a href="/privacy" className={overrides.footerLink}>
+          {/* Change this to NavLink to avoid loading */}
           Privacy
         </a>
       </AntLayout.Footer>
