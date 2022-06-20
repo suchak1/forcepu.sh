@@ -6,7 +6,7 @@
 .swagger-ui .scheme-container {
   background: inherit !important;
   padding-top: 0;
-  padding: 5px 0;
+  padding-bottom: 5px;
   margin-top: -6px;
 }
 
@@ -29,7 +29,8 @@
 
 .swagger-ui .wrapper {
   // reassess
-  padding: 0 !important;
+  padding: 0;
+  margin: 0;
   color:rgba(255, 255, 255, 0.85);
   font-family: inherit;
   fill: rgba(255, 255, 255, 0.85);
@@ -214,7 +215,8 @@
 .swagger-ui section.models {
   border: 2px solid #1f1f1f;
   border-radius: 5px;
-  margin: 24px 0;
+  margin-top: 24px;
+  margin-bottom: 0;
 }
 
 .swagger-ui section.models.is-open h4 {
@@ -290,6 +292,10 @@
 // Padding/Margin
 .swagger-ui .opblock {
   margin: unset;
+}
+
+.swagger-ui section.models.is-open {
+  padding: unset;
 }
 
 .ant-typography + h2.ant-typography {
