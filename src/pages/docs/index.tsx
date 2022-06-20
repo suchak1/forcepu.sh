@@ -64,9 +64,8 @@ const DocsPage = () => {
   // 2. Add helpful message to /signals API for invalid api key (missing from db)
   // 3. Make API key uncopyable - combo of user-select: none and pointer-events:none?
   // (Make sure that pointer events doesn't ruin tooltip hint)
-  // 4. Intercept request send and display message or notification about wrong api key if api key exists
-  // 5. Intercept response and display message or notification that request succeeded if 200 status code
-  // 6. Move Docs tab to the right? and remove signed in as User text
+  // 4. Intercept response and display message or notification that request succeeded if 200 status code
+  // 5. Move Docs tab to the right? and remove signed in as User text
 
   return (
     <>
@@ -123,14 +122,22 @@ const DocsPage = () => {
           if (!("X-API-Key" in headers)) {
             notification.error({
               duration: 10,
-              message: "Auth",
-              description: "Missing API Key",
+              message: "Missing API Key",
+              description: (
+                <>
+                  <span>{"Paste your API key in the "}</span>
+                  <b>
+                    <span style={{ color: "#49cc90" }}>Authorize</span>
+                  </b>
+                  <span>{" modal."}</span>
+                </>
+              ),
             });
           } else if (headers["X-API-Key"] !== account?.api_key) {
             notification.error({
               duration: 10,
-              message: "Auth",
-              description: "Wrong API Key",
+              message: "Wrong API Key",
+              description: "Copy your API key from the Auth section.",
             });
           }
           return req;
