@@ -21,7 +21,7 @@ paths:
       summary: Get the latest BUY / SELL signals
       responses:
         '200':
-          description: "***OK***: latest signals for the given asset"
+          description: "*OK*: latest signals for the given asset"
           content:
             application/json:
               schema:
@@ -29,11 +29,11 @@ paths:
                 items:
                   $ref: '#/components/schemas/SignalResponse'
         '401':
-          description: "***Unauthorized:*** invalid API key"
+          description: "*Unauthorized:* invalid API key"
         '402':
-          description: "***Payment Required:*** beta subscribers only"
+          description: "*Payment Required:* beta subscribers only"
         '403':
-          description: "***Forbidden:*** quota reached"
+          description: "*Forbidden:* quota reached"
 components:
   securitySchemes:
     ApiKeyAuth:

@@ -45,6 +45,20 @@ const APIKey = styled(Input.Password)`
   }
 `;
 
+const MyInput = styled(Input)`
+  .ant-input:hover,
+  .ant-input:active {
+    border-color: #52e5ff !important;
+    box-shadow: 0 0 5px #52e5ff !important;
+  }
+
+  .ant-input:focus {
+    border-color: #52e5ff !important;
+  }
+`;
+
+// const APIKey = MyInput.Password;
+
 const DocsPage = () => {
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const [accountLoading, setAccountLoading] = useState(false);
@@ -64,6 +78,7 @@ const DocsPage = () => {
   // 2. Make API key uncopyable - combo of user-select: none and pointer-events:none?
   // (Make sure that pointer events doesn't ruin tooltip hint)
   // 3. Move Docs tab to the right? and remove signed in as User text
+  // 4. Handle Login API key text - should say API Key on the left, have correct cyan, and be in monospace or NOT actually
 
   return (
     <>
@@ -81,32 +96,36 @@ const DocsPage = () => {
         </div>
       </div>
       <Input.Group style={{ paddingBottom: "26px" }}>
-        <span style={{ display: "flex" }}>
-          {/* use tooltip and/or message above explaining that this is needed to access endpoint */}
-          {/* and header is X-API-Key */}
-          <Tooltip
-            title="Use the button on the right to copy."
-            placement="bottom"
-          >
-            <APIKey
-              // style={{
-              //   userSelect: "none",
-              //   "-webkit-user-select": "none",
-              //   "user-select": "none",
-              // }}
-              style={{ userSelect: "none" }}
-              addonBefore="API Key"
-              defaultValue={
-                loggedIn ? account?.api_key : "Log in to receive your API key."
-              }
-              readOnly
+        {loggedIn ? (
+          <span style={{ display: "flex" }}>
+            {/* use tooltip and/or message above explaining that this is needed to access endpoint */}
+            {/* and header is X-API-Key */}
+            <Tooltip
+              trigger={["hover", "focus"]}
+              title="Use the button on the right to copy."
+              placement="bottom"
+            >
+              <APIKey
+                // style={{
+                //   userSelect: "none",
+                //   "-webkit-user-select": "none",
+                //   "user-select": "none",
+                // }}
+                style={{ userSelect: "none" }}
+                addonBefore="API Key"
+                defaultValue={account?.api_key}
+                readOnly
+                type="text"
+              />
+            </Tooltip>
+            <Button
+              onClick={() => copyToClipboard(account?.api_key, "API Key")}
+              icon={<CopyOutlined />}
             />
-          </Tooltip>
-          <Button
-            onClick={() => copyToClipboard(account?.api_key, "API Key")}
-            icon={<CopyOutlined />}
-          />
-        </span>
+          </span>
+        ) : (
+          <MyInput readOnly defaultValue={"Log in to receive your API key."} />
+        )}
       </Input.Group>
       <Title level={2}>API</Title>
 
