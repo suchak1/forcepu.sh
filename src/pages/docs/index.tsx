@@ -63,8 +63,7 @@ const DocsPage = () => {
   // 1. remove account debugging line
   // 2. Make API key uncopyable - combo of user-select: none and pointer-events:none?
   // (Make sure that pointer events doesn't ruin tooltip hint)
-  // 3. Intercept response and display message or notification that request succeeded if 200 status code
-  // 4. Move Docs tab to the right? and remove signed in as User text
+  // 3. Move Docs tab to the right? and remove signed in as User text
 
   return (
     <>
@@ -107,8 +106,6 @@ const DocsPage = () => {
             onClick={() => copyToClipboard(account?.api_key, "API Key")}
             icon={<CopyOutlined />}
           />
-          {/* handle copying to clipboard */}
-          {/* show success or info alert for a few sec at top when Copy button is pressed */}
         </span>
       </Input.Group>
       <Title level={2}>API</Title>
@@ -141,7 +138,6 @@ const DocsPage = () => {
               description: "Copy your API key from the Auth section.",
             });
           }
-          req.url = "https://jsonplaceholder.typicode.com/todos/1";
           return req;
         }}
         responseInterceptor={(res: Response) => {
@@ -167,8 +163,17 @@ const DocsPage = () => {
             notification.success({
               duration: 10,
               message: "Success",
-              // Modify description to say "New signal: BUY or SELL" lime or red monospace
-              description: "Your request succeeded.",
+              description: (
+                <>
+                  <span>{"New signal: "}</span>
+                  <span
+                    style={{
+                      fontFamily: "monospace",
+                      color: signal === "BUY" ? "lime" : "red",
+                    }}
+                  >{`${signal}`}</span>
+                </>
+              ),
             });
           } else {
             notification.error({
