@@ -61,12 +61,10 @@ const DocsPage = () => {
 
   // TODO:
   // 1. remove account debugging line
-  // 2. Add helpful message to /signals API for invalid api key (missing from db)
-  // 3. Make API key uncopyable - combo of user-select: none and pointer-events:none?
+  // 2. Make API key uncopyable - combo of user-select: none and pointer-events:none?
   // (Make sure that pointer events doesn't ruin tooltip hint)
-  // 4. Intercept response and display message or notification that request succeeded if 200 status code
-  // 5. Move Docs tab to the right? and remove signed in as User text
-  // 6. UI should distinguish notification error as 403 Forbidden and 401 Unauthorized
+  // 3. Intercept response and display message or notification that request succeeded if 200 status code
+  // 4. Move Docs tab to the right? and remove signed in as User text
 
   return (
     <>
@@ -119,6 +117,7 @@ const DocsPage = () => {
         spec={swaggerSpec}
         defaultModelsExpandDepth={0}
         requestInterceptor={(req: Request) => {
+          console.log(req);
           const { headers } = req;
           if (!("X-API-Key" in headers)) {
             notification.error({
@@ -141,12 +140,29 @@ const DocsPage = () => {
               description: "Copy your API key from the Auth section.",
             });
           }
+          req.url = "https://jsonplaceholder.typicode.com/todos/1";
           return req;
         }}
         responseInterceptor={(res: Response) => {
           console.log(res);
-          const { ok } = res;
+          const errors = {
+            401: {
+              message: "Unauthorized",
+              description: "Check your API key.",
+            },
+            402: {
+              message: "Payment Required",
+              description: "You are not a beta subscriber.",
+            },
+            403: {
+              message: "Forbidden",
+              description: "Your quota has been reached.",
+            },
+          };
+          const { ok, status } = res;
           if (ok) {
+            const { data } = JSON.parse(res.text);
+            const signal = data[data.length - 1].Signal;
             notification.success({
               duration: 10,
               message: "Success",
@@ -154,11 +170,13 @@ const DocsPage = () => {
               description: "Your request succeeded.",
             });
           } else {
-            console.log(res.json());
             notification.error({
               duration: 10,
-              message: "Unauthorized",
-              description: "Your request failed. Check the error message.",
+              message: status in errors ? errors[status].message : "Failure",
+              description:
+                status in errors
+                  ? errors[status].description
+                  : "Your request failed. Check the error message.",
             });
           }
         }}
