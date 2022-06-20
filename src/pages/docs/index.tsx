@@ -65,11 +65,8 @@ const DocsPage = () => {
   // (Make sure that pointer events doesn't ruin tooltip hint)
   // 4. Intercept request send and display message or notification about wrong api key if api key exists
   // 5. Intercept response and display message or notification that request succeeded if 200 status code
-  // 6. Find a way to collapse Schema at mount
 
   return (
-    // <Layout>
-    // <Layout.Content style={{ padding: 24 }}>
     <>
       <Title>API Docs</Title>
       {/* add message when req fails that you need a valid api key */}
@@ -104,11 +101,8 @@ const DocsPage = () => {
                 loggedIn ? account?.api_key : "Log in to receive your API key."
               }
               readOnly
-              // this isn't working?
-              // onClick={() => copyToClipboard(account?.api_key, "API Key")}
             />
           </Tooltip>
-          {/* change input focus color to cyan */}
           <Button
             onClick={() => copyToClipboard(account?.api_key, "API Key")}
             icon={<CopyOutlined />}
@@ -119,31 +113,11 @@ const DocsPage = () => {
       </Input.Group>
       <Title level={2}>API</Title>
 
-      <SwaggerUI
-        spec={swaggerSpec}
-        // docExpansion="full"
-      />
+      <SwaggerUI spec={swaggerSpec} defaultModelsExpandDepth={0} />
     </>
-    // </Layout.Content>
-    // </Layout>
   );
 };
 
 DocsPage.displayName = "Docs";
 
 export default DocsPage;
-
-// const StyledSwagger = styled(SwaggerUI)``;
-// .swagger-ui .opblock-description-wrapper {
-//   display: none;
-// }
-
-// .swagger-ui .opblock.opblock-get .opblock-summary-method {
-//   background: #52e5ff;
-// }
-
-// {/* <SwaggerUI spec={swaggerSpec} /> */}
-// {/* use signals_ui.pdf in downloads folder as guide, keep wide screen - better for mobile */}
-// {/* remove params wrapper div, remove info div, rename algo to Signals API or Algo API, ,  */}
-// {/* requestInterceptor => should inject api key if necessary, responseInterceptor => should reveal cards on left */}
-// {/* 2. API swagger docs on separate Page called Docs with NavLink in header */}
