@@ -17,6 +17,7 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 import { CopyOutlined } from "@ant-design/icons";
 import SwaggerUI from "swagger-ui-react";
 import "swagger-ui-react/swagger-ui.css";
+import layoutStyles from "../../layouts/index.less";
 import "./index.less";
 import styled from "styled-components";
 
@@ -52,14 +53,20 @@ const MyInput = styled(Input)`
     box-shadow: 0 0 5px #52e5ff !important;
   }
 
-  .ant-input:focus {
+  .ant-input:focus,
+  input::selection {
     border-color: #52e5ff !important;
   }
 `;
 
+interface DocsProps {
+  loginLoading: boolean;
+  setShowLogin: any;
+}
+
 // const APIKey = MyInput.Password;
 
-const DocsPage = () => {
+const DocsPage = ({ loginLoading, setShowLogin }: DocsProps) => {
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const [accountLoading, setAccountLoading] = useState(false);
   const [account, setAccount] = useState();
@@ -78,7 +85,8 @@ const DocsPage = () => {
   // 2. Make API key uncopyable - combo of user-select: none and pointer-events:none?
   // (Make sure that pointer events doesn't ruin tooltip hint)
   // 3. Move Docs tab to the right? and remove signed in as User text
-  // 4. Handle Login API key text - should say API Key on the left, have correct cyan, and be in monospace or NOT actually
+  // 4. Handle Login API key text - should say API Key on the left, have correct cyan, and be in monospace
+  // OR NOT actually - have Segoi UI bc more readable?
 
   return (
     <>
@@ -95,38 +103,48 @@ const DocsPage = () => {
           <span style={{ fontFamily: "monospace" }}>{"X-API-Key"}</span>
         </div>
       </div>
-      <Input.Group style={{ paddingBottom: "26px" }}>
-        {loggedIn ? (
-          <span style={{ display: "flex" }}>
-            {/* use tooltip and/or message above explaining that this is needed to access endpoint */}
-            {/* and header is X-API-Key */}
-            <Tooltip
-              trigger={["hover", "focus"]}
-              title="Use the button on the right to copy."
-              placement="bottom"
-            >
-              <APIKey
-                // style={{
-                //   userSelect: "none",
-                //   "-webkit-user-select": "none",
-                //   "user-select": "none",
-                // }}
-                style={{ userSelect: "none" }}
-                addonBefore="API Key"
-                defaultValue={account?.api_key}
-                readOnly
-                type="text"
+      {!loginLoading && (
+        <Input.Group style={{ paddingBottom: "26px" }}>
+          {loggedIn ? (
+            <span style={{ display: "flex" }}>
+              {/* use tooltip and/or message above explaining that this is needed to access endpoint */}
+              {/* and header is X-API-Key */}
+              <Tooltip
+                trigger={["hover", "focus"]}
+                title="Use the button on the right to copy."
+                placement="bottom"
+              >
+                <APIKey
+                  // style={{
+                  //   userSelect: "none",
+                  //   "-webkit-user-select": "none",
+                  //   "user-select": "none",
+                  // }}
+                  style={{ userSelect: "none" }}
+                  addonBefore="API Key"
+                  defaultValue={account?.api_key}
+                  readOnly
+                  type="text"
+                />
+              </Tooltip>
+              <Button
+                onClick={() => copyToClipboard(account?.api_key, "API Key")}
+                icon={<CopyOutlined />}
               />
-            </Tooltip>
+            </span>
+          ) : (
+            // (
+            //   <MyInput readOnly defaultValue={"Sign in to receive your API key."} />
+            // )
             <Button
-              onClick={() => copyToClipboard(account?.api_key, "API Key")}
-              icon={<CopyOutlined />}
-            />
-          </span>
-        ) : (
-          <MyInput readOnly defaultValue={"Log in to receive your API key."} />
-        )}
-      </Input.Group>
+              className={layoutStyles.start}
+              onClick={() => setShowLogin(true)}
+            >
+              Sign in to receive your API key
+            </Button>
+          )}
+        </Input.Group>
+      )}
       <Title level={2}>API</Title>
 
       <SwaggerUI
