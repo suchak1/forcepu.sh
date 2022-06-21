@@ -27,6 +27,7 @@ swaggerSpec.servers[0].url = getApiUrl();
 const APIKey = styled(Input.Password)`
   input {
     font-family: monospace;
+    pointer-events: none;
     user-select: none;
     -webkit-user-select: none;
   }
@@ -148,7 +149,7 @@ const DocsPage = ({ loginLoading, setShowLogin }: DocsProps) => {
           return req;
         }}
         responseInterceptor={(res: Response) => {
-          console.log(res);
+          // consider dropping this mapping and using status codes and JSON.parse(res.text).message directly
           const errors = {
             401: {
               message: "Unauthorized",
@@ -165,7 +166,7 @@ const DocsPage = ({ loginLoading, setShowLogin }: DocsProps) => {
           };
           const { ok, status } = res;
           if (ok) {
-            const { data } = JSON.parse(res.text);
+            const { data, message } = JSON.parse(res.text);
             const signal = data[data.length - 1].Signal;
             notification.success({
               duration: 10,
@@ -181,6 +182,11 @@ const DocsPage = ({ loginLoading, setShowLogin }: DocsProps) => {
                   >{`${signal}`}</span>
                 </>
               ),
+            });
+            notification.warning({
+              duration: 10,
+              message: "Quota",
+              description: message,
             });
           } else {
             notification.error({
