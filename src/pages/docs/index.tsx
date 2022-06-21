@@ -133,15 +133,17 @@ const DocsPage = ({ loginLoading, setShowLogin }: DocsProps) => {
               />
             </span>
           ) : (
-            // (
-            //   <MyInput readOnly defaultValue={"Sign in to receive your API key."} />
-            // )
-            <Button
-              className={layoutStyles.start}
-              onClick={() => setShowLogin(true)}
-            >
-              Sign in to receive your API key
-            </Button>
+            <div style={{ display: "flex" }}>
+              <span className="ant-input-wrapper ant-input-group">
+                <span className="ant-input-group-addon">API Key</span>
+                <Button
+                  className={layoutStyles.start}
+                  onClick={() => setShowLogin(true)}
+                >
+                  Sign in to receive your API key
+                </Button>
+              </span>
+            </div>
           )}
         </Input.Group>
       )}
