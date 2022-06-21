@@ -1,14 +1,11 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import {
-  Layout,
   Typography,
-  Table,
   Input,
   message,
   Button,
   Tooltip,
-  Popover,
   notification,
 } from "antd";
 import { getApiUrl, useAccount } from "@/utils";
@@ -21,7 +18,7 @@ import layoutStyles from "../../layouts/index.less";
 import "./index.less";
 import styled from "styled-components";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 swaggerSpec.servers[0].url = getApiUrl();
 
 //  input {
@@ -46,32 +43,16 @@ const APIKey = styled(Input.Password)`
   }
 `;
 
-const MyInput = styled(Input)`
-  .ant-input:hover,
-  .ant-input:active {
-    border-color: #52e5ff !important;
-    box-shadow: 0 0 5px #52e5ff !important;
-  }
-
-  .ant-input:focus,
-  input::selection {
-    border-color: #52e5ff !important;
-  }
-`;
-
 interface DocsProps {
   loginLoading: boolean;
   setShowLogin: any;
 }
 
-// const APIKey = MyInput.Password;
-
 const DocsPage = ({ loginLoading, setShowLogin }: DocsProps) => {
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
-  const [accountLoading, setAccountLoading] = useState(false);
+  const [_, setAccountLoading] = useState(false);
   const [account, setAccount] = useState();
-  const inBeta = loggedIn && account?.permissions?.in_beta;
-
+  // const { api_key } = account;
   useEffect(useAccount(loggedIn, setAccount, setAccountLoading), [loggedIn]);
 
   const copyToClipboard = (val: string, name: string) =>
@@ -84,17 +65,11 @@ const DocsPage = ({ loginLoading, setShowLogin }: DocsProps) => {
   // 1. remove account debugging line
   // 2. Make API key uncopyable - combo of user-select: none and pointer-events:none?
   // (Make sure that pointer events doesn't ruin tooltip hint)
-  // 3. Move Docs tab to the right? and remove signed in as User text
-  // 4. Handle Login API key text - should say API Key on the left, have correct cyan, and be in monospace
-  // OR NOT actually - have Segoi UI bc more readable?
+  // 3. Move Docs tab to the right? and remove signed in as User text?
 
   return (
     <>
       <Title>API Docs</Title>
-      {/* add message when req fails that you need a valid api key */}
-      {/* login and fetch account */}
-      {/* hide api key component or indicate that you can login to get one */}
-      {/* CHOOSE LATTER ^ */}
       <Title level={2}>Auth</Title>
       <div style={{ paddingBottom: "22px", marginTop: "-4px" }}>
         <div>{"Use this key to authenticate your API requests."}</div>
@@ -107,8 +82,6 @@ const DocsPage = ({ loginLoading, setShowLogin }: DocsProps) => {
         <Input.Group style={{ paddingBottom: "26px" }}>
           {loggedIn ? (
             <span style={{ display: "flex" }}>
-              {/* use tooltip and/or message above explaining that this is needed to access endpoint */}
-              {/* and header is X-API-Key */}
               <Tooltip
                 trigger={["hover", "focus"]}
                 title="Use the button on the right to copy."
@@ -133,17 +106,12 @@ const DocsPage = ({ loginLoading, setShowLogin }: DocsProps) => {
               />
             </span>
           ) : (
-            <div style={{ display: "flex" }}>
-              <span className="ant-input-wrapper ant-input-group">
-                <span className="ant-input-group-addon">API Key</span>
-                <Button
-                  className={layoutStyles.start}
-                  onClick={() => setShowLogin(true)}
-                >
-                  Sign in to receive your API key
-                </Button>
-              </span>
-            </div>
+            <Button
+              className={layoutStyles.start}
+              onClick={() => setShowLogin(true)}
+            >
+              Sign in to receive your API key
+            </Button>
           )}
         </Input.Group>
       )}
