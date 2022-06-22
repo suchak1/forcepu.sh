@@ -8,7 +8,7 @@ import {
   Tooltip,
   notification,
 } from "antd";
-import { getApiUrl, useAccount, getEnvironment, getHostname } from "@/utils";
+import { getApiUrl, useAccount, signalColors, signalEmojis } from "@/utils";
 import swaggerSpec from "../../api/spec/swagger.json";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { CopyOutlined } from "@ant-design/icons";
@@ -165,13 +165,15 @@ const DocsPage = ({ loginLoading, setShowLogin }: DocsProps) => {
               message: "Success",
               description: (
                 <>
-                  <span>{"New signal: "}</span>
+                  <span>{"New Signal: "}</span>
                   <span
                     style={{
                       fontFamily: "monospace",
-                      color: signal === "BUY" ? "lime" : "red",
+                      color: signalColors[signal],
                     }}
-                  >{`${signal}`}</span>
+                  >
+                    <b>{`${signal} ${signalEmojis[signal]}`}</b>
+                  </span>
                 </>
               ),
             });

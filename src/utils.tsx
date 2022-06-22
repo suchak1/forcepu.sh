@@ -71,22 +71,30 @@ export const useLoginLoading = (setLoginLoading: any) => () => {
   setLoginLoading(window.location?.search?.indexOf("?code=") === 0);
 };
 
-export const useAccount = (
-  loggedIn: any,
-  setAccount: any,
-  setAccountLoading: any
-) => () => {
-  if (loggedIn) {
-    setAccountLoading(true);
-    const { idToken } = loggedIn.signInUserSession;
-    const url = `${getApiUrl()}/account`;
-    fetch(url, {
-      method: "GET",
-      headers: { Authorization: idToken.jwtToken },
-    })
-      .then((response) => response.json())
-      .then((data) => setAccount(data))
-      .catch((err) => console.error(err))
-      .finally(() => setAccountLoading(false));
-  }
+export const useAccount =
+  (loggedIn: any, setAccount: any, setAccountLoading: any) => () => {
+    if (loggedIn) {
+      setAccountLoading(true);
+      const { idToken } = loggedIn.signInUserSession;
+      const url = `${getApiUrl()}/account`;
+      fetch(url, {
+        method: "GET",
+        headers: { Authorization: idToken.jwtToken },
+      })
+        .then((response) => response.json())
+        .then((data) => setAccount(data))
+        .catch((err) => console.error(err))
+        .finally(() => setAccountLoading(false));
+    }
+  };
+
+export const signalColors = {
+  BUY: "lime",
+  SELL: "red",
+  HODL: "#F7931A",
+};
+
+export const signalEmojis = {
+  BUY: "🚀",
+  SELL: "💥",
 };

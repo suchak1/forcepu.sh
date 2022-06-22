@@ -31,6 +31,8 @@ import {
   getDateRange,
   addDays,
   useAccount,
+  signalColors,
+  signalEmojis,
 } from "@/utils";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 const { Title } = Typography;
@@ -55,16 +57,7 @@ const Page = () => {
     Fri: "#13A8A8",
     Sat: "#D87A16",
   };
-  const signalColors = {
-    BUY: "lime",
-    SELL: "red",
-    HODL: "#F7931A",
-  };
 
-  const signalEmojis = {
-    BUY: "🚀",
-    SELL: "💥",
-  };
   const caretIconSize = 50;
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const HODL = "HODL";
