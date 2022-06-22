@@ -151,7 +151,7 @@ const Page = () => {
       .then((response) => {
         const { message, data } = response;
         notification.warning({
-          duration: 5,
+          duration: 10,
           message: "Quota",
           description: message,
         });

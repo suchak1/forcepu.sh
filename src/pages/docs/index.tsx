@@ -135,12 +135,6 @@ const DocsPage = ({ loginLoading, setShowLogin }: DocsProps) => {
               message: "Wrong API Key",
               description: "Copy your API key from the Auth section.",
             });
-          } else {
-            notification.success({
-              duration: 10,
-              message: "Authenticated",
-              description: "Your request is now authenticated.",
-            });
           }
           return req;
         }}
