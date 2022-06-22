@@ -112,7 +112,6 @@ const DocsPage = ({ loginLoading, setShowLogin }: DocsProps) => {
         // can make this 0 to collapse Schema
         defaultModelsExpandDepth={1}
         requestInterceptor={(req: Request) => {
-          console.log(req);
           const { headers } = req;
           if (!("X-API-Key" in headers)) {
             notification.error({

@@ -7,7 +7,7 @@ from shared.utils import handle_options
 
 s3 = boto3.client('s3')
 
-headers = {"Access-Control-Allow-Origin": "*"}
+res_headers = {"Access-Control-Allow-Origin": "*"}
 
 
 def get_signals(event, _):
@@ -25,7 +25,7 @@ def return_error(status, message):
         "body": json.dumps(
             {'message': message}
         ),
-        "headers": headers
+        "headers": res_headers
     }
 
 
@@ -35,10 +35,10 @@ def enough_time_has_passed(start, end, delta):
 
 def handle_get(event):
     # first get user by api key
-    headers = event['headers']
-    if 'x-api-key' not in headers:
+    req_headers = event['headers']
+    if 'x-api-key' not in req_headers:
         return_error(401, 'Provide a valid API key.')
-    api_key = headers['x-api-key']
+    api_key = req_headers['x-api-key']
     query_results = query_by_api_key(api_key)
     if not query_results:
         return_error(401, 'Provide a valid API key.')
@@ -139,7 +139,7 @@ def handle_get(event):
     return {
         "statusCode": status_code,
         "body": body,
-        "headers": headers
+        "headers": res_headers
     }
 
 
