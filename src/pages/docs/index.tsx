@@ -106,7 +106,6 @@ const DocsPage = ({ loginLoading, setShowLogin }: DocsProps) => {
         </Input.Group>
       )}
       <Title level={2}>API</Title>
-      {/* Use this to auto fill out API key https://stackoverflow.com/a/49637597 */}
       <SwaggerUI
         onComplete={(ui: any) =>
           ui.preauthorizeApiKey("ApiKeyAuth", account?.api_key)
