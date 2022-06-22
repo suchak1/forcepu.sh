@@ -51,8 +51,9 @@ interface DocsProps {
 
 const DocsPage = ({ loginLoading, setShowLogin }: DocsProps) => {
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
-  const [_, setAccountLoading] = useState(false);
+  const [accountLoading, setAccountLoading] = useState(false);
   const [account, setAccount] = useState();
+  const loading = loginLoading || accountLoading;
   // const { api_key } = account;
   useEffect(useAccount(loggedIn, setAccount, setAccountLoading), [loggedIn]);
 
@@ -79,9 +80,9 @@ const DocsPage = ({ loginLoading, setShowLogin }: DocsProps) => {
           <span style={{ fontFamily: "monospace" }}>{"X-API-Key"}</span>
         </div>
       </div>
-      {!loginLoading && (
+      {!loading && (
         <Input.Group style={{ paddingBottom: "26px" }}>
-          {loggedIn ? (
+          {loggedIn && account ? (
             <span style={{ display: "flex" }}>
               <Tooltip
                 trigger={["hover", "focus"]}
