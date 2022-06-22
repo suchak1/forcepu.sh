@@ -8,7 +8,7 @@ import {
   Tooltip,
   notification,
 } from "antd";
-import { getApiUrl, useAccount } from "@/utils";
+import { getApiUrl, useAccount, getEnvironment, getHostname } from "@/utils";
 import swaggerSpec from "../../api/spec/swagger.json";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { CopyOutlined } from "@ant-design/icons";
@@ -19,11 +19,9 @@ import "./index.less";
 import styled from "styled-components";
 
 const { Title } = Typography;
-swaggerSpec.servers[0].url = getApiUrl();
+swaggerSpec.servers[0].url =
+  getEnvironment() === "local" ? getApiUrl() : getHostname(false);
 
-//  input {
-//    pointer-events: none;
-//  }
 const APIKey = styled(Input.Password)`
   input {
     font-family: monospace;
@@ -54,7 +52,6 @@ const DocsPage = ({ loginLoading, setShowLogin }: DocsProps) => {
   const [accountLoading, setAccountLoading] = useState(false);
   const [account, setAccount] = useState();
   const loading = loginLoading || accountLoading;
-  // const { api_key } = account;
   useEffect(useAccount(loggedIn, setAccount, setAccountLoading), [loggedIn]);
 
   const copyToClipboard = (val: string, name: string) =>
@@ -64,9 +61,6 @@ const DocsPage = ({ loginLoading, setShowLogin }: DocsProps) => {
     );
 
   // TODO:
-  // 1. remove account debugging line
-  // 2. Make API key uncopyable - combo of user-select: none and pointer-events:none?
-  // (Make sure that pointer events doesn't ruin tooltip hint)
   // 3. Move Docs tab to the right? and remove signed in as User text?
 
   return (
@@ -90,11 +84,6 @@ const DocsPage = ({ loginLoading, setShowLogin }: DocsProps) => {
                 placement="bottom"
               >
                 <APIKey
-                  // style={{
-                  //   userSelect: "none",
-                  //   "-webkit-user-select": "none",
-                  //   "user-select": "none",
-                  // }}
                   style={{ userSelect: "none" }}
                   addonBefore="API Key"
                   defaultValue={account?.api_key}
@@ -145,6 +134,12 @@ const DocsPage = ({ loginLoading, setShowLogin }: DocsProps) => {
               duration: 10,
               message: "Wrong API Key",
               description: "Copy your API key from the Auth section.",
+            });
+          } else {
+            notification.success({
+              duration: 10,
+              message: "Authenticated",
+              description: "Your request is now authenticated.",
             });
           }
           return req;
