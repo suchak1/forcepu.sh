@@ -32,7 +32,7 @@
     "@umijs/plugin-dva": "^0.13.1",
     "@umijs/plugin-request": "^2.8.1",
     "@wojtekmaj/react-hooks": "^1.13.0",
-    "antd": "4.20.2",
+    "antd": "^4.21.3",
     "aws-amplify": "4.3.15",
     "react-hover-video-player": "^9.4.0",
     "react-pdf": "^5.7.1",
