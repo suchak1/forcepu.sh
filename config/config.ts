@@ -6,9 +6,6 @@ export default defineConfig({
   dva: {
     hmr: true,
   },
-  locale: {
-    baseNavigator: true,
-  },
   // publicPath: 'assets/'
   theme: {'switch-color': '#F7931A'},
   metas: [
