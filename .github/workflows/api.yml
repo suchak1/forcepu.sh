@@ -38,7 +38,7 @@ jobs:
           node-version: 16
 
       - name: Create parameters.env [prod]
-        uses: SpicyPizza/create-envfile@v1.2
+        uses: SpicyPizza/create-envfile@v1.3
         with:
           envkey_S3Bucket: ${{ secrets.HYPERDRIVE_BUCKET }}
           envkey_Stage: prod
