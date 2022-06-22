@@ -132,7 +132,7 @@ interface LayoutProps {
   route: any;
   children: any;
 }
-const Layout = ({ route, children }: LayoutProps) => {
+const Layout = ({ children }: LayoutProps) => {
   const [showLogin, setShowLogin] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
   const { user: loggedIn, signOut } = useAuthenticator((context) => [
