@@ -19,8 +19,7 @@ import "./index.less";
 import styled from "styled-components";
 
 const { Title } = Typography;
-swaggerSpec.servers[0].url =
-  getEnvironment() === "local" ? getApiUrl() : getHostname(false);
+swaggerSpec.servers[0].url = getApiUrl();
 
 const APIKey = styled(Input.Password)`
   input {
