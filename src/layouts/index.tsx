@@ -13,16 +13,16 @@ import "@aws-amplify/ui-react/styles.css";
 import BTC_ICE from "../../assets/btc_ice.png";
 import overrides from "./index.less";
 import "./index.less";
-import { useLoginLoading } from "@/utils";
+import { useLoginLoading, getEnvironment, getHostname } from "@/utils";
 
 let config;
-const isLocal = process.env.NODE_ENV === "development";
-const prodHostname = "forcepu.sh";
-const devHostname = "dev.forcepu.sh";
-const isDev = window.location.hostname === devHostname;
-const redirectUrl = isDev
-  ? `https://${devHostname}`
-  : `https://${prodHostname}`;
+const isLocal = getEnvironment() === "local";
+const protocol = isLocal ? "http" : "https";
+const hostname = getHostname(false);
+const port = isLocal ? ":8000" : "";
+// const { pathname } = window.location;
+// const redirectUrl = `${protocol}://${hostname}${port}${pathname}`;
+const redirectUrl = `${protocol}://${hostname}${port}`;
 
 if (isLocal) {
   config = require("@/aws-exports").default;
@@ -64,6 +64,8 @@ if (isLocal) {
     aws_cognito_verification_mechanisms: ["EMAIL"],
   };
 }
+// config.oauth.redirectSignIn = redirectUrl;
+// config.oauth.redirectSignOut = redirectUrl;
 
 Amplify.configure(config);
 
