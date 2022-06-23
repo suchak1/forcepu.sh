@@ -309,9 +309,23 @@
   }
 }
 
-
 .swagger-ui section.models.is-open {
   padding: unset;
+}
+
+// Response schema width on mobile
+@media (max-width: 700px) {
+  .swagger-ui .model-hint {
+    display: none;
+  }
+
+  .swagger-ui .model-example {
+    margin-left: -100px;
+  }
+}
+
+.swagger-ui .renderedMarkdown {
+  color:rgba(255, 255, 255, 0.65);
 }
 
 .ant-typography + h2.ant-typography {

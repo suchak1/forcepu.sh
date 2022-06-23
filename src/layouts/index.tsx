@@ -219,6 +219,8 @@ const Layout = ({ children }: LayoutProps) => {
                 </Button>
               )}
               <Modal
+                // changing this would change position of modal when you alternate between Sign In and Create Account
+                style={{ height: "462px" }}
                 visible={showModal}
                 closable={false}
                 centered

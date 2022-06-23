@@ -112,7 +112,8 @@ const DocsPage = ({ loginLoading, setShowLogin }: DocsProps) => {
         }
         spec={swaggerSpec}
         // can make this 0 to collapse Schema
-        defaultModelsExpandDepth={1}
+        // or 1 to reveal Schema names
+        defaultModelsExpandDepth={0}
         persistAuthorization
         displayRequestDuration
         requestInterceptor={(req: Request) => {
