@@ -19,7 +19,7 @@ def get_signals(event, _):
     return response
 
 
-def return_error(status, message):
+def error(status, message):
     return {
         "statusCode": status,
         "body": json.dumps(
@@ -37,11 +37,11 @@ def handle_get(event):
     # first get user by api key
     req_headers = event['headers']
     if 'x-api-key' not in req_headers:
-        return_error(401, 'Provide a valid API key.')
+        return error(401, 'Provide a valid API key.')
     api_key = req_headers['x-api-key']
     query_results = query_by_api_key(api_key)
     if not query_results:
-        return_error(401, 'Provide a valid API key.')
+        return error(401, 'Provide a valid API key.')
     user = query_results[0]
 
     # if in beta:
@@ -61,7 +61,7 @@ def handle_get(event):
         #           add key to usage plan
         #       elif not verified and not active:
         #           error out as 402, This endpoint is for subscribers only.
-        return return_error(402, 'This endpoint is for beta subscribers only.')
+        return error(402, 'This endpoint is for beta subscribers only.')
     # proceed
 
     # Notes: Instead of using usage plan,
@@ -87,9 +87,9 @@ def handle_get(event):
     # Update user model in db with new access_queue
     user.update(actions=[UserModel.access_queue.set(access_queue)])
     if quota_reached:
-        return return_error(403,
-                            f'You have reached your quota of {max_accesses} requests / {duration_days} day(s).'
-                            )
+        return error(403,
+                     f'You have reached your quota of {max_accesses} requests / {duration_days} day(s).'
+                     )
 
     # Find out how many requests are left
     remaining = 0
