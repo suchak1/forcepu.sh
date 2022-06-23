@@ -183,7 +183,7 @@ const DocsPage = ({ loginLoading, setShowLogin }: DocsProps) => {
               message: "Quota",
               description: message,
             });
-          } else {
+          } else if (status !== 401) {
             notification.error({
               duration: 10,
               message: status in errors ? errors[status].message : "Failure",
