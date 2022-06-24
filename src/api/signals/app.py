@@ -7,7 +7,8 @@ from shared.utils import handle_options
 
 s3 = boto3.client('s3')
 
-headers = {"Access-Control-Allow-Origin": "*"}
+res_headers = {"Access-Control-Allow-Origin": "*"}
+
 
 def get_signals(event, _):
     if event['httpMethod'].upper() == 'OPTIONS':
@@ -18,22 +19,30 @@ def get_signals(event, _):
     return response
 
 
-def unauthorized_error(message):
+def error(status, message):
     return {
-        "statusCode": 403,
+        "statusCode": status,
         "body": json.dumps(
             {'message': message}
         ),
-        "headers": headers
+        "headers": res_headers
     }
+
 
 def enough_time_has_passed(start, end, delta):
     return end - start >= delta
 
+
 def handle_get(event):
     # first get user by api key
-    api_key = event['headers']['x-api-key']
-    user = query_by_api_key(api_key)[0]
+    req_headers = event['headers']
+    if 'x-api-key' not in req_headers:
+        return error(401, 'Provide a valid API key.')
+    api_key = req_headers['x-api-key']
+    query_results = query_by_api_key(api_key)
+    if not query_results:
+        return error(401, 'Provide a valid API key.')
+    user = query_results[0]
 
     # if in beta:
     if user.permissions.in_beta:
@@ -47,12 +56,12 @@ def handle_get(event):
         #   AND hit stripe subscription endpoint
         #       if verified (simple ok response) but not active sub:
         #           remove key from usage plan
-        #           error out as 403, inactive subscription / renew sub
+        #           error out as 402, inactive subscription / renew sub
         #       elif not verified (error response) but active sub:
         #           add key to usage plan
         #       elif not verified and not active:
-        #           error out as 403, This endpoint is for subscribers only.
-        return unauthorized_error('This endpoint is for subscribers only.')
+        #           error out as 402, This endpoint is for subscribers only.
+        return error(402, 'This endpoint is for beta subscribers only.')
     # proceed
 
     # Notes: Instead of using usage plan,
@@ -78,10 +87,10 @@ def handle_get(event):
     # Update user model in db with new access_queue
     user.update(actions=[UserModel.access_queue.set(access_queue)])
     if quota_reached:
-        return unauthorized_error(
-            f'You have reached your quota of {max_accesses} requests / {duration_days} day(s).'
-        )
-    
+        return error(403,
+                     f'You have reached your quota of {max_accesses} requests / {duration_days} day(s).'
+                     )
+
     # Find out how many requests are left
     remaining = 0
     for access in access_queue:
@@ -130,7 +139,7 @@ def handle_get(event):
     return {
         "statusCode": status_code,
         "body": body,
-        "headers": headers
+        "headers": res_headers
     }
 
 

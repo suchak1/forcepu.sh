@@ -57,9 +57,9 @@
   z-index: -1000 !important;
 }
 
-// :global(.ant-modal) {
-//   top: 20%;
-// }
+:global(.ant-modal-mask) {
+  background-color: rgba(0, 0, 0, 0.8);
+}
 
 :global(.ant-modal-body) {
   padding: 0;
@@ -127,9 +127,8 @@
 }
 
 :global(.ant-menu.ant-menu-dark .ant-menu-item-active:hover) {
-  background-color: #52e5ff;
+  background-color: inherit;
   color: white;
-  // font-weight: 600;
 }
 
 .ice {

@@ -7,7 +7,7 @@ from pynamodb.attributes import UnicodeAttribute, MapAttribute, BooleanAttribute
 
 
 def query_by_api_key(api_key):
-    return list(UserModel.api_key_index.query(api_key))
+    return list(UserModel.api_key_index.query(api_key)) if api_key else []
 
 
 def get_api_key():

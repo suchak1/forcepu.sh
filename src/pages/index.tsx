@@ -25,16 +25,18 @@ import {
 import styles from "./index.less";
 import layoutStyles from "../layouts/index.less";
 import "./index.less";
-import swaggerSpec from "../api/spec/swagger.json";
-import { getApiUrl, useLoginLoading, getDateRange, addDays } from "@/utils";
+import {
+  getApiUrl,
+  useLoginLoading,
+  getDateRange,
+  addDays,
+  useAccount,
+  signalColors,
+  signalEmojis,
+} from "@/utils";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 const { Title } = Typography;
-import styled from "styled-components";
-import SwaggerUI from "swagger-ui-react";
-import "swagger-ui-react/swagger-ui.css";
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
-
-swaggerSpec.servers[0].url = getApiUrl();
 
 const Page = () => {
   const ribbonColors = {
@@ -55,16 +57,7 @@ const Page = () => {
     Fri: "#13A8A8",
     Sat: "#D87A16",
   };
-  const signalColors = {
-    BUY: "lime",
-    SELL: "red",
-    HODL: "#F7931A",
-  };
 
-  const signalEmojis = {
-    BUY: "🚀",
-    SELL: "💥",
-  };
   const caretIconSize = 50;
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const HODL = "HODL";
@@ -117,24 +110,7 @@ const Page = () => {
       .finally(() => setPreviewLoading(false));
   }, []);
 
-  useEffect(() => {
-    if (loggedIn) {
-      setAccountLoading(true);
-      const { idToken } = loggedIn.signInUserSession;
-      const url = `${getApiUrl()}/account`;
-      // remove this after debugging
-      // setAccount({ api_key: "a".repeat(86), permissions: { in_beta: true } });
-      fetch(url, {
-        method: "GET",
-        headers: { Authorization: idToken.jwtToken },
-      })
-        .then((response) => response.json())
-        .then((data) => setAccount(data))
-        .catch((err) => console.error(err))
-        .finally(() => setAccountLoading(false));
-    }
-  }, [loggedIn]);
-
+  useEffect(useAccount(loggedIn, setAccount, setAccountLoading), [loggedIn]);
   useEffect(useLoginLoading(setLoginLoading));
 
   const fetchSignals = () => {
@@ -168,7 +144,7 @@ const Page = () => {
       .then((response) => {
         const { message, data } = response;
         notification.warning({
-          duration: 5,
+          duration: 10,
           message: "Quota",
           description: message,
         });
@@ -309,38 +285,6 @@ const Page = () => {
     },
   ];
 
-  // const APIKey = styled(Input.Password)`
-  //   input {
-  //     pointer-events: none;
-  //   }
-
-  //   .ant-input-affix-wrapper:hover,
-  //   .ant-input-affix-wrapper:active {
-  //     border-color: #52e5ff;
-  //     box-shadow: 0 0 5px #52e5ff;
-  //   }
-
-  //   .ant-input-affix-wrapper:focus,
-  //   .ant-input-affix-wrapper-focused {
-  //     border-color: #52e5ff;
-  //   }
-  // `;
-
-  // const StyledSwagger = styled(SwaggerUI)``;
-  // .swagger-ui .opblock-description-wrapper {
-  //   display: none;
-  // }
-
-  // .swagger-ui .opblock.opblock-get .opblock-summary-method {
-  //   background: #52e5ff;
-  // }
-
-  // const copyToClipboard = (val: string, name: string) =>
-  //   navigator.clipboard.writeText(val).then(
-  //     () => message.success(`Copied ${name} to clipboard.`),
-  //     () => message.error(`Did not copy ${name} to clipboard`)
-  //   );
-
   const betaTitlePrefix = "New Signal:";
   const betaTitle = (
     <div className={styles.content}>
@@ -448,7 +392,7 @@ const Page = () => {
           message={
             inBeta
               ? "Congrats! You've been selected for the closed beta. 🎊"
-              : "You are not in the closed beta, but you may receive an invitation in the future."
+              : "You are not in the closed beta, but you may receive an invitation in the future. 📧"
           }
           type={inBeta ? "success" : "warning"}
           showIcon
@@ -663,35 +607,6 @@ const Page = () => {
                     ))}
                   </Row>
                 </div>
-                {/* <Input.Group> */}
-                {/* <span style={{ display: "flex" }}> */}
-                {/* <APIKey */}
-                {/* style={{ userSelect: "none" }} */}
-                {/* // style={{pointerEvents: 'none'}} */}
-                {/* addonBefore="API Key" */}
-                {/* defaultValue={account?.api_key} */}
-                {/* readOnly */}
-                {/* /> */}
-                {/* change input focus color to cyan */}
-                {/* <Button */}
-                {/* onClick={() => */}
-                {/* copyToClipboard(account?.api_key, "API Key") */}
-                {/* } */}
-                {/* icon={<CopyOutlined />} */}
-                {/* /> */}
-                {/* handle copying to clipboard */}
-                {/* show success or info alert for a few sec at top when Copy button is pressed */}
-                {/* </span> */}
-                {/* </Input.Group> */}
-                {/* <SwaggerUI url="https://petstore.swagger.io/v2/swagger.json" /> */}
-                {/* <SwaggerUI spec={swaggerSpec} /> */}
-                {/* use signals_ui.pdf in downloads folder as guide, keep wide screen - better for mobile */}
-                {/* remove params wrapper div, remove info div, rename algo to Signals API or Algo API, ,  */}
-                {/* requestInterceptor => should inject api key if necessary, responseInterceptor => should reveal cards on left */}
-                {/* parameterize api vs api.dev and replace string in json after importing */}
-                {/* split up pages: */}
-                {/* 1. cards w colors and data on home page after login */}
-                {/* 2. API swagger docs on separate Page called Docs with NavLink in header */}
               </>
             ) : (
               !loading && (

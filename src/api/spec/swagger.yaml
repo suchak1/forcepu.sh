@@ -4,41 +4,43 @@ info:
   version: '1.0'
 servers:
   - url: https://api.forcepu.sh
-    # variables:
-    #   env:
-    #     default: api 
-    #     enum:
-    #       - api
-    #       - api.dev
 paths:
-  # /preview:
   /signals:
     get:
       tags:
         - Algorithm
-      # security:
-      # - ApiKeyAuth: []
       summary: Get the latest BUY / SELL signals
       responses:
         '200':
-          description: latest signals for the given asset
+          description: "**OK**: latest signals for the given asset"
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SignalResponse'
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "You have 3 requests left / 1 day(s)."
+                    description: Quota
+                  data:
+                    type: array
+                    description: Signals
+                    items:
+                      $ref: '#/components/schemas/SignalDatum'
+        '401':
+          description: "**Unauthorized:** invalid API key"
+        '402':
+          description: "**Payment Required:** beta subscribers only"
         '403':
-          description: Unauthorized Request (wrong api key OR user is not in beta)
+          description: "**Forbidden:** quota reached"
 components:
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
       in: header
       name: X-API-Key
-      # hopefully, API Gateway lowercases this
   schemas:
-    SignalResponse:
+    SignalDatum:
       type: object
       required:
         - Signal
