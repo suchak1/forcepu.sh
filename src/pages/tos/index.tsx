@@ -3,7 +3,7 @@ import { connect } from "dva";
 import { Typography } from "antd";
 const { Title } = Typography;
 
-const TOSPage = ({ dispatch, tos, _loading }) => {
+export default ({ dispatch, tos, _loading }) => {
   return (
     <div style={{ wordWrap: "break-word" }}>
       <Title>Terms of Service & Financial Disclaimer</Title>
@@ -625,8 +625,8 @@ const TOSPage = ({ dispatch, tos, _loading }) => {
   );
 };
 
-TOSPage.displayName = "TOS";
+// TOSPage.displayName = "TOS";
 
-export default connect(({ tos, loading }) => ({
-  tos,
-}))(TOSPage);
+// export default connect(({ tos, loading }) => ({
+//   tos,
+// }))(TOSPage);
