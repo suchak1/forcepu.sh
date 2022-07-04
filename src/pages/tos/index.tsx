@@ -1,9 +1,8 @@
 import React from "react";
-import { connect } from "dva";
 import { Typography } from "antd";
 const { Title } = Typography;
 
-const TOSPage = ({ dispatch, tos, _loading }) => {
+const TOSPage = () => {
   return (
     <div style={{ wordWrap: "break-word" }}>
       <Title>Terms of Service & Financial Disclaimer</Title>

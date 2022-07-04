@@ -152,6 +152,7 @@ const Layout = ({ children }: LayoutProps) => {
   if (window?.location?.pathname === "/docs") {
     children = React.cloneElement(children, { loginLoading, setShowLogin });
   }
+
   return (
     <AntLayout>
       <AntLayout.Header
