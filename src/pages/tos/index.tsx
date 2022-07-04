@@ -6,7 +6,7 @@ const { Title } = Typography;
 const TOSPage = ({ dispatch, tos, _loading }) => {
   return (
     <div style={{ wordWrap: "break-word" }}>
-      <h2>Terms of Service &amp; Financial Disclaimer</h2>
+      <Title>Terms of Service & Financial Disclaimer</Title>
       <p className="small">Effective 4 July 2022</p>
       <p>From time to time FORCEPU.SH may review and update this Policy.</p>
       <p>
@@ -23,9 +23,9 @@ const TOSPage = ({ dispatch, tos, _loading }) => {
         the basis of any claim, demand, or cause of action against FORCEPU.SH or
         anyone affiliated therewith.
       </p>
-      <hr />
+
       <section id="terms-and-conditions">
-        <h3>Terms and Conditions</h3>
+        <Title level={2}>Terms and Conditions</Title>
         <p>
           The information provided by FORCEPU.SH on the FORCEPU.SH web site is
           owned by or licensed to FORCEPU.SH and any user is permitted to store,
@@ -48,9 +48,9 @@ const TOSPage = ({ dispatch, tos, _loading }) => {
           indirect, consequential, punitive or exemplary).
         </p>
       </section>
-      <hr />
+
       <section id="terms-of-use">
-        <h3>Terms of Use</h3>
+        <Title level={2}>Terms of Use</Title>
         <p>
           Welcome to FORCEPU.SH. These Terms of Use govern your use of the
           FORCEPU.SH Network (the websites of FORCEPU.SH, hereafter referred to
@@ -64,9 +64,9 @@ const TOSPage = ({ dispatch, tos, _loading }) => {
           IF YOU DO NOT AGREE, DO NOT USE FORCEPU.SH.
         </p>
       </section>
-      <hr />
+
       <section id="terms-changes">
-        <h3>Changes to the Terms of Use</h3>
+        <Title level={2}>Changes to the Terms of Use</Title>
         <p>
           We may change these Terms of Use at any time. You can review the most
           current version of these terms by clicking on the “Terms of Service
@@ -76,20 +76,20 @@ const TOSPage = ({ dispatch, tos, _loading }) => {
           Use, you are signifying your acceptance of the new terms.
         </p>
       </section>
-      <hr />
+
       <section id="site-changes">
-        <h3>Changes to FORCEPU.SH</h3>
+        <Title level={2}>Changes to FORCEPU.SH</Title>
         <p>
           We may discontinue or change any service or feature on FORCEPU.SH at
           any time and without notice.
         </p>
       </section>
-      <hr />
+
       <section id="info-ownership">
-        <h3>
+        <Title level={2}>
           Ownership of Information; License to use forcepu.sh; Redistribution of
           Data
-        </h3>
+        </Title>
         <p>
           Unless otherwise noted, all right, title and interest in and to
           FORCEPU.SH, and all information made available through FORCEPU.SH or
@@ -137,9 +137,9 @@ const TOSPage = ({ dispatch, tos, _loading }) => {
           DISASSEMBLING OR CREATING DERIVATIVE WORKS.
         </p>
       </section>
-      <hr />
+
       <section id="third-party-sites">
-        <h3>Third Party Sites and Advertisers</h3>
+        <Title level={2}>Third Party Sites and Advertisers</Title>
         <p>
           As a convenience to you, FORCEPU.SH may provide hyperlinks to web
           sites operated by third parties. When you select these hyperlinks you
@@ -190,9 +190,9 @@ const TOSPage = ({ dispatch, tos, _loading }) => {
           advertisers.
         </p>
       </section>
-      <hr />
+
       <section id="content-disclaimer">
-        <h3>Disclaimer Regarding Content</h3>
+        <Title level={2}>Disclaimer Regarding Content</Title>
         <p>
           FORCEPU.SH cannot and does not represent or guarantee that any of the
           information available through the Services or on FORCEPU.SH is
@@ -217,9 +217,11 @@ const TOSPage = ({ dispatch, tos, _loading }) => {
           or indirect, consequential, punitive or exemplary).
         </p>
       </section>
-      <hr />
+
       <section id="investment-disclaimer">
-        <h3>Disclaimer Regarding Investment Decisions and Trading</h3>
+        <Title level={2}>
+          Disclaimer Regarding Investment Decisions and Trading
+        </Title>
         <p>
           Decisions to buy, sell, hold or trade in securities, commodities and
           other investments involve risk and are best made based on the advice
@@ -244,9 +246,11 @@ const TOSPage = ({ dispatch, tos, _loading }) => {
           expendable risk capital should be used.
         </p>
       </section>
-      <hr />
+
       <section id="performance-disclaimer">
-        <h3>Disclaimer Regarding Hypothetical Performance Results</h3>
+        <Title level={2}>
+          Disclaimer Regarding Hypothetical Performance Results
+        </Title>
         <p>
           Hypothetical performance results have many inherent limitations, some
           of which are mentioned below. No representation is being made that any
@@ -288,9 +292,9 @@ const TOSPage = ({ dispatch, tos, _loading }) => {
           QUALIFIED TO GIVE FINANCIAL ADVICE.
         </p>
       </section>
-      <hr />
+
       <section id="limitation-of-liability">
-        <h3>Limitation of Liability</h3>
+        <Title level={2}>Limitation of Liability</Title>
         <p>
           YOUR EXCLUSIVE REMEDY FOR DISSATISFACTION WITH THE SITE AND CONTENT IS
           TO STOP USING THE SITE AND CONTENT. FORCEPU.SH IS NOT LIABLE FOR ANY
@@ -317,9 +321,9 @@ const TOSPage = ({ dispatch, tos, _loading }) => {
           with a description of the material(s) at issue and the URL.
         </p>
       </section>
-      <hr />
+
       <section id="trading-signals">
-        <h3>Trading Signals</h3>
+        <Title level={2}>Trading Signals</Title>
         <p>
           ALL SIGNALS are for educational purposes only and are not to be
           construed as an offer to buy or sell securities. By reading this, you
@@ -330,9 +334,9 @@ const TOSPage = ({ dispatch, tos, _loading }) => {
           text.
         </p>
       </section>
-      <hr />
+
       <section id="registered-users">
-        <h3>Registered Users</h3>
+        <Title level={2}>Registered Users</Title>
         <p>
           Certain services are available only to registered users of the
           FORCEPU.SH website and require you to sign in with a username and
@@ -359,9 +363,9 @@ const TOSPage = ({ dispatch, tos, _loading }) => {
           (or any portion thereof).
         </p>
       </section>
-      <hr />
+
       <section id="rules-of-conduct">
-        <h3>Rules of Conduct</h3>
+        <Title level={2}>Rules of Conduct</Title>
         <p>
           Your use of the Site and Content is conditioned on your compliance
           with the rules of conduct set forth here. You will not:
@@ -415,9 +419,9 @@ const TOSPage = ({ dispatch, tos, _loading }) => {
           </li>
         </ul>
       </section>
-      <hr />
+
       <section id="termination">
-        <h3>Termination</h3>
+        <Title level={2}>Termination</Title>
         <p>
           FORCEPU.SH, in its sole discretion, may terminate your access to or
           use of the Site and Content, at any time and for any reason. Your
@@ -453,9 +457,9 @@ const TOSPage = ({ dispatch, tos, _loading }) => {
           “Contact Support” link.
         </p>
       </section>
-      <hr />
+
       <section id="access-and-security">
-        <h3>Access and Security</h3>
+        <Title level={2}>Access and Security</Title>
         <p>
           You accept responsibility for the confidentiality and use of any user
           name and email address that you may register for your access to and
@@ -469,9 +473,9 @@ const TOSPage = ({ dispatch, tos, _loading }) => {
           arising from your failure to comply.
         </p>
       </section>
-      <hr />
+
       <section id="feedback">
-        <h3>Feedback to FORCEPU.SH</h3>
+        <Title level={2}>Feedback to FORCEPU.SH</Title>
         <p>
           By submitting ideas, suggestions, documents, and/or proposals to
           FORCEPU.SH through its contact or feedback webpages, you acknowledge
@@ -488,9 +492,9 @@ const TOSPage = ({ dispatch, tos, _loading }) => {
           FORCEPU.SH under any circumstances.
         </p>
       </section>
-      <hr />
+
       <section id="indemnity">
-        <h3>Indemnity</h3>
+        <Title level={2}>Indemnity</Title>
         <p>
           You agree to indemnify and hold FORCEPU.SH and its subsidiaries,
           affiliates, officers, agents, employees, partners and licensors
@@ -502,12 +506,12 @@ const TOSPage = ({ dispatch, tos, _loading }) => {
           Use, or your violation of any rights of another.
         </p>
       </section>
-      <hr />
+
       <section id="billing-cancellation-and-refunds">
-        <h3>
+        <Title level={2}>
           FORCEPU.SH Premier &amp; Ad-Free Billing, Cancellation, and Refund
           Policy
-        </h3>
+        </Title>
         <p>
           Unless otherwise stated, all subscriptions are automatically renewing.
         </p>
@@ -524,9 +528,9 @@ const TOSPage = ({ dispatch, tos, _loading }) => {
           your service will remain active through the end of your paid term.
         </p>
       </section>
-      <hr />
+
       <section id="service-interruption">
-        <h3>Service Interruption</h3>
+        <Title level={2}>Service Interruption</Title>
         <p>
           In the event of an interruption of service lasting five consecutive
           days or longer, FORCEPU.SH agrees to offer applicable subscribers the
@@ -551,9 +555,9 @@ const TOSPage = ({ dispatch, tos, _loading }) => {
           </li>
         </ul>
       </section>
-      <hr />
+
       <section id="algorithm-discontinuation">
-        <h3>Algorithm Discontinuation</h3>
+        <Title level={2}>Algorithm Discontinuation</Title>
         <p>
           In the event of the discontinuation of signals from a FORCEPU.SH
           algorithm, FORCEPU.SH agrees to provide appropriate notice to all
@@ -581,9 +585,9 @@ const TOSPage = ({ dispatch, tos, _loading }) => {
           </li>
         </ul>
       </section>
-      <hr />
+
       <section id="disputes">
-        <h3>Disputes</h3>
+        <Title level={2}>Disputes</Title>
         <p>
           ALL DISPUTES ARISING UNDER THIS AGREEMENT SHALL BE LITIGATED BEFORE A
           COURT LOCATED IN NEW YORK, NEW YORK, WITHOUT REGARD TO CHOICE OF LAW
@@ -600,9 +604,9 @@ const TOSPage = ({ dispatch, tos, _loading }) => {
           BREACH BY YOU OF ANY TERMS OF USE.
         </p>
       </section>
-      <hr />
+
       <section id="site-content-warranty">
-        <h3>SITE AND CONTENT NOT WARRANTED</h3>
+        <Title level={2}>SITE AND CONTENT NOT WARRANTED</Title>
         <p>
           THE SITE AND CONTENT ARE PROVIDED “AS IS” AND WITHOUT WARRANTIES OF
           ANY KIND. YOU BEAR ALL RISKS ASSOCIATED WITH THE USE OF THE SITE AND
