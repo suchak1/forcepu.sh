@@ -38,7 +38,8 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 
-const Page = () => {
+const Page = (_, state: any) => {
+  console.log(state);
   const ribbonColors = {
     Sun: "red",
     Mon: "yellow",

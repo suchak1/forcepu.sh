@@ -134,7 +134,7 @@ interface LayoutProps {
   route: any;
   children: any;
 }
-const Layout = ({ children }: LayoutProps) => {
+const Layout = ({ route, children, renderProps }: LayoutProps) => {
   const [showLogin, setShowLogin] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
   const { user: loggedIn, signOut } = useAuthenticator((context) => [
@@ -150,9 +150,11 @@ const Layout = ({ children }: LayoutProps) => {
   useEffect(useLoginLoading(setLoginLoading));
 
   if (window?.location?.pathname === "/docs") {
-    children = React.cloneElement(children, { loginLoading, setShowLogin });
+    // children = React.cloneElement(children, { loginLoading, setShowLogin });
   }
-
+  const state = { props: "ok" };
+  // console.log(children(route, state));
+  // const childrenWProps = React.cloneElement(children);
   return (
     <AntLayout>
       <AntLayout.Header
@@ -246,7 +248,9 @@ const Layout = ({ children }: LayoutProps) => {
           overflow: "auto",
         }}
       >
-        {children}
+        {/* {children({ props: "ok" })} */}
+        {/* {children({ route, state })} */}
+        {renderProps(state)}
       </AntLayout.Content>
       <AntLayout.Footer
         style={{
@@ -271,6 +275,6 @@ const Layout = ({ children }: LayoutProps) => {
 
 export default ({ route, children }: LayoutProps) => (
   <Authenticator.Provider>
-    <Layout route={route}>{children}</Layout>
+    <Layout route={route} renderProps={(state) => children} />
   </Authenticator.Provider>
 );
