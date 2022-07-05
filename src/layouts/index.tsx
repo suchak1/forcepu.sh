@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import { NavLink } from "umi";
 import { Layout as AntLayout, Menu, Button, Modal } from "antd";
 import {
@@ -13,7 +13,12 @@ import "@aws-amplify/ui-react/styles.css";
 import BTC_ICE from "../../assets/btc_ice.png";
 import overrides from "./index.less";
 import "./index.less";
-import { useLoginLoading, getEnvironment, getHostname } from "@/utils";
+import {
+  useLoginLoading,
+  getEnvironment,
+  getHostname,
+  useAccount,
+} from "@/utils";
 
 let config;
 const isLocal = getEnvironment() === "local";
@@ -130,6 +135,9 @@ const footerHeight = headerHeight;
 // add logo to forcepush div
 // remove menu and menu items?
 // or at least move these pieces out
+
+export const AccountContext = createContext(null);
+
 interface LayoutProps {
   route: any;
   children: any;
@@ -140,14 +148,17 @@ const Layout = ({ children }: LayoutProps) => {
   const { user: loggedIn, signOut } = useAuthenticator((context) => [
     context.user,
   ]);
+  const [account, setAccount] = useState();
+  const [accountLoading, setAccountLoading] = useState(false);
   const showModal = !loggedIn && showLogin;
   const dummy = <Authenticator className={overrides.invisible} />;
   const getAccountText = (user: string | undefined) => `signed in as ${user}`;
-  const account = getAccountText(
+  const accountText = getAccountText(
     loggedIn?.attributes?.name || loggedIn?.attributes?.email
   );
 
   useEffect(useLoginLoading(setLoginLoading));
+  useEffect(useAccount(loggedIn, setAccount, setAccountLoading), [loggedIn]);
 
   if (window?.location?.pathname === "/docs") {
     children = React.cloneElement(children, { loginLoading, setShowLogin });
@@ -201,7 +212,9 @@ const Layout = ({ children }: LayoutProps) => {
                 justifyContent: "flex-end",
               }}
             >
-              {loggedIn && <span className={overrides.account}>{account}</span>}
+              {loggedIn && (
+                <span className={overrides.account}>{accountText}</span>
+              )}
               {loggedIn ? (
                 <Button
                   className="signOut"
@@ -246,7 +259,9 @@ const Layout = ({ children }: LayoutProps) => {
           overflow: "auto",
         }}
       >
-        {children}
+        <AccountContext.Provider value={{ account, accountLoading }}>
+          {children}
+        </AccountContext.Provider>
       </AntLayout.Content>
       <AntLayout.Footer
         style={{

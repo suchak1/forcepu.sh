@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { useState, useEffect } from "react";
 import {
   Typography,
@@ -21,6 +21,7 @@ import {
   CaretDownFilled,
   CaretUpFilled,
   QuestionOutlined,
+  IeSquareFilled,
 } from "@ant-design/icons";
 import styles from "./index.less";
 import layoutStyles from "../layouts/index.less";
@@ -37,9 +38,84 @@ import {
 import { useAuthenticator } from "@aws-amplify/ui-react";
 const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
+import { AccountContext } from "../layouts";
 
-const Page = (_, state: any) => {
-  console.log(state);
+const HODL = "HODL";
+const hyperdrive = "hyperdrive";
+const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
+const formatUSD = (v: number) => {
+  if (v < 1e3) {
+    return `$ ${v}`;
+  } else if (v < 1e6) {
+    return `$ ${v / 1e3}k`;
+  }
+  return `$ ${v / 1e6}M`;
+};
+const LineChart: React.FC<any> = memo(
+  ({ data, formatFx }) => {
+    const config = {
+      // onReady,
+      autoFit: true,
+      data,
+      xField: "Time",
+      yField: "Bal",
+      seriesField: "Name",
+      smooth: true,
+      colorField: "Name",
+      color: ({ Name }) => {
+        if (Name === HODL) {
+          return "magenta";
+        }
+        return "#52e5ff";
+      },
+      area: {
+        style: {
+          fillOpacity: 0.15,
+        },
+      },
+      animation: {
+        // Why is this necessary?
+        // !inBeta &&
+        appear: {
+          animation: "wave-in",
+          duration: 4000,
+        },
+      },
+      xAxis: {
+        tickCount: 10,
+        grid: {
+          line: {
+            style: {
+              lineWidth: 0,
+              strokeOpacity: 0,
+            },
+          },
+        },
+      },
+      yAxis: {
+        label: {
+          formatter: (v: any) => formatFx(v),
+        },
+        grid: {
+          line: {
+            style: {
+              lineWidth: 0,
+              strokeOpacity: 0,
+            },
+          },
+        },
+      },
+      point: {
+        shape: "breath-point",
+      },
+    };
+    return <Line {...config} />;
+  },
+  (pre, next) => JSON.stringify(pre?.data) === JSON.stringify(next?.data)
+);
+
+const Page = () => {
+  const { account, accountLoading } = React.useContext(AccountContext);
   const ribbonColors = {
     Sun: "red",
     Mon: "yellow",
@@ -61,8 +137,6 @@ const Page = (_, state: any) => {
 
   const caretIconSize = 50;
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
-  const HODL = "HODL";
-  const hyperdrive = "hyperdrive";
   const [previewData, setPreviewData] = useState({
     BTC: { data: [], stats: [] },
     USD: { data: [], stats: [] },
@@ -81,7 +155,7 @@ const Page = (_, state: any) => {
   const [signalData, setSignalData] = useState(defaultSignals);
   const [toggle, setToggle] = useState(true);
   const [previewLoading, setPreviewLoading] = useState(true);
-  const [accountLoading, setAccountLoading] = useState(false);
+  // const [accountLoading, setAccountLoading] = useState(false);
   const [signalLoading, setSignalLoading] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
   const [showSignalCard, setShowSignalCard] = useState(false);
@@ -89,17 +163,9 @@ const Page = (_, state: any) => {
   const [haveNewSignal, setHaveNewSignal] = useState(false);
   const [quotaReached, setQuotaReached] = useState(false);
   const loading = previewLoading || accountLoading || loginLoading;
-  const [account, setAccount] = useState();
+  // const [account, setAccount] = useState();
   const inBeta = loggedIn && account?.permissions?.in_beta;
-  const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
-  const formatUSD = (v: number) => {
-    if (v < 1e3) {
-      return `$ ${v}`;
-    } else if (v < 1e6) {
-      return `$ ${v / 1e3}k`;
-    }
-    return `$ ${v / 1e6}M`;
-  };
+
   useEffect(() => {
     // find a way to not load this for in_beta
     // simple if !inBeta or checking accountLoading and loginLoading doesn't work
@@ -111,7 +177,7 @@ const Page = (_, state: any) => {
       .finally(() => setPreviewLoading(false));
   }, []);
 
-  useEffect(useAccount(loggedIn, setAccount, setAccountLoading), [loggedIn]);
+  // useEffect(useAccount(loggedIn, setAccount, setAccountLoading), [loggedIn]);
   useEffect(useLoginLoading(setLoginLoading));
 
   const fetchSignals = () => {
@@ -218,59 +284,61 @@ const Page = (_, state: any) => {
       return group;
     },
   });
-  const config = {
-    autoFit: true,
-    data: toggle ? previewData.BTC.data : previewData.USD.data,
-    xField: "Time",
-    yField: "Bal",
-    seriesField: "Name",
-    smooth: true,
-    colorField: "Name",
-    color: ({ Name }) => {
-      if (Name === HODL) {
-        return "magenta";
-      }
-      return "#52e5ff";
-    },
-    area: {
-      style: {
-        fillOpacity: 0.15,
-      },
-    },
-    animation: !inBeta && {
-      appear: {
-        animation: "wave-in",
-        duration: 4000,
-      },
-    },
-    xAxis: {
-      tickCount: 10,
-      grid: {
-        line: {
-          style: {
-            lineWidth: 0,
-            strokeOpacity: 0,
-          },
-        },
-      },
-    },
-    yAxis: {
-      label: {
-        formatter: (v: any) => (toggle ? formatBTC(v) : formatUSD(v)),
-      },
-      grid: {
-        line: {
-          style: {
-            lineWidth: 0,
-            strokeOpacity: 0,
-          },
-        },
-      },
-    },
-    point: {
-      shape: "breath-point",
-    },
-  };
+  // const config = {
+  //   autoFit: true,
+  //   data: toggle ? previewData.BTC.data : previewData.USD.data,
+  //   xField: "Time",
+  //   yField: "Bal",
+  //   seriesField: "Name",
+  //   smooth: true,
+  //   colorField: "Name",
+  //   color: ({ Name }) => {
+  //     if (Name === HODL) {
+  //       return "magenta";
+  //     }
+  //     return "#52e5ff";
+  //   },
+  //   area: {
+  //     style: {
+  //       fillOpacity: 0.15,
+  //     },
+  //   },
+  //   animation: {
+  //     // Why is this necessary?
+  //     // !inBeta &&
+  //     appear: {
+  //       animation: "wave-in",
+  //       duration: 4000,
+  //     },
+  //   },
+  //   xAxis: {
+  //     tickCount: 10,
+  //     grid: {
+  //       line: {
+  //         style: {
+  //           lineWidth: 0,
+  //           strokeOpacity: 0,
+  //         },
+  //       },
+  //     },
+  //   },
+  //   yAxis: {
+  //     label: {
+  //       formatter: (v: any) => (toggle ? formatBTC(v) : formatUSD(v)),
+  //     },
+  //     grid: {
+  //       line: {
+  //         style: {
+  //           lineWidth: 0,
+  //           strokeOpacity: 0,
+  //         },
+  //       },
+  //     },
+  //   },
+  //   point: {
+  //     shape: "breath-point",
+  //   },
+  // };
 
   const columns = [
     { title: "Metric", dataIndex: "metric", key: "metric" },
@@ -387,244 +455,12 @@ const Page = (_, state: any) => {
   );
 
   return (
-    <>
-      {loggedIn && account && (
-        <Alert
-          message={
-            inBeta
-              ? "Congrats! You've been selected for the closed beta. 🎊"
-              : "You are not in the closed beta, but you may receive an invitation in the future. 📧"
-          }
-          type={inBeta ? "success" : "warning"}
-          showIcon
-          closable
-          style={{ marginBottom: "12px" }}
-        />
-      )}
-      {!loading && (
-        <>
-          <Title>
-            {inBeta ? (
-              <div className={styles.parent}>
-                <div className={styles.child} style={{ marginBottom: "10px" }}>
-                  {betaTitle}
-                </div>
-                <div
-                  className={styles.child}
-                  style={{
-                    marginBottom: "0px",
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    alignItems: "center",
-                    height: "45px",
-                  }}
-                >
-                  {
-                    <Button
-                      disabled={quotaReached}
-                      loading={signalLoading}
-                      className={`${layoutStyles.start} ${styles.signals} ${
-                        quotaReached && styles.disabled
-                      }`}
-                      onClick={fetchSignals}
-                    >
-                      Fetch the latest signals
-                    </Button>
-                  }
-                </div>
-              </div>
-            ) : (
-              "Leveraging AutoML to beat BTC"
-            )}
-            {/* if consecutive buy, then label BUY/HODL with green/orange diagonal split */}
-            {/* same if consecutive sell, then label SELL/HODL with red/orange diagonal split */}
-            {/* on the right of latest signal title or  below latest signals title but above squares row*/}
-            {/* #0C2226 background color of chart - cyan*/}
-            {/* #2C2246 background color of chart - magenta*/}
-          </Title>
-          <span
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              margin: "-12px 0px 12px 0px",
-            }}
-          >
-            {!inBeta && (
-              <>
-                <Title level={5}>
-                  a momentum trading strategy using{" "}
-                  <a href="https://github.com/suchak1/hyperdrive">
-                    <i style={{ color: "#52e5ff" }}>{hyperdrive}</i>
-                  </a>
-                </Title>
-                <Switch
-                  checkedChildren="BTC (₿)"
-                  unCheckedChildren="USD ($)"
-                  defaultChecked
-                  onChange={(checked) => setToggle(checked)}
-                />
-              </>
-            )}
-          </span>
-        </>
-      )}
-      {loading ? (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "400px",
-          }}
-        >
-          <Spin indicator={antIcon} />
-        </div>
-      ) : (
-        <div className={styles.parent}>
-          {!inBeta && !loading && (
-            <div className={styles.child}>
-              <Line {...config} />
-            </div>
-          )}
-          <div style={{ height: "400px" }} className={styles.child}>
-            {inBeta ? (
-              <>
-                <Modal
-                  visible={showSignalCard}
-                  closable={false}
-                  onCancel={() => setShowSignalCard(false)}
-                  centered
-                >
-                  <Card
-                    headStyle={{
-                      background: cardHeaderColors[signalCardData.Day],
-                    }}
-                    title={signalCardData.Day.toUpperCase()}
-                  >
-                    <div>
-                      <span>
-                        <b>{"Signal: "}</b>
-                      </span>
-                      <span
-                        style={{
-                          fontFamily: "monospace",
-                          color:
-                            signalCardData.Signal === "BUY"
-                              ? "lime"
-                              : signalCardData.Signal === "SELL"
-                              ? "red"
-                              : "inherit",
-                        }}
-                      >
-                        {signalCardData.Signal}
-                      </span>
-                    </div>
-                    <div>
-                      <span>
-                        <b>{"Date: "}</b>
-                      </span>
-                      <span style={{ fontFamily: "monospace" }}>
-                        {signalCardData.Date}
-                      </span>
-                    </div>
-                    <div>
-                      <span>
-                        <b>{"Asset: "}</b>
-                      </span>
-                      <span style={{ fontFamily: "monospace" }}>
-                        {"BTC ("}
-                        <span style={{ color: "#F7931A" }}>{"₿"}</span>
-                        {")"}
-                      </span>
-                    </div>
-                  </Card>
-                </Modal>
-                <div
-                  style={{
-                    height: "100%",
-                    width: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    // marginBottom: "36px",
-                  }}
-                >
-                  <Row style={{ width: "100%" }}>
-                    {signalData.map((datum, idx) => (
-                      <Col key={idx} flex={1}>
-                        <Badge.Ribbon
-                          color={ribbonColors[datum.Day]}
-                          text={<b>{datum.Day.toUpperCase()}</b>}
-                        >
-                          <Card
-                            hoverable
-                            onClick={() => {
-                              setSignalCardData(datum);
-                              setShowSignalCard(true);
-                            }}
-                            bodyStyle={{
-                              display: "flex",
-                              justifyContent: "center",
-                              height: "100%",
-                              alignItems: "center",
-                            }}
-                          >
-                            {signalLoading && (
-                              <Skeleton
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                }}
-                                loading
-                                active
-                              />
-                            )}
-                            {!signalLoading &&
-                              (datum.Signal === "BUY" ? (
-                                <CaretUpFilled
-                                  style={{
-                                    fontSize: `${caretIconSize}px`,
-                                    color: "lime",
-                                    marginBottom: `${caretIconSize / 2}px`,
-                                  }}
-                                />
-                              ) : datum.Signal === "SELL" ? (
-                                <CaretDownFilled
-                                  style={{
-                                    fontSize: `${caretIconSize}px`,
-                                    color: "red",
-                                    marginTop: `${caretIconSize / 2}px`,
-                                  }}
-                                />
-                              ) : (
-                                <QuestionOutlined
-                                  style={{ fontSize: `${caretIconSize}px` }}
-                                />
-                              ))}
-                          </Card>
-                        </Badge.Ribbon>
-                      </Col>
-                    ))}
-                  </Row>
-                </div>
-              </>
-            ) : (
-              !loading && (
-                <Table
-                  dataSource={
-                    toggle ? previewData.BTC.stats : previewData.USD.stats
-                  }
-                  columns={columns}
-                  pagination={false}
-                  loading={loading}
-                />
-              )
-            )}
-          </div>
-        </div>
-      )}
-    </>
+    <LineChart
+      data={toggle ? previewData.BTC.data : previewData.USD.data}
+      formatFx={toggle ? formatBTC : formatUSD}
+    />
+    // <Line {...config} onlyChangeData={true} />
+
     // automated portfolio management
     // using momentum based strategy
 
