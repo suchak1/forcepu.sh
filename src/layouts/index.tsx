@@ -136,7 +136,7 @@ const footerHeight = headerHeight;
 // remove menu and menu items?
 // or at least move these pieces out
 
-export const AccountContext = createContext(null);
+export const AccountContext = createContext({});
 
 interface LayoutProps {
   route: any;
@@ -160,9 +160,9 @@ const Layout = ({ children }: LayoutProps) => {
   useEffect(useLoginLoading(setLoginLoading));
   useEffect(useAccount(loggedIn, setAccount, setAccountLoading), [loggedIn]);
 
-  if (window?.location?.pathname === "/docs") {
-    children = React.cloneElement(children, { loginLoading, setShowLogin });
-  }
+  // if (window?.location?.pathname === "/docs") {
+  //   children = React.cloneElement(children, { loginLoading, setShowLogin });
+  // }
 
   return (
     <AntLayout>
@@ -259,7 +259,9 @@ const Layout = ({ children }: LayoutProps) => {
           overflow: "auto",
         }}
       >
-        <AccountContext.Provider value={{ account, accountLoading }}>
+        <AccountContext.Provider
+          value={{ account, accountLoading, loginLoading, setShowLogin }}
+        >
           {children}
         </AccountContext.Provider>
       </AntLayout.Content>
