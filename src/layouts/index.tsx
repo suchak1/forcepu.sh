@@ -20,8 +20,8 @@ import {
   getHostname,
   getAccount,
 } from "@/utils";
-import TOS from "../pages/tos";
-import pageStyles from "../pages/index.less";
+import TOS, { TOSTitleText } from "../pages/tos";
+// import pageStyles from "../pages/index.less";
 
 let config;
 const isLocal = getEnvironment() === "local";
@@ -276,7 +276,7 @@ const Layout = ({ children }: LayoutProps) => {
         <Modal
           width={600}
           visible
-          title="Acknowledgement"
+          title={TOSTitleText(true)}
           bodyStyle={{
             height: "200px",
             padding: "24px",
@@ -314,7 +314,6 @@ const Layout = ({ children }: LayoutProps) => {
                 loading={acknowledgeLoading}
                 disabled={!checked}
                 onClick={onAcknowledge}
-                // style={!checked && { borderColor: "#434343" }}
               >
                 OK
               </Button>
@@ -324,7 +323,7 @@ const Layout = ({ children }: LayoutProps) => {
           // confirm button hits api to update user
           // onCancel={() => setShowLogin(false)}
         >
-          <TOS maxLevel={4} />
+          <TOS modal />
         </Modal>
         <AccountContext.Provider
           value={{ account, accountLoading, loginLoading, setShowLogin }}
