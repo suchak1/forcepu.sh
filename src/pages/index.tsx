@@ -27,7 +27,7 @@ import layoutStyles from "../layouts/index.less";
 import "./index.less";
 import {
   getApiUrl,
-  useLoginLoading,
+  getLoginLoading,
   getDateRange,
   addDays,
   signalColors,
@@ -176,8 +176,8 @@ const Page = () => {
       .finally(() => setPreviewLoading(false));
   }, []);
 
-  // useEffect(useAccount(loggedIn, setAccount, setAccountLoading), [loggedIn]);
-  useEffect(useLoginLoading(setLoginLoading));
+  // useEffect(getAccount(loggedIn, setAccount, setAccountLoading), [loggedIn]);
+  useEffect(getLoginLoading(setLoginLoading));
 
   const fetchSignals = () => {
     setSignalLoading(true);
@@ -510,6 +510,7 @@ const Page = () => {
                   closable={false}
                   onCancel={() => setShowSignalCard(false)}
                   centered
+                  footer={null}
                 >
                   <Card
                     headStyle={{

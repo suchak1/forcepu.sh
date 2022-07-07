@@ -2,10 +2,10 @@ import React from "react";
 import { Typography } from "antd";
 const { Title } = Typography;
 
-const TOSPage = () => {
+const TOSPage = ({ maxLevel } = { maxLevel: 1 }) => {
   return (
     <div style={{ wordWrap: "break-word" }}>
-      <Title>Terms of Service & Financial Disclaimer</Title>
+      <Title level={maxLevel}>Terms of Service & Financial Disclaimer</Title>
       <p className="small">Effective 4 July 2022</p>
       <p>From time to time FORCEPU.SH may review and update this Policy.</p>
       <p>
@@ -24,7 +24,7 @@ const TOSPage = () => {
       </p>
 
       <section id="terms-and-conditions">
-        <Title level={2}>Terms and Conditions</Title>
+        <Title level={maxLevel + 1}>Terms and Conditions</Title>
         <p>
           The information provided by FORCEPU.SH on the FORCEPU.SH web site is
           owned by or licensed to FORCEPU.SH and any user is permitted to store,
@@ -49,7 +49,7 @@ const TOSPage = () => {
       </section>
 
       <section id="terms-of-use">
-        <Title level={2}>Terms of Use</Title>
+        <Title level={maxLevel + 1}>Terms of Use</Title>
         <p>
           Welcome to FORCEPU.SH. These Terms of Use govern your use of the
           FORCEPU.SH Network (the websites of FORCEPU.SH, hereafter referred to
@@ -65,7 +65,7 @@ const TOSPage = () => {
       </section>
 
       <section id="terms-changes">
-        <Title level={2}>Changes to the Terms of Use</Title>
+        <Title level={maxLevel + 1}>Changes to the Terms of Use</Title>
         <p>
           We may change these Terms of Use at any time. You can review the most
           current version of these terms by clicking on the “Terms of Service
@@ -77,7 +77,7 @@ const TOSPage = () => {
       </section>
 
       <section id="site-changes">
-        <Title level={2}>Changes to FORCEPU.SH</Title>
+        <Title level={maxLevel + 1}>Changes to FORCEPU.SH</Title>
         <p>
           We may discontinue or change any service or feature on FORCEPU.SH at
           any time and without notice.
@@ -85,7 +85,7 @@ const TOSPage = () => {
       </section>
 
       <section id="info-ownership">
-        <Title level={2}>
+        <Title level={maxLevel + 1}>
           Ownership of Information; License to use forcepu.sh; Redistribution of
           Data
         </Title>
@@ -138,7 +138,7 @@ const TOSPage = () => {
       </section>
 
       <section id="third-party-sites">
-        <Title level={2}>Third Party Sites and Advertisers</Title>
+        <Title level={maxLevel + 1}>Third Party Sites and Advertisers</Title>
         <p>
           As a convenience to you, FORCEPU.SH may provide hyperlinks to web
           sites operated by third parties. When you select these hyperlinks you
@@ -191,7 +191,7 @@ const TOSPage = () => {
       </section>
 
       <section id="content-disclaimer">
-        <Title level={2}>Disclaimer Regarding Content</Title>
+        <Title level={maxLevel + 1}>Disclaimer Regarding Content</Title>
         <p>
           FORCEPU.SH cannot and does not represent or guarantee that any of the
           information available through the Services or on FORCEPU.SH is
@@ -218,7 +218,7 @@ const TOSPage = () => {
       </section>
 
       <section id="investment-disclaimer">
-        <Title level={2}>
+        <Title level={maxLevel + 1}>
           Disclaimer Regarding Investment Decisions and Trading
         </Title>
         <p>
@@ -247,7 +247,7 @@ const TOSPage = () => {
       </section>
 
       <section id="performance-disclaimer">
-        <Title level={2}>
+        <Title level={maxLevel + 1}>
           Disclaimer Regarding Hypothetical Performance Results
         </Title>
         <p>
@@ -293,7 +293,7 @@ const TOSPage = () => {
       </section>
 
       <section id="limitation-of-liability">
-        <Title level={2}>Limitation of Liability</Title>
+        <Title level={maxLevel + 1}>Limitation of Liability</Title>
         <p>
           YOUR EXCLUSIVE REMEDY FOR DISSATISFACTION WITH THE SITE AND CONTENT IS
           TO STOP USING THE SITE AND CONTENT. FORCEPU.SH IS NOT LIABLE FOR ANY
@@ -322,7 +322,7 @@ const TOSPage = () => {
       </section>
 
       <section id="trading-signals">
-        <Title level={2}>Trading Signals</Title>
+        <Title level={maxLevel + 1}>Trading Signals</Title>
         <p>
           ALL SIGNALS are for educational purposes only and are not to be
           construed as an offer to buy or sell securities. By reading this, you
@@ -335,7 +335,7 @@ const TOSPage = () => {
       </section>
 
       <section id="registered-users">
-        <Title level={2}>Registered Users</Title>
+        <Title level={maxLevel + 1}>Registered Users</Title>
         <p>
           Certain services are available only to registered users of the
           FORCEPU.SH website and require you to sign in with a username and
@@ -364,7 +364,7 @@ const TOSPage = () => {
       </section>
 
       <section id="rules-of-conduct">
-        <Title level={2}>Rules of Conduct</Title>
+        <Title level={maxLevel + 1}>Rules of Conduct</Title>
         <p>
           Your use of the Site and Content is conditioned on your compliance
           with the rules of conduct set forth here. You will not:
@@ -420,7 +420,7 @@ const TOSPage = () => {
       </section>
 
       <section id="termination">
-        <Title level={2}>Termination</Title>
+        <Title level={maxLevel + 1}>Termination</Title>
         <p>
           FORCEPU.SH, in its sole discretion, may terminate your access to or
           use of the Site and Content, at any time and for any reason. Your
@@ -458,7 +458,7 @@ const TOSPage = () => {
       </section>
 
       <section id="access-and-security">
-        <Title level={2}>Access and Security</Title>
+        <Title level={maxLevel + 1}>Access and Security</Title>
         <p>
           You accept responsibility for the confidentiality and use of any user
           name and email address that you may register for your access to and
@@ -474,7 +474,7 @@ const TOSPage = () => {
       </section>
 
       <section id="feedback">
-        <Title level={2}>Feedback to FORCEPU.SH</Title>
+        <Title level={maxLevel + 1}>Feedback to FORCEPU.SH</Title>
         <p>
           By submitting ideas, suggestions, documents, and/or proposals to
           FORCEPU.SH through its contact or feedback webpages, you acknowledge
@@ -493,7 +493,7 @@ const TOSPage = () => {
       </section>
 
       <section id="indemnity">
-        <Title level={2}>Indemnity</Title>
+        <Title level={maxLevel + 1}>Indemnity</Title>
         <p>
           You agree to indemnify and hold FORCEPU.SH and its subsidiaries,
           affiliates, officers, agents, employees, partners and licensors
@@ -507,7 +507,7 @@ const TOSPage = () => {
       </section>
 
       <section id="billing-cancellation-and-refunds">
-        <Title level={2}>
+        <Title level={maxLevel + 1}>
           FORCEPU.SH Premier &amp; Ad-Free Billing, Cancellation, and Refund
           Policy
         </Title>
@@ -529,7 +529,7 @@ const TOSPage = () => {
       </section>
 
       <section id="service-interruption">
-        <Title level={2}>Service Interruption</Title>
+        <Title level={maxLevel + 1}>Service Interruption</Title>
         <p>
           In the event of an interruption of service lasting five consecutive
           days or longer, FORCEPU.SH agrees to offer applicable subscribers the
@@ -556,7 +556,7 @@ const TOSPage = () => {
       </section>
 
       <section id="algorithm-discontinuation">
-        <Title level={2}>Algorithm Discontinuation</Title>
+        <Title level={maxLevel + 1}>Algorithm Discontinuation</Title>
         <p>
           In the event of the discontinuation of signals from a FORCEPU.SH
           algorithm, FORCEPU.SH agrees to provide appropriate notice to all
@@ -586,7 +586,7 @@ const TOSPage = () => {
       </section>
 
       <section id="disputes">
-        <Title level={2}>Disputes</Title>
+        <Title level={maxLevel + 1}>Disputes</Title>
         <p>
           ALL DISPUTES ARISING UNDER THIS AGREEMENT SHALL BE LITIGATED BEFORE A
           COURT LOCATED IN NEW YORK, NEW YORK, WITHOUT REGARD TO CHOICE OF LAW
@@ -605,7 +605,7 @@ const TOSPage = () => {
       </section>
 
       <section id="site-content-warranty">
-        <Title level={2}>SITE AND CONTENT NOT WARRANTED</Title>
+        <Title level={maxLevel + 1}>SITE AND CONTENT NOT WARRANTED</Title>
         <p>
           THE SITE AND CONTENT ARE PROVIDED “AS IS” AND WITHOUT WARRANTIES OF
           ANY KIND. YOU BEAR ALL RISKS ASSOCIATED WITH THE USE OF THE SITE AND

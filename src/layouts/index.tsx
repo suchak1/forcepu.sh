@@ -14,11 +14,12 @@ import BTC_ICE from "../../assets/btc_ice.png";
 import overrides from "./index.less";
 import "./index.less";
 import {
-  useLoginLoading,
+  getLoginLoading,
   getEnvironment,
   getHostname,
-  useAccount,
+  getAccount,
 } from "@/utils";
+import TOS from "../pages/tos";
 
 let config;
 const isLocal = getEnvironment() === "local";
@@ -157,12 +158,8 @@ const Layout = ({ children }: LayoutProps) => {
     loggedIn?.attributes?.name || loggedIn?.attributes?.email
   );
 
-  useEffect(useLoginLoading(setLoginLoading));
-  useEffect(useAccount(loggedIn, setAccount, setAccountLoading), [loggedIn]);
-
-  // if (window?.location?.pathname === "/docs") {
-  //   children = React.cloneElement(children, { loginLoading, setShowLogin });
-  // }
+  useEffect(getLoginLoading(setLoginLoading));
+  useEffect(getAccount(loggedIn, setAccount, setAccountLoading), [loggedIn]);
 
   return (
     <AntLayout>
@@ -241,6 +238,7 @@ const Layout = ({ children }: LayoutProps) => {
                 closable={false}
                 centered
                 onCancel={() => setShowLogin(false)}
+                footer={null}
               >
                 <AmplifyProvider theme={theme} colorMode="dark">
                   <Authenticator />
@@ -259,6 +257,19 @@ const Layout = ({ children }: LayoutProps) => {
           overflow: "auto",
         }}
       >
+        <Modal
+          visible
+          title="Acknowledgement"
+          bodyStyle={{ height: "400px", padding: "24px", overflowY: "scroll" }}
+          // visible={account && !account?.permissions?.read_disclaimer}
+          closable={false}
+          centered
+          // footer with checkbox, statement, and grayed out confirm
+          // confirm button hits api to update user
+          // onCancel={() => setShowLogin(false)}
+        >
+          <TOS maxLevel={4} />
+        </Modal>
         <AccountContext.Provider
           value={{ account, accountLoading, loginLoading, setShowLogin }}
         >
