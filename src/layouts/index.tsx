@@ -1,6 +1,7 @@
 import React, { useState, useEffect, createContext } from "react";
 import { NavLink } from "umi";
-import { Layout as AntLayout, Menu, Button, Modal } from "antd";
+import { Layout as AntLayout, Menu, Button, Modal, Checkbox } from "antd";
+import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import {
   Authenticator,
   AmplifyProvider,
@@ -157,9 +158,22 @@ const Layout = ({ children }: LayoutProps) => {
   const accountText = getAccountText(
     loggedIn?.attributes?.name || loggedIn?.attributes?.email
   );
+  const [checked, setChecked] = useState(false);
+  const [acknowledgeLoading, setAcknowledgeLoading] = useState(false);
 
   useEffect(getLoginLoading(setLoginLoading));
   useEffect(getAccount(loggedIn, setAccount, setAccountLoading), [loggedIn]);
+
+  const onCheck = (e: CheckboxChangeEvent) => {
+    setChecked(e.target.checked);
+  };
+
+  const onAcknowledge = () => {
+    setAcknowledgeLoading(true);
+    setTimeout(() => {
+      setAcknowledgeLoading(false);
+    }, 3000);
+  };
 
   return (
     <AntLayout>
@@ -258,12 +272,38 @@ const Layout = ({ children }: LayoutProps) => {
         }}
       >
         <Modal
+          width={600}
           visible
           title="Acknowledgement"
           bodyStyle={{ height: "400px", padding: "24px", overflowY: "scroll" }}
           // visible={account && !account?.permissions?.read_disclaimer}
           closable={false}
           centered
+          footer={
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Checkbox
+                checked={checked}
+                onChange={onCheck}
+                style={{ textAlign: "left" }}
+              >
+                I agree to the Terms of Service & Financial Disclaimer.
+              </Checkbox>
+              <Button
+                type="primary"
+                loading={acknowledgeLoading}
+                disabled={!checked}
+                onClick={onAcknowledge}
+              >
+                OK
+              </Button>
+            </div>
+          }
           // footer with checkbox, statement, and grayed out confirm
           // confirm button hits api to update user
           // onCancel={() => setShowLogin(false)}
