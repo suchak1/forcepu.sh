@@ -275,7 +275,7 @@ const Layout = ({ children }: LayoutProps) => {
           width={600}
           visible
           title="Acknowledgement"
-          bodyStyle={{ height: "400px", padding: "24px", overflowY: "scroll" }}
+          bodyStyle={{ height: "200px", padding: "24px", overflowY: "scroll" }}
           // visible={account && !account?.permissions?.read_disclaimer}
           closable={false}
           centered
