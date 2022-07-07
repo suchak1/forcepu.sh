@@ -81,21 +81,30 @@
   background-color: unset;;
 }
 
+.ant-btn[disabled]:hover {
+  border-color: #434343 !important;
+}
+
 .start {
   border-color: #52e5ff;
 }
 
+// mobile
 @media (max-width: 475px) {
   .checkbox {
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
   }
 }
 
+// desktop
 @media (min-width: 475px) {
   .mobileBreak {
     display: none;
+  }
+  .ant-checkbox + span {
+    padding-left: 16px;
   }
 }
 

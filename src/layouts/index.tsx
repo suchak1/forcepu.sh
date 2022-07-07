@@ -292,6 +292,7 @@ const Layout = ({ children }: LayoutProps) => {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
+                paddingLeft: "8px",
               }}
             >
               <Checkbox
@@ -313,6 +314,7 @@ const Layout = ({ children }: LayoutProps) => {
                 loading={acknowledgeLoading}
                 disabled={!checked}
                 onClick={onAcknowledge}
+                // style={!checked && { borderColor: "#434343" }}
               >
                 OK
               </Button>
