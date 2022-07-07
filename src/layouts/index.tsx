@@ -277,7 +277,12 @@ const Layout = ({ children }: LayoutProps) => {
           width={600}
           visible
           title="Acknowledgement"
-          bodyStyle={{ height: "200px", padding: "24px", overflowY: "scroll" }}
+          bodyStyle={{
+            height: "200px",
+            padding: "24px",
+            overflowY: "scroll",
+            color: "rgba(255, 255, 255, 0.45)",
+          }}
           // visible={account && !account?.permissions?.read_disclaimer}
           closable={false}
           centered
@@ -294,11 +299,16 @@ const Layout = ({ children }: LayoutProps) => {
                 onChange={onCheck}
                 style={{ textAlign: "left" }}
               >
-                I agree to the Terms of Service & Financial Disclaimer.
+                {
+                  <>
+                    <span>{"I agree to the Terms of Service & "}</span>
+                    <br className={overrides.mobileBreak} />
+                    <span>{"Financial Disclaimer."}</span>
+                  </>
+                }
               </Checkbox>
               <Button
-                className={pageStyles.disabled}
-                type="primary"
+                className={overrides.start}
                 loading={acknowledgeLoading}
                 disabled={!checked}
                 onClick={onAcknowledge}
