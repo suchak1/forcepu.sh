@@ -21,6 +21,7 @@ import {
   getAccount,
 } from "@/utils";
 import TOS from "../pages/tos";
+import pageStyles from "../pages/index.less";
 
 let config;
 const isLocal = getEnvironment() === "local";
@@ -169,6 +170,7 @@ const Layout = ({ children }: LayoutProps) => {
   };
 
   const onAcknowledge = () => {
+    console.log("click");
     setAcknowledgeLoading(true);
     setTimeout(() => {
       setAcknowledgeLoading(false);
@@ -295,6 +297,7 @@ const Layout = ({ children }: LayoutProps) => {
                 I agree to the Terms of Service & Financial Disclaimer.
               </Checkbox>
               <Button
+                className={pageStyles.disabled}
                 type="primary"
                 loading={acknowledgeLoading}
                 disabled={!checked}
