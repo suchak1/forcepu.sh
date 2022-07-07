@@ -295,15 +295,16 @@ const Layout = ({ children }: LayoutProps) => {
               }}
             >
               <Checkbox
+                className={overrides.checkbox}
                 checked={checked}
                 onChange={onCheck}
-                style={{ textAlign: "left" }}
+                style={{ textAlign: "left", width: "100%" }}
               >
                 {
                   <>
-                    <span>{"I agree to the Terms of Service & "}</span>
+                    <span>{"I agree to the Terms of Service "}</span>
                     <br className={overrides.mobileBreak} />
-                    <span>{"Financial Disclaimer."}</span>
+                    <span>{"& Financial Disclaimer."}</span>
                   </>
                 }
               </Checkbox>
