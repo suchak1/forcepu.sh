@@ -275,7 +275,7 @@ const Layout = ({ children }: LayoutProps) => {
       >
         <Modal
           width={600}
-          visible
+          // visible
           title={TOSTitleText(true)}
           bodyStyle={{
             height: "200px",
@@ -283,7 +283,7 @@ const Layout = ({ children }: LayoutProps) => {
             overflowY: "scroll",
             color: "rgba(255, 255, 255, 0.45)",
           }}
-          // visible={account && !account?.permissions?.read_disclaimer}
+          visible={account && !account?.permissions?.read_disclaimer}
           closable={false}
           centered
           footer={
@@ -343,10 +343,9 @@ const Layout = ({ children }: LayoutProps) => {
         <span className={overrides.footerLink}>
           _move fast; break everything
         </span>
-        <a href="/privacy" className={overrides.footerLink}>
-          {/* Change this to NavLink to avoid loading */}
+        <NavLink className={overrides.footerLink} to="/privacy">
           Privacy
-        </a>
+        </NavLink>
       </AntLayout.Footer>
     </AntLayout>
   );
