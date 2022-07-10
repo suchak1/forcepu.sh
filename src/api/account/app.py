@@ -69,8 +69,9 @@ def handle_post(event):
         user = UserModel.get(email)
         req_body = json.loads(event['body'])
         if 'permissions' in req_body and 'read_disclaimer' in req_body['permissions'] and req_body['permissions']['read_disclaimer']:
+            user.permissions.read_disclaimer = True
             user.update(
-                actions=[UserModel.permissions.read_disclaimer.set(True)])
+                actions=[UserModel.permissions.set(user.permissions)])
         body = user.to_json()
 
     return {
