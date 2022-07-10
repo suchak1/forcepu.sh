@@ -71,7 +71,7 @@ def handle_post(event):
         if 'permissions' in req_body and 'read_disclaimer' in req_body['permissions'] and req_body['permissions']['read_disclaimer']:
             user.update(
                 actions=[UserModel.permissions.read_disclaimer.set(True)])
-        body = json.dumps({'message': 'Your account has been updated.'})
+        body = user.to_json()
 
     return {
         "statusCode": status_code,

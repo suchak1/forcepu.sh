@@ -19,6 +19,7 @@ import {
   getEnvironment,
   getHostname,
   getAccount,
+  getApiUrl,
 } from "@/utils";
 import TOS, { TOSTitleText } from "../pages/tos";
 // import pageStyles from "../pages/index.less";
@@ -170,11 +171,17 @@ const Layout = ({ children }: LayoutProps) => {
   };
 
   const onAcknowledge = () => {
-    console.log("click");
     setAcknowledgeLoading(true);
-    setTimeout(() => {
-      setAcknowledgeLoading(false);
-    }, 3000);
+    const { idToken } = loggedIn.signInUserSession;
+    const url = `${getApiUrl()}/account`;
+    fetch(url, {
+      method: "POST",
+      headers: { Authorization: idToken.jwtToken },
+    })
+      .then((response) => response.json())
+      .then((data) => setAccount(data))
+      .catch((err) => console.error(err))
+      .finally(() => setAcknowledgeLoading(false));
   };
 
   return (
