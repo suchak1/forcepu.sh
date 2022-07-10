@@ -13,6 +13,7 @@ const TOSPage = ({ modal } = { modal: false }) => {
   return (
     <div style={{ wordWrap: "break-word" }}>
       {!modal && TOSTitleText()}
+      {modal && <Title level={sublevel}>Meta</Title>}
       <p className="small">Effective 4 July 2022</p>
       <p>From time to time FORCEPU.SH may review and update this Policy.</p>
       <p>
