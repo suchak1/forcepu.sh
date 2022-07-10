@@ -1,5 +1,4 @@
 import React from "react";
-import { connect } from "dva";
 import { useState, useEffect } from "react";
 import { Typography, Table, Input } from "antd";
 import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
@@ -46,7 +45,7 @@ const columns = [
   },
 ];
 
-const GymPage = ({ dispatch, gym, _loading }) => {
+const GymPage = () => {
   const [log, setLog] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -88,6 +87,4 @@ const GymPage = ({ dispatch, gym, _loading }) => {
 
 GymPage.displayName = "Gym";
 
-export default connect(({ gym, loading }) => ({
-  gym,
-}))(GymPage);
+export default GymPage;
