@@ -177,6 +177,7 @@ const Layout = ({ children }: LayoutProps) => {
     fetch(url, {
       method: "POST",
       headers: { Authorization: idToken.jwtToken },
+      body: JSON.stringify({ permissions: { read_disclaimer: true } }),
     })
       .then((response) => response.json())
       .then((data) => setAccount(data))
