@@ -52,7 +52,7 @@ const GymPage = ({ dispatch, gym, _loading }) => {
 
   useEffect(() => {
     (async () => {
-      const url = `${getApiUrl()}/exercise_log`;
+      const url = `${getApiUrl({ localOverride: "prod" })}/exercise_log`;
       fetch(url, { method: "GET" })
         .then((response) => response.json())
         .then((data) => setLog(data))
