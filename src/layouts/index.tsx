@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import { NavLink } from "umi";
-import { Layout as AntLayout, Menu, Button, Modal } from "antd";
+import { Layout as AntLayout, Menu, Button, Modal, Checkbox } from "antd";
+import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import {
   Authenticator,
   AmplifyProvider,
@@ -13,7 +14,15 @@ import "@aws-amplify/ui-react/styles.css";
 import BTC_ICE from "../../assets/btc_ice.png";
 import overrides from "./index.less";
 import "./index.less";
-import { useLoginLoading, getEnvironment, getHostname } from "@/utils";
+import {
+  getLoginLoading,
+  getEnvironment,
+  getHostname,
+  getAccount,
+  getApiUrl,
+} from "@/utils";
+import TOS, { TOSTitleText } from "../pages/tos";
+// import pageStyles from "../pages/index.less";
 
 let config;
 const isLocal = getEnvironment() === "local";
@@ -130,6 +139,9 @@ const footerHeight = headerHeight;
 // add logo to forcepush div
 // remove menu and menu items?
 // or at least move these pieces out
+
+export const AccountContext = createContext({});
+
 interface LayoutProps {
   route: any;
   children: any;
@@ -140,18 +152,39 @@ const Layout = ({ children }: LayoutProps) => {
   const { user: loggedIn, signOut } = useAuthenticator((context) => [
     context.user,
   ]);
+  const [account, setAccount] = useState();
+  const [accountLoading, setAccountLoading] = useState(false);
   const showModal = !loggedIn && showLogin;
   const dummy = <Authenticator className={overrides.invisible} />;
   const getAccountText = (user: string | undefined) => `signed in as ${user}`;
-  const account = getAccountText(
+  const accountText = getAccountText(
     loggedIn?.attributes?.name || loggedIn?.attributes?.email
   );
+  const [checked, setChecked] = useState(false);
+  const [acknowledgeLoading, setAcknowledgeLoading] = useState(false);
 
-  useEffect(useLoginLoading(setLoginLoading));
+  useEffect(getLoginLoading(setLoginLoading));
+  useEffect(getAccount(loggedIn, setAccount, setAccountLoading), [loggedIn]);
 
-  if (window?.location?.pathname === "/docs") {
-    children = React.cloneElement(children, { loginLoading, setShowLogin });
-  }
+  const onCheck = (e: CheckboxChangeEvent) => {
+    setChecked(e.target.checked);
+  };
+
+  const onAcknowledge = () => {
+    setAcknowledgeLoading(true);
+    const { idToken } = loggedIn.signInUserSession;
+    const url = `${getApiUrl()}/account`;
+    fetch(url, {
+      method: "POST",
+      headers: { Authorization: idToken.jwtToken },
+      body: JSON.stringify({ permissions: { read_disclaimer: true } }),
+    })
+      .then((response) => response.json())
+      .then((data) => setAccount(data))
+      .catch((err) => console.error(err))
+      .finally(() => setAcknowledgeLoading(false));
+  };
+
   return (
     <AntLayout>
       <AntLayout.Header
@@ -200,7 +233,9 @@ const Layout = ({ children }: LayoutProps) => {
                 justifyContent: "flex-end",
               }}
             >
-              {loggedIn && <span className={overrides.account}>{account}</span>}
+              {loggedIn && (
+                <span className={overrides.account}>{accountText}</span>
+              )}
               {loggedIn ? (
                 <Button
                   className="signOut"
@@ -227,6 +262,7 @@ const Layout = ({ children }: LayoutProps) => {
                 closable={false}
                 centered
                 onCancel={() => setShowLogin(false)}
+                footer={null}
               >
                 <AmplifyProvider theme={theme} colorMode="dark">
                   <Authenticator />
@@ -245,7 +281,63 @@ const Layout = ({ children }: LayoutProps) => {
           overflow: "auto",
         }}
       >
-        {children}
+        <Modal
+          width={600}
+          // visible
+          title={TOSTitleText(true)}
+          bodyStyle={{
+            height: "200px",
+            padding: "24px",
+            overflowY: "scroll",
+            color: "rgba(255, 255, 255, 0.45)",
+          }}
+          visible={account && !account?.permissions?.read_disclaimer}
+          closable={false}
+          centered
+          footer={
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                paddingLeft: "8px",
+              }}
+            >
+              <Checkbox
+                className={overrides.checkbox}
+                checked={checked}
+                onChange={onCheck}
+                style={{ textAlign: "left", width: "100%" }}
+              >
+                {
+                  <>
+                    <span>{"I agree to the Terms of Service "}</span>
+                    <br className={overrides.mobileBreak} />
+                    <span>{"& Financial Disclaimer."}</span>
+                  </>
+                }
+              </Checkbox>
+              <Button
+                className={overrides.start}
+                loading={acknowledgeLoading}
+                disabled={!checked}
+                onClick={onAcknowledge}
+              >
+                OK
+              </Button>
+            </div>
+          }
+          // footer with checkbox, statement, and grayed out confirm
+          // confirm button hits api to update user
+          // onCancel={() => setShowLogin(false)}
+        >
+          <TOS modal />
+        </Modal>
+        <AccountContext.Provider
+          value={{ account, accountLoading, loginLoading, setShowLogin }}
+        >
+          {children}
+        </AccountContext.Provider>
       </AntLayout.Content>
       <AntLayout.Footer
         style={{
@@ -259,10 +351,12 @@ const Layout = ({ children }: LayoutProps) => {
         <span className={overrides.footerLink}>
           _move fast; break everything
         </span>
-        <a href="/privacy" className={overrides.footerLink}>
-          {/* Change this to NavLink to avoid loading */}
+        <NavLink className={overrides.footerLink} to="/tos">
+          Terms of Service & Financial Disclaimer
+        </NavLink>
+        <NavLink className={overrides.footerLink} to="/privacy">
           Privacy
-        </a>
+        </NavLink>
       </AntLayout.Footer>
     </AntLayout>
   );
