@@ -1,5 +1,5 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { memo } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   Typography,
   Spin,
@@ -27,18 +27,96 @@ import layoutStyles from "../layouts/index.less";
 import "./index.less";
 import {
   getApiUrl,
-  useLoginLoading,
+  getLoginLoading,
   getDateRange,
   addDays,
-  useAccount,
   signalColors,
   signalEmojis,
 } from "@/utils";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
+import { AccountContext } from "../layouts";
+
+const HODL = "HODL";
+const hyperdrive = "hyperdrive";
+const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
+const formatUSD = (v: number) => {
+  if (v < 1e3) {
+    return `$ ${v}`;
+  } else if (v < 1e6) {
+    return `$ ${v / 1e3}k`;
+  }
+  return `$ ${v / 1e6}M`;
+};
+
+// Look up memo vs useMemo
+// https://blog.logrocket.com/react-memo-vs-usememo/
+const LineChart: React.FC<any> = memo(
+  ({ data, formatFx }) => {
+    const config = {
+      autoFit: true,
+      data,
+      xField: "Time",
+      yField: "Bal",
+      seriesField: "Name",
+      smooth: true,
+      colorField: "Name",
+      color: ({ Name }) => {
+        if (Name === HODL) {
+          return "magenta";
+        }
+        return "#52e5ff";
+      },
+      area: {
+        style: {
+          fillOpacity: 0.15,
+        },
+      },
+      animation:
+        // Why is this necessary?
+        // !inBeta &&
+        {
+          appear: {
+            animation: "wave-in",
+            duration: 4000,
+          },
+        },
+      xAxis: {
+        tickCount: 10,
+        grid: {
+          line: {
+            style: {
+              lineWidth: 0,
+              strokeOpacity: 0,
+            },
+          },
+        },
+      },
+      yAxis: {
+        label: {
+          formatter: (v: any) => formatFx(v),
+        },
+        grid: {
+          line: {
+            style: {
+              lineWidth: 0,
+              strokeOpacity: 0,
+            },
+          },
+        },
+      },
+      point: {
+        shape: "breath-point",
+      },
+    };
+    return <Line {...config} />;
+  },
+  (pre, next) => JSON.stringify(pre?.data) === JSON.stringify(next?.data)
+);
 
 const Page = () => {
+  const { account, accountLoading } = useContext(AccountContext);
   const ribbonColors = {
     Sun: "red",
     Mon: "yellow",
@@ -60,8 +138,6 @@ const Page = () => {
 
   const caretIconSize = 50;
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
-  const HODL = "HODL";
-  const hyperdrive = "hyperdrive";
   const [previewData, setPreviewData] = useState({
     BTC: { data: [], stats: [] },
     USD: { data: [], stats: [] },
@@ -80,7 +156,6 @@ const Page = () => {
   const [signalData, setSignalData] = useState(defaultSignals);
   const [toggle, setToggle] = useState(true);
   const [previewLoading, setPreviewLoading] = useState(true);
-  const [accountLoading, setAccountLoading] = useState(false);
   const [signalLoading, setSignalLoading] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
   const [showSignalCard, setShowSignalCard] = useState(false);
@@ -88,17 +163,8 @@ const Page = () => {
   const [haveNewSignal, setHaveNewSignal] = useState(false);
   const [quotaReached, setQuotaReached] = useState(false);
   const loading = previewLoading || accountLoading || loginLoading;
-  const [account, setAccount] = useState();
   const inBeta = loggedIn && account?.permissions?.in_beta;
-  const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
-  const formatUSD = (v: number) => {
-    if (v < 1e3) {
-      return `$ ${v}`;
-    } else if (v < 1e6) {
-      return `$ ${v / 1e3}k`;
-    }
-    return `$ ${v / 1e6}M`;
-  };
+
   useEffect(() => {
     // find a way to not load this for in_beta
     // simple if !inBeta or checking accountLoading and loginLoading doesn't work
@@ -110,8 +176,8 @@ const Page = () => {
       .finally(() => setPreviewLoading(false));
   }, []);
 
-  useEffect(useAccount(loggedIn, setAccount, setAccountLoading), [loggedIn]);
-  useEffect(useLoginLoading(setLoginLoading));
+  // useEffect(getAccount(loggedIn, setAccount, setAccountLoading), [loggedIn]);
+  useEffect(getLoginLoading(setLoginLoading));
 
   const fetchSignals = () => {
     setSignalLoading(true);
@@ -217,59 +283,6 @@ const Page = () => {
       return group;
     },
   });
-  const config = {
-    autoFit: true,
-    data: toggle ? previewData.BTC.data : previewData.USD.data,
-    xField: "Time",
-    yField: "Bal",
-    seriesField: "Name",
-    smooth: true,
-    colorField: "Name",
-    color: ({ Name }) => {
-      if (Name === HODL) {
-        return "magenta";
-      }
-      return "#52e5ff";
-    },
-    area: {
-      style: {
-        fillOpacity: 0.15,
-      },
-    },
-    animation: !inBeta && {
-      appear: {
-        animation: "wave-in",
-        duration: 4000,
-      },
-    },
-    xAxis: {
-      tickCount: 10,
-      grid: {
-        line: {
-          style: {
-            lineWidth: 0,
-            strokeOpacity: 0,
-          },
-        },
-      },
-    },
-    yAxis: {
-      label: {
-        formatter: (v: any) => (toggle ? formatBTC(v) : formatUSD(v)),
-      },
-      grid: {
-        line: {
-          style: {
-            lineWidth: 0,
-            strokeOpacity: 0,
-          },
-        },
-      },
-    },
-    point: {
-      shape: "breath-point",
-    },
-  };
 
   const columns = [
     { title: "Metric", dataIndex: "metric", key: "metric" },
@@ -483,7 +496,10 @@ const Page = () => {
         <div className={styles.parent}>
           {!inBeta && !loading && (
             <div className={styles.child}>
-              <Line {...config} />
+              <LineChart
+                data={toggle ? previewData.BTC.data : previewData.USD.data}
+                formatFx={toggle ? formatBTC : formatUSD}
+              />
             </div>
           )}
           <div style={{ height: "400px" }} className={styles.child}>
@@ -494,6 +510,7 @@ const Page = () => {
                   closable={false}
                   onCancel={() => setShowSignalCard(false)}
                   centered
+                  footer={null}
                 >
                   <Card
                     headStyle={{
