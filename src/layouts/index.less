@@ -1,16 +1,19 @@
 /* width */
 ::-webkit-scrollbar {
-  width: 16px;
+  width: 10px;
+  // background-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: black;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
 }
 
-/* Handle */
+// /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #1f1f1f;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
 }
 
 /* Handle on hover */
@@ -65,26 +68,57 @@
   padding: 0;
 }
 
-:global(.ant-modal-footer) {
-  display: none;
+// adds cyan border when unchecked
+.ant-checkbox-inner, .ant-checkbox-wrapper:hover .ant-checkbox-inner, .ant-checkbox-input:focus + .ant-checkbox-inner {
+  border-color: #52e5ff;
+}
+
+// removes blue border after checking
+.ant-checkbox-checked::after {
+  border: unset;
+}
+
+// removes cyan border after checking
+:global(.ant-checkbox-checked .ant-checkbox-inner) {
+  border-color: transparent !important;
+  background-color: unset;;
+}
+
+.ant-btn[disabled]:hover {
+  border-color: #434343 !important;
 }
 
 .start {
   border-color: #52e5ff;
 }
 
-// :global(.ant-btn) {
-//   border-color: #52e5ff;
-// }
+// mobile
+@media (max-width: 475px) {
+  .checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
 
-:global(.ant-btn:hover),
-:global(.ant-btn:active) {
+// desktop
+@media (min-width: 475px) {
+  .mobileBreak {
+    display: none;
+  }
+  .ant-checkbox + span {
+    padding-left: 16px;
+  }
+}
+
+:global(.ant-btn-default:hover),
+:global(.ant-btn-default:active) {
   border-color: #52e5ff !important;
   box-shadow: 0 0 5px #52e5ff;
   color: rgba(255, 255, 255, 0.85);
 }
 
-:global(.ant-btn:focus) {
+:global(.ant-btn-default:focus) {
   border-color: #52e5ff;
   color: rgba(255, 255, 255, 0.85);
 }

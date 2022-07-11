@@ -1,6 +1,4 @@
 import React from "react";
-import { connect } from "dva";
-import { useState, useEffect } from "react";
 import { Card, Typography, Row, Col, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { NFTE } from "@nfte/react";
@@ -10,7 +8,7 @@ import HoverVideoPlayer from "react-hover-video-player";
 
 import styles from "./index.less";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 const nftWidth = 400;
 const metadataWidth = nftWidth / 3;
@@ -25,7 +23,19 @@ const nftCard = (contract, token) => (
         >
           <HoverVideoPlayer
             videoSrc={data?.metadata?.animation_url}
-            loadingOverlay={<Spin indicator={antIcon} />}
+            loadingOverlay={
+              <div
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Spin indicator={antIcon} />
+              </div>
+            }
           />
           <div style={{ paddingTop: 18 }}>{data?.description}</div>
           <div
@@ -61,8 +71,7 @@ const nftCard = (contract, token) => (
   </NFTE>
 );
 
-const ArtPage = ({ dispatch, art, _loading }) => {
-  const [loading, setLoading] = useState(true);
+const ArtPage = () => {
   const nfts = [
     [
       {
@@ -119,6 +128,4 @@ const ArtPage = ({ dispatch, art, _loading }) => {
 
 ArtPage.displayName = "Art";
 
-export default connect(({ art, loading }) => ({
-  art,
-}))(ArtPage);
+export default ArtPage;

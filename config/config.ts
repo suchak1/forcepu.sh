@@ -3,9 +3,6 @@ import { defineConfig } from 'umi';
 export default defineConfig({
   plugins: [],
   antd: { dark: true },
-  dva: {
-    hmr: true,
-  },
   // publicPath: 'assets/'
   theme: {'switch-color': '#F7931A'},
   metas: [

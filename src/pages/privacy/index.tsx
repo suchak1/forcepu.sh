@@ -1,9 +1,8 @@
 import React from "react";
-import { connect } from "dva";
 import { Typography } from "antd";
 const { Title } = Typography;
 
-const PrivacyPage = ({ dispatch, privacy, _loading }) => {
+const PrivacyPage = () => {
   return (
     <div style={{ wordWrap: "break-word" }}>
       <Title>Privacy Policy</Title>
@@ -503,6 +502,4 @@ const PrivacyPage = ({ dispatch, privacy, _loading }) => {
 
 PrivacyPage.displayName = "Privacy";
 
-export default connect(({ privacy, loading }) => ({
-  privacy,
-}))(PrivacyPage);
+export default PrivacyPage;
