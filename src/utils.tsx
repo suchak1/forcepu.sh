@@ -67,11 +67,11 @@ export const convertShortISO = (dateString: string) => {
   return `${month}/${day}/${year}`;
 };
 
-export const useLoginLoading = (setLoginLoading: any) => () => {
+export const getLoginLoading = (setLoginLoading: any) => () => {
   setLoginLoading(window.location?.search?.indexOf("?code=") === 0);
 };
 
-export const useAccount = (
+export const getAccount = (
   loggedIn: any,
   setAccount: any,
   setAccountLoading: any

@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useContext } from "react";
 import {
   Typography,
   Input,
@@ -8,7 +8,8 @@ import {
   Tooltip,
   notification,
 } from "antd";
-import { getApiUrl, useAccount, signalColors, signalEmojis } from "@/utils";
+import { getApiUrl, signalColors, signalEmojis } from "@/utils";
+import { AccountContext } from "../../layouts";
 import swaggerSpec from "../../api/spec/swagger.json";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { CopyOutlined } from "@ant-design/icons";
@@ -41,17 +42,12 @@ const APIKey = styled(Input.Password)`
   }
 `;
 
-interface DocsProps {
-  loginLoading: boolean;
-  setShowLogin: any;
-}
-
-const DocsPage = ({ loginLoading, setShowLogin }: DocsProps) => {
+const DocsPage = () => {
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
-  const [accountLoading, setAccountLoading] = useState(false);
-  const [account, setAccount] = useState();
+  const { account, accountLoading, loginLoading, setShowLogin } = useContext(
+    AccountContext
+  );
   const loading = loginLoading || accountLoading;
-  useEffect(useAccount(loggedIn, setAccount, setAccountLoading), [loggedIn]);
 
   const copyToClipboard = (val: string, name: string) =>
     navigator.clipboard.writeText(val).then(

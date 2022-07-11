@@ -26,6 +26,7 @@ def get_default_access_queue():
 class Permissions(MapAttribute):
     is_admin = BooleanAttribute(default=False)
     in_beta = BooleanAttribute(default=False)
+    read_disclaimer = BooleanAttribute(default=False)
 
 
 class APIKeyIndex(GlobalSecondaryIndex):
