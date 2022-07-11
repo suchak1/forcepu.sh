@@ -149,7 +149,7 @@ const Page = () => {
   );
   const defaultSignals = signalDates.map((date) => ({
     Date: date.toISOString().slice(0, 10),
-    Day: date.toDateString().slice(0, 3),
+    Day: date.toUTCString().slice(0, 3),
     Signal: "?",
     Asset: "BTC",
   }));
