@@ -60,7 +60,8 @@ const AlgorithmPage = () => {
 
   return (
     <>
-      <Title>Trading Model</Title>
+      {/* consider changing page and nav to /research and title to Algorithm */}
+      <Title>Model</Title>
       <Title level={2}>Auth</Title>
       <div style={{ paddingBottom: "22px", marginTop: "-4px" }}>
         <div>{"Use this key to authenticate your API requests."}</div>
