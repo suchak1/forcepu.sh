@@ -8,6 +8,7 @@ import {
   Tooltip,
   notification,
 } from "antd";
+import Plot from "react-plotly.js";
 import { getApiUrl, signalColors, signalEmojis } from "@/utils";
 import { AccountContext } from "../../layouts";
 import swaggerSpec from "../../api/spec/swagger.json";
@@ -61,7 +62,20 @@ const AlgorithmPage = () => {
   return (
     <>
       {/* consider changing page and nav to /research and title to Algorithm */}
-      <Title>Model</Title>
+      <Title>AI / ML Model</Title>
+      <Plot
+        data={[
+          {
+            x: [1, 2, 3],
+            y: [2, 6, 3],
+            type: "scatter",
+            mode: "lines+markers",
+            marker: { color: "red" },
+          },
+          { type: "bar", x: [1, 2, 3], y: [2, 5, 3] },
+        ]}
+        layout={{ width: 320, height: 240, title: "A Fancy Plot" }}
+      />
       <Title level={2}>Auth</Title>
       <div style={{ paddingBottom: "22px", marginTop: "-4px" }}>
         <div>{"Use this key to authenticate your API requests."}</div>
