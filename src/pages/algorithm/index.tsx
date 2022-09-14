@@ -88,9 +88,14 @@ const AlgorithmPage = () => {
             y: [0, 5, 5, 0, 0, 5, 5, 0],
             z: [0, 0, 5, 5, 0, 0, 5, 5],
             value: [0, 0, 0, 0, 1, 1, 1, 1],
-            type: "isosurface",
+            type: "volume",
             mode: "markers",
-            colorscale: ["magenta", "cyan"],
+            colorscale: [
+              ["0", "magenta"],
+              ["1", "cyan"],
+            ],
+            // colorscale: "cool",
+            // colorscale: ["magenta", "cyan"],
           },
         ]}
         layout={{ width: "100%", height: "100%", title: "Visualization" }}
