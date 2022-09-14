@@ -62,19 +62,38 @@ const AlgorithmPage = () => {
   return (
     <>
       {/* consider changing page and nav to /research and title to Algorithm */}
+      {/* DISPLAY model stats here and call api.forcepu.sh/model */}
+      {/* sanitize model info (remove features) in API */}
       <Title>AI / ML Model</Title>
       <Plot
         data={[
           {
-            x: [1, 2, 3],
-            y: [2, 6, 3],
-            type: "scatter",
-            mode: "lines+markers",
-            marker: { color: "red" },
+            x: [5, 5],
+            y: [0, 5],
+            z: [0, 0],
+            type: "scatter3d",
+            mode: "markers",
+            marker: { color: "cyan" },
           },
-          { type: "bar", x: [1, 2, 3], y: [2, 5, 3] },
+          {
+            x: [0, 0],
+            y: [0, 5],
+            z: [5, 5],
+            type: "scatter3d",
+            mode: "markers",
+            marker: { color: "magenta" },
+          },
+          {
+            x: [0, 0, 0, 0, 5, 5, 5, 5],
+            y: [0, 5, 5, 0, 0, 5, 5, 0],
+            z: [0, 0, 5, 5, 0, 0, 5, 5],
+            value: [0, 0, 0, 0, 1, 1, 1, 1],
+            type: "isosurface",
+            mode: "markers",
+            colorscale: ["magenta", "cyan"],
+          },
         ]}
-        layout={{ width: 320, height: 240, title: "A Fancy Plot" }}
+        layout={{ width: "100%", height: "100%", title: "Visualization" }}
       />
       <Title level={2}>Auth</Title>
       <div style={{ paddingBottom: "22px", marginTop: "-4px" }}>
