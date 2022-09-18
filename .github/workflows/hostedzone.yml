@@ -28,8 +28,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      - name: Create parameters.env [dev]
-        uses: SpicyPizza/create-envfile@v1.2
+      - name: Get hosted zone
         env:
           HOSTED_ZONE_ID: ${{ secrets.HOSTED_ZONE_ID }}
         run: python -c "import os; print(os.environ['HOSTED_ZONE_ID'][-2:])"
