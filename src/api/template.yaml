@@ -151,7 +151,7 @@ Resources:
             RestApiId: !Ref ApiGatewayApi
     Metadata:
       Dockerfile: Dockerfile
-      DockerContext: ./model
+      DockerContext: ./preview
       DockerTag: python3.8-v1
   SignalsFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -170,8 +170,6 @@ Resources:
                 - s3:GetObject
               Resource: !Sub "arn:aws:s3:::${S3Bucket}/models/latest/signals.csv"
       PackageType: Image
-      ImageConfig:
-        Command: ["app.get_signals"]
       Events:
         Signals:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
