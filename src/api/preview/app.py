@@ -28,7 +28,7 @@ def get_model(*_):
         "headers": {"Access-Control-Allow-Origin": "*"}
     }
 
-
+# In case read() can't read entire preview json
 # bytes_buffer = io.BytesIO()
 # s3.download_fileobj(Bucket=bucket_name,
 #                     Key='models/latest/metadata.json', Fileobj=bytes_buffer)
