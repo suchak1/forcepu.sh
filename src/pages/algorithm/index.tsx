@@ -1,15 +1,15 @@
 import React from "react";
-import { useContext } from "react";
+import { useState, useEffect } from "react";
 import {
   Typography,
-  Input,
+  Table,
   message,
   Button,
   Tooltip,
   notification,
 } from "antd";
 import Plot from "react-plotly.js";
-import { getApiUrl, signalColors, signalEmojis } from "@/utils";
+import { getApiUrl, signalColors, signalEmojis, getDayDiff } from "@/utils";
 import { AccountContext } from "../../layouts";
 import swaggerSpec from "../../api/spec/swagger.json";
 import { useAuthenticator } from "@aws-amplify/ui-react";
@@ -23,38 +23,118 @@ import styled from "styled-components";
 const { Title } = Typography;
 swaggerSpec.servers[0].url = getApiUrl();
 
-const APIKey = styled(Input.Password)`
-  input {
-    font-family: monospace;
-    pointer-events: none;
-    user-select: none;
-    -webkit-user-select: none;
-  }
-
-  .ant-input-affix-wrapper:hover,
-  .ant-input-affix-wrapper:active {
-    border-color: #52e5ff;
-    box-shadow: 0 0 5px #52e5ff;
-  }
-
-  .ant-input-affix-wrapper:focus,
-  .ant-input-affix-wrapper-focused {
-    border-color: #52e5ff;
-  }
-`;
-
 const AlgorithmPage = () => {
-  const { user: loggedIn } = useAuthenticator((context) => [context.user]);
-  const { account, accountLoading, loginLoading, setShowLogin } = useContext(
-    AccountContext
-  );
-  const loading = loginLoading || accountLoading;
+  const [metadata, setMetadata] = useState();
+  const [metadataLoading, setMetadataLoading] = useState(true);
 
-  const copyToClipboard = (val: string, name: string) =>
-    navigator.clipboard.writeText(val).then(
-      () => message.success(`Copied ${name} to clipboard.`),
-      () => message.error(`Did not copy ${name} to clipboard`)
-    );
+  useEffect(() => {
+    // find a way to not load this for in_beta
+    // simple if !inBeta or checking accountLoading and loginLoading doesn't work
+    const url = `${getApiUrl({ localOverride: "dev" })}/model`;
+    fetch(url, { method: "GET" })
+      .then((response) => response.json())
+      .then((data) => {
+        const {
+          created,
+          start,
+          end,
+          num_features: numFeatures,
+          accuracy,
+        } = data;
+        const lastUpdated = `${Math.floor(
+          getDayDiff(created, new Date()) / 30
+        )} months ago`;
+        const dataRange = `${Math.floor(getDayDiff(start, end) / 365)} years`;
+        const labels = [
+          "Last Updated",
+          "Training Data Range",
+          "Number of Features",
+          "Test Accuracy",
+        ];
+        const values = [
+          lastUpdated,
+          dataRange,
+          numFeatures,
+          `${Math.round(accuracy * 1000) / 10}%`,
+        ];
+        const newData = labels.map((label, idx) => ({
+          key: idx,
+          metadata: label,
+          stat: values[idx],
+        }));
+        return newData;
+      })
+      .then((data) => setMetadata(data))
+      .catch((err) => console.error(err))
+      .finally(() => setMetadataLoading(false));
+  }, []);
+
+  const stats = [
+    {
+      key: 0,
+      metadata: "Total Return [%]",
+      // HODL: 0.0,
+      stat: 70.97,
+    },
+    {
+      key: 1,
+      metadata: "Max Drawdown [%]",
+      // HODL: 0.0,
+      stat: 25.77,
+    },
+    {
+      key: 2,
+      metadata: "Win Rate [%]",
+      // HODL: null,
+      stat: 50.0,
+    },
+    {
+      key: 3,
+      metadata: "Profit Factor",
+      // HODL: null,
+      stat: 2.18,
+    },
+    {
+      key: 4,
+      metadata: "Total Fees Paid",
+      // HODL: 0.0,
+      stat: 0.04,
+    },
+    {
+      key: 5,
+      metadata: "Profitable Time [%]",
+      // HODL: 9.39,
+      stat: 90.61,
+    },
+  ];
+
+  const columns = [
+    { title: "Metadata", dataIndex: "metadata", key: "metadata" },
+    // {
+    //   title: <span style={{ color: "#DF00DF" }}>{HODL}</span>,
+    //   dataIndex: HODL,
+    //   key: HODL,
+    // },
+    {
+      title: <i style={{ color: "#52e5ff" }}>{"Stat"}</i>,
+      dataIndex: "stat",
+      key: "stat",
+    },
+  ];
+
+  // const columns = [
+  //   { title: "Metadata", dataIndex: "metadata", key: "metadata" },
+  //   {
+  //     title: <span style={{ color: "#DF00DF" }}>{HODL}</span>,
+  //     dataIndex: HODL,
+  //     key: HODL,
+  //   },
+  //   {
+  //     title: <i style={{ color: "#52e5ff" }}>{hyperdrive}</i>,
+  //     dataIndex: hyperdrive,
+  //     key: hyperdrive,
+  //   },
+  // ];
 
   // TODO:
   // 3. Move Algorithm tab to the right? and remove signed in as User text?
@@ -65,6 +145,13 @@ const AlgorithmPage = () => {
       {/* DISPLAY model stats here and call api.forcepu.sh/model */}
       {/* sanitize model info (remove features) in API */}
       <Title>AI / ML Model</Title>
+      <Table
+        dataSource={metadata}
+        columns={columns}
+        title={() => "Metadata"}
+        pagination={false}
+        loading={metadataLoading}
+      />
       <Plot
         data={[
           {
@@ -102,136 +189,6 @@ const AlgorithmPage = () => {
           },
         ]}
         layout={{ width: "100%", height: "100%", title: "Visualization" }}
-      />
-      <Title level={2}>Auth</Title>
-      <div style={{ paddingBottom: "22px", marginTop: "-4px" }}>
-        <div>{"Use this key to authenticate your API requests."}</div>
-        <div>
-          <span>{"Header: "}</span>
-          <span style={{ fontFamily: "monospace" }}>{"X-API-Key"}</span>
-        </div>
-      </div>
-      {!loading && (
-        <Input.Group style={{ paddingBottom: "26px" }}>
-          {loggedIn && account ? (
-            <span style={{ display: "flex" }}>
-              <Tooltip
-                trigger={["hover", "focus"]}
-                title="Use the button on the right to copy."
-                placement="bottom"
-              >
-                <APIKey
-                  style={{ userSelect: "none" }}
-                  addonBefore="API Key"
-                  defaultValue={account?.api_key}
-                  readOnly
-                  type="text"
-                />
-              </Tooltip>
-              <Button
-                onClick={() => copyToClipboard(account?.api_key, "API Key")}
-                icon={<CopyOutlined />}
-              />
-            </span>
-          ) : (
-            <Button
-              className={layoutStyles.start}
-              onClick={() => setShowLogin(true)}
-            >
-              Sign in to receive your API key
-            </Button>
-          )}
-        </Input.Group>
-      )}
-      <Title level={2}>API</Title>
-      <SwaggerUI
-        onComplete={(ui: any) =>
-          ui.preauthorizeApiKey("ApiKeyAuth", account?.api_key)
-        }
-        spec={swaggerSpec}
-        // can make this 0 to collapse Schema
-        // or 1 to reveal Schema names
-        defaultModelsExpandDepth={0}
-        persistAuthorization
-        displayRequestDuration
-        requestInterceptor={(req: Request) => {
-          const { headers } = req;
-          if (!("X-API-Key" in headers)) {
-            notification.error({
-              duration: 10,
-              message: "Missing API Key",
-              description: (
-                <>
-                  <span>{"Paste your API key in the "}</span>
-                  <b>
-                    <span style={{ color: "#49cc90" }}>Authorize</span>
-                  </b>
-                  <span>{" modal."}</span>
-                </>
-              ),
-            });
-          } else if (headers["X-API-Key"] !== account?.api_key) {
-            notification.error({
-              duration: 10,
-              message: "Wrong API Key",
-              description: "Copy your API key from the Auth section.",
-            });
-          }
-          return req;
-        }}
-        responseInterceptor={(res: Response) => {
-          // consider dropping this mapping and using status codes and JSON.parse(res.text).message directly
-          const errors = {
-            401: {
-              message: "Unauthorized",
-              description: "Check your API key.",
-            },
-            402: {
-              message: "Payment Required",
-              description: "You are not a beta subscriber.",
-            },
-            403: {
-              message: "Forbidden",
-              description: "Your quota has been reached.",
-            },
-          };
-          const { ok, status } = res;
-          if (ok) {
-            const { data, message } = JSON.parse(res.text);
-            const signal = data[data.length - 1].Signal;
-            notification.success({
-              duration: 10,
-              message: "Success",
-              description: (
-                <>
-                  <span>{"New Signal: "}</span>
-                  <span
-                    style={{
-                      fontFamily: "monospace",
-                      color: signalColors[signal],
-                    }}
-                  >
-                    <b>{`${signal} ${signalEmojis[signal]}`}</b>
-                  </span>
-                </>
-              ),
-            });
-            notification.warning({
-              duration: 10,
-              message: "Quota",
-              description: message,
-            });
-          } else if (status !== 401) {
-            notification.error({
-              duration: 10,
-              message: status in errors ? errors[status].message : "Failure",
-              description:
-                status in errors
-                  ? errors[status].description
-                  : "Your request failed. Check the error message.",
-            });
-          }
-        }}
       />
     </>
   );

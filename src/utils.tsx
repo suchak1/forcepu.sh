@@ -54,6 +54,26 @@ export const getDateRange = (
   return range;
 };
 
+const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+export const getDayDiff = (start: string | Date, end: string | Date) => {
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+  const startUTC = Date.UTC(
+    startDate.getFullYear(),
+    startDate.getMonth(),
+    startDate.getDate()
+  );
+  const endUTC = Date.UTC(
+    endDate.getFullYear(),
+    endDate.getMonth(),
+    endDate.getDate()
+  );
+
+  const diff = Math.floor((endUTC - startUTC) / _MS_PER_DAY);
+  return diff;
+};
+
 export const addDays = (date: string | Date, steps = 0) => {
   const newDate = new Date(date);
   newDate.setUTCDate(newDate.getUTCDate() + steps);
