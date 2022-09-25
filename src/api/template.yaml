@@ -151,7 +151,37 @@ Resources:
             RestApiId: !Ref ApiGatewayApi
     Metadata:
       Dockerfile: Dockerfile
-      DockerContext: ./preview
+      DockerContext: ./model
+      DockerTag: python3.8-v1
+  VisualizationFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Environment:
+        Variables:
+          S3_BUCKET: !Ref S3Bucket
+      Policies:
+        - Statement:
+            - Sid: S3ReadPolicy
+              Effect: Allow
+              Action:
+                - s3:GetObject
+              Resource: [
+                !Sub "arn:aws:s3:::${S3Bucket}/models/latest/2D/*",
+                !Sub "arn:aws:s3:::${S3Bucket}/models/latest/3D/*"
+              ]
+      PackageType: Image
+      ImageConfig:
+        Command: ["app.get_visualization"]
+      Events:
+        Model:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /visualization
+            Method: get
+            RestApiId: !Ref ApiGatewayApi
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./model
       DockerTag: python3.8-v1
   SignalsFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
