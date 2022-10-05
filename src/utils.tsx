@@ -111,6 +111,10 @@ export const getAccount = (
   }
 };
 
+// https://stackoverflow.com/questions/17428587/transposing-a-2d-array-in-javascript
+export const transpose = (matrix: any[][]) =>
+  matrix[0].map((_, i) => matrix.map((row) => row[i]));
+
 export const signalColors = {
   BUY: "lime",
   SELL: "red",
