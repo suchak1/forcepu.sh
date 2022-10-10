@@ -4,8 +4,8 @@
   "description": "UmiJS app for forcepu.sh",
   "main": "index.js",
   "scripts": {
-    "build-dev:umi": "npm run swagger && UMI_APP_ENV=dev umi build && cp -r assets/. dist",
-    "build:umi": "npm run swagger && UMI_APP_ENV=prod umi build && cp -r assets/. dist",
+    "build-dev:umi": "npm run swagger && NODE_OPTIONS=--max-old-space-size=4096 UMI_APP_ENV=dev umi build && cp -r assets/. dist",
+    "build:umi": "npm run swagger && NODE_OPTIONS=--max-old-space-size=4096 UMI_APP_ENV=prod umi build && cp -r assets/. dist",
     "build:api": "cd src/api && sam build --use-container --cached --parallel",
     "build+start:api": "npm run build:api && npm run start:api",
     "build+deploy:api": "npm run build:api && npm run deploy:api",
