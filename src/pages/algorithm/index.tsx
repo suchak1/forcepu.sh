@@ -163,13 +163,6 @@ const AlgorithmPage = () => {
       {/* DISPLAY model stats here and call api.forcepu.sh/model */}
       {/* sanitize model info (remove features) in API */}
       <Title>AI / ML Model</Title>
-      <Table
-        dataSource={metadata}
-        columns={columns}
-        title={() => "Metadata"}
-        pagination={false}
-        loading={metadataLoading}
-      />
       <Plot
         data={[
           // {
@@ -286,8 +279,9 @@ const AlgorithmPage = () => {
             //   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;",
             family: "inherit",
           },
-          width: "1600",
-          height: "900",
+          autosize: true,
+          // make responsive
+          // https://codesandbox.io/s/nostalgic-jones-4kuww
           title: "Model Predictions vs Actual Market Results",
           xaxis: { title: "x" },
           yaxis: { title: "y" },
@@ -300,7 +294,16 @@ const AlgorithmPage = () => {
             title: { text: "Signal [actual]" },
           },
         }}
+        style={{ width: "100%", height: "100%" }}
+        useResizeHandler
         config={{ displayModeBar: false }}
+      />
+      <Table
+        dataSource={metadata}
+        columns={columns}
+        title={() => "Metadata"}
+        pagination={false}
+        loading={metadataLoading}
       />
     </>
   );
