@@ -279,7 +279,21 @@ const AlgorithmPage = () => {
             name: "SELL",
           },
         ]}
-        layout={{ width: "100%", height: "100%", title: "Visualization" }}
+        layout={{
+          width: "100%",
+          height: "100%",
+          title: "Model Predictions vs Actual Market Results",
+          xaxis: { title: "x" },
+          yaxis: { title: "y" },
+          plot_bgcolor: "white",
+          dragmode: false,
+          legend: {
+            y: 0,
+            x: 0,
+            title: { text: "Signal [actual]" },
+          },
+        }}
+        config={{ displayModeBar: false }}
       />
     </>
   );
