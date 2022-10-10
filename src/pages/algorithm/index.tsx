@@ -16,7 +16,7 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 import { CopyOutlined } from "@ant-design/icons";
 import SwaggerUI from "swagger-ui-react";
 import "swagger-ui-react/swagger-ui.css";
-import layoutStyles from "../../layouts/index.less";
+import pageStyles from "../index.less";
 import "./index.less";
 import styled from "styled-components";
 
@@ -163,148 +163,157 @@ const AlgorithmPage = () => {
       {/* DISPLAY model stats here and call api.forcepu.sh/model */}
       {/* sanitize model info (remove features) in API */}
       <Title>AI / ML Model</Title>
-      <Plot
-        data={[
-          // {
-          //   x: [5, 5],
-          //   y: [0, 5],
-          //   z: [0, 0],
-          //   type: "scatter3d",
-          //   mode: "markers",
-          //   marker: { color: "cyan" },
-          // },
-          // {
-          //   x: [0, 0],
-          //   y: [0, 5],
-          //   z: [5, 5],
-          //   type: "scatter3d",
-          //   mode: "markers",
-          //   marker: { color: "magenta" },
-          // },
-          // {
-          //   // x: [2.5, 2.5, 2.5, 2.5, 0.0, 5.0],
-          //   // y: [0.0, 2.5, 5.0, 2.5, 2.5, 2.5],
-          //   // z: [2.5, 0.0, 2.5, 5.0, 2.5, 2.5],
-          //   value: [0, 0, 0, 0, 1, 1],
-          //   type: "volume",
-          //   mode: "markers",
-          //   colorscale: [
-          //     ["0", "magenta"],
-          //     ["1", "cyan"],
-          //   ],
-          //   x: [0.0, 2.5, 2.5, 2.5, 2.5, 5.0],
-          //   y: [2.5, 0.0, 2.5, 2.5, 5.0, 2.5],
-          //   z: [2.5, 2.5, 0.0, 5.0, 2.5, 2.5],
-          //   // colorscale: "cool",
-          //   // colorscale: ["magenta", "cyan"],
-          // },
+      <div className={pageStyles.parent}>
+        <div className={pageStyles.child}>
+          <Plot
+            data={[
+              // {
+              //   x: [5, 5],
+              //   y: [0, 5],
+              //   z: [0, 0],
+              //   type: "scatter3d",
+              //   mode: "markers",
+              //   marker: { color: "cyan" },
+              // },
+              // {
+              //   x: [0, 0],
+              //   y: [0, 5],
+              //   z: [5, 5],
+              //   type: "scatter3d",
+              //   mode: "markers",
+              //   marker: { color: "magenta" },
+              // },
+              // {
+              //   // x: [2.5, 2.5, 2.5, 2.5, 0.0, 5.0],
+              //   // y: [0.0, 2.5, 5.0, 2.5, 2.5, 2.5],
+              //   // z: [2.5, 0.0, 2.5, 5.0, 2.5, 2.5],
+              //   value: [0, 0, 0, 0, 1, 1],
+              //   type: "volume",
+              //   mode: "markers",
+              //   colorscale: [
+              //     ["0", "magenta"],
+              //     ["1", "cyan"],
+              //   ],
+              //   x: [0.0, 2.5, 2.5, 2.5, 2.5, 5.0],
+              //   y: [2.5, 0.0, 2.5, 2.5, 5.0, 2.5],
+              //   z: [2.5, 2.5, 0.0, 5.0, 2.5, 2.5],
+              //   // colorscale: "cool",
+              //   // colorscale: ["magenta", "cyan"],
+              // },
 
-          // 2D
+              // 2D
 
-          // 2 contours and 2 scatters
-          // use v2 and bring opacity up a bit
-          {
-            x: viz2D?.grid[0],
-            y: viz2D?.grid[1],
-            z: viz2D?.preds,
-            type: "contour",
-            hoverinfo: "none",
-            contours: {
-              coloring: "fill",
-              start: 0,
-              end: 1,
-              size: size,
-            },
-            line: { smoothing: 0, width },
-            colorscale: [
-              ["0", "magenta"],
-              ["1", "cyan"],
-            ],
-            opacity: 0.2,
-            showscale: false,
-            name: "predicted",
-          },
-          {
-            x: viz2D?.grid[0],
-            y: viz2D?.grid[1],
-            z: viz2D?.preds,
-            type: "contour",
-            hoverinfo: "none",
-            contours: {
-              coloring: "lines",
-              start: 0,
-              end: 1,
-              size: size,
-            },
-            line: { smoothing: 0, width },
-            colorscale: [
-              ["0", "magenta"],
-              ["1", "cyan"],
-            ],
-            colorbar: {
-              title: "Signal [predicted]",
-              tickmode: "array",
-              ticktext: tickText,
-              tickvals: tickVals,
-            },
-            name: "predicted",
-          },
-          {
-            x: viz2D?.actual[0]?.BUY,
-            y: viz2D?.actual[1]?.BUY,
-            type: "scatter",
-            mode: "markers",
-            // change marker outline to white after making bg black/transparent?
-            marker: { color: "cyan", line: { color: "black", width: 1 } },
-            showlegend: true,
-            text: "BUY [actual]",
-            name: "BUY",
-          },
-          {
-            x: viz2D?.actual[0]?.SELL,
-            y: viz2D?.actual[1]?.SELL,
-            type: "scatter",
-            mode: "markers",
-            // change marker outline to white after making bg black/transparent?
-            marker: { color: "magenta", line: { color: "black", width: 1 } },
-            showlegend: true,
-            text: "SELL [actual]",
-            name: "SELL",
-          },
-        ]}
-        layout={{
-          font: {
-            color: "rgba(255, 255, 255, 0.85)",
-            // family:
-            //   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;",
-            family: "inherit",
-          },
-          autosize: true,
-          // make responsive
-          // https://codesandbox.io/s/nostalgic-jones-4kuww
-          title: "Model Predictions vs Actual Market Results",
-          xaxis: { title: "x" },
-          yaxis: { title: "y" },
-          paper_bgcolor: "transparent",
-          plot_bgcolor: "transparent",
-          dragmode: false,
-          legend: {
-            y: 0,
-            x: 0,
-            title: { text: "Signal [actual]" },
-          },
-        }}
-        style={{ width: "100%", height: "100%" }}
-        useResizeHandler
-        config={{ displayModeBar: false }}
-      />
-      <Table
-        dataSource={metadata}
-        columns={columns}
-        title={() => "Metadata"}
-        pagination={false}
-        loading={metadataLoading}
-      />
+              // 2 contours and 2 scatters
+              // use v2 and bring opacity up a bit
+              {
+                x: viz2D?.grid[0],
+                y: viz2D?.grid[1],
+                z: viz2D?.preds,
+                type: "contour",
+                hoverinfo: "none",
+                contours: {
+                  coloring: "fill",
+                  start: 0,
+                  end: 1,
+                  size: size,
+                },
+                line: { smoothing: 0, width },
+                colorscale: [
+                  ["0", "magenta"],
+                  ["1", "cyan"],
+                ],
+                opacity: 0.2,
+                showscale: false,
+                name: "predicted",
+              },
+              {
+                x: viz2D?.grid[0],
+                y: viz2D?.grid[1],
+                z: viz2D?.preds,
+                type: "contour",
+                hoverinfo: "none",
+                contours: {
+                  coloring: "lines",
+                  start: 0,
+                  end: 1,
+                  size: size,
+                },
+                line: { smoothing: 0, width },
+                colorscale: [
+                  ["0", "magenta"],
+                  ["1", "cyan"],
+                ],
+                colorbar: {
+                  title: "Signal [predicted]",
+                  tickmode: "array",
+                  ticktext: tickText,
+                  tickvals: tickVals,
+                },
+                name: "predicted",
+              },
+              {
+                x: viz2D?.actual[0]?.BUY,
+                y: viz2D?.actual[1]?.BUY,
+                type: "scatter",
+                mode: "markers",
+                // change marker outline to white after making bg black/transparent?
+                marker: { color: "cyan", line: { color: "black", width: 1 } },
+                showlegend: true,
+                text: "BUY [actual]",
+                name: "BUY",
+              },
+              {
+                x: viz2D?.actual[0]?.SELL,
+                y: viz2D?.actual[1]?.SELL,
+                type: "scatter",
+                mode: "markers",
+                // change marker outline to white after making bg black/transparent?
+                marker: {
+                  color: "magenta",
+                  line: { color: "black", width: 1 },
+                },
+                showlegend: true,
+                text: "SELL [actual]",
+                name: "SELL",
+              },
+            ]}
+            layout={{
+              font: {
+                color: "rgba(255, 255, 255, 0.85)",
+                // family:
+                //   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;",
+                family: "inherit",
+              },
+              autosize: true,
+              // make responsive
+              // https://codesandbox.io/s/nostalgic-jones-4kuww
+              title: "Model Predictions vs Actual Market Results",
+              xaxis: { title: "x" },
+              yaxis: { title: "y" },
+              paper_bgcolor: "transparent",
+              plot_bgcolor: "transparent",
+              dragmode: false,
+              legend: {
+                y: 0,
+                x: 0,
+                title: { text: "Signal [actual]" },
+              },
+            }}
+            style={{ width: "100%", height: "100%" }}
+            useResizeHandler
+            config={{ displayModeBar: false }}
+          />
+        </div>
+        <div className={pageStyles.child}>
+          <Table
+            dataSource={metadata}
+            columns={columns}
+            title={() => "Metadata"}
+            pagination={false}
+            loading={metadataLoading}
+          />
+        </div>
+      </div>
     </>
   );
 };
