@@ -163,7 +163,7 @@ const AlgorithmPage = () => {
       {/* DISPLAY model stats here and call api.forcepu.sh/model */}
       {/* sanitize model info (remove features) in API */}
       <Title>AI / ML Model</Title>
-      <div className={pageStyles.parent}>
+      <div className={pageStyles.parent} style={{ alignItems: "center" }}>
         <div className={pageStyles.child}>
           <Plot
             data={[
@@ -244,7 +244,7 @@ const AlgorithmPage = () => {
                   ["1", "cyan"],
                 ],
                 colorbar: {
-                  title: "Signal [predicted]",
+                  title: "Predicted",
                   tickmode: "array",
                   ticktext: tickText,
                   tickvals: tickVals,
@@ -287,7 +287,7 @@ const AlgorithmPage = () => {
               autosize: true,
               // make responsive
               // https://codesandbox.io/s/nostalgic-jones-4kuww
-              title: "Model Predictions vs Actual Market Results",
+              title: "Visualization",
               xaxis: { title: "x" },
               yaxis: { title: "y" },
               paper_bgcolor: "transparent",
@@ -296,7 +296,7 @@ const AlgorithmPage = () => {
               legend: {
                 y: 0,
                 x: 0,
-                title: { text: "Signal [actual]" },
+                title: { text: "Actual" },
               },
             }}
             style={{ width: "100%", height: "100%" }}
@@ -308,7 +308,7 @@ const AlgorithmPage = () => {
           <Table
             dataSource={metadata}
             columns={columns}
-            title={() => "Metadata"}
+            // title={() => "Metadata"}
             pagination={false}
             loading={metadataLoading}
           />
