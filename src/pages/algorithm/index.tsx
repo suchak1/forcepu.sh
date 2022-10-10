@@ -30,7 +30,14 @@ const AlgorithmPage = () => {
   // }
   const [metadata, setMetadata] = useState();
   const [metadataLoading, setMetadataLoading] = useState(true);
-
+  const size = 0.4999;
+  const width = 3;
+  const numTicks = Math.ceil(1 / size);
+  const tickText = Array(numTicks).fill("");
+  tickText[0] = "SELL";
+  tickText[numTicks - 1] = "BUY";
+  tickText[Math.floor(numTicks / 2)] = "HODL";
+  const tickVals = tickText.map((_, idx) => size * idx);
   useEffect(() => {
     const url = `${getApiUrl({ localOverride: "dev" })}/model`;
     fetch(url, { method: "GET" })
@@ -202,6 +209,28 @@ const AlgorithmPage = () => {
           // 2D
 
           // 2 contours and 2 scatters
+          // use v2 and bring opacity up a bit
+          {
+            x: viz2D?.grid[0],
+            y: viz2D?.grid[1],
+            z: viz2D?.preds,
+            type: "contour",
+            hoverinfo: "none",
+            contours: {
+              coloring: "fill",
+              start: 0,
+              end: 1,
+              size: size,
+            },
+            line: { smoothing: 0, width },
+            colorscale: [
+              ["0", "magenta"],
+              ["1", "cyan"],
+            ],
+            opacity: 0.2,
+            showscale: false,
+            name: "predicted",
+          },
           {
             x: viz2D?.actual[0]?.BUY,
             y: viz2D?.actual[1]?.BUY,
