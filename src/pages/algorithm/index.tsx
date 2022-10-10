@@ -280,12 +280,19 @@ const AlgorithmPage = () => {
           },
         ]}
         layout={{
-          width: "100%",
-          height: "100%",
+          font: {
+            color: "rgba(255, 255, 255, 0.85)",
+            // family:
+            //   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;",
+            family: "inherit",
+          },
+          width: "1600",
+          height: "900",
           title: "Model Predictions vs Actual Market Results",
           xaxis: { title: "x" },
           yaxis: { title: "y" },
-          plot_bgcolor: "white",
+          paper_bgcolor: "transparent",
+          plot_bgcolor: "transparent",
           dragmode: false,
           legend: {
             y: 0,
