@@ -232,6 +232,31 @@ const AlgorithmPage = () => {
             name: "predicted",
           },
           {
+            x: viz2D?.grid[0],
+            y: viz2D?.grid[1],
+            z: viz2D?.preds,
+            type: "contour",
+            hoverinfo: "none",
+            contours: {
+              coloring: "lines",
+              start: 0,
+              end: 1,
+              size: size,
+            },
+            line: { smoothing: 0, width },
+            colorscale: [
+              ["0", "magenta"],
+              ["1", "cyan"],
+            ],
+            colorbar: {
+              title: "Signal [predicted]",
+              tickmode: "array",
+              ticktext: tickText,
+              tickvals: tickVals,
+            },
+            name: "predicted",
+          },
+          {
             x: viz2D?.actual[0]?.BUY,
             y: viz2D?.actual[1]?.BUY,
             type: "scatter",
