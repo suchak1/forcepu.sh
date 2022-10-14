@@ -22,10 +22,6 @@ const Toggle = styled(Segmented)`
     color: rgba(255, 255, 255, 0.85);
   }
 
-  .ant-segmented {
-    color: rgba(255, 255, 255, 0.65);
-  }
-
   .ant-segmented-item:hover,
   .ant-segmented-item:focus {
     color: rgba(255, 255, 255, 0.85);
@@ -511,7 +507,7 @@ const AlgorithmPage = () => {
         </>
       </span>
       <div className={pageStyles.parent} style={{ alignItems: "center" }}>
-        <div className={pageStyles.child}>{plot3D}</div>
+        <div className={pageStyles.child}>{toggle2D ? plot2D : plot3D}</div>
         <div className={pageStyles.child}>
           <Table
             dataSource={metadata}
