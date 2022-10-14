@@ -1,34 +1,45 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import {
-  Typography,
-  Table,
-  Segmented,
-  Button,
-  Tooltip,
-  notification,
-} from "antd";
+import { Typography, Table, Segmented } from "antd";
 import Plot from "react-plotly.js";
-import { getApiUrl, transpose, getDayDiff } from "@/utils";
+import { getApiUrl, getDayDiff } from "@/utils";
 import { AccountContext } from "../../layouts";
-import swaggerSpec from "../../api/spec/swagger.json";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { CopyOutlined } from "@ant-design/icons";
-import SwaggerUI from "swagger-ui-react";
 import "swagger-ui-react/swagger-ui.css";
 import pageStyles from "../index.less";
 import "./index.less";
 import styled from "styled-components";
 
 const { Title } = Typography;
-swaggerSpec.servers[0].url = getApiUrl();
+// outline: 1px solid ${val ? "#52e5ff" : "magenta"};
+// background-color: ${val ? "#52e5ff" : "magenta"};
+
+const Toggle = styled(Segmented)`
+  .ant-segmented-item-selected {
+    background-color: unset;
+    outline: 1px solid ${(props) => (props.val ? "#52e5ff" : "magenta")};
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .ant-segmented {
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  .ant-segmented-item:hover,
+  .ant-segmented-item:focus {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .ant-segmented-thumb {
+    background-color: ${(props) => (props.val ? "#52e5ff" : "magenta")};
+  }
+`;
 
 const AlgorithmPage = () => {
   const [viz2D, setViz2D] = useState();
   const [viz3D, setViz3D] = useState();
-  //   {
-  //   actual: [[]],
-  // }
+  const [toggle2D, setToggle2D] = useState(true);
   const [metadata, setMetadata] = useState();
   const [metadataLoading, setMetadataLoading] = useState(true);
   const size = 0.4999;
@@ -491,7 +502,12 @@ const AlgorithmPage = () => {
       >
         <>
           <Title level={5}>the driving force behind our signals</Title>
-          <Segmented options={["2D", "3D"]} defaultValue="2D" />
+          <Toggle
+            val={toggle2D}
+            options={["2D", "3D"]}
+            defaultValue="2D"
+            onChange={(val) => setToggle2D(val === "2D")}
+          />
         </>
       </span>
       <div className={pageStyles.parent} style={{ alignItems: "center" }}>
