@@ -32,7 +32,7 @@ const Toggle = styled(Segmented)`
   }
 
   .ant-segmented-thumb {
-    background-color: ${(props) => (props.val ? "#52e5ff" : "magenta")};
+    background-color: ${(props) => (props.val ? "magenta" : "#52e5ff")};
   }
 `;
 
