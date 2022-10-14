@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import {
   Typography,
   Table,
-  message,
+  Segmented,
   Button,
   Tooltip,
   notification,
@@ -25,6 +25,7 @@ swaggerSpec.servers[0].url = getApiUrl();
 
 const AlgorithmPage = () => {
   const [viz2D, setViz2D] = useState();
+  const [viz3D, setViz3D] = useState();
   //   {
   //   actual: [[]],
   // }
@@ -83,6 +84,15 @@ const AlgorithmPage = () => {
     fetch(url, { method: "GET" })
       .then((response) => response.json())
       .then((data) => setViz2D(data))
+      .catch((err) => console.error(err));
+    // .finally(() => setMetadataLoading(false));
+  }, []);
+
+  useEffect(() => {
+    const url = `${getApiUrl({ localOverride: "dev" })}/visualization?dims=3D`;
+    fetch(url, { method: "GET" })
+      .then((response) => response.json())
+      .then((data) => setViz3D(data))
       .catch((err) => console.error(err));
     // .finally(() => setMetadataLoading(false));
   }, []);
@@ -157,153 +167,335 @@ const AlgorithmPage = () => {
   // TODO:
   // 3. Move Algorithm tab to the right? and remove signed in as User text?
 
+  const plot2D = (
+    <Plot
+      data={[
+        // {
+        //   x: [5, 5],
+        //   y: [0, 5],
+        //   z: [0, 0],
+        //   type: "scatter3d",
+        //   mode: "markers",
+        //   marker: { color: "cyan" },
+        // },
+        // {
+        //   x: [0, 0],
+        //   y: [0, 5],
+        //   z: [5, 5],
+        //   type: "scatter3d",
+        //   mode: "markers",
+        //   marker: { color: "magenta" },
+        // },
+        // {
+        //   // x: [2.5, 2.5, 2.5, 2.5, 0.0, 5.0],
+        //   // y: [0.0, 2.5, 5.0, 2.5, 2.5, 2.5],
+        //   // z: [2.5, 0.0, 2.5, 5.0, 2.5, 2.5],
+        //   value: [0, 0, 0, 0, 1, 1],
+        //   type: "volume",
+        //   mode: "markers",
+        //   colorscale: [
+        //     ["0", "magenta"],
+        //     ["1", "cyan"],
+        //   ],
+        //   x: [0.0, 2.5, 2.5, 2.5, 2.5, 5.0],
+        //   y: [2.5, 0.0, 2.5, 2.5, 5.0, 2.5],
+        //   z: [2.5, 2.5, 0.0, 5.0, 2.5, 2.5],
+        //   // colorscale: "cool",
+        //   // colorscale: ["magenta", "cyan"],
+        // },
+
+        // 2D
+
+        // 2 contours and 2 scatters
+        // use v2 and bring opacity up a bit
+        {
+          x: viz2D?.grid[0],
+          y: viz2D?.grid[1],
+          z: viz2D?.preds,
+          type: "contour",
+          hoverinfo: "none",
+          contours: {
+            coloring: "fill",
+            start: 0,
+            end: 1,
+            size: size,
+          },
+          line: { smoothing: 0, width },
+          colorscale: [
+            ["0", "magenta"],
+            ["1", "cyan"],
+          ],
+          opacity: 0.2,
+          showscale: false,
+          name: "predicted",
+        },
+        {
+          x: viz2D?.grid[0],
+          y: viz2D?.grid[1],
+          z: viz2D?.preds,
+          type: "contour",
+          hoverinfo: "none",
+          contours: {
+            coloring: "lines",
+            start: 0,
+            end: 1,
+            size: size,
+          },
+          line: { smoothing: 0, width },
+          colorscale: [
+            ["0", "magenta"],
+            ["1", "cyan"],
+          ],
+          colorbar: {
+            title: "Predicted",
+            tickmode: "array",
+            ticktext: tickText,
+            tickvals: tickVals,
+          },
+          name: "predicted",
+        },
+        {
+          x: viz2D?.actual[0]?.BUY,
+          y: viz2D?.actual[1]?.BUY,
+          type: "scatter",
+          mode: "markers",
+          // change marker outline to white after making bg black/transparent?
+          marker: { color: "cyan", line: { color: "black", width: 1 } },
+          showlegend: true,
+          text: "BUY [actual]",
+          name: "BUY",
+        },
+        {
+          x: viz2D?.actual[0]?.SELL,
+          y: viz2D?.actual[1]?.SELL,
+          type: "scatter",
+          mode: "markers",
+          // change marker outline to white after making bg black/transparent?
+          marker: {
+            color: "magenta",
+            line: { color: "black", width: 1 },
+          },
+          showlegend: true,
+          text: "SELL [actual]",
+          name: "SELL",
+        },
+      ]}
+      layout={{
+        font: {
+          color: "rgba(255, 255, 255, 0.85)",
+          // family:
+          //   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;",
+          family: "inherit",
+        },
+        autosize: true,
+        // make responsive
+        // https://codesandbox.io/s/nostalgic-jones-4kuww
+        title: "Visualization",
+        xaxis: { title: "x" },
+        yaxis: { title: "y" },
+        paper_bgcolor: "transparent",
+        plot_bgcolor: "transparent",
+        dragmode: false,
+        legend: {
+          y: 0,
+          x: 0,
+          title: { text: "Actual" },
+        },
+      }}
+      style={{ width: "100%", height: "100%" }}
+      useResizeHandler
+      config={{ displayModeBar: false }}
+    />
+  );
+
+  const plot3D = (
+    <Plot
+      data={[
+        // {
+        //   x: [5, 5],
+        //   y: [0, 5],
+        //   z: [0, 0],
+        //   type: "scatter3d",
+        //   mode: "markers",
+        //   marker: { color: "cyan" },
+        // },
+        // {
+        //   x: [0, 0],
+        //   y: [0, 5],
+        //   z: [5, 5],
+        //   type: "scatter3d",
+        //   mode: "markers",
+        //   marker: { color: "magenta" },
+        // },
+        // {
+        //   // x: [2.5, 2.5, 2.5, 2.5, 0.0, 5.0],
+        //   // y: [0.0, 2.5, 5.0, 2.5, 2.5, 2.5],
+        //   // z: [2.5, 0.0, 2.5, 5.0, 2.5, 2.5],
+        //   value: [0, 0, 0, 0, 1, 1],
+        //   type: "volume",
+        //   mode: "markers",
+        //   colorscale: [
+        //     ["0", "magenta"],
+        //     ["1", "cyan"],
+        //   ],
+        //   x: [0.0, 2.5, 2.5, 2.5, 2.5, 5.0],
+        //   y: [2.5, 0.0, 2.5, 2.5, 5.0, 2.5],
+        //   z: [2.5, 2.5, 0.0, 5.0, 2.5, 2.5],
+        //   // colorscale: "cool",
+        //   // colorscale: ["magenta", "cyan"],
+        // },
+
+        // 2D
+
+        // 2 contours and 2 scatters
+        // use v2 and bring opacity up a bit
+        // {
+        //   x: viz2D?.grid[0],
+        //   y: viz2D?.grid[1],
+        //   z: viz2D?.preds,
+        //   type: "contour",
+        //   hoverinfo: "none",
+        //   contours: {
+        //     coloring: "fill",
+        //     start: 0,
+        //     end: 1,
+        //     size: size,
+        //   },
+        //   line: { smoothing: 0, width },
+        //   colorscale: [
+        //     ["0", "magenta"],
+        //     ["1", "cyan"],
+        //   ],
+        //   opacity: 0.2,
+        //   showscale: false,
+        //   name: "predicted",
+        // },
+        // {
+        //   x: viz2D?.grid[0],
+        //   y: viz2D?.grid[1],
+        //   z: viz2D?.preds,
+        //   type: "contour",
+        //   hoverinfo: "none",
+        //   contours: {
+        //     coloring: "lines",
+        //     start: 0,
+        //     end: 1,
+        //     size: size,
+        //   },
+        //   line: { smoothing: 0, width },
+        //   colorscale: [
+        //     ["0", "magenta"],
+        //     ["1", "cyan"],
+        //   ],
+        //   colorbar: {
+        //     title: "Predicted",
+        //     tickmode: "array",
+        //     ticktext: tickText,
+        //     tickvals: tickVals,
+        //   },
+        //   name: "predicted",
+        // },
+        {
+          x: viz3D?.actual[0]?.BUY,
+          y: viz3D?.actual[1]?.BUY,
+          z: viz3D?.actual[2]?.BUY,
+          type: "scatter3d",
+          mode: "markers",
+          // change marker outline to white after making bg black/transparent?
+          marker: { color: "cyan", line: { color: "black", width: 1 } },
+          showlegend: true,
+          text: "BUY [actual]",
+          name: "BUY",
+        },
+        {
+          x: viz3D?.actual[0]?.SELL,
+          y: viz3D?.actual[1]?.SELL,
+          z: viz3D?.actual[2]?.SELL,
+          type: "scatter3d",
+          mode: "markers",
+          // change marker outline to white after making bg black/transparent?
+          marker: {
+            color: "magenta",
+            line: { color: "black", width: 1 },
+          },
+          showlegend: true,
+          text: "SELL [actual]",
+          name: "SELL",
+        },
+        {
+          x: viz3D?.grid[0],
+          y: viz3D?.grid[1],
+          z: viz3D?.grid[2],
+          type: "volume",
+          opacity: 0.4,
+          value: viz3D?.preds,
+          colorscale: [
+            ["0", "magenta"],
+            ["1", "cyan"],
+          ],
+          hoverinfo: "none",
+          // change marker outline to white after making bg black/transparent?
+          // marker: {
+          //   color: "magenta",
+          //   line: { color: "black", width: 1 },
+          // },
+          // showlegend: true,
+          // text: "SELL [actual]",
+          // name: "SELL",
+        },
+      ]}
+      layout={{
+        font: {
+          color: "rgba(255, 255, 255, 0.85)",
+          // family:
+          //   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;",
+          family: "inherit",
+        },
+        autosize: true,
+        // make responsive
+        // https://codesandbox.io/s/nostalgic-jones-4kuww
+        title: "Visualization",
+        xaxis: { title: "x" },
+        yaxis: { title: "y" },
+        zaxis: { title: "z" },
+        paper_bgcolor: "transparent",
+        plot_bgcolor: "transparent",
+        // dragmode: false,
+        legend: {
+          y: 0,
+          x: 0,
+          title: { text: "Actual" },
+        },
+      }}
+      style={{ width: "100%", height: "100%" }}
+      useResizeHandler
+      // config={{ displayModeBar: false }}
+    />
+  );
   return (
     <>
       {/* consider changing page and nav to /research and title to Algorithm */}
       {/* DISPLAY model stats here and call api.forcepu.sh/model */}
       {/* sanitize model info (remove features) in API */}
+      {/* use Segmented component for 2D vs 3D */}
+      {/* consider switching BTC toggle to Segmented on home screen */}
+      {/* consider using Statistic component for metadata */}
       <Title>AI / ML Model</Title>
+      <span
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          margin: "-12px 0px 12px 0px",
+        }}
+      >
+        <>
+          <Title level={5}>the driving force behind our signals</Title>
+          <Segmented options={["2D", "3D"]} defaultValue="2D" />
+        </>
+      </span>
       <div className={pageStyles.parent} style={{ alignItems: "center" }}>
-        <div className={pageStyles.child}>
-          <Plot
-            data={[
-              // {
-              //   x: [5, 5],
-              //   y: [0, 5],
-              //   z: [0, 0],
-              //   type: "scatter3d",
-              //   mode: "markers",
-              //   marker: { color: "cyan" },
-              // },
-              // {
-              //   x: [0, 0],
-              //   y: [0, 5],
-              //   z: [5, 5],
-              //   type: "scatter3d",
-              //   mode: "markers",
-              //   marker: { color: "magenta" },
-              // },
-              // {
-              //   // x: [2.5, 2.5, 2.5, 2.5, 0.0, 5.0],
-              //   // y: [0.0, 2.5, 5.0, 2.5, 2.5, 2.5],
-              //   // z: [2.5, 0.0, 2.5, 5.0, 2.5, 2.5],
-              //   value: [0, 0, 0, 0, 1, 1],
-              //   type: "volume",
-              //   mode: "markers",
-              //   colorscale: [
-              //     ["0", "magenta"],
-              //     ["1", "cyan"],
-              //   ],
-              //   x: [0.0, 2.5, 2.5, 2.5, 2.5, 5.0],
-              //   y: [2.5, 0.0, 2.5, 2.5, 5.0, 2.5],
-              //   z: [2.5, 2.5, 0.0, 5.0, 2.5, 2.5],
-              //   // colorscale: "cool",
-              //   // colorscale: ["magenta", "cyan"],
-              // },
-
-              // 2D
-
-              // 2 contours and 2 scatters
-              // use v2 and bring opacity up a bit
-              {
-                x: viz2D?.grid[0],
-                y: viz2D?.grid[1],
-                z: viz2D?.preds,
-                type: "contour",
-                hoverinfo: "none",
-                contours: {
-                  coloring: "fill",
-                  start: 0,
-                  end: 1,
-                  size: size,
-                },
-                line: { smoothing: 0, width },
-                colorscale: [
-                  ["0", "magenta"],
-                  ["1", "cyan"],
-                ],
-                opacity: 0.2,
-                showscale: false,
-                name: "predicted",
-              },
-              {
-                x: viz2D?.grid[0],
-                y: viz2D?.grid[1],
-                z: viz2D?.preds,
-                type: "contour",
-                hoverinfo: "none",
-                contours: {
-                  coloring: "lines",
-                  start: 0,
-                  end: 1,
-                  size: size,
-                },
-                line: { smoothing: 0, width },
-                colorscale: [
-                  ["0", "magenta"],
-                  ["1", "cyan"],
-                ],
-                colorbar: {
-                  title: "Predicted",
-                  tickmode: "array",
-                  ticktext: tickText,
-                  tickvals: tickVals,
-                },
-                name: "predicted",
-              },
-              {
-                x: viz2D?.actual[0]?.BUY,
-                y: viz2D?.actual[1]?.BUY,
-                type: "scatter",
-                mode: "markers",
-                // change marker outline to white after making bg black/transparent?
-                marker: { color: "cyan", line: { color: "black", width: 1 } },
-                showlegend: true,
-                text: "BUY [actual]",
-                name: "BUY",
-              },
-              {
-                x: viz2D?.actual[0]?.SELL,
-                y: viz2D?.actual[1]?.SELL,
-                type: "scatter",
-                mode: "markers",
-                // change marker outline to white after making bg black/transparent?
-                marker: {
-                  color: "magenta",
-                  line: { color: "black", width: 1 },
-                },
-                showlegend: true,
-                text: "SELL [actual]",
-                name: "SELL",
-              },
-            ]}
-            layout={{
-              font: {
-                color: "rgba(255, 255, 255, 0.85)",
-                // family:
-                //   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;",
-                family: "inherit",
-              },
-              autosize: true,
-              // make responsive
-              // https://codesandbox.io/s/nostalgic-jones-4kuww
-              title: "Visualization",
-              xaxis: { title: "x" },
-              yaxis: { title: "y" },
-              paper_bgcolor: "transparent",
-              plot_bgcolor: "transparent",
-              dragmode: false,
-              legend: {
-                y: 0,
-                x: 0,
-                title: { text: "Actual" },
-              },
-            }}
-            style={{ width: "100%", height: "100%" }}
-            useResizeHandler
-            config={{ displayModeBar: false }}
-          />
-        </div>
+        <div className={pageStyles.child}>{plot3D}</div>
         <div className={pageStyles.child}>
           <Table
             dataSource={metadata}
