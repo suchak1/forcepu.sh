@@ -102,10 +102,7 @@ const AlgorithmPage = () => {
     const url = `${getApiUrl({ localOverride: "dev" })}/visualization?dims=3D`;
     fetch(url, { method: "GET" })
       .then((response) => response.json())
-      .then((data) => {
-        setViz3D(data);
-        setPlot3D(plot("3D"));
-      })
+      .then((data) => setViz3D(data))
       .catch((err) => console.error(err));
     // .finally(() => setMetadataLoading(false));
   }, []);
@@ -525,9 +522,9 @@ const AlgorithmPage = () => {
     />
   );
 
-  const getPlot = (dims: string) => (dims === "2D" ? plot2D : plot3D);
+  // const getPlot = (dims: string) => (dims === "2D" ? plot2D : plot3D);
   // const memoizedPlot = (dep: string) => useMemo(() => getPlot(dep), [dep]);
-  const memoizedPlot = useMemo(() => getPlot(toggle2D), [toggle2D]);
+  // const memoizedPlot = useMemo(() => getPlot(toggle2D), [toggle2D]);
 
   return (
     <>
@@ -550,22 +547,23 @@ const AlgorithmPage = () => {
           <Title level={5}>the driving force behind our signals</Title>
           {/* consider square and cube icons https://ant.design/components/segmented/#components-segmented-demo-with-icon */}
 
-          {/* <Toggle
+          <Toggle
             val={toggle2D}
             options={["2D", "3D"]}
             defaultValue="2D"
             onChange={(val: string) => setToggle2D(val === "2D")}
-          /> */}
-          <Segmented
+          />
+          {/* <Segmented
             options={["2D", "3D"]}
             defaultValue="2D"
             onChange={(val: string) => setToggle2D(val === "2D")}
-          />
+          /> */}
         </>
       </span>
       <div className={pageStyles.parent} style={{ alignItems: "center" }}>
         <div className={pageStyles.child}>
-          {toggle2D ? plot2D : plot3DSaved}
+          <div style={(!toggle2D && { display: "none" }) || {}}>{plot2D}</div>
+          <div style={(toggle2D && { display: "none" }) || {}}>{plot3D}</div>
         </div>
         <div className={pageStyles.child}>
           <Table
