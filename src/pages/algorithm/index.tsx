@@ -1,6 +1,6 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import { Typography, Table, Segmented } from "antd";
+import { useState, useEffect, useMemo } from "react";
+import { Typography, Table, Segmented, Button } from "antd";
 import Plot from "react-plotly.js";
 import { getApiUrl, getDayDiff } from "@/utils";
 import { AccountContext } from "../../layouts";
@@ -18,7 +18,8 @@ const { Title } = Typography;
 const Toggle = styled(Segmented)`
   .ant-segmented-item-selected {
     background-color: unset;
-    outline: 1px solid ${(props) => (props.val ? "#52e5ff" : "magenta")};
+    outline: 1px solid
+      ${(props: { val: boolean }) => (props.val ? "#52e5ff" : "magenta")};
     color: rgba(255, 255, 255, 0.85);
   }
 
@@ -28,7 +29,8 @@ const Toggle = styled(Segmented)`
   }
 
   .ant-segmented-thumb {
-    background-color: ${(props) => (props.val ? "magenta" : "#52e5ff")};
+    background-color: ${(props: { val: boolean }) =>
+      props.val ? "magenta" : "#52e5ff"};
   }
 `;
 
@@ -177,40 +179,6 @@ const AlgorithmPage = () => {
   const plot2D = (
     <Plot
       data={[
-        // {
-        //   x: [5, 5],
-        //   y: [0, 5],
-        //   z: [0, 0],
-        //   type: "scatter3d",
-        //   mode: "markers",
-        //   marker: { color: "cyan" },
-        // },
-        // {
-        //   x: [0, 0],
-        //   y: [0, 5],
-        //   z: [5, 5],
-        //   type: "scatter3d",
-        //   mode: "markers",
-        //   marker: { color: "magenta" },
-        // },
-        // {
-        //   // x: [2.5, 2.5, 2.5, 2.5, 0.0, 5.0],
-        //   // y: [0.0, 2.5, 5.0, 2.5, 2.5, 2.5],
-        //   // z: [2.5, 0.0, 2.5, 5.0, 2.5, 2.5],
-        //   value: [0, 0, 0, 0, 1, 1],
-        //   type: "volume",
-        //   mode: "markers",
-        //   colorscale: [
-        //     ["0", "magenta"],
-        //     ["1", "cyan"],
-        //   ],
-        //   x: [0.0, 2.5, 2.5, 2.5, 2.5, 5.0],
-        //   y: [2.5, 0.0, 2.5, 2.5, 5.0, 2.5],
-        //   z: [2.5, 2.5, 0.0, 5.0, 2.5, 2.5],
-        //   // colorscale: "cool",
-        //   // colorscale: ["magenta", "cyan"],
-        // },
-
         // 2D
 
         // 2 contours and 2 scatters
@@ -318,90 +286,6 @@ const AlgorithmPage = () => {
   const plot3D = (
     <Plot
       data={[
-        // {
-        //   x: [5, 5],
-        //   y: [0, 5],
-        //   z: [0, 0],
-        //   type: "scatter3d",
-        //   mode: "markers",
-        //   marker: { color: "cyan" },
-        // },
-        // {
-        //   x: [0, 0],
-        //   y: [0, 5],
-        //   z: [5, 5],
-        //   type: "scatter3d",
-        //   mode: "markers",
-        //   marker: { color: "magenta" },
-        // },
-        // {
-        //   // x: [2.5, 2.5, 2.5, 2.5, 0.0, 5.0],
-        //   // y: [0.0, 2.5, 5.0, 2.5, 2.5, 2.5],
-        //   // z: [2.5, 0.0, 2.5, 5.0, 2.5, 2.5],
-        //   value: [0, 0, 0, 0, 1, 1],
-        //   type: "volume",
-        //   mode: "markers",
-        //   colorscale: [
-        //     ["0", "magenta"],
-        //     ["1", "cyan"],
-        //   ],
-        //   x: [0.0, 2.5, 2.5, 2.5, 2.5, 5.0],
-        //   y: [2.5, 0.0, 2.5, 2.5, 5.0, 2.5],
-        //   z: [2.5, 2.5, 0.0, 5.0, 2.5, 2.5],
-        //   // colorscale: "cool",
-        //   // colorscale: ["magenta", "cyan"],
-        // },
-
-        // 2D
-
-        // 2 contours and 2 scatters
-        // use v2 and bring opacity up a bit
-        // {
-        //   x: viz2D?.grid[0],
-        //   y: viz2D?.grid[1],
-        //   z: viz2D?.preds,
-        //   type: "contour",
-        //   hoverinfo: "none",
-        //   contours: {
-        //     coloring: "fill",
-        //     start: 0,
-        //     end: 1,
-        //     size: size,
-        //   },
-        //   line: { smoothing: 0, width },
-        //   colorscale: [
-        //     ["0", "magenta"],
-        //     ["1", "cyan"],
-        //   ],
-        //   opacity: 0.2,
-        //   showscale: false,
-        //   name: "predicted",
-        // },
-        // {
-        //   x: viz2D?.grid[0],
-        //   y: viz2D?.grid[1],
-        //   z: viz2D?.preds,
-        //   type: "contour",
-        //   hoverinfo: "none",
-        //   contours: {
-        //     coloring: "lines",
-        //     start: 0,
-        //     end: 1,
-        //     size: size,
-        //   },
-        //   line: { smoothing: 0, width },
-        //   colorscale: [
-        //     ["0", "magenta"],
-        //     ["1", "cyan"],
-        //   ],
-        //   colorbar: {
-        //     title: "Predicted",
-        //     tickmode: "array",
-        //     ticktext: tickText,
-        //     tickvals: tickVals,
-        //   },
-        //   name: "predicted",
-        // },
         {
           x: viz3D?.actual[0]?.BUY,
           y: viz3D?.actual[1]?.BUY,
@@ -479,6 +363,168 @@ const AlgorithmPage = () => {
       // config={{ displayModeBar: false }}
     />
   );
+
+  const plot = (
+    <Plot
+      data={
+        toggle2D
+          ? [
+              {
+                x: viz2D?.grid[0],
+                y: viz2D?.grid[1],
+                z: viz2D?.preds,
+                type: "contour",
+                hoverinfo: "none",
+                contours: {
+                  coloring: "fill",
+                  start: 0,
+                  end: 1,
+                  size: size,
+                },
+                line: { smoothing: 0, width },
+                colorscale: [
+                  ["0", "magenta"],
+                  ["1", "cyan"],
+                ],
+                opacity: 0.2,
+                showscale: false,
+                name: "predicted",
+              },
+              {
+                x: viz2D?.grid[0],
+                y: viz2D?.grid[1],
+                z: viz2D?.preds,
+                type: "contour",
+                hoverinfo: "none",
+                contours: {
+                  coloring: "lines",
+                  start: 0,
+                  end: 1,
+                  size: size,
+                },
+                line: { smoothing: 0, width },
+                colorscale: [
+                  ["0", "magenta"],
+                  ["1", "cyan"],
+                ],
+                colorbar: {
+                  title: "Predicted",
+                  tickmode: "array",
+                  ticktext: tickText,
+                  tickvals: tickVals,
+                },
+                name: "predicted",
+              },
+              {
+                x: viz2D?.actual[0]?.BUY,
+                y: viz2D?.actual[1]?.BUY,
+                type: "scatter",
+                mode: "markers",
+                // change marker outline to white after making bg black/transparent?
+                marker: { color: "cyan", line: { color: "black", width: 1 } },
+                showlegend: true,
+                text: "BUY [actual]",
+                name: "BUY",
+              },
+              {
+                x: viz2D?.actual[0]?.SELL,
+                y: viz2D?.actual[1]?.SELL,
+                type: "scatter",
+                mode: "markers",
+                // change marker outline to white after making bg black/transparent?
+                marker: {
+                  color: "magenta",
+                  line: { color: "black", width: 1 },
+                },
+                showlegend: true,
+                text: "SELL [actual]",
+                name: "SELL",
+              },
+            ]
+          : [
+              {
+                x: viz3D?.actual[0]?.BUY,
+                y: viz3D?.actual[1]?.BUY,
+                z: viz3D?.actual[2]?.BUY,
+                type: "scatter3d",
+                mode: "markers",
+                // change marker outline to white after making bg black/transparent?
+                marker: { color: "cyan", line: { color: "black", width: 1 } },
+                showlegend: true,
+                text: "BUY [actual]",
+                name: "BUY",
+              },
+              {
+                x: viz3D?.actual[0]?.SELL,
+                y: viz3D?.actual[1]?.SELL,
+                z: viz3D?.actual[2]?.SELL,
+                type: "scatter3d",
+                mode: "markers",
+                // change marker outline to white after making bg black/transparent?
+                marker: {
+                  color: "magenta",
+                  line: { color: "black", width: 1 },
+                },
+                showlegend: true,
+                text: "SELL [actual]",
+                name: "SELL",
+              },
+              {
+                x: viz3D?.grid[0],
+                y: viz3D?.grid[1],
+                z: viz3D?.grid[2],
+                type: "volume",
+                opacity: 0.4,
+                value: viz3D?.preds,
+                colorscale: [
+                  ["0", "magenta"],
+                  ["1", "cyan"],
+                ],
+                hoverinfo: "none",
+                // change marker outline to white after making bg black/transparent?
+                // marker: {
+                //   color: "magenta",
+                //   line: { color: "black", width: 1 },
+                // },
+                // showlegend: true,
+                // text: "SELL [actual]",
+                // name: "SELL",
+              },
+            ]
+      }
+      layout={{
+        font: {
+          color: "rgba(255, 255, 255, 0.85)",
+          // family:
+          //   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;",
+          family: "inherit",
+        },
+        autosize: true,
+        // make responsive
+        // https://codesandbox.io/s/nostalgic-jones-4kuww
+        title: "Visualization",
+        xaxis: { title: "x" },
+        yaxis: { title: "y" },
+        zaxis: { title: "z" },
+        paper_bgcolor: "transparent",
+        plot_bgcolor: "transparent",
+        // dragmode: false,
+        legend: {
+          y: 0,
+          x: 0,
+          title: { text: "Actual" },
+        },
+      }}
+      style={{ width: "100%", height: "100%" }}
+      useResizeHandler
+      // config={{ displayModeBar: false }}
+    />
+  );
+
+  const getPlot = (dims: string) => (dims === "2D" ? plot2D : plot3D);
+  // const memoizedPlot = (dep: string) => useMemo(() => getPlot(dep), [dep]);
+  const memoizedPlot = useMemo(() => getPlot(toggle2D), [toggle2D]);
+
   return (
     <>
       {/* consider changing page and nav to /research and title to Algorithm */}
@@ -498,16 +544,23 @@ const AlgorithmPage = () => {
       >
         <>
           <Title level={5}>the driving force behind our signals</Title>
-          <Toggle
+          {/* consider square and cube icons https://ant.design/components/segmented/#components-segmented-demo-with-icon */}
+
+          {/* <Toggle
             val={toggle2D}
             options={["2D", "3D"]}
             defaultValue="2D"
-            onChange={(val) => setToggle2D(val === "2D")}
+            onChange={(val: string) => setToggle2D(val === "2D")}
+          /> */}
+          <Segmented
+            options={["2D", "3D"]}
+            defaultValue="2D"
+            onChange={(val: string) => setToggle2D(val === "2D")}
           />
         </>
       </span>
       <div className={pageStyles.parent} style={{ alignItems: "center" }}>
-        <div className={pageStyles.child}>{toggle2D ? plot2D : plot3D}</div>
+        <div className={pageStyles.child}>{memoizedPlot(toggle2D)}</div>
         <div className={pageStyles.child}>
           <Table
             dataSource={metadata}
