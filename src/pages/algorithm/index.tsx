@@ -562,8 +562,8 @@ const AlgorithmPage = () => {
       </span>
       <div className={pageStyles.parent} style={{ alignItems: "center" }}>
         <div className={pageStyles.child}>
-          <div style={(!toggle2D && { display: "none" }) || {}}>{plot2D}</div>
-          <div style={(toggle2D && { display: "none" }) || {}}>{plot3D}</div>
+          <div style={toggle2D ? {} : { display: "none" }}>{plot("2D")}</div>
+          <div style={toggle2D ? { display: "none" } : {}}>{plot("3D")}</div>
         </div>
         <div className={pageStyles.child}>
           <Table
