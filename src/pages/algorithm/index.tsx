@@ -37,6 +37,7 @@ const Toggle = styled(Segmented)`
 const AlgorithmPage = () => {
   const [viz2D, setViz2D] = useState();
   const [viz3D, setViz3D] = useState();
+  const [plot3DSaved, setPlot3D] = useState();
   const [toggle2D, setToggle2D] = useState(true);
   const [metadata, setMetadata] = useState();
   const [metadataLoading, setMetadataLoading] = useState(true);
@@ -101,7 +102,10 @@ const AlgorithmPage = () => {
     const url = `${getApiUrl({ localOverride: "dev" })}/visualization?dims=3D`;
     fetch(url, { method: "GET" })
       .then((response) => response.json())
-      .then((data) => setViz3D(data))
+      .then((data) => {
+        setViz3D(data);
+        setPlot3D(plot("3D"));
+      })
       .catch((err) => console.error(err));
     // .finally(() => setMetadataLoading(false));
   }, []);
@@ -364,10 +368,10 @@ const AlgorithmPage = () => {
     />
   );
 
-  const plot = (
+  const plot = (toggleVal) => (
     <Plot
       data={
-        toggle2D
+        toggleVal === "2D"
           ? [
               {
                 x: viz2D?.grid[0],
@@ -560,7 +564,9 @@ const AlgorithmPage = () => {
         </>
       </span>
       <div className={pageStyles.parent} style={{ alignItems: "center" }}>
-        <div className={pageStyles.child}>{memoizedPlot(toggle2D)}</div>
+        <div className={pageStyles.child}>
+          {toggle2D ? plot2D : plot3DSaved}
+        </div>
         <div className={pageStyles.child}>
           <Table
             dataSource={metadata}
