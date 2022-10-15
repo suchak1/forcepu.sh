@@ -1,6 +1,6 @@
 import React from "react";
-import { useState, useEffect, useMemo } from "react";
-import { Typography, Table, Segmented, Button } from "antd";
+import { useState, useEffect } from "react";
+import { Typography, Table, Segmented } from "antd";
 import Plot from "react-plotly.js";
 import { getApiUrl, getDayDiff } from "@/utils";
 import { AccountContext } from "../../layouts";
@@ -41,6 +41,7 @@ const AlgorithmPage = () => {
   const [metadata, setMetadata] = useState();
   const [metadataLoading, setMetadataLoading] = useState(true);
   const size = 0.4999;
+  // const size = 0.3333;
   const width = 3;
   const numTicks = Math.ceil(1 / size);
   const tickText = Array(numTicks).fill("");
@@ -196,10 +197,19 @@ const AlgorithmPage = () => {
                 line: { smoothing: 0, width },
                 colorscale: [
                   ["0", "magenta"],
+                  ["0.4", "magenta"],
+                  ["0.5", "#8080FF"],
+                  ["0.6", "cyan"],
                   ["1", "cyan"],
                 ],
+                colorbar: {
+                  title: "Predicted",
+                  tickmode: "array",
+                  ticktext: tickText,
+                  tickvals: tickVals,
+                },
                 opacity: 0.2,
-                showscale: false,
+                // showscale: false,
                 name: "predicted",
               },
               {
@@ -219,12 +229,13 @@ const AlgorithmPage = () => {
                   ["0", "magenta"],
                   ["1", "cyan"],
                 ],
-                colorbar: {
-                  title: "Predicted",
-                  tickmode: "array",
-                  ticktext: tickText,
-                  tickvals: tickVals,
-                },
+                showscale: false,
+                // colorbar: {
+                //   title: "Predicted",
+                //   // tickmode: "array",
+                //   // ticktext: tickText,
+                //   // tickvals: tickVals,
+                // },
                 name: "predicted",
               },
               {
@@ -292,6 +303,12 @@ const AlgorithmPage = () => {
                   ["0", "magenta"],
                   ["1", "cyan"],
                 ],
+                colorbar: {
+                  title: "Predicted",
+                  tickmode: "array",
+                  ticktext: tickText,
+                  tickvals: tickVals,
+                },
                 hoverinfo: "none",
                 // change marker outline to white after making bg black/transparent?
                 // marker: {
