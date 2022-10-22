@@ -26,7 +26,7 @@ const eyes = get3DCircle(
   [0, 0, 0],
   [1.25, 1.25, 1.25],
   [1.25, 1.25, -1.25],
-  60
+  360
 );
 // .map((pt: number[]) => ({ x: pt[0], y: pt[1], z: pt[2] }));
 
@@ -210,11 +210,11 @@ const AlgorithmPage = () => {
       const newEyeIdx = (eyeIdx + 1) % eyes.length;
       console.log(newEyeIdx, eyes[newEyeIdx]);
       if (!hover) {
-        if (newEyeIdx === 12) {
+        if (newEyeIdx === 12 * 6) {
           setUp({ x: -1, y: -1, z: -1 });
-        } else if (newEyeIdx === 30) {
+        } else if (newEyeIdx === 30 * 6) {
           setUp({ x: 1, y: 1, z: -1 });
-        } else if (newEyeIdx === 48) {
+        } else if (newEyeIdx === 48 * 6) {
           setUp({ x: -1, y: -1, z: 1 });
         }
       }
@@ -230,7 +230,7 @@ const AlgorithmPage = () => {
       // 15 ms => 60fps
       // 30 ms => 30fps
       // 40 ms => 24fps
-    }, 100);
+    }, 15);
     return () => {
       clearInterval(interval);
     };
@@ -442,8 +442,8 @@ const AlgorithmPage = () => {
 
   const plot3D = (
     <Plot
-      onHover={() => setHover(true)}
-      onUnhover={() => setHover(false)}
+      // onHover={() => setHover(true)}
+      // onUnhover={() => setHover(false)}
       data={[
         {
           x: viz3D?.actual[0]?.BUY,
@@ -489,7 +489,7 @@ const AlgorithmPage = () => {
             ticktext: tickText,
             tickvals: tickVals,
           },
-          hoverinfo: "none",
+          hoverinfo: "skip",
           // change marker outline to white after making bg black/transparent?
           // marker: {
           //   color: "magenta",
@@ -500,8 +500,36 @@ const AlgorithmPage = () => {
           // name: "SELL",
         },
       ]}
+      // disable x, y, z titles?
       layout={{
         scene: {
+          xaxis: {
+            title: {
+              text: "x",
+              font: {
+                size: "100",
+              },
+            },
+            showticklabels: false,
+          },
+          yaxis: {
+            showticklabels: false,
+            title: {
+              text: "y",
+              font: {
+                size: "100",
+              },
+            },
+          },
+          zaxis: {
+            title: {
+              text: "z",
+              font: {
+                size: "100",
+              },
+            },
+            showticklabels: false,
+          },
           camera: {
             eye,
             up,
@@ -527,12 +555,30 @@ const AlgorithmPage = () => {
         // make responsive
         // https://codesandbox.io/s/nostalgic-jones-4kuww
         // title: "Visualization",
-        xaxis: { title: "x" },
-        yaxis: { title: "y" },
-        zaxis: { title: "z" },
+        xaxis: {
+          title: "x",
+          showticklabels: false,
+          ticks: "",
+          tickmode: "array",
+          tickVals: [],
+        },
+        yaxis: {
+          title: "y",
+          showticklabels: false,
+          ticks: "",
+          tickmode: "array",
+          tickVals: [],
+        },
+        zaxis: {
+          title: "z",
+          showticklabels: false,
+          ticks: "",
+          tickmode: "array",
+          tickVals: [],
+        },
         paper_bgcolor: "transparent",
         plot_bgcolor: "transparent",
-        // dragmode: false,
+        dragmode: false,
         legend: {
           y: 0,
           x: 0,
@@ -544,7 +590,7 @@ const AlgorithmPage = () => {
       // frames={eyes.map((eye: any) => ({
       //   layout: { scene: { camera: { eye } } },
       // }))}
-      // config={{ displayModeBar: false }}
+      config={{ displayModeBar: false }}
     />
   );
 
@@ -560,6 +606,7 @@ const AlgorithmPage = () => {
       {/* consider using Statistic component for metadata */}
       {/*  */}
       <Title>AI / ML Model</Title>
+      {/* Crystal ball ...er cube */}
       <span
         style={{
           display: "flex",
@@ -570,6 +617,7 @@ const AlgorithmPage = () => {
       >
         <>
           <Title level={5}>the driving force behind our signals</Title>
+          {/* the crystal ball ...er cube behind our signals */}
           {/* consider square and cube icons https://ant.design/components/segmented/#components-segmented-demo-with-icon */}
 
           <Toggle
