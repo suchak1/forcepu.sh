@@ -35,6 +35,16 @@
   }
 }
 
+.home {
+  font-size: 20px;
+  color: #52e5ff;
+  margin-left: -10px;
+}
+
+.home:hover {
+  color: white;
+}
+
 .signOut {
   border-left-color: magenta;
   border-right-color: magenta;
@@ -157,7 +167,14 @@
 
 // selected menu item style
 :global(.ant-menu-dark .ant-menu-item-selected > span > a) {
-  color: #52e5ff;
+  // color: #52e5ff;
+  display: flex;
+  margin-top: -2px;
+}
+
+.ant-menu-item-selected .ant-menu-title-content {
+  border-top: 2px solid #52e5ff;
+  // border-radius: 2px;
 }
 
 :global(.ant-menu.ant-menu-dark .ant-menu-item-active:hover) {

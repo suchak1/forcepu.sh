@@ -28,8 +28,6 @@ const eyes = get3DCircle(
 );
 // .map((pt: number[]) => ({ x: pt[0], y: pt[1], z: pt[2] }));
 
-console.log(eyes);
-
 const stats = [
   {
     key: 0,
@@ -207,7 +205,7 @@ const AlgorithmPage = () => {
       // console.log(time % eyes.length);
       // setTime((oldTime) => oldTime + 1);
       const newEyeIdx = (eyeIdx + 1) % eyes.length;
-      console.log(newEyeIdx, eyes[newEyeIdx]);
+      // console.log(newEyeIdx, eyes[newEyeIdx]);
       const multiplier = numPoints / 360;
       if (!hover) {
         if (newEyeIdx === 72 * multiplier) {
