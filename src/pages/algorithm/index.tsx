@@ -129,6 +129,7 @@ const AlgorithmPage = () => {
   const [eye, setEye] = useState({ x: 1.25, y: 1.25, z: 1.25 });
   const [eyeIdx, setEyeIdx] = useState(0);
   const [up, setUp] = useState({ x: 0, y: 0, z: 1 });
+  const [hover, setHover] = useState(false);
   // const size = 0.3333;
   const width = 3;
   const numTicks = Math.ceil(1 / size);
@@ -195,8 +196,6 @@ const AlgorithmPage = () => {
     // .finally(() => setMetadataLoading(false));
   }, []);
 
-  const [time, setTime] = useState(0);
-
   useEffect(() => {
     // use frames and useMemo instead
     // https://codesandbox.io/s/pier-stat-flood-w1ed4?file=/src/Flood.js
@@ -208,15 +207,24 @@ const AlgorithmPage = () => {
       // console.log(eyes[time % eyes.length]);
       // console.log(time % eyes.length);
       // setTime((oldTime) => oldTime + 1);
-      setEyeIdx(eyeIdx + 1);
-      setEye(eyes[eyeIdx % eyes.length]);
-      if (eyeIdx % eyes.length === 2) {
-        setUp({ x: -1, y: 0, z: 0 });
-      } else if (eyeIdx % eyes.length === 6) {
-        setUp({ x: 0, y: 0, z: 1 });
+      const newEyeIdx = (eyeIdx + 1) % eyes.length;
+      console.log(newEyeIdx, eyes[newEyeIdx]);
+      if (!hover) {
+        if (newEyeIdx === 2) {
+          setUp({ x: -1, y: -1, z: -1 });
+        } else if (newEyeIdx === 5) {
+          setUp({ x: 1, y: 1, z: -1 });
+        } else if (newEyeIdx === 8) {
+          setUp({ x: -1, y: -1, z: 1 });
+        }
       }
-      console.log(eye);
-      console.log(eyes[eyeIdx % eyes.length]);
+      // } else if (newEyeIdx % eyes.length === 6) {
+      //   setUp({ x: 0, y: 0, z: 1 });
+      // }
+      setEyeIdx(newEyeIdx);
+      if (!hover) {
+        setEye(eyes[newEyeIdx]);
+      }
 
       // eyeIdx == 2 or 6, camera flips
       // 15 ms => 60fps
@@ -434,6 +442,8 @@ const AlgorithmPage = () => {
 
   const plot3D = (
     <Plot
+      onHover={() => setHover(true)}
+      onUnhover={() => setHover(false)}
       data={[
         {
           x: viz3D?.actual[0]?.BUY,
@@ -493,14 +503,16 @@ const AlgorithmPage = () => {
       layout={{
         scene: {
           camera: {
-            eye: {
-              x: -0.6533950783163606,
-              y: -0.6533950783163606,
-              z: 1.957970822,
-            },
+            eye,
+            up,
+            // eye: {
+            //   x: -0.6533950783163606,
+            //   y: -0.6533950783163606,
+            //   z: 1.957970822,
+            // },
             //     // center: { x: time, y: time, z: time },
             //     eye: eyes[time % eyes.length],
-            up: { x: 0, y: -1, z: -1 },
+            // up: { x: 0, y: 0, z: 0 },
             // at eyeIdx === 2, blue string hould be back bottom, and bottom is mostly blue
             // up: { x: -1, y: -1, z: -1 },
           },
