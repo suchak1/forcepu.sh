@@ -3,9 +3,6 @@ import { useState, useEffect, useMemo } from "react";
 import { Typography, Table, Segmented } from "antd";
 import Plot from "react-plotly.js";
 import { getApiUrl, getDayDiff, get3DCircle } from "@/utils";
-import { AccountContext } from "../../layouts";
-import { useAuthenticator } from "@aws-amplify/ui-react";
-import { CopyOutlined } from "@ant-design/icons";
 import "swagger-ui-react/swagger-ui.css";
 import pageStyles from "../index.less";
 import "./index.less";
@@ -123,7 +120,8 @@ const AlgorithmPage = () => {
   const [viz2D, setViz2D] = useState();
   const [viz3D, setViz3D] = useState();
   // this should be true
-  const [toggle2D, setToggle2D] = useState(true);
+  const default2DToggle = false;
+  const [toggle2D, setToggle2D] = useState(default2DToggle);
   const [metadata, setMetadata] = useState();
   const [metadataLoading, setMetadataLoading] = useState(true);
   const size = 0.4999;
@@ -564,7 +562,7 @@ const AlgorithmPage = () => {
           <Toggle
             val={toggle2D}
             options={["2D", "3D"]}
-            defaultValue="2D"
+            defaultValue={default2DToggle ? "2D" : "3D"}
             onChange={(val: string) => setToggle2D(val === "2D")}
           />
         </>
