@@ -115,6 +115,111 @@ export const getAccount = (
 export const transpose = (matrix: any[][]) =>
   matrix[0].map((_, i) => matrix.map((row) => row[i]));
 
+// dot product
+const dot = (v1: number[], v2: number[]) =>
+  v1.reduce((sum, val, idx) => sum + val * v2[idx], 0);
+
+// cross product
+const cross = (v1: number[], v2: number[]) =>
+  Array(3)
+    .fill(0)
+    .map(
+      (_, idx) =>
+        v1[(idx + 1) % 3] * v2[(idx + 2) % 3] -
+        v1[(idx + 2) % 3] * v2[(idx + 1) % 3]
+    );
+
+// add
+const add = (v1: number[], v2: number[]) => v1.map((val, idx) => val + v2[idx]);
+
+// subtract
+const subtract = (v1: number[], v2: number[]) =>
+  v1.map((val, idx) => val - v2[idx]);
+
+// divide
+const divide = (v1: number[], divisor: number) =>
+  v1.map((val) => val / divisor);
+
+const findPlane = (pt1: number[], pt2: number[], pt3: number[]) => {
+  const u = subtract(pt2, pt1);
+  const v = subtract(pt3, pt1);
+
+  const normal = cross(u, v);
+  const [a, b, c] = normal;
+  const point = pt1.map((x: number) => -x);
+  const d = dot(point, normal);
+  return [a, b, c, d];
+};
+
+// distance
+const dist = (pt1: number[], pt2: number[]) =>
+  Math.sqrt(pt1.reduce((sum, val, idx) => sum + (val - pt2[idx]) ** 2, 0));
+
+// norm
+const norm = (v1: number[]) => dist(v1, Array(v1.length).fill(0));
+
+// linspace
+const linspace = (start: number, end: number, numPoints: number) =>
+  Array(numPoints)
+    .fill(0)
+    .map((_, idx) => start + idx * ((end - start) / (numPoints - 1)));
+
+// https://math.stackexchange.com/a/73242
+export const get3DCircle = (
+  center: number[],
+  pt1: number[],
+  pt2: number[],
+  refinement = 360
+) => {
+  const plane = findPlane(center, pt1, pt2);
+  const normal = plane.slice(0, 3);
+  const unitNormal = divide(normal, norm(normal));
+
+  let q1 = divide(pt1, norm(pt1));
+  let q2 = add(center, cross(q1, unitNormal));
+  // 0 -> 360 degrees in radians
+  const angles = linspace(0, 2 * Math.PI, refinement);
+
+  const radius = dist(center, pt1);
+
+  q1 = divide(q1, norm(q1));
+  q2 = add(center, cross(q1, unitNormal));
+
+  const convertToXYZ = (theta: number, idx: number) =>
+    center[idx] +
+    radius * Math.cos(theta) * q1[idx] +
+    radius * Math.sin(theta) * q2[idx];
+
+  // // this gives xs, ys, zs each of length refinement
+  // const circle = [0, 1, 2].map((dim) =>
+  //   angles.map((theta) => convertToXYZ(theta, dim))
+  // );
+
+  // this gives refinement # of x, y, z points
+  // const circle = angles.map((theta) => convertToXYZ(theta)
+  // const circle = angles.reduce(
+  //   (points, theta, idx) => [
+  //     ...points,
+  //     ...[
+  //       convertToXYZ(theta, 0),
+  //       convertToXYZ(theta, 1),
+  //       convertToXYZ(theta, 2),
+  //     ],
+  //   ],
+  //   []
+  // );
+  const circle = [];
+  for (let angle of angles) {
+    const point = [];
+    for (let dim of [0, 1, 2]) {
+      point.push(convertToXYZ(angle, dim));
+    }
+    const [x, y, z] = point;
+    circle.push({ x, y, z });
+  }
+  return circle;
+};
+
 export const signalColors = {
   BUY: "lime",
   SELL: "red",

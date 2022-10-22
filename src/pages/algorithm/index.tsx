@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Typography, Table, Segmented } from "antd";
 import Plot from "react-plotly.js";
-import { getApiUrl, getDayDiff } from "@/utils";
+import { getApiUrl, getDayDiff, get3DCircle } from "@/utils";
 import { AccountContext } from "../../layouts";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { CopyOutlined } from "@ant-design/icons";
@@ -14,6 +14,90 @@ import styled from "styled-components";
 const { Title } = Typography;
 // outline: 1px solid ${val ? "#52e5ff" : "magenta"};
 // background-color: ${val ? "#52e5ff" : "magenta"};
+
+// const eyes = [
+//   { x: 0.1, y: 0.1, z: 2.15 },
+//   { x: 1.25, y: 1.25, z: 1.25 }, // distance from (0, 0, 0) ~ 2.16
+//   { x: 1.53, y: 1.53, z: 0.1 },
+//   { x: 1.25, y: 1.25, z: -1.25 },
+//   { x: 0.1, y: 0.1, z: -2.15 },
+// ];
+const eyes = get3DCircle(
+  [0, 0, 0],
+  [1.25, 1.25, 1.25],
+  [1.25, 1.25, -1.25],
+  10
+);
+// .map((pt: number[]) => ({ x: pt[0], y: pt[1], z: pt[2] }));
+
+console.log(eyes);
+
+const stats = [
+  {
+    key: 0,
+    metadata: "Total Return [%]",
+    // HODL: 0.0,
+    stat: 70.97,
+  },
+  {
+    key: 1,
+    metadata: "Max Drawdown [%]",
+    // HODL: 0.0,
+    stat: 25.77,
+  },
+  {
+    key: 2,
+    metadata: "Win Rate [%]",
+    // HODL: null,
+    stat: 50.0,
+  },
+  {
+    key: 3,
+    metadata: "Profit Factor",
+    // HODL: null,
+    stat: 2.18,
+  },
+  {
+    key: 4,
+    metadata: "Total Fees Paid",
+    // HODL: 0.0,
+    stat: 0.04,
+  },
+  {
+    key: 5,
+    metadata: "Profitable Time [%]",
+    // HODL: 9.39,
+    stat: 90.61,
+  },
+];
+
+const columns = [
+  { title: "Metadata", dataIndex: "metadata", key: "metadata" },
+  // {
+  //   title: <span style={{ color: "#DF00DF" }}>{HODL}</span>,
+  //   dataIndex: HODL,
+  //   key: HODL,
+  // },
+  {
+    title: <i style={{ color: "#52e5ff" }}>{"Stat"}</i>,
+    dataIndex: "stat",
+    key: "stat",
+  },
+];
+
+// const columns = [
+//   { title: "Metadata", dataIndex: "metadata", key: "metadata" },
+//   {
+//     title: <span style={{ color: "#DF00DF" }}>{HODL}</span>,
+//     dataIndex: HODL,
+//     key: HODL,
+//   },
+//   {
+//     title: <i style={{ color: "#52e5ff" }}>{hyperdrive}</i>,
+//     dataIndex: hyperdrive,
+//     key: hyperdrive,
+//   },
+// ];
 
 const Toggle = styled(Segmented)`
   .ant-segmented-item-selected {
@@ -37,10 +121,14 @@ const Toggle = styled(Segmented)`
 const AlgorithmPage = () => {
   const [viz2D, setViz2D] = useState();
   const [viz3D, setViz3D] = useState();
-  const [toggle2D, setToggle2D] = useState(true);
+  // this should be true
+  const [toggle2D, setToggle2D] = useState(false);
   const [metadata, setMetadata] = useState();
   const [metadataLoading, setMetadataLoading] = useState(true);
   const size = 0.4999;
+  const [eye, setEye] = useState({ x: 1.25, y: 1.25, z: 1.25 });
+  const [eyeIdx, setEyeIdx] = useState(0);
+  const [up, setUp] = useState({ x: 0, y: 0, z: 1 });
   // const size = 0.3333;
   const width = 3;
   const numTicks = Math.ceil(1 / size);
@@ -107,221 +195,316 @@ const AlgorithmPage = () => {
     // .finally(() => setMetadataLoading(false));
   }, []);
 
-  const stats = [
-    {
-      key: 0,
-      metadata: "Total Return [%]",
-      // HODL: 0.0,
-      stat: 70.97,
-    },
-    {
-      key: 1,
-      metadata: "Max Drawdown [%]",
-      // HODL: 0.0,
-      stat: 25.77,
-    },
-    {
-      key: 2,
-      metadata: "Win Rate [%]",
-      // HODL: null,
-      stat: 50.0,
-    },
-    {
-      key: 3,
-      metadata: "Profit Factor",
-      // HODL: null,
-      stat: 2.18,
-    },
-    {
-      key: 4,
-      metadata: "Total Fees Paid",
-      // HODL: 0.0,
-      stat: 0.04,
-    },
-    {
-      key: 5,
-      metadata: "Profitable Time [%]",
-      // HODL: 9.39,
-      stat: 90.61,
-    },
-  ];
+  const [time, setTime] = useState(0);
 
-  const columns = [
-    { title: "Metadata", dataIndex: "metadata", key: "metadata" },
-    // {
-    //   title: <span style={{ color: "#DF00DF" }}>{HODL}</span>,
-    //   dataIndex: HODL,
-    //   key: HODL,
-    // },
-    {
-      title: <i style={{ color: "#52e5ff" }}>{"Stat"}</i>,
-      dataIndex: "stat",
-      key: "stat",
-    },
-  ];
+  useEffect(() => {
+    // use frames and useMemo instead
+    // https://codesandbox.io/s/pier-stat-flood-w1ed4?file=/src/Flood.js
+    // console.log(eyes[time % eyes.length]);
+    // console.log(time % eyes.length);
+    // console.log(eye)
+    // console.log()
+    const interval = setInterval(() => {
+      // console.log(eyes[time % eyes.length]);
+      // console.log(time % eyes.length);
+      // setTime((oldTime) => oldTime + 1);
+      setEyeIdx(eyeIdx + 1);
+      setEye(eyes[eyeIdx % eyes.length]);
+      if (eyeIdx % eyes.length === 2) {
+        setUp({ x: -1, y: 0, z: 0 });
+      } else if (eyeIdx % eyes.length === 6) {
+        setUp({ x: 0, y: 0, z: 1 });
+      }
+      console.log(eye);
+      console.log(eyes[eyeIdx % eyes.length]);
 
-  // const columns = [
-  //   { title: "Metadata", dataIndex: "metadata", key: "metadata" },
-  //   {
-  //     title: <span style={{ color: "#DF00DF" }}>{HODL}</span>,
-  //     dataIndex: HODL,
-  //     key: HODL,
-  //   },
-  //   {
-  //     title: <i style={{ color: "#52e5ff" }}>{hyperdrive}</i>,
-  //     dataIndex: hyperdrive,
-  //     key: hyperdrive,
-  //   },
-  // ];
+      // eyeIdx == 2 or 6, camera flips
+      // 15 ms => 60fps
+      // 30 ms => 30fps
+      // 40 ms => 24fps
+    }, 2000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [eye]);
 
   // TODO:
   // 3. Move Algorithm tab to the right? and remove signed in as User text?
+  // beginning camera
+  // center
+  // :
+  // {x: 0, y: 0, z: 0}
+  // eye
+  // :
+  // {x: 1.25, y: 1.25, z: 1.25}
+  // up
+  // :
+  // {x: 0, y: 0, z: 1}
+  // consider making camera move in python and exporting as html
+  // const plot = (toggleVal) => (
+  //   <Plot
+  //     // onUpdate={(fig, div) => {
+  //     //   console.log(time);
+  //     //   console.log("fig", fig) || console.log("div", div);
+  //     // }}
+  //     data={
+  //       toggleVal === "2D"
+  //         ? [
+  //             {
+  //               x: viz2D?.grid[0],
+  //               y: viz2D?.grid[1],
+  //               z: viz2D?.preds,
+  //               type: "contour",
+  //               hoverinfo: "none",
+  //               contours: {
+  //                 coloring: "fill",
+  //                 start: 0,
+  //                 end: 1,
+  //                 size: size,
+  //               },
+  //               line: { smoothing: 0, width },
+  //               colorscale: [
+  //                 ["0", "magenta"],
+  //                 ["0.4", "magenta"],
+  //                 ["0.5", "#8080FF"],
+  //                 ["0.6", "cyan"],
+  //                 ["1", "cyan"],
+  //               ],
+  //               // colorbar: {
+  //               //   //   title: "Predicted",
+  //               //   tickmode: "array",
+  //               //   //   // ticktext: ["SELL", "BUY"],
+  //               //   //   // tickvals: [0, 1],
+  //               //   //   nticks: 10,
+  //               //   ticktext: tickText.map(() => ""),
+  //               //   tickvals: tickVals,
+  //               // },
+  //               opacity: 0.2,
+  //               showscale: false,
+  //               name: "predicted",
+  //             },
+  //             {
+  //               x: viz2D?.grid[0],
+  //               y: viz2D?.grid[1],
+  //               z: viz2D?.preds,
+  //               type: "contour",
+  //               hoverinfo: "none",
+  //               contours: {
+  //                 coloring: "lines",
+  //                 start: 0,
+  //                 end: 1,
+  //                 size: size,
+  //               },
+  //               line: { smoothing: 0, width },
+  //               colorscale: [
+  //                 ["0", "magenta"],
+  //                 ["1", "cyan"],
+  //               ],
+  //               // showscale: false,
+  //               colorbar: {
+  //                 title: "Predicted",
+  //                 tickmode: "array",
+  //                 ticktext: tickText,
+  //                 tickvals: tickVals,
+  //               },
+  //               name: "predicted",
+  //             },
+  //             {
+  //               x: viz2D?.actual[0]?.BUY,
+  //               y: viz2D?.actual[1]?.BUY,
+  //               type: "scatter",
+  //               mode: "markers",
+  //               // change marker outline to white after making bg black/transparent?
+  //               marker: { color: "cyan", line: { color: "black", width: 1 } },
+  //               showlegend: true,
+  //               text: "BUY [actual]",
+  //               name: "BUY",
+  //             },
+  //             {
+  //               x: viz2D?.actual[0]?.SELL,
+  //               y: viz2D?.actual[1]?.SELL,
+  //               type: "scatter",
+  //               mode: "markers",
+  //               // change marker outline to white after making bg black/transparent?
+  //               marker: {
+  //                 color: "magenta",
+  //                 line: { color: "black", width: 1 },
+  //               },
+  //               showlegend: true,
+  //               text: "SELL [actual]",
+  //               name: "SELL",
+  //             },
+  //           ]
+  //         : [
+  //             {
+  //               x: viz3D?.actual[0]?.BUY,
+  //               y: viz3D?.actual[1]?.BUY,
+  //               z: viz3D?.actual[2]?.BUY,
+  //               type: "scatter3d",
+  //               mode: "markers",
+  //               // change marker outline to white after making bg black/transparent?
+  //               marker: { color: "cyan", line: { color: "black", width: 1 } },
+  //               showlegend: true,
+  //               text: "BUY [actual]",
+  //               name: "BUY",
+  //             },
+  //             {
+  //               x: viz3D?.actual[0]?.SELL,
+  //               y: viz3D?.actual[1]?.SELL,
+  //               z: viz3D?.actual[2]?.SELL,
+  //               type: "scatter3d",
+  //               mode: "markers",
+  //               // change marker outline to white after making bg black/transparent?
+  //               marker: {
+  //                 color: "magenta",
+  //                 line: { color: "black", width: 1 },
+  //               },
+  //               showlegend: true,
+  //               text: "SELL [actual]",
+  //               name: "SELL",
+  //             },
+  //             {
+  //               x: viz3D?.grid[0],
+  //               y: viz3D?.grid[1],
+  //               z: viz3D?.grid[2],
+  //               type: "volume",
+  //               opacity: 0.4,
+  //               value: viz3D?.preds,
+  //               colorscale: [
+  //                 ["0", "magenta"],
+  //                 ["1", "cyan"],
+  //               ],
+  //               colorbar: {
+  //                 title: "Predicted",
+  //                 tickmode: "array",
+  //                 ticktext: tickText,
+  //                 tickvals: tickVals,
+  //               },
+  //               hoverinfo: "none",
+  //               // change marker outline to white after making bg black/transparent?
+  //               // marker: {
+  //               //   color: "magenta",
+  //               //   line: { color: "black", width: 1 },
+  //               // },
+  //               // showlegend: true,
+  //               // text: "SELL [actual]",
+  //               // name: "SELL",
+  //             },
+  //           ]
+  //     }
+  //     layout={{
+  //       scene: {
+  //         camera: {
+  //           eye,
+  //           //     // center: { x: time, y: time, z: time },
+  //           //     eye: eyes[time % eyes.length],
+  //           // up: { x: time, y: time, z: time },
+  //         },
+  //       },
+  //       font: {
+  //         color: "rgba(255, 255, 255, 0.85)",
+  //         // family:
+  //         //   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;",
+  //         family: "inherit",
+  //       },
+  //       autosize: true,
+  //       // make responsive
+  //       // https://codesandbox.io/s/nostalgic-jones-4kuww
+  //       // title: "Visualization",
+  //       xaxis: { title: "x" },
+  //       yaxis: { title: "y" },
+  //       zaxis: { title: "z" },
+  //       paper_bgcolor: "transparent",
+  //       plot_bgcolor: "transparent",
+  //       // dragmode: false,
+  //       legend: {
+  //         y: 0,
+  //         x: 0,
+  //         title: { text: "Actual" },
+  //       },
+  //     }}
+  //     style={{ width: "100%", height: "100%" }}
+  //     useResizeHandler
+  //     frames={eyes.map((eye: any) => ({
+  //       layout: { scene: { camera: { eye } } },
+  //     }))}
+  //     // config={{ displayModeBar: false }}
+  //   />
+  // );
 
-  const plot = (toggleVal) => (
+  const plot3D = (
     <Plot
-      data={
-        toggleVal === "2D"
-          ? [
-              {
-                x: viz2D?.grid[0],
-                y: viz2D?.grid[1],
-                z: viz2D?.preds,
-                type: "contour",
-                hoverinfo: "none",
-                contours: {
-                  coloring: "fill",
-                  start: 0,
-                  end: 1,
-                  size: size,
-                },
-                line: { smoothing: 0, width },
-                colorscale: [
-                  ["0", "magenta"],
-                  ["0.4", "magenta"],
-                  ["0.5", "#8080FF"],
-                  ["0.6", "cyan"],
-                  ["1", "cyan"],
-                ],
-                colorbar: {
-                  title: "Predicted",
-                  tickmode: "array",
-                  ticktext: tickText,
-                  tickvals: tickVals,
-                },
-                opacity: 0.2,
-                // showscale: false,
-                name: "predicted",
-              },
-              {
-                x: viz2D?.grid[0],
-                y: viz2D?.grid[1],
-                z: viz2D?.preds,
-                type: "contour",
-                hoverinfo: "none",
-                contours: {
-                  coloring: "lines",
-                  start: 0,
-                  end: 1,
-                  size: size,
-                },
-                line: { smoothing: 0, width },
-                colorscale: [
-                  ["0", "magenta"],
-                  ["1", "cyan"],
-                ],
-                showscale: false,
-                // colorbar: {
-                //   title: "Predicted",
-                //   // tickmode: "array",
-                //   // ticktext: tickText,
-                //   // tickvals: tickVals,
-                // },
-                name: "predicted",
-              },
-              {
-                x: viz2D?.actual[0]?.BUY,
-                y: viz2D?.actual[1]?.BUY,
-                type: "scatter",
-                mode: "markers",
-                // change marker outline to white after making bg black/transparent?
-                marker: { color: "cyan", line: { color: "black", width: 1 } },
-                showlegend: true,
-                text: "BUY [actual]",
-                name: "BUY",
-              },
-              {
-                x: viz2D?.actual[0]?.SELL,
-                y: viz2D?.actual[1]?.SELL,
-                type: "scatter",
-                mode: "markers",
-                // change marker outline to white after making bg black/transparent?
-                marker: {
-                  color: "magenta",
-                  line: { color: "black", width: 1 },
-                },
-                showlegend: true,
-                text: "SELL [actual]",
-                name: "SELL",
-              },
-            ]
-          : [
-              {
-                x: viz3D?.actual[0]?.BUY,
-                y: viz3D?.actual[1]?.BUY,
-                z: viz3D?.actual[2]?.BUY,
-                type: "scatter3d",
-                mode: "markers",
-                // change marker outline to white after making bg black/transparent?
-                marker: { color: "cyan", line: { color: "black", width: 1 } },
-                showlegend: true,
-                text: "BUY [actual]",
-                name: "BUY",
-              },
-              {
-                x: viz3D?.actual[0]?.SELL,
-                y: viz3D?.actual[1]?.SELL,
-                z: viz3D?.actual[2]?.SELL,
-                type: "scatter3d",
-                mode: "markers",
-                // change marker outline to white after making bg black/transparent?
-                marker: {
-                  color: "magenta",
-                  line: { color: "black", width: 1 },
-                },
-                showlegend: true,
-                text: "SELL [actual]",
-                name: "SELL",
-              },
-              {
-                x: viz3D?.grid[0],
-                y: viz3D?.grid[1],
-                z: viz3D?.grid[2],
-                type: "volume",
-                opacity: 0.4,
-                value: viz3D?.preds,
-                colorscale: [
-                  ["0", "magenta"],
-                  ["1", "cyan"],
-                ],
-                colorbar: {
-                  title: "Predicted",
-                  tickmode: "array",
-                  ticktext: tickText,
-                  tickvals: tickVals,
-                },
-                hoverinfo: "none",
-                // change marker outline to white after making bg black/transparent?
-                // marker: {
-                //   color: "magenta",
-                //   line: { color: "black", width: 1 },
-                // },
-                // showlegend: true,
-                // text: "SELL [actual]",
-                // name: "SELL",
-              },
-            ]
-      }
+      data={[
+        {
+          x: viz3D?.actual[0]?.BUY,
+          y: viz3D?.actual[1]?.BUY,
+          z: viz3D?.actual[2]?.BUY,
+          type: "scatter3d",
+          mode: "markers",
+          // change marker outline to white after making bg black/transparent?
+          marker: { color: "cyan", line: { color: "black", width: 1 } },
+          showlegend: true,
+          text: "BUY [actual]",
+          name: "BUY",
+        },
+        {
+          x: viz3D?.actual[0]?.SELL,
+          y: viz3D?.actual[1]?.SELL,
+          z: viz3D?.actual[2]?.SELL,
+          type: "scatter3d",
+          mode: "markers",
+          // change marker outline to white after making bg black/transparent?
+          marker: {
+            color: "magenta",
+            line: { color: "black", width: 1 },
+          },
+          showlegend: true,
+          text: "SELL [actual]",
+          name: "SELL",
+        },
+        {
+          x: viz3D?.grid[0],
+          y: viz3D?.grid[1],
+          z: viz3D?.grid[2],
+          type: "volume",
+          opacity: 0.4,
+          value: viz3D?.preds,
+          colorscale: [
+            ["0", "magenta"],
+            ["1", "cyan"],
+          ],
+          colorbar: {
+            title: "Predicted",
+            tickmode: "array",
+            ticktext: tickText,
+            tickvals: tickVals,
+          },
+          hoverinfo: "none",
+          // change marker outline to white after making bg black/transparent?
+          // marker: {
+          //   color: "magenta",
+          //   line: { color: "black", width: 1 },
+          // },
+          // showlegend: true,
+          // text: "SELL [actual]",
+          // name: "SELL",
+        },
+      ]}
       layout={{
+        scene: {
+          camera: {
+            eye: {
+              x: -0.6533950783163606,
+              y: -0.6533950783163606,
+              z: 1.957970822,
+            },
+            //     // center: { x: time, y: time, z: time },
+            //     eye: eyes[time % eyes.length],
+            up: { x: 0, y: -1, z: -1 },
+            // at eyeIdx === 2, blue string hould be back bottom, and bottom is mostly blue
+            // up: { x: -1, y: -1, z: -1 },
+          },
+        },
         font: {
           color: "rgba(255, 255, 255, 0.85)",
           // family:
@@ -331,7 +514,7 @@ const AlgorithmPage = () => {
         autosize: true,
         // make responsive
         // https://codesandbox.io/s/nostalgic-jones-4kuww
-        title: "Visualization",
+        // title: "Visualization",
         xaxis: { title: "x" },
         yaxis: { title: "y" },
         zaxis: { title: "z" },
@@ -346,6 +529,9 @@ const AlgorithmPage = () => {
       }}
       style={{ width: "100%", height: "100%" }}
       useResizeHandler
+      // frames={eyes.map((eye: any) => ({
+      //   layout: { scene: { camera: { eye } } },
+      // }))}
       // config={{ displayModeBar: false }}
     />
   );
@@ -357,11 +543,10 @@ const AlgorithmPage = () => {
   return (
     <>
       {/* consider changing page and nav to /research and title to Algorithm */}
-      {/* DISPLAY model stats here and call api.forcepu.sh/model */}
-      {/* sanitize model info (remove features) in API */}
-      {/* use Segmented component for 2D vs 3D */}
+      {/* remove numbers on axis for 3d / camera should spin up and down */}
       {/* consider switching BTC toggle to Segmented on home screen */}
       {/* consider using Statistic component for metadata */}
+      {/*  */}
       <Title>AI / ML Model</Title>
       <span
         style={{
@@ -385,8 +570,9 @@ const AlgorithmPage = () => {
       </span>
       <div className={pageStyles.parent} style={{ alignItems: "center" }}>
         <div className={pageStyles.child}>
-          <div style={toggle2D ? {} : { display: "none" }}>{plot("2D")}</div>
-          <div style={toggle2D ? { display: "none" } : {}}>{plot("3D")}</div>
+          {/* <div style={toggle2D ? {} : { display: "none" }}>{plot("2D")}</div>
+          <div style={toggle2D ? { display: "none" } : {}}>{plot("3D")}</div> */}
+          {plot3D}
         </div>
         <div className={pageStyles.child}>
           <Table
