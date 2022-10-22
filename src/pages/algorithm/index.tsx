@@ -26,7 +26,7 @@ const eyes = get3DCircle(
   [0, 0, 0],
   [1.25, 1.25, 1.25],
   [1.25, 1.25, -1.25],
-  10
+  60
 );
 // .map((pt: number[]) => ({ x: pt[0], y: pt[1], z: pt[2] }));
 
@@ -210,11 +210,11 @@ const AlgorithmPage = () => {
       const newEyeIdx = (eyeIdx + 1) % eyes.length;
       console.log(newEyeIdx, eyes[newEyeIdx]);
       if (!hover) {
-        if (newEyeIdx === 2) {
+        if (newEyeIdx === 12) {
           setUp({ x: -1, y: -1, z: -1 });
-        } else if (newEyeIdx === 5) {
+        } else if (newEyeIdx === 30) {
           setUp({ x: 1, y: 1, z: -1 });
-        } else if (newEyeIdx === 8) {
+        } else if (newEyeIdx === 48) {
           setUp({ x: -1, y: -1, z: 1 });
         }
       }
@@ -230,7 +230,7 @@ const AlgorithmPage = () => {
       // 15 ms => 60fps
       // 30 ms => 30fps
       // 40 ms => 24fps
-    }, 2000);
+    }, 100);
     return () => {
       clearInterval(interval);
     };
