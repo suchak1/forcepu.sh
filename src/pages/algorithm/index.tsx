@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Typography, Table, Segmented } from "antd";
 import Plot from "react-plotly.js";
 import { getApiUrl, getDayDiff, get3DCircle } from "@/utils";
@@ -251,128 +251,131 @@ const AlgorithmPage = () => {
   // :
   // {x: 0, y: 0, z: 1}
   // consider making camera move in python and exporting as html
-  const plot2D = (
-    <Plot
-      // onUpdate={(fig, div) => {
-      //   console.log(time);
-      //   console.log("fig", fig) || console.log("div", div);
-      // }}
-      data={[
-        {
-          x: viz2D?.grid[0],
-          y: viz2D?.grid[1],
-          z: viz2D?.preds,
-          type: "contour",
-          hoverinfo: "none",
-          contours: {
-            coloring: "fill",
-            start: 0,
-            end: 1,
-            size: size,
+  const plot2D = useMemo(
+    () => (
+      <Plot
+        // onUpdate={(fig, div) => {
+        //   console.log(time);
+        //   console.log("fig", fig) || console.log("div", div);
+        // }}
+        data={[
+          {
+            x: viz2D?.grid[0],
+            y: viz2D?.grid[1],
+            z: viz2D?.preds,
+            type: "contour",
+            hoverinfo: "none",
+            contours: {
+              coloring: "fill",
+              start: 0,
+              end: 1,
+              size: size,
+            },
+            line: { smoothing: 0, width },
+            colorscale: [
+              ["0", "magenta"],
+              ["0.4", "magenta"],
+              ["0.5", "#8080FF"],
+              ["0.6", "cyan"],
+              ["1", "cyan"],
+            ],
+            // colorbar: {
+            //   //   title: "Predicted",
+            //   tickmode: "array",
+            //   //   // ticktext: ["SELL", "BUY"],
+            //   //   // tickvals: [0, 1],
+            //   //   nticks: 10,
+            //   ticktext: tickText.map(() => ""),
+            //   tickvals: tickVals,
+            // },
+            opacity: 0.2,
+            showscale: false,
+            name: "predicted",
           },
-          line: { smoothing: 0, width },
-          colorscale: [
-            ["0", "magenta"],
-            ["0.4", "magenta"],
-            ["0.5", "#8080FF"],
-            ["0.6", "cyan"],
-            ["1", "cyan"],
-          ],
-          // colorbar: {
-          //   //   title: "Predicted",
-          //   tickmode: "array",
-          //   //   // ticktext: ["SELL", "BUY"],
-          //   //   // tickvals: [0, 1],
-          //   //   nticks: 10,
-          //   ticktext: tickText.map(() => ""),
-          //   tickvals: tickVals,
-          // },
-          opacity: 0.2,
-          showscale: false,
-          name: "predicted",
-        },
-        {
-          x: viz2D?.grid[0],
-          y: viz2D?.grid[1],
-          z: viz2D?.preds,
-          type: "contour",
-          hoverinfo: "none",
-          contours: {
-            coloring: "lines",
-            start: 0,
-            end: 1,
-            size: size,
+          {
+            x: viz2D?.grid[0],
+            y: viz2D?.grid[1],
+            z: viz2D?.preds,
+            type: "contour",
+            hoverinfo: "none",
+            contours: {
+              coloring: "lines",
+              start: 0,
+              end: 1,
+              size: size,
+            },
+            line: { smoothing: 0, width },
+            colorscale: [
+              ["0", "magenta"],
+              ["1", "cyan"],
+            ],
+            // showscale: false,
+            colorbar: {
+              title: "Predicted",
+              tickmode: "array",
+              ticktext: tickText,
+              tickvals: tickVals,
+            },
+            name: "predicted",
           },
-          line: { smoothing: 0, width },
-          colorscale: [
-            ["0", "magenta"],
-            ["1", "cyan"],
-          ],
-          // showscale: false,
-          colorbar: {
-            title: "Predicted",
-            tickmode: "array",
-            ticktext: tickText,
-            tickvals: tickVals,
+          {
+            x: viz2D?.actual[0]?.BUY,
+            y: viz2D?.actual[1]?.BUY,
+            type: "scatter",
+            mode: "markers",
+            // change marker outline to white after making bg black/transparent?
+            marker: { color: "cyan", line: { color: "black", width: 1 } },
+            showlegend: true,
+            text: "BUY [actual]",
+            name: "BUY",
           },
-          name: "predicted",
-        },
-        {
-          x: viz2D?.actual[0]?.BUY,
-          y: viz2D?.actual[1]?.BUY,
-          type: "scatter",
-          mode: "markers",
-          // change marker outline to white after making bg black/transparent?
-          marker: { color: "cyan", line: { color: "black", width: 1 } },
-          showlegend: true,
-          text: "BUY [actual]",
-          name: "BUY",
-        },
-        {
-          x: viz2D?.actual[0]?.SELL,
-          y: viz2D?.actual[1]?.SELL,
-          type: "scatter",
-          mode: "markers",
-          // change marker outline to white after making bg black/transparent?
-          marker: {
-            color: "magenta",
-            line: { color: "black", width: 1 },
+          {
+            x: viz2D?.actual[0]?.SELL,
+            y: viz2D?.actual[1]?.SELL,
+            type: "scatter",
+            mode: "markers",
+            // change marker outline to white after making bg black/transparent?
+            marker: {
+              color: "magenta",
+              line: { color: "black", width: 1 },
+            },
+            showlegend: true,
+            text: "SELL [actual]",
+            name: "SELL",
           },
-          showlegend: true,
-          text: "SELL [actual]",
-          name: "SELL",
-        },
-      ]}
-      layout={{
-        font: {
-          color: "rgba(255, 255, 255, 0.85)",
-          // family:
-          //   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;",
-          family: "inherit",
-        },
-        autosize: true,
-        // make responsive
-        // https://codesandbox.io/s/nostalgic-jones-4kuww
-        // title: "Visualization",
-        xaxis: { title: "x" },
-        yaxis: { title: "y" },
-        zaxis: { title: "z" },
-        paper_bgcolor: "transparent",
-        plot_bgcolor: "transparent",
-        // dragmode: false,
-        legend: {
-          y: 0,
-          x: 0,
-          title: { text: "Actual" },
-        },
-      }}
-      style={{ width: "100%", height: "100%" }}
-      useResizeHandler
-      // frames={eyes.map((eye: any) => ({
-      //   layout: { scene: { camera: { eye } } },
-      // }))}
-      config={{ displayModeBar: false }}
-    />
+        ]}
+        layout={{
+          font: {
+            color: "rgba(255, 255, 255, 0.85)",
+            // family:
+            //   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;",
+            family: "inherit",
+          },
+          autosize: true,
+          // make responsive
+          // https://codesandbox.io/s/nostalgic-jones-4kuww
+          // title: "Visualization",
+          xaxis: { title: "x" },
+          yaxis: { title: "y" },
+          zaxis: { title: "z" },
+          paper_bgcolor: "transparent",
+          plot_bgcolor: "transparent",
+          // dragmode: false,
+          legend: {
+            y: 0,
+            x: 0,
+            title: { text: "Actual" },
+          },
+        }}
+        style={{ width: "100%", height: "100%" }}
+        useResizeHandler
+        // frames={eyes.map((eye: any) => ({
+        //   layout: { scene: { camera: { eye } } },
+        // }))}
+        config={{ displayModeBar: false }}
+      />
+    ),
+    [viz2D]
   );
 
   const plot3D = (
