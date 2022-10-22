@@ -378,158 +378,161 @@ const AlgorithmPage = () => {
     [viz2D]
   );
 
-  const plot3D = (
-    <Plot
-      // onHover={() => setHover(true)}
-      // onUnhover={() => setHover(false)}
-      data={[
-        {
-          x: viz3D?.actual[0]?.BUY,
-          y: viz3D?.actual[1]?.BUY,
-          z: viz3D?.actual[2]?.BUY,
-          type: "scatter3d",
-          mode: "markers",
-          // change marker outline to white after making bg black/transparent?
-          marker: { color: "cyan", line: { color: "black", width: 1 } },
-          showlegend: true,
-          text: "BUY [actual]",
-          name: "BUY",
-        },
-        {
-          x: viz3D?.actual[0]?.SELL,
-          y: viz3D?.actual[1]?.SELL,
-          z: viz3D?.actual[2]?.SELL,
-          type: "scatter3d",
-          mode: "markers",
-          // change marker outline to white after making bg black/transparent?
-          marker: {
-            color: "magenta",
-            line: { color: "black", width: 1 },
+  const plot3D = useMemo(
+    () => (
+      <Plot
+        // onHover={() => setHover(true)}
+        // onUnhover={() => setHover(false)}
+        data={[
+          {
+            x: viz3D?.actual[0]?.BUY,
+            y: viz3D?.actual[1]?.BUY,
+            z: viz3D?.actual[2]?.BUY,
+            type: "scatter3d",
+            mode: "markers",
+            // change marker outline to white after making bg black/transparent?
+            marker: { color: "cyan", line: { color: "black", width: 1 } },
+            showlegend: true,
+            text: "BUY [actual]",
+            name: "BUY",
           },
-          showlegend: true,
-          text: "SELL [actual]",
-          name: "SELL",
-        },
-        {
-          x: viz3D?.grid[0],
-          y: viz3D?.grid[1],
-          z: viz3D?.grid[2],
-          type: "volume",
-          opacity: 0.4,
-          value: viz3D?.preds,
-          colorscale: [
-            ["0", "magenta"],
-            ["1", "cyan"],
-          ],
-          colorbar: {
-            title: "Predicted",
-            tickmode: "array",
-            ticktext: tickText,
-            tickvals: tickVals,
+          {
+            x: viz3D?.actual[0]?.SELL,
+            y: viz3D?.actual[1]?.SELL,
+            z: viz3D?.actual[2]?.SELL,
+            type: "scatter3d",
+            mode: "markers",
+            // change marker outline to white after making bg black/transparent?
+            marker: {
+              color: "magenta",
+              line: { color: "black", width: 1 },
+            },
+            showlegend: true,
+            text: "SELL [actual]",
+            name: "SELL",
           },
-          hoverinfo: "skip",
-          // change marker outline to white after making bg black/transparent?
-          // marker: {
-          //   color: "magenta",
-          //   line: { color: "black", width: 1 },
-          // },
-          // showlegend: true,
-          // text: "SELL [actual]",
-          // name: "SELL",
-        },
-      ]}
-      // disable x, y, z titles?
-      layout={{
-        scene: {
-          xaxis: {
-            title: {
-              text: "x",
-              font: {
-                size: "100",
+          {
+            x: viz3D?.grid[0],
+            y: viz3D?.grid[1],
+            z: viz3D?.grid[2],
+            type: "volume",
+            opacity: 0.4,
+            value: viz3D?.preds,
+            colorscale: [
+              ["0", "magenta"],
+              ["1", "cyan"],
+            ],
+            colorbar: {
+              title: "Predicted",
+              tickmode: "array",
+              ticktext: tickText,
+              tickvals: tickVals,
+            },
+            hoverinfo: "skip",
+            // change marker outline to white after making bg black/transparent?
+            // marker: {
+            //   color: "magenta",
+            //   line: { color: "black", width: 1 },
+            // },
+            // showlegend: true,
+            // text: "SELL [actual]",
+            // name: "SELL",
+          },
+        ]}
+        // disable x, y, z titles?
+        layout={{
+          scene: {
+            xaxis: {
+              title: {
+                text: "x",
+                font: {
+                  size: "100",
+                },
+              },
+              showticklabels: false,
+            },
+            yaxis: {
+              showticklabels: false,
+              title: {
+                text: "y",
+                font: {
+                  size: "100",
+                },
               },
             },
+            zaxis: {
+              title: {
+                text: "z",
+                font: {
+                  size: "100",
+                },
+              },
+              showticklabels: false,
+            },
+            camera: {
+              eye,
+              up,
+              // eye: {
+              //   x: -0.6533950783163606,
+              //   y: -0.6533950783163606,
+              //   z: 1.957970822,
+              // },
+              //     // center: { x: time, y: time, z: time },
+              //     eye: eyes[time % eyes.length],
+              // up: { x: 0, y: 0, z: 0 },
+              // at eyeIdx === 2, blue string hould be back bottom, and bottom is mostly blue
+              // up: { x: -1, y: -1, z: -1 },
+            },
+          },
+          font: {
+            color: "rgba(255, 255, 255, 0.85)",
+            // family:
+            //   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;",
+            family: "inherit",
+          },
+          autosize: true,
+          // make responsive
+          // https://codesandbox.io/s/nostalgic-jones-4kuww
+          // title: "Visualization",
+          xaxis: {
+            title: "x",
             showticklabels: false,
+            ticks: "",
+            tickmode: "array",
+            tickVals: [],
           },
           yaxis: {
+            title: "y",
             showticklabels: false,
-            title: {
-              text: "y",
-              font: {
-                size: "100",
-              },
-            },
+            ticks: "",
+            tickmode: "array",
+            tickVals: [],
           },
           zaxis: {
-            title: {
-              text: "z",
-              font: {
-                size: "100",
-              },
-            },
+            title: "z",
             showticklabels: false,
+            ticks: "",
+            tickmode: "array",
+            tickVals: [],
           },
-          camera: {
-            eye,
-            up,
-            // eye: {
-            //   x: -0.6533950783163606,
-            //   y: -0.6533950783163606,
-            //   z: 1.957970822,
-            // },
-            //     // center: { x: time, y: time, z: time },
-            //     eye: eyes[time % eyes.length],
-            // up: { x: 0, y: 0, z: 0 },
-            // at eyeIdx === 2, blue string hould be back bottom, and bottom is mostly blue
-            // up: { x: -1, y: -1, z: -1 },
+          paper_bgcolor: "transparent",
+          plot_bgcolor: "transparent",
+          dragmode: false,
+          legend: {
+            y: 0,
+            x: 0,
+            title: { text: "Actual" },
           },
-        },
-        font: {
-          color: "rgba(255, 255, 255, 0.85)",
-          // family:
-          //   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;",
-          family: "inherit",
-        },
-        autosize: true,
-        // make responsive
-        // https://codesandbox.io/s/nostalgic-jones-4kuww
-        // title: "Visualization",
-        xaxis: {
-          title: "x",
-          showticklabels: false,
-          ticks: "",
-          tickmode: "array",
-          tickVals: [],
-        },
-        yaxis: {
-          title: "y",
-          showticklabels: false,
-          ticks: "",
-          tickmode: "array",
-          tickVals: [],
-        },
-        zaxis: {
-          title: "z",
-          showticklabels: false,
-          ticks: "",
-          tickmode: "array",
-          tickVals: [],
-        },
-        paper_bgcolor: "transparent",
-        plot_bgcolor: "transparent",
-        dragmode: false,
-        legend: {
-          y: 0,
-          x: 0,
-          title: { text: "Actual" },
-        },
-      }}
-      style={{ width: "100%", height: "100%" }}
-      useResizeHandler
-      // frames={eyes.map((eye: any) => ({
-      //   layout: { scene: { camera: { eye } } },
-      // }))}
-      config={{ displayModeBar: false }}
-    />
+        }}
+        style={{ width: "100%", height: "100%" }}
+        useResizeHandler
+        // frames={eyes.map((eye: any) => ({
+        //   layout: { scene: { camera: { eye } } },
+        // }))}
+        config={{ displayModeBar: false }}
+      />
+    ),
+    [viz3D, eye, up]
   );
 
   // const getPlot = (dims: string) => (dims === "2D" ? plot2D : plot3D);
