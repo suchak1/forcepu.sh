@@ -234,7 +234,7 @@ const AlgorithmPage = () => {
     return () => {
       clearInterval(interval);
     };
-  }, [eye]);
+  }, [eye, hover]);
 
   // TODO:
   // 3. Move Algorithm tab to the right? and remove signed in as User text?
@@ -379,8 +379,10 @@ const AlgorithmPage = () => {
   const plot3D = useMemo(
     () => (
       <Plot
+        // onBeforeHover={() => setHover(true)}
         // onHover={() => setHover(true)}
         // onUnhover={() => setHover(false)}
+        // onUnHover={() => setHover(false)}
         data={[
           {
             x: viz3D?.actual[0]?.BUY,
@@ -433,8 +435,6 @@ const AlgorithmPage = () => {
             //   line: { color: "black", width: 1 },
             // },
             // showlegend: true,
-            // text: "SELL [actual]",
-            // name: "SELL",
           },
         ]}
         // disable x, y, z titles?
@@ -444,7 +444,7 @@ const AlgorithmPage = () => {
               title: {
                 text: "x",
                 font: {
-                  size: "100",
+                  // size: "100",
                 },
               },
               showticklabels: false,
@@ -454,7 +454,7 @@ const AlgorithmPage = () => {
               title: {
                 text: "y",
                 font: {
-                  size: "100",
+                  // size: "100",
                 },
               },
             },
@@ -462,7 +462,7 @@ const AlgorithmPage = () => {
               title: {
                 text: "z",
                 font: {
-                  size: "100",
+                  // size: "100",
                 },
               },
               showticklabels: false,
@@ -492,30 +492,30 @@ const AlgorithmPage = () => {
           // make responsive
           // https://codesandbox.io/s/nostalgic-jones-4kuww
           // title: "Visualization",
-          xaxis: {
-            title: "x",
-            showticklabels: false,
-            ticks: "",
-            tickmode: "array",
-            tickVals: [],
-          },
-          yaxis: {
-            title: "y",
-            showticklabels: false,
-            ticks: "",
-            tickmode: "array",
-            tickVals: [],
-          },
-          zaxis: {
-            title: "z",
-            showticklabels: false,
-            ticks: "",
-            tickmode: "array",
-            tickVals: [],
-          },
+          // xaxis: {
+          //   title: "x",
+          //   showticklabels: false,
+          //   ticks: "",
+          //   tickmode: "array",
+          //   tickVals: [],
+          // },
+          // yaxis: {
+          //   title: "y",
+          //   showticklabels: false,
+          //   ticks: "",
+          //   tickmode: "array",
+          //   tickVals: [],
+          // },
+          // zaxis: {
+          //   title: "z",
+          //   showticklabels: false,
+          //   ticks: "",
+          //   tickmode: "array",
+          //   tickVals: [],
+          // },
           paper_bgcolor: "transparent",
           plot_bgcolor: "transparent",
-          dragmode: false,
+          // dragmode: false,
           legend: {
             y: 0,
             x: 0,
@@ -555,7 +555,9 @@ const AlgorithmPage = () => {
         }}
       >
         <>
-          <Title level={5}>the driving force behind our signals</Title>
+          <Title level={5}>
+            the crystal ball ...er cube behind our signals
+          </Title>
           {/* the crystal ball ...er cube behind our signals */}
           {/* consider square and cube icons https://ant.design/components/segmented/#components-segmented-demo-with-icon */}
 
