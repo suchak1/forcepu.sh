@@ -26,8 +26,8 @@ const eyes = get3DCircle(
   [1.25, 1.25, -1.25],
   numPoints
 );
-console.log(eyes);
-console.log(eyes.length);
+// console.log(eyes);
+// console.log(eyes.length);
 // .map((pt: number[]) => ({ x: pt[0], y: pt[1], z: pt[2] }));
 
 const stats = [
@@ -196,33 +196,22 @@ const AlgorithmPage = () => {
   useEffect(() => {
     // use frames and useMemo instead
     // https://codesandbox.io/s/pier-stat-flood-w1ed4?file=/src/Flood.js
-    // console.log(eyes[time % eyes.length]);
-    // console.log(time % eyes.length);
-    // console.log(eye)
-    // console.log()
+
     const interval = setInterval(() => {
-      // console.log(eyes[time % eyes.length]);
-      // console.log(time % eyes.length);
-      // setTime((oldTime) => oldTime + 1);
       const newEyeIdx = (eyeIdx + 1) % eyes.length;
-      // console.log(newEyeIdx, eyes[newEyeIdx]);
       const multiplier = numPoints / 360;
       const theta = Math.floor(newEyeIdx / multiplier);
+      console.log(theta);
 
       if (theta === 55) {
         setUp({ x: -1, y: -1, z: -1 });
       } else if (theta === 180) {
         setUp({ x: 1, y: 1, z: -1 });
-      } else if (theta === 289) {
+      } else if (theta === 290) {
         setUp({ x: -1, y: -1, z: 1 });
       }
-      // console.log(eyes[eyeIdx]);
 
-      // } else if (newEyeIdx % eyes.length === 6) {
-      //   setUp({ x: 0, y: 0, z: 1 });
-      // }
       setEyeIdx(newEyeIdx);
-      // setEye(eyes[newEyeIdx]);
 
       // eyeIdx == 2 or 6, camera flips
       // 15 ms => 60fps
