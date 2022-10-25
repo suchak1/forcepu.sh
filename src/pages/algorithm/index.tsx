@@ -19,7 +19,7 @@ const { Title } = Typography;
 //   { x: 1.25, y: 1.25, z: -1.25 },
 //   { x: 0.1, y: 0.1, z: -2.15 },
 // ];
-const numPoints = 180;
+const numPoints = 360;
 const eyes = get3DCircle(
   [0, 0, 0],
   [1.25, 1.25, 1.25],
@@ -211,11 +211,11 @@ const AlgorithmPage = () => {
       if (!hover) {
         // 56 flip
         // 72 flip
-        if (newEyeIdx === 56 * multiplier) {
+        if (newEyeIdx === 55 * multiplier) {
           setUp({ x: -1, y: -1, z: -1 });
         } else if (newEyeIdx === 180 * multiplier) {
           setUp({ x: 1, y: 1, z: -1 });
-        } else if (newEyeIdx === 288 * multiplier) {
+        } else if (newEyeIdx === 289 * multiplier) {
           setUp({ x: -1, y: -1, z: 1 });
         }
       }
@@ -231,7 +231,7 @@ const AlgorithmPage = () => {
       // 15 ms => 60fps
       // 30 ms => 30fps
       // 40 ms => 24fps
-    }, 40);
+    }, 15);
     return () => {
       clearInterval(interval);
     };
