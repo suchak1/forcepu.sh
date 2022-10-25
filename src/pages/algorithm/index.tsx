@@ -207,8 +207,11 @@ const AlgorithmPage = () => {
       const newEyeIdx = (eyeIdx + 1) % eyes.length;
       // console.log(newEyeIdx, eyes[newEyeIdx]);
       const multiplier = numPoints / 360;
+      // console.log(newEyeIdx / multiplier);
       if (!hover) {
-        if (newEyeIdx === 72 * multiplier) {
+        // 56 flip
+        // 72 flip
+        if (newEyeIdx === 56 * multiplier) {
           setUp({ x: -1, y: -1, z: -1 });
         } else if (newEyeIdx === 180 * multiplier) {
           setUp({ x: 1, y: 1, z: -1 });
