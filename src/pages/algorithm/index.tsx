@@ -26,6 +26,8 @@ const eyes = get3DCircle(
   [1.25, 1.25, -1.25],
   numPoints
 );
+console.log(eyes);
+console.log(eyes.length);
 // .map((pt: number[]) => ({ x: pt[0], y: pt[1], z: pt[2] }));
 
 const stats = [

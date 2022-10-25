@@ -159,10 +159,21 @@ const dist = (pt1: number[], pt2: number[]) =>
 const norm = (v1: number[]) => dist(v1, Array(v1.length).fill(0));
 
 // linspace
-const linspace = (start: number, end: number, numPoints: number) =>
+const linspace = (
+  start: number,
+  end: number,
+  numPoints: number,
+  includeEndpoint = true
+) =>
   Array(numPoints)
     .fill(0)
-    .map((_, idx) => start + idx * ((end - start) / (numPoints - 1)));
+    .map(
+      (_, idx) =>
+        start +
+        idx *
+          ((end - (includeEndpoint ? 0 : end / numPoints) - start) /
+            (numPoints - 1))
+    );
 
 // https://math.stackexchange.com/a/73242
 export const get3DCircle = (
@@ -178,7 +189,13 @@ export const get3DCircle = (
   let q1 = divide(pt1, norm(pt1));
   let q2 = add(center, cross(q1, unitNormal));
   // 0 -> 360 degrees in radians
-  const angles = linspace(0, 2 * Math.PI, refinement);
+  const angles = linspace(
+    0,
+    2 * Math.PI,
+    //  - (2 * Math.PI) / refinement,
+    refinement,
+    false
+  );
 
   const radius = dist(center, pt1);
 
