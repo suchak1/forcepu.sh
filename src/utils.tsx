@@ -189,13 +189,7 @@ export const get3DCircle = (
   let q1 = divide(pt1, norm(pt1));
   let q2 = add(center, cross(q1, unitNormal));
   // 0 -> 360 degrees in radians
-  const angles = linspace(
-    0,
-    2 * Math.PI,
-    //  - (2 * Math.PI) / refinement,
-    refinement,
-    false
-  );
+  const angles = linspace(0, 2 * Math.PI, refinement, false);
 
   const radius = dist(center, pt1);
 
@@ -225,15 +219,19 @@ export const get3DCircle = (
   //   ],
   //   []
   // );
-  const circle = [];
-  for (let angle of angles) {
-    const point = [];
-    for (let dim of [0, 1, 2]) {
-      point.push(convertToXYZ(angle, dim));
-    }
-    const [x, y, z] = point;
-    circle.push({ x, y, z });
-  }
+  // const circle = [];
+  // for (let angle of angles) {
+  //   const point = [0, 1, 2].map((dim) => convertToXYZ(angle, dim));
+  //   const [x, y, z] = point;
+  //   circle.push({ x, y, z });
+  // }
+  // return circle;
+
+  const circle = angles.map((angle) => ({
+    x: convertToXYZ(angle, 0),
+    y: convertToXYZ(angle, 1),
+    z: convertToXYZ(angle, 2),
+  }));
   return circle;
 };
 
