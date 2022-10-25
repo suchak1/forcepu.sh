@@ -201,37 +201,12 @@ export const get3DCircle = (
     radius * Math.cos(theta) * q1[idx] +
     radius * Math.sin(theta) * q2[idx];
 
-  // // this gives xs, ys, zs each of length refinement
-  // const circle = [0, 1, 2].map((dim) =>
-  //   angles.map((theta) => convertToXYZ(theta, dim))
-  // );
-
-  // this gives refinement # of x, y, z points
-  // const circle = angles.map((theta) => convertToXYZ(theta)
-  // const circle = angles.reduce(
-  //   (points, theta, idx) => [
-  //     ...points,
-  //     ...[
-  //       convertToXYZ(theta, 0),
-  //       convertToXYZ(theta, 1),
-  //       convertToXYZ(theta, 2),
-  //     ],
-  //   ],
-  //   []
-  // );
-  // const circle = [];
-  // for (let angle of angles) {
-  //   const point = [0, 1, 2].map((dim) => convertToXYZ(angle, dim));
-  //   const [x, y, z] = point;
-  //   circle.push({ x, y, z });
-  // }
-  // return circle;
-
-  const circle = angles.map((angle) => ({
-    x: convertToXYZ(angle, 0),
-    y: convertToXYZ(angle, 1),
-    z: convertToXYZ(angle, 2),
-  }));
+  const circle = angles.map((theta) =>
+    ["x", "y", "z"].reduce(
+      (point, axis, dim) => ({ ...point, [axis]: convertToXYZ(theta, dim) }),
+      {}
+    )
+  );
   return circle;
 };
 
