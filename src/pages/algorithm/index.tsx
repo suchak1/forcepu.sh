@@ -123,10 +123,8 @@ const AlgorithmPage = () => {
   const [metadata, setMetadata] = useState();
   const [metadataLoading, setMetadataLoading] = useState(true);
   const size = 0.4999;
-  const [eye, setEye] = useState({ x: 1.25, y: 1.25, z: 1.25 });
   const [eyeIdx, setEyeIdx] = useState(0);
   const [up, setUp] = useState({ x: 0, y: 0, z: 1 });
-  const [hover, setHover] = useState(false);
   // const size = 0.3333;
   const width = 3;
   const numTicks = Math.ceil(1 / size);
@@ -207,25 +205,22 @@ const AlgorithmPage = () => {
       const newEyeIdx = (eyeIdx + 1) % eyes.length;
       // console.log(newEyeIdx, eyes[newEyeIdx]);
       const multiplier = numPoints / 360;
-      // console.log(newEyeIdx / multiplier);
-      if (!hover) {
-        // 56 flip
-        // 72 flip
-        if (newEyeIdx === 55 * multiplier) {
-          setUp({ x: -1, y: -1, z: -1 });
-        } else if (newEyeIdx === 180 * multiplier) {
-          setUp({ x: 1, y: 1, z: -1 });
-        } else if (newEyeIdx === 289 * multiplier) {
-          setUp({ x: -1, y: -1, z: 1 });
-        }
+      const theta = Math.floor(newEyeIdx / multiplier);
+
+      if (theta === 55) {
+        setUp({ x: -1, y: -1, z: -1 });
+      } else if (theta === 180) {
+        setUp({ x: 1, y: 1, z: -1 });
+      } else if (theta === 289) {
+        setUp({ x: -1, y: -1, z: 1 });
       }
+      // console.log(eyes[eyeIdx]);
+
       // } else if (newEyeIdx % eyes.length === 6) {
       //   setUp({ x: 0, y: 0, z: 1 });
       // }
       setEyeIdx(newEyeIdx);
-      if (!hover) {
-        setEye(eyes[newEyeIdx]);
-      }
+      // setEye(eyes[newEyeIdx]);
 
       // eyeIdx == 2 or 6, camera flips
       // 15 ms => 60fps
@@ -235,7 +230,7 @@ const AlgorithmPage = () => {
     return () => {
       clearInterval(interval);
     };
-  }, [eye, hover]);
+  }, [eyeIdx]);
 
   // TODO:
   // 3. Move Algorithm tab to the right? and remove signed in as User text?
@@ -380,10 +375,6 @@ const AlgorithmPage = () => {
   const plot3D = useMemo(
     () => (
       <Plot
-        // onBeforeHover={() => setHover(true)}
-        // onHover={() => setHover(true)}
-        // onUnhover={() => setHover(false)}
-        // onUnHover={() => setHover(false)}
         data={[
           {
             x: viz3D?.actual[0]?.BUY,
@@ -469,7 +460,7 @@ const AlgorithmPage = () => {
               showticklabels: false,
             },
             camera: {
-              eye,
+              eye: eyes[eyeIdx],
               up,
               // eye: {
               //   x: -0.6533950783163606,
@@ -531,7 +522,7 @@ const AlgorithmPage = () => {
         config={{ displayModeBar: false }}
       />
     ),
-    [viz3D, eye, up]
+    [viz3D, eyeIdx, up]
   );
 
   // const getPlot = (dims: string) => (dims === "2D" ? plot2D : plot3D);
