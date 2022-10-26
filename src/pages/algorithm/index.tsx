@@ -474,27 +474,35 @@ const AlgorithmPage = () => {
           margin: "-12px 0px 12px 0px",
         }}
       >
-        <>
-          <Title level={5}>
-            the crystal ball (or rather cube) behind our signals
-          </Title>
-          {/* the crystal ball ...er cube behind our signals */}
-          {/* consider square and cube icons https://ant.design/components/segmented/#components-segmented-demo-with-icon */}
+        {/* <div
+        className={pageStyles.parent}
+        > */}
+        <Title
+          level={5}
+          style={{ width: "75%" }}
+          // className={pageStyles.child}
+        >
+          the crystal ball (or rather cube) behind our signals
+        </Title>
+        {/* the crystal ball ...er cube behind our signals */}
+        {/* consider square and cube icons https://ant.design/components/segmented/#components-segmented-demo-with-icon */}
 
-          <Toggle
-            val={toggle2D}
-            options={["2D", "3D"]}
-            defaultValue={default2DToggle ? "2D" : "3D"}
-            onChange={(val: string) => setToggle2D(val === "2D")}
-          />
-        </>
+        <Toggle
+          // style={{ flexGrow: 2 }}
+          // className={pageStyles.child}
+          val={toggle2D}
+          options={["2D", "3D"]}
+          defaultValue={default2DToggle ? "2D" : "3D"}
+          onChange={(val: string) => setToggle2D(val === "2D")}
+        />
+        {/* </div> */}
       </span>
       <div className={pageStyles.parent} style={{ alignItems: "center" }}>
         <div className={pageStyles.child}>
           {toggle2D && plot2D}
           <div style={toggle2D ? { display: "none" } : {}}>{plot3D}</div>
         </div>
-        <div className={`${pageStyles.child} ${styles.chartMobile}`}>
+        <div className={pageStyles.child}>
           {!metadataLoading && (
             <Row gutter={[24, 24]}>
               <Col span={24} style={{ textAlign: "justify" }}>
