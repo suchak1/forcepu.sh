@@ -114,26 +114,7 @@ const AlgorithmPage = () => {
   const [metadataLoading, setMetadataLoading] = useState(true);
   const size = 0.4999;
   const [eyeIdx, setEyeIdx] = useState(0);
-  // const [up, setUp] = useState({ x: 0, y: 0, z: 1 });
-  // let up = { x: 0, y: 0, z: 1 };
-  // const multiplier = numPoints / 360;
-  // const theta = Math.floor(((eyeIdx + 1) % eyes.length) / multiplier);
-  // console.log(up);
-  // const roundAngle = (angle: number) => {
-  //   // works with numPoints <= 360
-  //   const divisor = Math.floor(360 / numPoints);
-  //   const remainder = angle % divisor;
-  //   return angle + (remainder ? divisor - (angle % divisor) : 0);
-  // };
-
-  // if (theta >= roundAngle(55)) {
-  //   up = { x: -1, y: -1, z: -1 };
-  // } else if (theta >= roundAngle(180)) {
-  //   up = { x: 1, y: 1, z: -1 };
-  // } else if (theta >= 290) {
-  //   up = { x: -1, y: -1, z: 1 };
-  // }
-
+  const [up, setUp] = useState({ x: 0, y: 0, z: 1 });
   // const size = 0.3333;
   const width = 3;
   const numTicks = Math.ceil(1 / size);
@@ -205,27 +186,26 @@ const AlgorithmPage = () => {
     // https://codesandbox.io/s/pier-stat-flood-w1ed4?file=/src/Flood.js
 
     const interval = setInterval(() => {
-      // const newEyeIdx = (eyeIdx + 1) % eyes.length;
-      // const multiplier = numPoints / 360;
-      // const theta = Math.floor(newEyeIdx / multiplier);
-      // console.log(theta);
-      // const roundAngle = (angle: number) => {
-      //   // works with numPoints <= 360
-      //   const divisor = Math.floor(360 / numPoints);
-      //   const remainder = angle % divisor;
-      //   return angle + (remainder ? divisor - (angle % divisor) : 0);
-      // };
+      const newEyeIdx = (eyeIdx + 1) % eyes.length;
+      const multiplier = numPoints / 360;
+      const theta = Math.floor(newEyeIdx / multiplier);
 
-      // if (theta === roundAngle(55)) {
-      //   // setUp({ x: -1, y: -1, z: -1 });
-      // } else if (theta === roundAngle(180)) {
-      //   // setUp({ x: 1, y: 1, z: -1 });
-      // } else if (theta === 290) {
-      //   // setUp({ x: -1, y: -1, z: 1 });
-      // }
+      const roundAngle = (angle: number) => {
+        // works with numPoints <= 360
+        const divisor = Math.floor(360 / numPoints);
+        const remainder = angle % divisor;
+        return angle + (remainder ? divisor - (angle % divisor) : 0);
+      };
 
-      // setEyeIdx(newEyeIdx);
-      setEyeIdx((prevEyeIdx) => (prevEyeIdx + 1) % eyes.length);
+      if (theta === roundAngle(55)) {
+        setUp({ x: -1, y: -1, z: -1 });
+      } else if (theta === roundAngle(180)) {
+        setUp({ x: 1, y: 1, z: -1 });
+      } else if (theta === 290) {
+        setUp({ x: -1, y: -1, z: 1 });
+      }
+
+      setEyeIdx(newEyeIdx);
 
       // eyeIdx == 2 or 6, camera flips
       // 15 ms => 60fps
@@ -377,29 +357,8 @@ const AlgorithmPage = () => {
     [viz2D]
   );
 
-  const plot3D = useMemo(() => {
-    let up = { x: 0, y: 0, z: 1 };
-    const multiplier = numPoints / 360;
-    const theta = Math.floor((eyeIdx % eyes.length) / multiplier);
-
-    const roundAngle = (angle: number) => {
-      // works with numPoints <= 360
-      const divisor = Math.floor(360 / numPoints);
-      const remainder = angle % divisor;
-      return angle + (remainder ? divisor - (angle % divisor) : 0);
-    };
-    // console.log("rounded", roundAngle(55));
-    // console.log("theta", theta);
-
-    if (theta >= roundAngle(290)) {
-      up = { x: -1, y: -1, z: 1 };
-    } else if (theta >= roundAngle(180)) {
-      up = { x: 1, y: 1, z: -1 };
-    } else if (theta >= roundAngle(55)) {
-      up = { x: -1, y: -1, z: -1 };
-    }
-    // console.log("up", up);
-    return (
+  const plot3D = useMemo(
+    () => (
       <Plot
         data={[
           {
@@ -547,8 +506,9 @@ const AlgorithmPage = () => {
         // }))}
         config={{ displayModeBar: false }}
       />
-    );
-  }, [viz3D, eyeIdx]);
+    ),
+    [viz3D, eyeIdx, up]
+  );
 
   // const getPlot = (dims: string) => (dims === "2D" ? plot2D : plot3D);
   // const memoizedPlot = (dep: string) => useMemo(() => getPlot(dep), [dep]);
