@@ -4,7 +4,6 @@ import { Typography, Table, Segmented, Row, Col, Card, Statistic } from "antd";
 import Plot from "react-plotly.js";
 import { getApiUrl, getDayDiff, get3DCircle } from "@/utils";
 import pageStyles from "../index.less";
-import styles from "./index.less";
 import "./index.less";
 
 import styled from "styled-components";
@@ -18,15 +17,6 @@ const eyes = get3DCircle(
   [1.25, 1.25, -1.25],
   numPoints
 );
-
-const columns = [
-  { title: "Metadata", dataIndex: "metadata", key: "metadata" },
-  {
-    title: <i style={{ color: "#52e5ff" }}>{"Stat"}</i>,
-    dataIndex: "stat",
-    key: "stat",
-  },
-];
 
 const Toggle = styled(Segmented)`
   .ant-segmented-item-selected {
@@ -150,7 +140,6 @@ const AlgorithmPage = () => {
 
       setEyeIdx(newEyeIdx);
 
-      // eyeIdx == 2 or 6, camera flips
       // 15 ms => 60fps
       // 30 ms => 30fps
       // 40 ms => 24fps
@@ -160,26 +149,10 @@ const AlgorithmPage = () => {
     };
   }, [eyeIdx]);
 
-  // TODO:
-  // 3. Move Algorithm tab to the right? and remove signed in as User text?
-  // beginning camera
-  // center
-  // :
-  // {x: 0, y: 0, z: 0}
-  // eye
-  // :
-  // {x: 1.25, y: 1.25, z: 1.25}
-  // up
-  // :
-  // {x: 0, y: 0, z: 1}
   // consider making camera move in python and exporting as html
   const plot2D = useMemo(
     () => (
       <Plot
-        // onUpdate={(fig, div) => {
-        //   console.log(time);
-        //   console.log("fig", fig) || console.log("div", div);
-        // }}
         data={[
           {
             x: viz2D?.grid[0],
@@ -201,15 +174,6 @@ const AlgorithmPage = () => {
               ["0.6", "cyan"],
               ["1", "cyan"],
             ],
-            // colorbar: {
-            //   //   title: "Predicted",
-            //   tickmode: "array",
-            //   //   // ticktext: ["SELL", "BUY"],
-            //   //   // tickvals: [0, 1],
-            //   //   nticks: 10,
-            //   ticktext: tickText.map(() => ""),
-            //   tickvals: tickVals,
-            // },
             opacity: 0.2,
             showscale: false,
             name: "predicted",
@@ -282,7 +246,7 @@ const AlgorithmPage = () => {
           zaxis: { title: "z" },
           paper_bgcolor: "transparent",
           plot_bgcolor: "transparent",
-          // dragmode: false,
+          dragmode: false,
           legend: {
             y: 0,
             x: 0,
@@ -291,9 +255,6 @@ const AlgorithmPage = () => {
         }}
         style={{ width: "100%", height: "100%" }}
         useResizeHandler
-        // frames={eyes.map((eye: any) => ({
-        //   layout: { scene: { camera: { eye } } },
-        // }))}
         config={{ displayModeBar: false }}
       />
     ),
@@ -390,16 +351,6 @@ const AlgorithmPage = () => {
             camera: {
               eye: eyes[eyeIdx],
               up,
-              // eye: {
-              //   x: -0.6533950783163606,
-              //   y: -0.6533950783163606,
-              //   z: 1.957970822,
-              // },
-              //     // center: { x: time, y: time, z: time },
-              //     eye: eyes[time % eyes.length],
-              // up: { x: 0, y: 0, z: 0 },
-              // at eyeIdx === 2, blue string hould be back bottom, and bottom is mostly blue
-              // up: { x: -1, y: -1, z: -1 },
             },
           },
           font: {
@@ -412,30 +363,8 @@ const AlgorithmPage = () => {
           // make responsive
           // https://codesandbox.io/s/nostalgic-jones-4kuww
           title: "Decision Space",
-          // xaxis: {
-          //   title: "x",
-          //   showticklabels: false,
-          //   ticks: "",
-          //   tickmode: "array",
-          //   tickVals: [],
-          // },
-          // yaxis: {
-          //   title: "y",
-          //   showticklabels: false,
-          //   ticks: "",
-          //   tickmode: "array",
-          //   tickVals: [],
-          // },
-          // zaxis: {
-          //   title: "z",
-          //   showticklabels: false,
-          //   ticks: "",
-          //   tickmode: "array",
-          //   tickVals: [],
-          // },
           paper_bgcolor: "transparent",
           plot_bgcolor: "transparent",
-          // dragmode: false,
           legend: {
             y: 0,
             x: 0,
@@ -444,18 +373,11 @@ const AlgorithmPage = () => {
         }}
         style={{ width: "100%", height: "100%" }}
         useResizeHandler
-        // frames={eyes.map((eye: any) => ({
-        //   layout: { scene: { camera: { eye } } },
-        // }))}
         config={{ displayModeBar: false }}
       />
     ),
     [viz3D, eyeIdx, up]
   );
-
-  // const getPlot = (dims: string) => (dims === "2D" ? plot2D : plot3D);
-  // const memoizedPlot = (dep: string) => useMemo(() => getPlot(dep), [dep]);
-  // const memoizedPlot = useMemo(() => getPlot(toggle2D), [toggle2D]);
 
   return (
     <>
@@ -474,28 +396,18 @@ const AlgorithmPage = () => {
           margin: "-12px 0px 12px 0px",
         }}
       >
-        {/* <div
-        className={pageStyles.parent}
-        > */}
-        <Title
-          level={5}
-          style={{ width: "75%" }}
-          // className={pageStyles.child}
-        >
+        <Title level={5} style={{ width: "75%" }}>
           the crystal ball (or rather cube) behind our signals
         </Title>
         {/* the crystal ball ...er cube behind our signals */}
         {/* consider square and cube icons https://ant.design/components/segmented/#components-segmented-demo-with-icon */}
 
         <Toggle
-          // style={{ flexGrow: 2 }}
-          // className={pageStyles.child}
           val={toggle2D}
           options={["2D", "3D"]}
           defaultValue={default2DToggle ? "2D" : "3D"}
           onChange={(val: string) => setToggle2D(val === "2D")}
         />
-        {/* </div> */}
       </span>
       <div className={pageStyles.parent} style={{ alignItems: "center" }}>
         <div className={pageStyles.child}>
@@ -523,14 +435,7 @@ const AlgorithmPage = () => {
               {metadata?.map((datum) => (
                 <Col span={12}>
                   <Card>
-                    <Statistic
-                      title={datum.metadata}
-                      value={datum.stat}
-                      // precision={2}
-                      // // valueStyle={{ color: "#3f8600" }}
-                      // // prefix={<ArrowUpOutlined />}
-                      // suffix="%"
-                    />
+                    <Statistic title={datum.metadata} value={datum.stat} />
                   </Card>
                 </Col>
               ))}
