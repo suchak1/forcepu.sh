@@ -9,16 +9,7 @@ import "./index.less";
 import styled from "styled-components";
 
 const { Title } = Typography;
-// outline: 1px solid ${val ? "#52e5ff" : "magenta"};
-// background-color: ${val ? "#52e5ff" : "magenta"};
 
-// const eyes = [
-//   { x: 0.1, y: 0.1, z: 2.15 },
-//   { x: 1.25, y: 1.25, z: 1.25 }, // distance from (0, 0, 0) ~ 2.16
-//   { x: 1.53, y: 1.53, z: 0.1 },
-//   { x: 1.25, y: 1.25, z: -1.25 },
-//   { x: 0.1, y: 0.1, z: -2.15 },
-// ];
 const numPoints = 360;
 const eyes = get3DCircle(
   [0, 0, 0],
@@ -26,9 +17,6 @@ const eyes = get3DCircle(
   [1.25, 1.25, -1.25],
   numPoints
 );
-// console.log(eyes);
-// console.log(eyes.length);
-// .map((pt: number[]) => ({ x: pt[0], y: pt[1], z: pt[2] }));
 
 const stats = [
   {
@@ -201,11 +189,17 @@ const AlgorithmPage = () => {
       const newEyeIdx = (eyeIdx + 1) % eyes.length;
       const multiplier = numPoints / 360;
       const theta = Math.floor(newEyeIdx / multiplier);
-      console.log(theta);
 
-      if (theta === 55) {
+      const roundAngle = (angle: number) => {
+        // works with numPoints <= 360
+        const divisor = Math.floor(360 / numPoints);
+        const remainder = angle % divisor;
+        return angle + (remainder ? divisor - (angle % divisor) : 0);
+      };
+
+      if (theta === roundAngle(55)) {
         setUp({ x: -1, y: -1, z: -1 });
-      } else if (theta === 180) {
+      } else if (theta === roundAngle(180)) {
         setUp({ x: 1, y: 1, z: -1 });
       } else if (theta === 290) {
         setUp({ x: -1, y: -1, z: 1 });
