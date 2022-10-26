@@ -275,7 +275,7 @@ const AlgorithmPage = () => {
           autosize: true,
           // make responsive
           // https://codesandbox.io/s/nostalgic-jones-4kuww
-          // title: "Visualization",
+          title: "Decision Space",
           xaxis: { title: "x" },
           yaxis: { title: "y" },
           zaxis: { title: "z" },
@@ -410,7 +410,7 @@ const AlgorithmPage = () => {
           autosize: true,
           // make responsive
           // https://codesandbox.io/s/nostalgic-jones-4kuww
-          // title: "Visualization",
+          title: "Decision Space",
           // xaxis: {
           //   title: "x",
           //   showticklabels: false,
@@ -494,77 +494,39 @@ const AlgorithmPage = () => {
           <div style={toggle2D ? { display: "none" } : {}}>{plot3D}</div>
         </div>
         <div className={pageStyles.child}>
-          {/* <Table
-            dataSource={metadata}
-            columns={columns}
-            // title={() => "Metadata"}
-            pagination={false}
-            loading={metadataLoading}
-          /> */}
-          <Row gutter={[24, 24]}>
-            {metadata?.map((datum) => (
-              <Col span={12}>
-                <Card>
-                  <Statistic
-                    title={datum.metadata}
-                    value={datum.stat}
-                    // precision={2}
-                    // // valueStyle={{ color: "#3f8600" }}
-                    // // prefix={<ArrowUpOutlined />}
-                    // suffix="%"
-                  />
-                </Card>
+          {!metadataLoading && (
+            <Row gutter={[24, 24]}>
+              <Col span={24} style={{ textAlign: "justify" }}>
+                The points on the plot represent historical market data reduced
+                from {metadata[2]?.stat} dimensions to {toggle2D ? "2D" : "3D"}.
+                The filled regions represent the model's predictions. Based on
+                which space today's data point occupies, we may be able to
+                predict whether now is a good time to{" "}
+                <b>
+                  <span style={{ color: "#52e5ff" }}>BUY</span>
+                </b>{" "}
+                or{" "}
+                <b>
+                  <span style={{ color: "magenta" }}>SELL</span>
+                </b>
+                .
               </Col>
-            ))}
-            {/* <Col span={12}>
-              <Card>
-                <Statistic
-                  title={metadata && metadata[0].metadata}
-                  value={11.28}
-                  precision={2}
-                  valueStyle={{ color: "#3f8600" }}
-                  // prefix={<ArrowUpOutlined />}
-                  suffix="%"
-                />
-              </Card>
-            </Col>
-            <Col span={12}>
-              <Card>
-                <Statistic
-                  // title={metadata?[1]?.metadata}
-                  value={9.3}
-                  precision={2}
-                  valueStyle={{ color: "#cf1322" }}
-                  // prefix={<ArrowDownOutlined />}
-                  suffix="%"
-                />
-              </Card>
-            </Col>
-            <Col span={12}>
-              <Card>
-                <Statistic
-                  title="Title3"
-                  value={11.28}
-                  precision={2}
-                  valueStyle={{ color: "#3f8600" }}
-                  // prefix={<ArrowUpOutlined />}
-                  suffix="%"
-                />
-              </Card>
-            </Col>
-            <Col span={12}>
-              <Card>
-                <Statistic
-                  title="Title4"
-                  value={9.3}
-                  precision={2}
-                  valueStyle={{ color: "#cf1322" }}
-                  // prefix={<ArrowDownOutlined />}
-                  suffix="%"
-                />
-              </Card>
-            </Col> */}
-          </Row>
+              {metadata?.map((datum) => (
+                <Col span={12}>
+                  <Card>
+                    <Statistic
+                      title={datum.metadata}
+                      value={datum.stat}
+                      // precision={2}
+                      // // valueStyle={{ color: "#3f8600" }}
+                      // // prefix={<ArrowUpOutlined />}
+                      // suffix="%"
+                    />
+                  </Card>
+                </Col>
+              ))}
+            </Row>
+          )}
         </div>
       </div>
     </>
