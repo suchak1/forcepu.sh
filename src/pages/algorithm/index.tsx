@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect, useMemo } from "react";
-import { Typography, Table, Segmented } from "antd";
+import { Typography, Table, Segmented, Row, Col, Card, Statistic } from "antd";
 import Plot from "react-plotly.js";
 import { getApiUrl, getDayDiff, get3DCircle } from "@/utils";
 import "swagger-ui-react/swagger-ui.css";
@@ -18,72 +18,14 @@ const eyes = get3DCircle(
   numPoints
 );
 
-const stats = [
-  {
-    key: 0,
-    metadata: "Total Return [%]",
-    // HODL: 0.0,
-    stat: 70.97,
-  },
-  {
-    key: 1,
-    metadata: "Max Drawdown [%]",
-    // HODL: 0.0,
-    stat: 25.77,
-  },
-  {
-    key: 2,
-    metadata: "Win Rate [%]",
-    // HODL: null,
-    stat: 50.0,
-  },
-  {
-    key: 3,
-    metadata: "Profit Factor",
-    // HODL: null,
-    stat: 2.18,
-  },
-  {
-    key: 4,
-    metadata: "Total Fees Paid",
-    // HODL: 0.0,
-    stat: 0.04,
-  },
-  {
-    key: 5,
-    metadata: "Profitable Time [%]",
-    // HODL: 9.39,
-    stat: 90.61,
-  },
-];
-
 const columns = [
   { title: "Metadata", dataIndex: "metadata", key: "metadata" },
-  // {
-  //   title: <span style={{ color: "#DF00DF" }}>{HODL}</span>,
-  //   dataIndex: HODL,
-  //   key: HODL,
-  // },
   {
     title: <i style={{ color: "#52e5ff" }}>{"Stat"}</i>,
     dataIndex: "stat",
     key: "stat",
   },
 ];
-
-// const columns = [
-//   { title: "Metadata", dataIndex: "metadata", key: "metadata" },
-//   {
-//     title: <span style={{ color: "#DF00DF" }}>{HODL}</span>,
-//     dataIndex: HODL,
-//     key: HODL,
-//   },
-//   {
-//     title: <i style={{ color: "#52e5ff" }}>{hyperdrive}</i>,
-//     dataIndex: hyperdrive,
-//     key: hyperdrive,
-//   },
-// ];
 
 const Toggle = styled(Segmented)`
   .ant-segmented-item-selected {
@@ -110,7 +52,7 @@ const AlgorithmPage = () => {
   // this should be true
   const default2DToggle = false;
   const [toggle2D, setToggle2D] = useState(default2DToggle);
-  const [metadata, setMetadata] = useState();
+  const [metadata, setMetadata] = useState([]);
   const [metadataLoading, setMetadataLoading] = useState(true);
   const size = 0.4999;
   const [eyeIdx, setEyeIdx] = useState(0);
@@ -533,7 +475,7 @@ const AlgorithmPage = () => {
       >
         <>
           <Title level={5}>
-            the crystal ball ...er cube behind our signals
+            the crystal ball (or rather cube) behind our signals
           </Title>
           {/* the crystal ball ...er cube behind our signals */}
           {/* consider square and cube icons https://ant.design/components/segmented/#components-segmented-demo-with-icon */}
@@ -552,13 +494,77 @@ const AlgorithmPage = () => {
           <div style={toggle2D ? { display: "none" } : {}}>{plot3D}</div>
         </div>
         <div className={pageStyles.child}>
-          <Table
+          {/* <Table
             dataSource={metadata}
             columns={columns}
             // title={() => "Metadata"}
             pagination={false}
             loading={metadataLoading}
-          />
+          /> */}
+          <Row gutter={[24, 24]}>
+            {metadata?.map((datum) => (
+              <Col span={12}>
+                <Card>
+                  <Statistic
+                    title={datum.metadata}
+                    value={datum.stat}
+                    // precision={2}
+                    // // valueStyle={{ color: "#3f8600" }}
+                    // // prefix={<ArrowUpOutlined />}
+                    // suffix="%"
+                  />
+                </Card>
+              </Col>
+            ))}
+            {/* <Col span={12}>
+              <Card>
+                <Statistic
+                  title={metadata && metadata[0].metadata}
+                  value={11.28}
+                  precision={2}
+                  valueStyle={{ color: "#3f8600" }}
+                  // prefix={<ArrowUpOutlined />}
+                  suffix="%"
+                />
+              </Card>
+            </Col>
+            <Col span={12}>
+              <Card>
+                <Statistic
+                  // title={metadata?[1]?.metadata}
+                  value={9.3}
+                  precision={2}
+                  valueStyle={{ color: "#cf1322" }}
+                  // prefix={<ArrowDownOutlined />}
+                  suffix="%"
+                />
+              </Card>
+            </Col>
+            <Col span={12}>
+              <Card>
+                <Statistic
+                  title="Title3"
+                  value={11.28}
+                  precision={2}
+                  valueStyle={{ color: "#3f8600" }}
+                  // prefix={<ArrowUpOutlined />}
+                  suffix="%"
+                />
+              </Card>
+            </Col>
+            <Col span={12}>
+              <Card>
+                <Statistic
+                  title="Title4"
+                  value={9.3}
+                  precision={2}
+                  valueStyle={{ color: "#cf1322" }}
+                  // prefix={<ArrowDownOutlined />}
+                  suffix="%"
+                />
+              </Card>
+            </Col> */}
+          </Row>
         </div>
       </div>
     </>
