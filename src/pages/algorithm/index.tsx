@@ -3,9 +3,10 @@ import { useState, useEffect, useMemo } from "react";
 import { Typography, Table, Segmented, Row, Col, Card, Statistic } from "antd";
 import Plot from "react-plotly.js";
 import { getApiUrl, getDayDiff, get3DCircle } from "@/utils";
-import "swagger-ui-react/swagger-ui.css";
 import pageStyles from "../index.less";
+import styles from "./index.less";
 import "./index.less";
+
 import styled from "styled-components";
 
 const { Title } = Typography;
@@ -493,7 +494,7 @@ const AlgorithmPage = () => {
           {toggle2D && plot2D}
           <div style={toggle2D ? { display: "none" } : {}}>{plot3D}</div>
         </div>
-        <div className={pageStyles.child}>
+        <div className={`${pageStyles.child} ${styles.chartMobile}`}>
           {!metadataLoading && (
             <Row gutter={[24, 24]}>
               <Col span={24} style={{ textAlign: "justify" }}>
