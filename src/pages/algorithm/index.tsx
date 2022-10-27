@@ -407,7 +407,10 @@ const AlgorithmPage = () => {
           onChange={(val: string) => setToggle2D(val === "2D")}
         />
       </span>
-      <div className={pageStyles.parent} style={{ alignItems: "center" }}>
+      <div
+        className={pageStyles.parent}
+        style={{ alignItems: "center", minHeight: "450px" }}
+      >
         <div className={pageStyles.child}>
           {!(viz2D && viz3D) ? (
             spinner
@@ -419,7 +422,7 @@ const AlgorithmPage = () => {
           )}
         </div>
         <div className={pageStyles.child}>
-          {metadata.length && (
+          {metadata.length ? (
             <Row gutter={[24, 24]}>
               <Col span={24} style={{ textAlign: "justify" }}>
                 The points on the plot represent historical market data reduced
@@ -444,7 +447,7 @@ const AlgorithmPage = () => {
                 </Col>
               ))}
             </Row>
-          )}
+          ) : null}
         </div>
       </div>
     </>
