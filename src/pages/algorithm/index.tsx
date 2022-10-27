@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect, useMemo } from "react";
-import { Typography, Table, Segmented, Row, Col, Card, Statistic } from "antd";
+import { Typography, Segmented, Row, Col, Card, Statistic } from "antd";
 import Plot from "react-plotly.js";
 import { getApiUrl, getDayDiff, get3DCircle } from "@/utils";
 import pageStyles from "../index.less";
@@ -44,7 +44,6 @@ const AlgorithmPage = () => {
   const default2DToggle = false;
   const [toggle2D, setToggle2D] = useState(default2DToggle);
   const [metadata, setMetadata] = useState([]);
-  const [metadataLoading, setMetadataLoading] = useState(true);
   const size = 0.4999;
   const [eyeIdx, setEyeIdx] = useState(0);
   const [up, setUp] = useState({ x: 0, y: 0, z: 1 });
@@ -57,7 +56,7 @@ const AlgorithmPage = () => {
   tickText[Math.floor(numTicks / 2)] = "HODL";
   const tickVals = tickText.map((_, idx) => size * idx);
   useEffect(() => {
-    const url = `${getApiUrl({ localOverride: "dev" })}/model`;
+    const url = `${getApiUrl({ localOverride: "prod" })}/model`;
     fetch(url, { method: "GET" })
       .then((response) => response.json())
       .then((data) => {
@@ -92,26 +91,23 @@ const AlgorithmPage = () => {
         return newData;
       })
       .then((data) => setMetadata(data))
-      .catch((err) => console.error(err))
-      .finally(() => setMetadataLoading(false));
+      .catch((err) => console.error(err));
   }, []);
 
   useEffect(() => {
-    const url = `${getApiUrl({ localOverride: "dev" })}/visualization`;
+    const url = `${getApiUrl({ localOverride: "prod" })}/visualization`;
     fetch(url, { method: "GET" })
       .then((response) => response.json())
       .then((data) => setViz2D(data))
       .catch((err) => console.error(err));
-    // .finally(() => setMetadataLoading(false));
   }, []);
 
   useEffect(() => {
-    const url = `${getApiUrl({ localOverride: "dev" })}/visualization?dims=3D`;
+    const url = `${getApiUrl({ localOverride: "prod" })}/visualization?dims=3D`;
     fetch(url, { method: "GET" })
       .then((response) => response.json())
       .then((data) => setViz3D(data))
       .catch((err) => console.error(err));
-    // .finally(() => setMetadataLoading(false));
   }, []);
 
   useEffect(() => {
@@ -415,7 +411,7 @@ const AlgorithmPage = () => {
           <div style={toggle2D ? { display: "none" } : {}}>{plot3D}</div>
         </div>
         <div className={pageStyles.child}>
-          {!metadataLoading && (
+          {metadata.length && (
             <Row gutter={[24, 24]}>
               <Col span={24} style={{ textAlign: "justify" }}>
                 The points on the plot represent historical market data reduced
