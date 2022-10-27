@@ -238,7 +238,7 @@ const AlgorithmPage = () => {
           autosize: true,
           // make responsive
           // https://codesandbox.io/s/nostalgic-jones-4kuww
-          title: "Decision Space",
+          title: { text: "Decision Space", x: 0 },
           xaxis: { title: "x" },
           yaxis: { title: "y" },
           zaxis: { title: "z" },
@@ -360,7 +360,7 @@ const AlgorithmPage = () => {
           autosize: true,
           // make responsive
           // https://codesandbox.io/s/nostalgic-jones-4kuww
-          title: "Decision Space",
+          title: { text: "Decision Space", x: 0 },
           paper_bgcolor: "transparent",
           plot_bgcolor: "transparent",
           legend: {
@@ -425,7 +425,7 @@ const AlgorithmPage = () => {
                 The points on the plot represent historical market data reduced
                 from {metadata[2]?.stat} dimensions to {toggle2D ? "2D" : "3D"}.
                 The filled regions represent the model's predictions. Based on
-                which space today's data point occupies, we may be able to
+                which region today's data point occupies, we may be able to
                 predict whether now is a good time to{" "}
                 <b>
                   <span style={{ color: "#52e5ff" }}>BUY</span>
