@@ -1,9 +1,10 @@
 import React from "react";
 import { useState, useEffect, useMemo } from "react";
-import { Typography, Segmented, Row, Col, Card, Statistic } from "antd";
+import { Typography, Segmented, Row, Col, Card, Statistic, Spin } from "antd";
 import Plot from "react-plotly.js";
 import { getApiUrl, getDayDiff, get3DCircle } from "@/utils";
 import pageStyles from "../index.less";
+import { LoadingOutlined } from "@ant-design/icons";
 import "./index.less";
 
 import styled from "styled-components";
@@ -17,6 +18,8 @@ const eyes = get3DCircle(
   [1.25, 1.25, -1.25],
   numPoints
 );
+const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
+const spinner = <Spin style={{ width: "100%" }} indicator={antIcon} />;
 
 const Toggle = styled(Segmented)`
   .ant-segmented-item-selected {
@@ -40,7 +43,6 @@ const Toggle = styled(Segmented)`
 const AlgorithmPage = () => {
   const [viz2D, setViz2D] = useState();
   const [viz3D, setViz3D] = useState();
-  // this should be true
   const default2DToggle = false;
   const [toggle2D, setToggle2D] = useState(default2DToggle);
   const [metadata, setMetadata] = useState([]);
@@ -407,8 +409,14 @@ const AlgorithmPage = () => {
       </span>
       <div className={pageStyles.parent} style={{ alignItems: "center" }}>
         <div className={pageStyles.child}>
-          {toggle2D && plot2D}
-          <div style={toggle2D ? { display: "none" } : {}}>{plot3D}</div>
+          {!(viz2D && viz3D) ? (
+            spinner
+          ) : (
+            <>
+              {toggle2D && plot2D}
+              <div style={toggle2D ? { display: "none" } : {}}>{plot3D}</div>
+            </>
+          )}
         </div>
         <div className={pageStyles.child}>
           {metadata.length && (
