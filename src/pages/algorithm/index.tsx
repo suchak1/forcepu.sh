@@ -238,7 +238,7 @@ const AlgorithmPage = () => {
           autosize: true,
           // make responsive
           // https://codesandbox.io/s/nostalgic-jones-4kuww
-          title: { text: "Decision Space", x: 0 },
+          title: { text: "Decision Space [2D]" },
           xaxis: { title: "x" },
           yaxis: { title: "y" },
           zaxis: { title: "z" },
@@ -360,7 +360,7 @@ const AlgorithmPage = () => {
           autosize: true,
           // make responsive
           // https://codesandbox.io/s/nostalgic-jones-4kuww
-          title: { text: "Decision Space", x: 0 },
+          title: { text: "Decision Space [3D]" },
           paper_bgcolor: "transparent",
           plot_bgcolor: "transparent",
           legend: {
