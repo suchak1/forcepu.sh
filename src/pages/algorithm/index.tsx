@@ -46,6 +46,7 @@ const AlgorithmPage = () => {
   const default2DToggle = false;
   const [toggle2D, setToggle2D] = useState(default2DToggle);
   const [metadata, setMetadata] = useState([]);
+  // const loading = !(metadata.length && viz2D && viz3D);
   const size = 0.4999;
   const [eyeIdx, setEyeIdx] = useState(0);
   const [up, setUp] = useState({ x: 0, y: 0, z: 1 });
@@ -421,8 +422,8 @@ const AlgorithmPage = () => {
             </>
           )}
         </div>
-        <div className={pageStyles.child}>
-          {metadata.length ? (
+        {metadata.length && (
+          <div className={pageStyles.child}>
             <Row gutter={[24, 24]}>
               <Col span={24} style={{ textAlign: "justify" }}>
                 The points on the plot represent historical market data reduced
@@ -447,8 +448,8 @@ const AlgorithmPage = () => {
                 </Col>
               ))}
             </Row>
-          ) : null}
-        </div>
+          </div>
+        )}
       </div>
     </>
   );
