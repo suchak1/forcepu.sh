@@ -36,7 +36,7 @@
     "react-hover-video-player": "^9.7.1",
     "react-plotly.js": "^2.6.0",
     "styled-components": "^5.3.5",
-    "swagger-ui-react": "^4.15.2",
+    "swagger-ui-react": "^4.12.0",
     "umi": "3.5.21"
   },
   "devDependencies": {
