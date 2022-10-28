@@ -109,6 +109,7 @@ const pages: string[] = [
   // "art",
   "docs",
   "algorithm", // alternative name: research
+  "subscription",
 ];
 
 // "docs" should be example of how to use library or service
