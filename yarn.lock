@@ -3907,10 +3907,10 @@
     jest-worker "24.9.0"
     prettier "2.2.1"
 
-"@umijs/plugin-antd@^0.15.0":
-  version "0.15.0"
-  resolved "https://registry.npmjs.org/@umijs/plugin-antd/-/plugin-antd-0.15.0.tgz"
-  integrity sha512-HnEvox1+jrnlqNg7jpbviCUt6gSgF7o3jE2TjAEC/qMg/a5a5bi/TxpmVouR8sgcIvh7jusmp6VrCK0vvoSGtg==
+"@umijs/plugin-antd@^0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@umijs/plugin-antd/-/plugin-antd-0.15.2.tgz#18539355196bb73053ce21b708f9d07e9c5bcac0"
+  integrity sha512-iknetUYGIHCuUra4TD+yYxiMGVXhhn6S6I/6VKKWl6i8ToQ0W4S0So6eAG9JLGtYEEtjrNnecJXQVipmZtcHtA==
   dependencies:
     antd "^4.1.3"
     semver "^7.3.5"
