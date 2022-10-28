@@ -8601,10 +8601,10 @@ picomatch@^2.0.4, picomatch@^2.2.1, picomatch@^2.3.0:
   resolved "https://registry.npmjs.org/picomatch/-/picomatch-2.3.1.tgz"
   integrity sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==
 
-plotly.js@^2.14.0:
-  version "2.14.0"
-  resolved "https://registry.yarnpkg.com/plotly.js/-/plotly.js-2.14.0.tgz#082fbaad893f20bf083fac982755b36699ff052c"
-  integrity sha512-bv3Re8FmgVJOyIFidAc24mbKLZQ/y/xEFWoFhJMAIpl9pPrB9I6OjAv/gYCKEraWj4VTK5nAPAOGnjcDjodf2g==
+plotly.js@^2.16.1:
+  version "2.16.1"
+  resolved "https://registry.yarnpkg.com/plotly.js/-/plotly.js-2.16.1.tgz#9548f90bea9628592d79874f075423c8cc644415"
+  integrity sha512-83BJWgbXSjeEl31+zq66ZzU/QWfd/CItzGm5mtYeWHWHyoOcCzHDW4I+QgkicGq0ntLZ2PfEb0fjM0qMzGGXVw==
   dependencies:
     "@plotly/d3" "3.8.0"
     "@plotly/d3-sankey" "0.7.2"
