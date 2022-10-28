@@ -9983,10 +9983,10 @@ react-generate-context@1.0.1:
   resolved "https://registry.npmjs.org/react-generate-context/-/react-generate-context-1.0.1.tgz"
   integrity sha512-rOFGh3KgC2Ot66DmVCcT1p8lVJCmmCjzGE5WK/KsyDFi43wpIbW1PYcr04cQ3mbF4LaIkY6SpK7k1DOgwtpUXA==
 
-react-hover-video-player@^9.6.1:
-  version "9.6.1"
-  resolved "https://registry.yarnpkg.com/react-hover-video-player/-/react-hover-video-player-9.6.1.tgz#61dd8f8acf6556f127790506d411943019dc1c04"
-  integrity sha512-tL5+ObksarhbMjSrgtJjMJTvzOduU9XC/Ern/XCWLecyeCSeeSqkK+itye8J4ti3GW/QpXmvaj4pWvLyAVVjaA==
+react-hover-video-player@^9.7.1:
+  version "9.7.1"
+  resolved "https://registry.yarnpkg.com/react-hover-video-player/-/react-hover-video-player-9.7.1.tgz#63d291304d54e06827877c4b7bdbe5a0ca9885f7"
+  integrity sha512-mC74jCZscPui+vtJUFdwhb6pM+4UQI9ZepzAQKAN8l5sOQRA1AVpiCDl5LoTlnJETYKUc96SKaKsXW5L8Z30AQ==
 
 react-immutable-proptypes@2.2.0:
   version "2.2.0"
