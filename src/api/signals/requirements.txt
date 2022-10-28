@@ -1,2 +1,2 @@
 boto3 == 1.24.26
-pynamodb == 5.2.1
+pynamodb == 5.2.3
