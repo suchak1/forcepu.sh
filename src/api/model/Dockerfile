@@ -1,8 +1,7 @@
 FROM public.ecr.aws/lambda/python:3.8
 
-COPY signals/app.py signals/requirements.txt ./
-COPY shared shared
+COPY app.py requirements.txt ./
 
 RUN python3.8 -m pip install -r requirements.txt -t .
 
-CMD ["app.get_signals"]
+CMD ["app.lambda_handler"]

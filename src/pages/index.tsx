@@ -495,7 +495,7 @@ const Page = () => {
       ) : (
         <div className={styles.parent}>
           {!inBeta && !loading && (
-            <div className={styles.child}>
+            <div className={`${styles.child} ${styles.chartMobile}`}>
               <LineChart
                 data={toggle ? previewData.BTC.data : previewData.USD.data}
                 formatFx={toggle ? formatBTC : formatUSD}

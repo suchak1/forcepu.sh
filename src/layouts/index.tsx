@@ -108,6 +108,7 @@ const pages: string[] = [
   // "gym",
   // "art",
   "docs",
+  "algorithm", // alternative name: research
 ];
 
 // "docs" should be example of how to use library or service
@@ -123,9 +124,9 @@ const routes = [
   {
     text: (
       <>
-        <div style={{ fontSize: 20, marginLeft: -10 }}>
+        <div className={overrides.home}>
           <span className={overrides.white}>force</span>
-          pu.sh
+          <span>pu.sh</span>
         </div>
       </>
     ),
@@ -185,6 +186,10 @@ const Layout = ({ children }: LayoutProps) => {
       .finally(() => setAcknowledgeLoading(false));
   };
 
+  const selectedMenuIdx = pages.indexOf(window.location.pathname.slice(1)) + 1;
+  // filter out home link from antd's menu "selected" css stylings
+  const selectedMenuItems = selectedMenuIdx ? [selectedMenuIdx.toString()] : [];
+
   return (
     <AntLayout>
       <AntLayout.Header
@@ -202,12 +207,8 @@ const Layout = ({ children }: LayoutProps) => {
             style={{ height: headerHeight, width: "100%" }}
             theme="dark"
             mode="horizontal"
-            defaultSelectedKeys={["0"].concat([
-              (pages.indexOf(window.location.pathname.slice(1)) + 1).toString(),
-            ])}
-            selectedKeys={["0"].concat([
-              (pages.indexOf(window.location.pathname.slice(1)) + 1).toString(),
-            ])}
+            defaultSelectedKeys={selectedMenuItems}
+            selectedKeys={selectedMenuItems}
             items={routes.map((route, idx) => ({
               className: [overrides.white, overrides.ice].join(" "),
               key: idx,
