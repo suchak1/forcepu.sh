@@ -422,7 +422,7 @@ const AlgorithmPage = () => {
             </>
           )}
         </div>
-        {metadata.length && (
+        {metadata.length ? (
           <div className={pageStyles.child}>
             <Row gutter={[24, 24]}>
               <Col span={24} style={{ textAlign: "justify" }}>
@@ -449,7 +449,7 @@ const AlgorithmPage = () => {
               ))}
             </Row>
           </div>
-        )}
+        ) : null}
       </div>
     </>
   );
