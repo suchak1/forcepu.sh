@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect, useMemo, useContext } from "react";
 import { Typography, Segmented, Row, Col, Card, Statistic, Spin } from "antd";
 import Plot from "react-plotly.js";
-import { getApiUrl, getDayDiff, get3DCircle } from "@/utils";
+import { getApiUrl, getDayDiff, get3DCircle, linspace } from "@/utils";
 import pageStyles from "../index.less";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useAuthenticator } from "@aws-amplify/ui-react";
@@ -13,6 +13,21 @@ import styled from "styled-components";
 
 const { Title } = Typography;
 
+const xs = [];
+const ys = [];
+const zs = [];
+const base = linspace(-2, 2, 100);
+base.forEach((x, i) => {
+  base.forEach((y, j) => {
+    const z = ((7 * x * y) / Math.E) ^ (x ** 2 + y ** 2);
+    xs.push(x);
+    ys.push(y);
+    zs.push(z);
+  });
+});
+// const xs = linspace(-2, 2, 10);
+// const ys = xs;
+// const zs = xs.map((x, i) => ((7 * x * ys[i]) / Math.E) ^ (x ** 2 + ys[i] ** 2));
 const numPoints = 360;
 const eyes = get3DCircle(
   [0, 0, 0],
@@ -133,16 +148,114 @@ const SubscriptionPage = () => {
       clearInterval(interval);
     };
   }, [eyeIdx]);
+  const plot3D = useMemo(
+    () => (
+      <Plot
+        data={[
+          {
+            x: xs,
+            y: ys,
+            z: zs,
+            type: "scatter3d",
+            mode: "markers",
+            // change marker outline to white after making bg black/transparent?
+            marker: { color: "cyan", line: { color: "black", width: 1 } },
+            hoverinfo: "skip",
+            // showlegend: true,
+            // text: "BUY [actual]",
+            // name: "BUY",
+          },
+          // 8 points of cube
+          // (-1, )
+          // {
+          //   x: xs,
+          //   y: ys,
+          //   z: zs,
+          //   type: "volume",
+          //   opacity: 0.4,
+          //   // value: viz3D?.preds,
+          //   colorscale: [
+          //     ["0", "magenta"],
+          //     ["1", "cyan"],
+          //   ],
+          //   colorbar: {
+          //     title: "Predicted",
+          //     tickmode: "array",
+          //     ticktext: tickText,
+          //     tickvals: tickVals,
+          //   },
+          //   hoverinfo: "skip",
+          //   // change marker outline to white after making bg black/transparent?
+          //   // marker: {
+          //   //   color: "magenta",
+          //   //   line: { color: "black", width: 1 },
+          //   // },
+          //   // showlegend: true,
+          // },
+        ]}
+        // disable x, y, z titles?
+        layout={{
+          scene: {
+            xaxis: {
+              title: {
+                text: "x",
+                font: {
+                  // size: "100",
+                },
+              },
+              showticklabels: false,
+            },
+            yaxis: {
+              showticklabels: false,
+              title: {
+                text: "y",
+                font: {
+                  // size: "100",
+                },
+              },
+            },
+            zaxis: {
+              title: {
+                text: "z",
+                font: {
+                  // size: "100",
+                },
+              },
+              showticklabels: false,
+            },
+            camera: {
+              eye: eyes[eyeIdx],
+              up,
+            },
+          },
+          font: {
+            color: "rgba(255, 255, 255, 0.85)",
+            // family:
+            //   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;",
+            family: "inherit",
+          },
+          autosize: true,
+          // make responsive
+          // https://codesandbox.io/s/nostalgic-jones-4kuww
+          paper_bgcolor: "transparent",
+          plot_bgcolor: "transparent",
+          legend: {
+            y: 0,
+            x: 0,
+            title: { text: "Actual" },
+          },
+        }}
+        style={{ width: "100%", height: "100%" }}
+        useResizeHandler
+        config={{ displayModeBar: false }}
+      />
+    ),
+    [viz3D, eyeIdx, up]
+  );
 
   return (
     <>
-      {/* consider changing page and nav to /research and title to Algorithm */}
-      {/* remove numbers on axis for 3d / camera should spin up and down */}
-      {/* consider switching BTC toggle to Segmented on home screen */}
-      {/* consider using Statistic component for metadata */}
-      {/*  */}
       <Title>Premium Access</Title>
-      {/* Crystal ball ...er cube */}
       <span
         style={{
           display: "flex",
@@ -155,8 +268,6 @@ const SubscriptionPage = () => {
           to the algorithm's <span style={{ color: "#52e5ff" }}>BUY</span> and{" "}
           <span style={{ color: "magenta" }}>SELL</span> signals
         </Title>
-        {/* the crystal ball ...er cube behind our signals */}
-        {/* consider square and cube icons https://ant.design/components/segmented/#components-segmented-demo-with-icon */}
       </span>
       <div
         className={pageStyles.parent}
@@ -164,7 +275,14 @@ const SubscriptionPage = () => {
       >
         <div className={pageStyles.child}>
           {/* test if preview endpoint is done loading (for return estimate) */}
-          {!(viz2D && viz3D) ? spinner : <>{"DatumInfo"}</>}
+          {!(viz2D && viz3D) ? (
+            spinner
+          ) : (
+            <>
+              {plot3D}
+              {"DatumInfo"}
+            </>
+          )}
         </div>
         {/* test if signed in | if not, then don't render,
         if signed in, then test if in beta | if so, show beta view, 
