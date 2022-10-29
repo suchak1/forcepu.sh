@@ -197,30 +197,15 @@ const SubscriptionPage = () => {
         layout={{
           scene: {
             xaxis: {
-              title: {
-                text: "x",
-                font: {
-                  // size: "100",
-                },
-              },
+              showgrid: false,
               showticklabels: false,
             },
             yaxis: {
+              showgrid: false,
               showticklabels: false,
-              title: {
-                text: "y",
-                font: {
-                  // size: "100",
-                },
-              },
             },
             zaxis: {
-              title: {
-                text: "z",
-                font: {
-                  // size: "100",
-                },
-              },
+              showgrid: false,
               showticklabels: false,
             },
             camera: {
