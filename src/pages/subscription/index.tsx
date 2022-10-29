@@ -1,10 +1,12 @@
 import React from "react";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useContext } from "react";
 import { Typography, Segmented, Row, Col, Card, Statistic, Spin } from "antd";
 import Plot from "react-plotly.js";
 import { getApiUrl, getDayDiff, get3DCircle } from "@/utils";
 import pageStyles from "../index.less";
 import { LoadingOutlined } from "@ant-design/icons";
+import { useAuthenticator } from "@aws-amplify/ui-react";
+import { AccountContext } from "../../layouts";
 import "./index.less";
 
 import styled from "styled-components";
@@ -21,26 +23,10 @@ const eyes = get3DCircle(
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 const spinner = <Spin style={{ width: "100%" }} indicator={antIcon} />;
 
-const Toggle = styled(Segmented)`
-  .ant-segmented-item-selected {
-    background-color: unset;
-    outline: 1px solid
-      ${(props: { val: boolean }) => (props.val ? "#52e5ff" : "magenta")};
-    color: rgba(255, 255, 255, 0.85);
-  }
-
-  .ant-segmented-item:hover,
-  .ant-segmented-item:focus {
-    color: rgba(255, 255, 255, 0.85);
-  }
-
-  .ant-segmented-thumb {
-    background-color: ${(props: { val: boolean }) =>
-      props.val ? "magenta" : "#52e5ff"};
-  }
-`;
-
 const SubscriptionPage = () => {
+  const { user: loggedIn } = useAuthenticator((context) => [context.user]);
+  const { account, accountLoading } = useContext(AccountContext);
+  const inBeta = loggedIn && account?.permissions?.in_beta;
   const [viz2D, setViz2D] = useState();
   const [viz3D, setViz3D] = useState();
   const default2DToggle = false;
@@ -148,236 +134,6 @@ const SubscriptionPage = () => {
     };
   }, [eyeIdx]);
 
-  // consider making camera move in python and exporting as html
-  const plot2D = useMemo(
-    () => (
-      <Plot
-        data={[
-          {
-            x: viz2D?.grid[0],
-            y: viz2D?.grid[1],
-            z: viz2D?.preds,
-            type: "contour",
-            hoverinfo: "none",
-            contours: {
-              coloring: "fill",
-              start: 0,
-              end: 1,
-              size: size,
-            },
-            line: { smoothing: 0, width },
-            colorscale: [
-              ["0", "magenta"],
-              ["0.4", "magenta"],
-              ["0.5", "#8080FF"],
-              ["0.6", "cyan"],
-              ["1", "cyan"],
-            ],
-            opacity: 0.2,
-            showscale: false,
-            name: "predicted",
-          },
-          {
-            x: viz2D?.grid[0],
-            y: viz2D?.grid[1],
-            z: viz2D?.preds,
-            type: "contour",
-            hoverinfo: "none",
-            contours: {
-              coloring: "lines",
-              start: 0,
-              end: 1,
-              size: size,
-            },
-            line: { smoothing: 0, width },
-            colorscale: [
-              ["0", "magenta"],
-              ["1", "cyan"],
-            ],
-            // showscale: false,
-            colorbar: {
-              title: "Predicted",
-              tickmode: "array",
-              ticktext: tickText,
-              tickvals: tickVals,
-            },
-            name: "predicted",
-          },
-          {
-            x: viz2D?.actual[0]?.BUY,
-            y: viz2D?.actual[1]?.BUY,
-            type: "scatter",
-            mode: "markers",
-            // change marker outline to white after making bg black/transparent?
-            marker: { color: "cyan", line: { color: "black", width: 1 } },
-            showlegend: true,
-            text: "BUY [actual]",
-            name: "BUY",
-          },
-          {
-            x: viz2D?.actual[0]?.SELL,
-            y: viz2D?.actual[1]?.SELL,
-            type: "scatter",
-            mode: "markers",
-            // change marker outline to white after making bg black/transparent?
-            marker: {
-              color: "magenta",
-              line: { color: "black", width: 1 },
-            },
-            showlegend: true,
-            text: "SELL [actual]",
-            name: "SELL",
-          },
-        ]}
-        layout={{
-          font: {
-            color: "rgba(255, 255, 255, 0.85)",
-            // family:
-            //   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;",
-            family: "inherit",
-          },
-          autosize: true,
-          // make responsive
-          // https://codesandbox.io/s/nostalgic-jones-4kuww
-          title: { text: "Decision Space [2D]" },
-          xaxis: { title: "x" },
-          yaxis: { title: "y" },
-          zaxis: { title: "z" },
-          paper_bgcolor: "transparent",
-          plot_bgcolor: "transparent",
-          dragmode: false,
-          legend: {
-            y: 0,
-            x: 0,
-            title: { text: "Actual" },
-          },
-        }}
-        style={{ width: "100%", height: "100%" }}
-        useResizeHandler
-        config={{ displayModeBar: false }}
-      />
-    ),
-    [viz2D]
-  );
-
-  const plot3D = useMemo(
-    () => (
-      <Plot
-        data={[
-          {
-            x: viz3D?.actual[0]?.BUY,
-            y: viz3D?.actual[1]?.BUY,
-            z: viz3D?.actual[2]?.BUY,
-            type: "scatter3d",
-            mode: "markers",
-            // change marker outline to white after making bg black/transparent?
-            marker: { color: "cyan", line: { color: "black", width: 1 } },
-            showlegend: true,
-            text: "BUY [actual]",
-            name: "BUY",
-          },
-          {
-            x: viz3D?.actual[0]?.SELL,
-            y: viz3D?.actual[1]?.SELL,
-            z: viz3D?.actual[2]?.SELL,
-            type: "scatter3d",
-            mode: "markers",
-            // change marker outline to white after making bg black/transparent?
-            marker: {
-              color: "magenta",
-              line: { color: "black", width: 1 },
-            },
-            showlegend: true,
-            text: "SELL [actual]",
-            name: "SELL",
-          },
-          {
-            x: viz3D?.grid[0],
-            y: viz3D?.grid[1],
-            z: viz3D?.grid[2],
-            type: "volume",
-            opacity: 0.2,
-            value: viz3D?.preds,
-            colorscale: [
-              ["0", "magenta"],
-              ["1", "cyan"],
-            ],
-            colorbar: {
-              title: "Predicted",
-              tickmode: "array",
-              ticktext: tickText,
-              tickvals: tickVals,
-            },
-            hoverinfo: "skip",
-            // change marker outline to white after making bg black/transparent?
-            // marker: {
-            //   color: "magenta",
-            //   line: { color: "black", width: 1 },
-            // },
-            // showlegend: true,
-          },
-        ]}
-        // disable x, y, z titles?
-        layout={{
-          scene: {
-            xaxis: {
-              title: {
-                text: "x",
-                font: {
-                  // size: "100",
-                },
-              },
-              showticklabels: false,
-            },
-            yaxis: {
-              showticklabels: false,
-              title: {
-                text: "y",
-                font: {
-                  // size: "100",
-                },
-              },
-            },
-            zaxis: {
-              title: {
-                text: "z",
-                font: {
-                  // size: "100",
-                },
-              },
-              showticklabels: false,
-            },
-            camera: {
-              eye: eyes[eyeIdx],
-              up,
-            },
-          },
-          font: {
-            color: "rgba(255, 255, 255, 0.85)",
-            // family:
-            //   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;",
-            family: "inherit",
-          },
-          autosize: true,
-          // make responsive
-          // https://codesandbox.io/s/nostalgic-jones-4kuww
-          title: { text: "Decision Space [3D]" },
-          paper_bgcolor: "transparent",
-          plot_bgcolor: "transparent",
-          legend: {
-            y: 0,
-            x: 0,
-            title: { text: "Actual" },
-          },
-        }}
-        style={{ width: "100%", height: "100%" }}
-        useResizeHandler
-        config={{ displayModeBar: false }}
-      />
-    ),
-    [viz3D, eyeIdx, up]
-  );
-
   return (
     <>
       {/* consider changing page and nav to /research and title to Algorithm */}
@@ -401,28 +157,19 @@ const SubscriptionPage = () => {
         </Title>
         {/* the crystal ball ...er cube behind our signals */}
         {/* consider square and cube icons https://ant.design/components/segmented/#components-segmented-demo-with-icon */}
-
-        <Toggle
-          val={toggle2D}
-          options={["2D", "3D"]}
-          defaultValue={default2DToggle ? "2D" : "3D"}
-          onChange={(val: string) => setToggle2D(val === "2D")}
-        />
       </span>
       <div
         className={pageStyles.parent}
         style={{ alignItems: "center", minHeight: "450px" }}
       >
         <div className={pageStyles.child}>
-          {!(viz2D && viz3D) ? (
-            spinner
-          ) : (
-            <>
-              {toggle2D && plot2D}
-              <div style={toggle2D ? { display: "none" } : {}}>{plot3D}</div>
-            </>
-          )}
+          {/* test if preview endpoint is done loading (for return estimate) */}
+          {!(viz2D && viz3D) ? spinner : <>{"DatumInfo"}</>}
         </div>
+        {/* test if signed in | if not, then don't render,
+        if signed in, then test if in beta | if so, show beta view, 
+        else test if active subscription | if so, show plan/sub amount, payment method, and option to cancel / manage - should have to open modal and click button or type in phrase to cancel
+        else show stripe subscription page*/}
         {metadata.length ? (
           <div className={pageStyles.child}>
             <Row gutter={[24, 24]}>
