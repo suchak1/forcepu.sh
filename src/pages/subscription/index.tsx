@@ -114,129 +114,129 @@ const SubscriptionPage = () => {
       .catch((err) => console.error(err));
   }, []);
 
-  useEffect(() => {
-    // use frames and useMemo instead
-    // https://codesandbox.io/s/pier-stat-flood-w1ed4?file=/src/Flood.js
+  // useEffect(() => {
+  //   // use frames and useMemo instead
+  //   // https://codesandbox.io/s/pier-stat-flood-w1ed4?file=/src/Flood.js
 
-    const interval = setInterval(() => {
-      const newEyeIdx = (eyeIdx + 1) % eyes.length;
-      const multiplier = numPoints / 360;
-      const theta = Math.floor(newEyeIdx / multiplier);
+  //   const interval = setInterval(() => {
+  //     const newEyeIdx = (eyeIdx + 1) % eyes.length;
+  //     const multiplier = numPoints / 360;
+  //     const theta = Math.floor(newEyeIdx / multiplier);
 
-      const roundAngle = (angle: number) => {
-        // works with numPoints <= 360
-        const divisor = Math.floor(360 / numPoints);
-        const remainder = angle % divisor;
-        return angle + (remainder ? divisor - (angle % divisor) : 0);
-      };
+  //     const roundAngle = (angle: number) => {
+  //       // works with numPoints <= 360
+  //       const divisor = Math.floor(360 / numPoints);
+  //       const remainder = angle % divisor;
+  //       return angle + (remainder ? divisor - (angle % divisor) : 0);
+  //     };
 
-      if (theta === roundAngle(55)) {
-        setUp({ x: -1, y: -1, z: -1 });
-      } else if (theta === roundAngle(180)) {
-        setUp({ x: 1, y: 1, z: -1 });
-      } else if (theta === 290) {
-        setUp({ x: -1, y: -1, z: 1 });
-      }
+  //     if (theta === roundAngle(55)) {
+  //       // setUp({ x: -1, y: -1, z: -1 });
+  //     } else if (theta === roundAngle(180)) {
+  //       // setUp({ x: 1, y: 1, z: -1 });
+  //     } else if (theta === 290) {
+  //       // setUp({ x: -1, y: -1, z: 1 });
+  //     }
 
-      setEyeIdx(newEyeIdx);
+  //     setEyeIdx(newEyeIdx);
 
-      // 15 ms => 60fps
-      // 30 ms => 30fps
-      // 40 ms => 24fps
-    }, 15);
-    return () => {
-      clearInterval(interval);
-    };
-  }, [eyeIdx]);
-  const plot3D = useMemo(
-    () => (
-      <Plot
-        data={[
-          {
-            x: xs,
-            y: ys,
-            z: zs,
-            type: "scatter3d",
-            mode: "markers",
-            // change marker outline to white after making bg black/transparent?
-            marker: { color: "cyan", line: { color: "black", width: 1 } },
-            hoverinfo: "skip",
-            // showlegend: true,
-            // text: "BUY [actual]",
-            // name: "BUY",
-          },
-          // 8 points of cube
-          // (-1, )
-          // {
-          //   x: xs,
-          //   y: ys,
-          //   z: zs,
-          //   type: "volume",
-          //   opacity: 0.4,
-          //   // value: viz3D?.preds,
-          //   colorscale: [
-          //     ["0", "magenta"],
-          //     ["1", "cyan"],
-          //   ],
-          //   colorbar: {
-          //     title: "Predicted",
-          //     tickmode: "array",
-          //     ticktext: tickText,
-          //     tickvals: tickVals,
-          //   },
-          //   hoverinfo: "skip",
-          //   // change marker outline to white after making bg black/transparent?
-          //   // marker: {
-          //   //   color: "magenta",
-          //   //   line: { color: "black", width: 1 },
-          //   // },
-          //   // showlegend: true,
-          // },
-        ]}
-        // disable x, y, z titles?
-        layout={{
-          scene: {
-            xaxis: {
-              showgrid: false,
-              showticklabels: false,
-            },
-            yaxis: {
-              showgrid: false,
-              showticklabels: false,
-            },
-            zaxis: {
-              showgrid: false,
-              showticklabels: false,
-            },
-            camera: {
-              eye: eyes[eyeIdx],
-              up,
-            },
-          },
-          font: {
-            color: "rgba(255, 255, 255, 0.85)",
-            // family:
-            //   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;",
-            family: "inherit",
-          },
-          autosize: true,
-          // make responsive
-          // https://codesandbox.io/s/nostalgic-jones-4kuww
-          paper_bgcolor: "transparent",
-          plot_bgcolor: "transparent",
-          legend: {
-            y: 0,
-            x: 0,
-            title: { text: "Actual" },
-          },
-        }}
-        style={{ width: "100%", height: "100%" }}
-        useResizeHandler
-        config={{ displayModeBar: false }}
-      />
-    ),
-    [viz3D, eyeIdx, up]
-  );
+  //     // 15 ms => 60fps
+  //     // 30 ms => 30fps
+  //     // 40 ms => 24fps
+  //   }, 15);
+  //   return () => {
+  //     clearInterval(interval);
+  //   };
+  // }, [eyeIdx]);
+  // const plot3D = useMemo(
+  //   () => (
+  //     <Plot
+  //       data={[
+  //         {
+  //           x: xs,
+  //           y: ys,
+  //           z: zs,
+  //           type: "scatter3d",
+  //           mode: "markers",
+  //           // change marker outline to white after making bg black/transparent?
+  //           marker: { color: "cyan", line: { color: "black", width: 1 } },
+  //           hoverinfo: "skip",
+  //           // showlegend: true,
+  //           // text: "BUY [actual]",
+  //           // name: "BUY",
+  //         },
+  //         // 8 points of cube
+  //         // (-1, )
+  //         // {
+  //         //   x: xs,
+  //         //   y: ys,
+  //         //   z: zs,
+  //         //   type: "volume",
+  //         //   opacity: 0.4,
+  //         //   // value: viz3D?.preds,
+  //         //   colorscale: [
+  //         //     ["0", "magenta"],
+  //         //     ["1", "cyan"],
+  //         //   ],
+  //         //   colorbar: {
+  //         //     title: "Predicted",
+  //         //     tickmode: "array",
+  //         //     ticktext: tickText,
+  //         //     tickvals: tickVals,
+  //         //   },
+  //         //   hoverinfo: "skip",
+  //         //   // change marker outline to white after making bg black/transparent?
+  //         //   // marker: {
+  //         //   //   color: "magenta",
+  //         //   //   line: { color: "black", width: 1 },
+  //         //   // },
+  //         //   // showlegend: true,
+  //         // },
+  //       ]}
+  //       // disable x, y, z titles?
+  //       layout={{
+  //         scene: {
+  //           xaxis: {
+  //             showgrid: false,
+  //             showticklabels: false,
+  //           },
+  //           yaxis: {
+  //             showgrid: false,
+  //             showticklabels: false,
+  //           },
+  //           zaxis: {
+  //             showgrid: false,
+  //             showticklabels: false,
+  //           },
+  //           camera: {
+  //             eye: eyes[eyeIdx],
+  //             up,
+  //           },
+  //         },
+  //         font: {
+  //           color: "rgba(255, 255, 255, 0.85)",
+  //           // family:
+  //           //   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;",
+  //           family: "inherit",
+  //         },
+  //         autosize: true,
+  //         // make responsive
+  //         // https://codesandbox.io/s/nostalgic-jones-4kuww
+  //         paper_bgcolor: "transparent",
+  //         plot_bgcolor: "transparent",
+  //         // legend: {
+  //         //   y: 0,
+  //         //   x: 0,
+  //         //   title: { text: "Actual" },
+  //         // },
+  //       }}
+  //       style={{ width: "100%", height: "250px" }}
+  //       useResizeHandler
+  //       config={{ displayModeBar: false }}
+  //     />
+  //   ),
+  //   [viz3D, eyeIdx, up]
+  // );
 
   return (
     <>
@@ -264,8 +264,25 @@ const SubscriptionPage = () => {
             spinner
           ) : (
             <>
-              {plot3D}
-              {"DatumInfo"}
+              <div
+                style={{
+                  width: "100%",
+                  height: "200px",
+                  overflow: "hidden",
+                  display: "flex",
+                  alignContent: "center",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  justifyItems: "center",
+                }}
+              >
+                {/* {plot3D} */}
+              </div>
+              <Title level={5}>Signals API</Title>
+
+              {
+                "Access to the /signals API which provides up to a week's worth of the latest BUY and SELL signals."
+              }
             </>
           )}
         </div>
