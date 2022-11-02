@@ -7,6 +7,8 @@ import pageStyles from "../index.less";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { AccountContext } from "../../layouts";
+import CUBE from "../../../assets/cube.webp";
+
 import "./index.less";
 
 import styled from "styled-components";
@@ -264,25 +266,37 @@ const SubscriptionPage = () => {
             spinner
           ) : (
             <>
+              <Title level={3}>Signals API</Title>
+              {/* should be level 3-5 */}
+              <span>{"Access to the "}</span>
+              <span style={{ fontFamily: "monospace", color: "#52e5ff" }}>
+                /signals
+              </span>
+              <span>
+                {
+                  " API which provides up to a week's worth of the latest BUY and SELL signals."
+                }
+              </span>
+              <div>New signals are produced by 12:05 UTC.</div>
               <div
                 style={{
                   width: "100%",
-                  height: "200px",
-                  overflow: "hidden",
                   display: "flex",
-                  alignContent: "center",
-                  alignItems: "center",
                   justifyContent: "center",
-                  justifyItems: "center",
                 }}
               >
-                {/* {plot3D} */}
+                <img height="200px" src={CUBE}></img>
               </div>
-              <Title level={5}>Signals API</Title>
-
-              {
-                "Access to the /signals API which provides up to a week's worth of the latest BUY and SELL signals."
-              }
+              <b>Disclaimer:</b>
+              <div>
+                Note that the algorithm's signals <b>DO NOT</b> constitute
+                investment advice.
+              </div>
+              <div>
+                {" "}
+                Do your own research, make your own judgements, and invest
+                responsibly.
+              </div>
             </>
           )}
         </div>
