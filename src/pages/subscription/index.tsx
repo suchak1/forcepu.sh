@@ -12,6 +12,7 @@ import CUBE from "../../../assets/cube.webp";
 import "./index.less";
 
 import styled from "styled-components";
+import { ConsoleLogger } from "@aws-amplify/core";
 
 const { Title } = Typography;
 
@@ -44,8 +45,7 @@ const SubscriptionPage = () => {
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const { account, accountLoading } = useContext(AccountContext);
   const inBeta = loggedIn && account?.permissions?.in_beta;
-  const [viz2D, setViz2D] = useState();
-  const [viz3D, setViz3D] = useState();
+  const [rate, setRate] = useState();
   const default2DToggle = false;
   const [toggle2D, setToggle2D] = useState(default2DToggle);
   const [metadata, setMetadata] = useState([]);
@@ -101,18 +101,15 @@ const SubscriptionPage = () => {
   }, []);
 
   useEffect(() => {
-    const url = `${getApiUrl({ localOverride: "prod" })}/visualization`;
+    const url = `${getApiUrl({ localOverride: "prod" })}/preview`;
     fetch(url, { method: "GET" })
       .then((response) => response.json())
-      .then((data) => setViz2D(data))
-      .catch((err) => console.error(err));
-  }, []);
-
-  useEffect(() => {
-    const url = `${getApiUrl({ localOverride: "prod" })}/visualization?dims=3D`;
-    fetch(url, { method: "GET" })
-      .then((response) => response.json())
-      .then((data) => setViz3D(data))
+      .then((data) => {
+        const preview = data.BTC.data;
+        const latest = preview.slice(preview.length - 2);
+        console.log(latest);
+        setRate(latest);
+      })
       .catch((err) => console.error(err));
   }, []);
 
@@ -262,7 +259,7 @@ const SubscriptionPage = () => {
       >
         <div className={pageStyles.child}>
           {/* test if preview endpoint is done loading (for return estimate) */}
-          {!(viz2D && viz3D) ? (
+          {!rate ? (
             spinner
           ) : (
             <>
@@ -277,7 +274,6 @@ const SubscriptionPage = () => {
                   " API which provides up to a week's worth of the latest BUY and SELL signals."
                 }
               </span>
-              <div>New signals are produced by 12:05 UTC.</div>
               <div
                 style={{
                   width: "100%",
@@ -287,7 +283,12 @@ const SubscriptionPage = () => {
               >
                 <img height="200px" src={CUBE}></img>
               </div>
+              <div>New signals are produced by 12:05 UTC.</div>
+              {rate && (
+                <div>Minimum recommended investment: {console.log(rate)}</div>
+              )}
               <b>Disclaimer:</b>
+              {/* Maybe merge the following disclaimer divs */}
               <div>
                 Note that the algorithm's signals <b>DO NOT</b> constitute
                 investment advice.
