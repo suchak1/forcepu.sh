@@ -105,10 +105,29 @@ const SubscriptionPage = () => {
     fetch(url, { method: "GET" })
       .then((response) => response.json())
       .then((data) => {
-        const preview = data.BTC.data;
-        const latest = preview.slice(preview.length - 2);
-        console.log(latest);
-        setRate(latest);
+        const previewBTC = data.BTC.data;
+        const previewUSD = data.USD.data;
+        let lastUSD = previewUSD.slice(previewUSD.length - 2);
+        lastUSD = lastUSD[0].Name === "HODL" ? lastUSD[0] : lastUSD[1];
+        const btcPrice = lastUSD.Bal;
+        console.log(btcPrice);
+        let first = previewBTC.slice(0, 2);
+        first = first[0].Name === "hyperdrive" ? first[0] : first[1];
+        const start = first.Time;
+        let last = previewBTC.slice(previewBTC.length - 2);
+        last = last[0].Name === "hyperdrive" ? last[0] : last[1];
+        const end = last.Time;
+        const days = getDayDiff(start, end);
+        const totalBTCRate = last.Bal - 1;
+        const monthlyBTCRate = (totalBTCRate / days) * 30;
+        const monthlySubUSD = 5;
+        const monthlySubBTC = monthlySubUSD / btcPrice;
+        // principal * monthly rate >= monthlysubrate
+        const minBTCInvestment = monthlySubBTC / monthlyBTCRate;
+        console.log(minBTCInvestment);
+        // console.log(days);
+
+        // setRate(monthlyBTCRate);
       })
       .catch((err) => console.error(err));
   }, []);
