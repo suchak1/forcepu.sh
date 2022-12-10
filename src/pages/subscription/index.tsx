@@ -45,7 +45,7 @@ const SubscriptionPage = () => {
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const { account, accountLoading } = useContext(AccountContext);
   const inBeta = loggedIn && account?.permissions?.in_beta;
-  const [rate, setRate] = useState();
+  const [minInvestment, setMinInvestment] = useState();
   const default2DToggle = false;
   const [toggle2D, setToggle2D] = useState(default2DToggle);
   const [metadata, setMetadata] = useState([]);
@@ -120,14 +120,15 @@ const SubscriptionPage = () => {
         const days = getDayDiff(start, end);
         const totalBTCRate = last.Bal - 1;
         const monthlyBTCRate = (totalBTCRate / days) * 30;
+        // this should be tied to val in backend / maybe make endpoint that returns backend constant
         const monthlySubUSD = 5;
         const monthlySubBTC = monthlySubUSD / btcPrice;
         // principal * monthly rate >= monthlysubrate
-        const minBTCInvestment = monthlySubBTC / monthlyBTCRate;
+        const minBTCInvestment = (monthlySubBTC / monthlyBTCRate).toPrecision(
+          2
+        );
         console.log(minBTCInvestment);
-        // console.log(days);
-
-        // setRate(monthlyBTCRate);
+        setMinInvestment(minBTCInvestment);
       })
       .catch((err) => console.error(err));
   }, []);
@@ -278,7 +279,7 @@ const SubscriptionPage = () => {
       >
         <div className={pageStyles.child}>
           {/* test if preview endpoint is done loading (for return estimate) */}
-          {!rate ? (
+          {!minInvestment ? (
             spinner
           ) : (
             <>
@@ -293,6 +294,7 @@ const SubscriptionPage = () => {
                   " API which provides up to a week's worth of the latest BUY and SELL signals."
                 }
               </span>
+              {/* example of json datum? */}
               <div
                 style={{
                   width: "100%",
@@ -303,8 +305,10 @@ const SubscriptionPage = () => {
                 <img height="200px" src={CUBE}></img>
               </div>
               <div>New signals are produced by 12:05 UTC.</div>
-              {rate && (
-                <div>Minimum recommended investment: {console.log(rate)}</div>
+              {minInvestment && (
+                <div
+                  style={{ marginBottom: "24px" }}
+                >{`Minimum recommended investment: ${minInvestment} BTC`}</div>
               )}
               <b>Disclaimer:</b>
               {/* Maybe merge the following disclaimer divs */}
