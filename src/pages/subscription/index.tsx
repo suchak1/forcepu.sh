@@ -2,6 +2,8 @@ import React from "react";
 import { useState, useEffect, useMemo, useContext } from "react";
 import { Typography, Segmented, Row, Col, Card, Statistic, Spin } from "antd";
 import Plot from "react-plotly.js";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements, PaymentElement } from "@stripe/react-stripe-js";
 import { getApiUrl, getDayDiff, get3DCircle, linspace } from "@/utils";
 import pageStyles from "../index.less";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -40,7 +42,9 @@ const eyes = get3DCircle(
 );
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 const spinner = <Spin style={{ width: "100%" }} indicator={antIcon} />;
-
+// const stripePromise = loadStripe("pk_test_TYooMQauvdEDq54NiTphI7jx");
+// youtube
+const stripePromise = loadStripe("pk_test_vAZ3gh1LcuM7fW4rKNvqafgB00DR9RKOjN");
 const SubscriptionPage = () => {
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const { account, accountLoading } = useContext(AccountContext);
@@ -61,6 +65,13 @@ const SubscriptionPage = () => {
   tickText[numTicks - 1] = "BUY";
   tickText[Math.floor(numTicks / 2)] = "HODL";
   const tickVals = tickText.map((_, idx) => size * idx);
+  const options = {
+    // passing the client secret obtained from the server
+    // clientSecret: "{{CLIENT_SECRET}}",
+    // youtube
+    clientSecret:
+      "pi_1ISrCzCZ6qsJgndJwlPxeAzG_secret_eZ2nKJLTfQZB0pAnLNqtm1Ns6",
+  };
   useEffect(() => {
     const url = `${getApiUrl({ localOverride: "prod" })}/model`;
     fetch(url, { method: "GET" })
@@ -330,6 +341,9 @@ const SubscriptionPage = () => {
         else show stripe subscription page*/}
         {metadata.length ? (
           <div className={pageStyles.child}>
+            <Elements stripe={stripePromise} options={options}>
+              <PaymentElement />
+            </Elements>
             <Row gutter={[24, 24]}>
               <Col span={24} style={{ textAlign: "justify" }}>
                 The points on the plot represent historical market data reduced
