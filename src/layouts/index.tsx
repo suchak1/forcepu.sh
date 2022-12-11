@@ -260,7 +260,7 @@ const Layout = ({ children }: LayoutProps) => {
               <Modal
                 // changing this would change position of modal when you alternate between Sign In and Create Account
                 style={{ height: "462px" }}
-                visible={showModal}
+                open={showModal}
                 closable={false}
                 centered
                 onCancel={() => setShowLogin(false)}
@@ -285,7 +285,6 @@ const Layout = ({ children }: LayoutProps) => {
       >
         <Modal
           width={600}
-          // visible
           title={TOSTitleText(true)}
           bodyStyle={{
             height: "200px",
@@ -293,7 +292,7 @@ const Layout = ({ children }: LayoutProps) => {
             overflowY: "scroll",
             color: "rgba(255, 255, 255, 0.45)",
           }}
-          visible={account && !account?.permissions?.read_disclaimer}
+          open={account && !account?.permissions?.read_disclaimer}
           closable={false}
           centered
           footer={

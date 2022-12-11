@@ -3,7 +3,11 @@ import { useState, useEffect, useMemo, useContext } from "react";
 import { Typography, Segmented, Row, Col, Card, Statistic, Spin } from "antd";
 import Plot from "react-plotly.js";
 import { loadStripe } from "@stripe/stripe-js";
-import { Elements, PaymentElement } from "@stripe/react-stripe-js";
+import {
+  Elements,
+  PaymentElement,
+  AddressElement,
+} from "@stripe/react-stripe-js";
 import { getApiUrl, getDayDiff, get3DCircle, linspace } from "@/utils";
 import pageStyles from "../index.less";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -65,7 +69,42 @@ const SubscriptionPage = () => {
   tickText[numTicks - 1] = "BUY";
   tickText[Math.floor(numTicks / 2)] = "HODL";
   const tickVals = tickText.map((_, idx) => size * idx);
+  console.log(loggedIn);
+  const paymentOptions = {
+    defaultValues: {
+      billingDetails: {
+        email: loggedIn?.attributes?.email,
+      },
+    },
+  };
+  const addressOptions = {
+    mode: "billing",
+    fields: {
+      phone: "always",
+    },
+    validation: {
+      phone: {
+        required: "always",
+      },
+    },
+    defaultValues: {
+      name: loggedIn?.attributes?.name,
+      email: loggedIn?.attributes?.email,
+      //     phone: "411",
+      //     address: {
+      //       line1: "1 Wayward Ave",
+      //       line2: "Apt 1",
+      //       city: "Futuria",
+      //       state: "FL",
+      //       country: "USA",
+      //       postal_code: "01101",
+      //     },
+    },
+  };
   const options = {
+    // https://stripe.com/docs/elements/appearance-api?platform=web#theme
+    // https://stripe.com/docs/elements/appearance-api#theme
+    appearance: { theme: "night" },
     // passing the client secret obtained from the server
     // clientSecret: "{{CLIENT_SECRET}}",
     // youtube
@@ -339,10 +378,12 @@ const SubscriptionPage = () => {
         if signed in, then test if in beta | if so, show beta view, 
         else test if active subscription | if so, show plan/sub amount, payment method, and option to cancel / manage - should have to open modal and click button or type in phrase to cancel
         else show stripe subscription page*/}
+        {/* https://stripe.com/docs/billing/subscriptions/build-subscriptions?ui=elements */}
         {metadata.length ? (
           <div className={pageStyles.child}>
             <Elements stripe={stripePromise} options={options}>
-              <PaymentElement />
+              <AddressElement options={addressOptions} />
+              <PaymentElement options={paymentOptions} />
             </Elements>
             <Row gutter={[24, 24]}>
               <Col span={24} style={{ textAlign: "justify" }}>

@@ -506,7 +506,7 @@ const Page = () => {
             {inBeta ? (
               <>
                 <Modal
-                  visible={showSignalCard}
+                  open={showSignalCard}
                   closable={false}
                   onCancel={() => setShowSignalCard(false)}
                   centered
