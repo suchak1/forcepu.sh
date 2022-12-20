@@ -1,4 +1,5 @@
 import React, { useState, useEffect, createContext } from "react";
+// import * as dotenv from "dotenv";
 import { NavLink } from "umi";
 import { Layout as AntLayout, Menu, Button, Modal, Checkbox } from "antd";
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
@@ -23,6 +24,12 @@ import {
 } from "@/utils";
 import TOS, { TOSTitleText } from "../pages/tos";
 // import pageStyles from "../pages/index.less";
+
+// console.log(dotenv.config({ debug: true, path: "./../../config.env" }));
+// console.log(dotenv.config({ debug: true, path: "./../config.env" }));
+// console.log(dotenv.config({ debug: true, path: "./config.env" }));
+
+console.log(process.env);
 
 let config;
 const isLocal = getEnvironment() === "local";

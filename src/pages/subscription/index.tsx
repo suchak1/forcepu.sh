@@ -352,6 +352,7 @@ const SubscriptionPage = () => {
                   justifyContent: "center",
                 }}
               >
+                {/* replace this with card with price per month (finally from backend config endpoint) heading and 5 requests / day (constant from backend) subheading*/}
                 <img height="200px" src={CUBE}></img>
               </div>
               <div>New signals are produced by 12:05 UTC.</div>
@@ -381,11 +382,12 @@ const SubscriptionPage = () => {
         {/* https://stripe.com/docs/billing/subscriptions/build-subscriptions?ui=elements */}
         {metadata.length ? (
           <div className={pageStyles.child}>
+            <Title level={3}>Payment</Title>
             <Elements stripe={stripePromise} options={options}>
               <AddressElement options={addressOptions} />
               <PaymentElement options={paymentOptions} />
             </Elements>
-            <Row gutter={[24, 24]}>
+            {/* <Row gutter={[24, 24]}>
               <Col span={24} style={{ textAlign: "justify" }}>
                 The points on the plot represent historical market data reduced
                 from {metadata[2]?.stat} dimensions to {toggle2D ? "2D" : "3D"}.
@@ -408,7 +410,7 @@ const SubscriptionPage = () => {
                   </Card>
                 </Col>
               ))}
-            </Row>
+            </Row> */}
           </div>
         ) : null}
       </div>

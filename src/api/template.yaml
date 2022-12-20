@@ -24,6 +24,9 @@ Parameters:
   UserPoolArn:
     Type: "String"
     NoEcho: true
+  StripeSecretKey:
+    Type: "String"
+    NoEcho: true
 
 Globals:
   Function:
@@ -222,8 +225,12 @@ Resources:
     Properties:
       Environment:
         Variables:
+          STRIPE_SECRET_KEY: !Ref StripeSecretKey
+          # remove table name if not needed
           TABLE_NAME: !Ref UsersTable
+      # remove policy if not needed
       Policies:
+      # remove policy if not needed
         - DynamoDBCrudPolicy:
             TableName: !Ref UsersTable
       PackageType: Image

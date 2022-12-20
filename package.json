@@ -11,7 +11,7 @@
     "build+deploy:api": "npm run build:api && npm run deploy:api",
     "deploy-dev:api": "cd src/api && sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --parameter-overrides $(cat dev-parameters.env) --config-env dev",
     "deploy:api": "cd src/api && sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --parameter-overrides $(cat parameters.env) --config-env prod",
-    "start": "NODE_OPTIONS=--max-old-space-size=4096 UMI_APP_ENV=dev MOCK=none umi dev -v",
+    "start": "bash -c \"source util/env.sh && NODE_OPTIONS=--max-old-space-size=4096 UMI_APP_ENV=dev MOCK=none umi dev -v\"",
     "start:api": "cd src/api && sam local start-api --parameter-overrides $(cat dev-parameters.env)",
     "umi": "umi",
     "test": "echo \"Error: no test specified\" && exit 1",
