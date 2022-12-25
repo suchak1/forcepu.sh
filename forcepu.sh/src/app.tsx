@@ -1,15 +1,15 @@
-// import { useState } from 'preact/hooks'
-// import { BrowserRouter, Routes, Route } from 'react-router-dom';
-// import About from './pages/About';
-// import './app.css'
+// // import { useState } from 'preact/hooks'
+// // import { BrowserRouter, Routes, Route } from 'react-router-dom';
+// // import About from './pages/About';
+// // import './app.css'
 
 
-/*<BrowserRouter>
-  <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="about" element={<About />} />
-  </Routes>
-/>*/
+// /*<BrowserRouter>
+//   <Routes>
+//           <Route path="/" element={<HomePage />} />
+//           <Route path="about" element={<About />} />
+//   </Routes>
+// />*/
 
 import React, { useState, useEffect, createContext } from "react";
 import { BrowserRouter, NavLink } from "react-router-dom";
@@ -41,8 +41,7 @@ import {
 import TOS, { TOSTitleText } from "@/pages/tos";
 // import pageStyles from "../pages/index.less";
 const { darkAlgorithm } = theme;
-console.log(overrides);
-// console.log(overrides);
+
 let config;
 const isLocal = getEnvironment() === "local";
 const protocol = isLocal ? "http" : "https";
@@ -230,7 +229,7 @@ const Layout = ({ children }: LayoutProps) => {
             selectedKeys={selectedMenuItems}
             items={routes.map((route, idx) => ({
               className: [overrides.white, overrides.ice].join(" "),
-              key: idx,
+              key: `${idx}`,
               style:
                 idx === 0
                   ? {
@@ -240,7 +239,7 @@ const Layout = ({ children }: LayoutProps) => {
                       display: "flex",
                       alignItems: "center",
                     },
-              label: <NavLink to={route.to}>{route.text}</NavLink>,
+              label: <NavLink to={route.to}>{route.text}</NavLink>
             }))}
           ></Menu>
           {dummy}
