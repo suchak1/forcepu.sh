@@ -1,6 +1,6 @@
 import path from 'path'
 import { defineConfig } from 'vite'
-import preact from '@preact/preset-vite'
+import react from '@vitejs/plugin-react'
 // import { getThemeVariables } from 'antd/dist/theme';
 
 // https://vitejs.dev/config/
@@ -9,11 +9,11 @@ export default defineConfig({
     global: {},
     // global: 'globalThis',
   },
-  plugins: [preact()],
+  plugins: [react()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      react: 'preact/compat',
+      // react: 'preact/compat',
     },
   },
   // css: {
