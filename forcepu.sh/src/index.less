@@ -1,0 +1,258 @@
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  // background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+}
+
+// /* Handle */
+::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.account {
+  padding-right: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+@media (max-width: 700px) {
+  .account {
+    display: none;
+    width: 0;
+  }
+}
+
+.home {
+  font-size: 20px;
+  color: #52e5ff;
+  margin-left: -10px;
+}
+
+.home:hover {
+  color: white;
+}
+
+.signOut {
+  border-left-color: magenta;
+  border-right-color: magenta;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+}
+
+.signOut:hover,
+.signOut:active {
+  border-color: magenta !important;
+  box-shadow: 0 0 5px magenta;
+}
+
+.signOut:focus {
+  border-left-color: magenta;
+  border-right-color: magenta;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+}
+
+.invisible {
+  display: none;
+  z-index: -1000 !important;
+}
+
+:global(.ant-modal-mask) {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+:global(.ant-modal-body) {
+  padding: 0;
+}
+
+// adds cyan border when unchecked
+.ant-checkbox-inner, .ant-checkbox-wrapper:hover .ant-checkbox-inner, .ant-checkbox-input:focus + .ant-checkbox-inner {
+  border-color: #52e5ff;
+}
+
+// removes blue border after checking
+.ant-checkbox-checked::after {
+  border: unset;
+}
+
+// removes cyan border after checking
+:global(.ant-checkbox-checked .ant-checkbox-inner) {
+  border-color: transparent !important;
+  background-color: unset;;
+}
+
+.ant-btn[disabled]:hover {
+  border-color: #434343 !important;
+}
+
+.start {
+  border-color: #52e5ff;
+}
+
+// mobile
+@media (max-width: 475px) {
+  .checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+// desktop
+@media (min-width: 475px) {
+  .mobileBreak {
+    display: none;
+  }
+  .ant-checkbox + span {
+    padding-left: 16px;
+  }
+}
+
+:global(.ant-btn-default:hover),
+:global(.ant-btn-default:active) {
+  border-color: #52e5ff !important;
+  box-shadow: 0 0 5px #52e5ff;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+:global(.ant-btn-default:focus) {
+  border-color: #52e5ff;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+:global(.ant-layout-footer) {
+  padding: 0 24px;
+}
+
+.footerLink {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+.footerLink:hover {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+:global(.ant-layout-header) {
+  // background: #1d1d1d;
+  padding: 0 24px 0 20px;
+  // change right align (2nd param) to 20px or left align (4th param) to 24px?
+}
+
+:global(.ant-menu.ant-menu-dark) {
+  background: transparent !important;
+}
+
+// set menu item semi-bold font weight
+:global(.ant-menu.ant-menu-dark .ant-menu-item) {
+  font-weight: 600;
+}
+
+:global(.ant-menu.ant-menu-dark .ant-menu-item-selected) {
+  color: #52e5ff;
+  background-color: transparent;
+}
+
+// selected menu item style
+:global(.ant-menu-dark .ant-menu-item-selected > span > a) {
+  // color: #52e5ff;
+  display: flex;
+  margin-top: -2px;
+}
+
+.ant-menu-item-selected .ant-menu-title-content {
+  border-top: 2px solid #52e5ff;
+  // border-radius: 2px;
+}
+
+:global(.ant-menu.ant-menu-dark .ant-menu-item-active:hover) {
+  background-color: inherit;
+  color: white;
+}
+
+.ice {
+  color: #52e5ff;
+  font-weight: 600;
+}
+
+.white {
+  color: white;
+  font-weight: 600;
+}
+
+// HOVER WHITE
+
+// google sign in button
+.federated-sign-in-button:hover,
+.federated-sign-in-button:focus .federated-sign-in-button:active {
+  background-color: #1d1d1d !important;
+  border-color: transparent !important;
+}
+
+// inactive tab
+[data-amplify-authenticator] [data-state="inactive"] {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+[data-amplify-authenticator] [data-state="inactive"]:hover {
+  color: white !important;
+}
+
+[data-amplify-theme="dark-mode-theme"] {
+  --amplify-colors-brand-primary-80: #52e5ff !important;
+  --amplify-font-weights-bold: 600 !important;
+  --amplify-colors-font-hover: white !important;
+  --amplify-colors-font-focus: white !important;
+  --amplify-colors-font-active: white !important;
+
+  --amplify-components-tabs-item-active-color: white !important;
+
+  // inactive tab
+  --amplify-colors-background-secondary: transparent !important;
+  --amplify-components-fieldcontrol-focus-border-color: white !important;
+
+  // forgot your password
+  --amplify-components-button-link-hover-background-color: transparent !important;
+  --amplify-components-button-link-focus-background-color: transparent !important;
+  --amplify-components-button-link-active-background-color: transparent !important;
+  --amplify-components-button-link-color: rgba(255, 255, 255, 0.65) !important;
+
+  // reveal password button
+  --amplify-components-button-hover-color: #52e5ff !important;
+  --amplify-components-button-focus-color: #52e5ff !important;
+  --amplify-components-button-active-color: #52e5ff !important;
+  --amplify-components-button-hover-background-color: transparent !important;
+  --amplify-components-button-focus-background-color: transparent !important;
+  --amplify-components-button-active-background-color: transparent !important;
+  --amplify-components-button-hover-border-color: rgba(255,
+      255,
+      255,
+      0.2) !important;
+  --amplify-components-button-focus-border-color: rgba(255,
+      255,
+      255,
+      0.2) !important;
+  --amplify-components-button-active-border-color: rgba(255,
+      255,
+      255,
+      0.2) !important;
+
+  // border outline for modal and inputs
+  --amplify-colors-border-primary: rgba(255, 255, 255, 0.2) !important;
+}
+
+[data-amplify-authenticator] [data-amplify-container] {
+  width: 100%;
+}
