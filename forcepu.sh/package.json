@@ -9,14 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "preact": "^10.11.3",
-    "react-router-dom": "^5.3.4"
+    "preact": "^10.11.3"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.4.0",
     "typescript": "^4.9.3",
-    "vite": "^4.0.0",
-    "vite-plugin-react-pages": "^3.3.1",
-    "vite-plugin-ssr": "^0.4.65"
+    "vite": "^4.0.0"
   }
 }
