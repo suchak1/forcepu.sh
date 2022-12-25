@@ -13,7 +13,7 @@
 
 import React, { useState, useEffect, createContext } from "react";
 import { BrowserRouter, NavLink } from "react-router-dom";
-import { Layout as AntLayout, Menu, Button, Modal, Checkbox } from "antd";
+import { Layout as AntLayout, Menu, Button, Modal, Checkbox, ConfigProvider, theme } from "antd";
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import {
   Authenticator,
@@ -25,8 +25,8 @@ import {
 import { Amplify } from "aws-amplify";
 import "@aws-amplify/ui-react/styles.css";
 import BTC_ICE from "../../assets/btc_ice.png";
-// import overrides from "./index.less";
-import overrides from "./index.less?inline"
+import overrides from "./index.less";
+// import overrides from "./index.less?inline"
 import "./index.less";
 import {
   getLoginLoading,
@@ -37,7 +37,8 @@ import {
 } from "@/utils";
 import TOS, { TOSTitleText } from "@/pages/tos";
 // import pageStyles from "../pages/index.less";
-
+const { darkAlgorithm } = theme;
+console.log(overrides.invisible);
 let config;
 const isLocal = getEnvironment() === "local";
 const protocol = isLocal ? "http" : "https";
@@ -92,7 +93,7 @@ if (isLocal) {
 
 Amplify.configure(config);
 
-const theme = createTheme({
+const authTheme = createTheme({
   name: "dark-mode-theme",
   overrides: [
     {
@@ -279,7 +280,7 @@ const Layout = ({ children }: LayoutProps) => {
                 onCancel={() => setShowLogin(false)}
                 footer={null}
               >
-                <AmplifyProvider theme={theme} colorMode="dark">
+                <AmplifyProvider theme={authTheme} colorMode="dark">
                   <Authenticator />
                 </AmplifyProvider>
               </Modal>
@@ -378,11 +379,15 @@ const Layout = ({ children }: LayoutProps) => {
 };
 
 export default ({ route, children }: LayoutProps) => (
+  <ConfigProvider theme={{
+    algorithm: darkAlgorithm
+  }}>
   <Authenticator.Provider>
     <BrowserRouter>
     <Layout route={route}>{children}</Layout>
     </BrowserRouter>
   </Authenticator.Provider>
+  </ConfigProvider>
 );
 
 
