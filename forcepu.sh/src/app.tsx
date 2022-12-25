@@ -1,5 +1,8 @@
 import { useState } from 'preact/hooks'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import preactLogo from './assets/preact.svg'
+// import HomePage from './pages/HomePage';
+import About from './pages/About';
 import './app.css'
 
 export function App() {
@@ -7,6 +10,12 @@ export function App() {
 
   return (
     <>
+    <BrowserRouter>
+        <Routes>
+          {/* <Route path="/" element={<HomePage />} /> */}
+          <Route path="about" element={<About />} />
+        </Routes>
+      </BrowserRouter>
       <div>
         <a href="https://vitejs.dev" target="_blank">
           <img src="/vite.svg" class="logo" alt="Vite logo" />
