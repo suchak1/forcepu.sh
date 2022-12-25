@@ -187,8 +187,14 @@ body {
   margin-top: -2px;
 }
 
+:global(.ant-menu-item .ant-menu-title-content) {
+  color: rgba(255, 255, 255, 0.65) !important;
+  font-size: 14px;
+}
+
 :global(.ant-menu-item-selected .ant-menu-title-content) {
   border-top: 2px solid #52e5ff !important;
+  color: white !important;
   // border-radius: 2px;
 }
 
@@ -206,11 +212,6 @@ body {
 
 :global(.ant-menu-horizontal .ant-menu-item) {
   padding-inline: 20px;
-}
-
-:global(.ant-menu-dark .ant-menu-item a) {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.65) !important;
 }
 
 :global(.ant-menu-dark .ant-menu-item a:hover) {

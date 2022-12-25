@@ -181,6 +181,9 @@ const Layout = ({ children }: LayoutProps) => {
   );
   const [checked, setChecked] = useState(false);
   const [acknowledgeLoading, setAcknowledgeLoading] = useState(false);
+  const [selectedMenuIdx, setSelectedMenuIdx] = useState(pages.indexOf(window.location.pathname.slice(1)) + 1);
+  // filter out home link from antd's menu "selected" css stylings
+  const selectedMenuItems = selectedMenuIdx ? [selectedMenuIdx.toString()] : [];
 
   useEffect(getLoginLoading(setLoginLoading));
   useEffect(getAccount(loggedIn, setAccount, setAccountLoading), [loggedIn]);
@@ -204,9 +207,7 @@ const Layout = ({ children }: LayoutProps) => {
       .finally(() => setAcknowledgeLoading(false));
   };
 
-  const selectedMenuIdx = pages.indexOf(window.location.pathname.slice(1)) + 1;
-  // filter out home link from antd's menu "selected" css stylings
-  const selectedMenuItems = selectedMenuIdx ? [selectedMenuIdx.toString()] : [];
+  
 
   return (
     <AntLayout>
@@ -222,6 +223,7 @@ const Layout = ({ children }: LayoutProps) => {
         <span style={{ display: "flex", alignItems: "center" }}>
           <img className="logo" src={BTC_ICE} width={24} height={24}></img>
           <Menu
+            onClick={(item) => setSelectedMenuIdx(parseInt(item.key))}
             style={{ height: headerHeight, width: "100%" }}
             theme="dark"
             mode="horizontal"
@@ -229,7 +231,7 @@ const Layout = ({ children }: LayoutProps) => {
             selectedKeys={selectedMenuItems}
             items={routes.map((route, idx) => ({
               className: [overrides.white, overrides.ice].join(" "),
-              key: `${idx}`,
+              key: idx.toString(),
               style:
                 idx === 0
                   ? {
