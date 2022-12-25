@@ -372,10 +372,10 @@ const Layout = ({ children }: LayoutProps) => {
         <span className={overrides.footerLink}>
           _move fast; break everything
         </span>
-        <NavLink className={overrides.footerLink} to="/tos">
+        <NavLink onClick={() => setSelectedMenuIdx(0)} className={overrides.footerLink} to="/tos">
           Terms of Service & Financial Disclaimer
         </NavLink>
-        <NavLink className={overrides.footerLink} to="/privacy">
+        <NavLink onClick={() => setSelectedMenuIdx(0)} className={overrides.footerLink} to="/privacy">
           Privacy
         </NavLink>
       </AntLayout.Footer>
