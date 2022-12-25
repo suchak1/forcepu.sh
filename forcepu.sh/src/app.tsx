@@ -11,7 +11,7 @@
 //   </Routes>
 // />*/
 
-import React, { useState, useEffect, createContext } from "react";
+import { useState, useEffect, createContext } from "react";
 import { BrowserRouter, NavLink } from "react-router-dom";
 import { Layout as AntLayout, Menu, Button, Modal, Checkbox, ConfigProvider, theme } from "antd";
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
@@ -184,7 +184,6 @@ const Layout = ({ children }: LayoutProps) => {
   const [selectedMenuIdx, setSelectedMenuIdx] = useState(pages.indexOf(window.location.pathname.slice(1)) + 1);
   // filter out home link from antd's menu "selected" css stylings
   const selectedMenuItems = selectedMenuIdx ? [selectedMenuIdx.toString()] : [];
-  const [showModalTest, setShowModal] = useState(false);
 
   useEffect(getLoginLoading(setLoginLoading));
   useEffect(getAccount(loggedIn, setAccount, setAccountLoading), [loggedIn]);
@@ -359,8 +358,6 @@ const Layout = ({ children }: LayoutProps) => {
           value={{ account, accountLoading, loginLoading, setShowLogin }}
         >
           {children}
-          <Button onClick={() => setShowModal(true)}>a</Button>
-          <Modal open={showModalTest} onCancel={() => setShowModal(false)}>ab</Modal>
         </AccountContext.Provider>
       </AntLayout.Content>
       <AntLayout.Footer
