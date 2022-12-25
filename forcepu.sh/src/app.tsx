@@ -25,9 +25,12 @@ import {
 import { Amplify } from "aws-amplify";
 import "@aws-amplify/ui-react/styles.css";
 import BTC_ICE from "../../assets/btc_ice.png";
-import overrides from "./index.less";
+// import overrides from "./index.less";
+import overrides from "./index.module.less";
 // import overrides from "./index.less?inline"
-import "./index.less";
+// import "./index.less";
+import "./index.module.less";
+
 import {
   getLoginLoading,
   getEnvironment,
@@ -38,7 +41,8 @@ import {
 import TOS, { TOSTitleText } from "@/pages/tos";
 // import pageStyles from "../pages/index.less";
 const { darkAlgorithm } = theme;
-console.log(overrides.invisible);
+console.log(overrides);
+// console.log(overrides);
 let config;
 const isLocal = getEnvironment() === "local";
 const protocol = isLocal ? "http" : "https";

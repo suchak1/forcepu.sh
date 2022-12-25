@@ -2,6 +2,7 @@ body {
   margin: 0;
   width: 100%;
   height: 100%;
+  background: black;
   // display: flex;
   // place-items: center;
   // min-width: 320px;
@@ -84,7 +85,7 @@ body {
   background-color: rgba(0, 0, 0, 0.8);
 }
 
-.ant-modal-content {
+:global(.ant-modal-content) {
   padding: 0 !important;
 }
 
@@ -102,6 +103,10 @@ body {
 :global(.ant-checkbox-checked .ant-checkbox-inner) {
   border-color: transparent !important;
   background-color: unset;;
+}
+
+:global(.ant-btn) {
+  border-radius: 2px;
 }
 
 .ant-btn[disabled]:hover {
@@ -135,7 +140,7 @@ body {
 :global(.ant-btn-default:active) {
   border-color: #52e5ff !important;
   box-shadow: 0 0 5px #52e5ff;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.85) !important;
 }
 
 :global(.ant-btn-default:focus) {
@@ -144,7 +149,7 @@ body {
 }
 
 :global(.ant-layout-footer) {
-  padding: 0 24px;
+  padding: 0 24px !important;
 }
 
 .footerLink {
@@ -156,8 +161,8 @@ body {
 }
 
 :global(.ant-layout-header) {
-  // background: #1d1d1d;
-  padding: 0 24px 0 20px;
+  background: #1d1d1d !important;
+  padding: 0 24px 0 20px !important;
   // change right align (2nd param) to 20px or left align (4th param) to 24px?
 }
 
@@ -187,9 +192,29 @@ body {
   // border-radius: 2px;
 }
 
+:global(.ant-menu-dark) {
+  background: black;
+}
+
+:global(.ant-menu-dark.ant-menu-submenu>.ant-menu) {
+  background-color: #1d1d1d;
+}
+
 :global(.ant-menu.ant-menu-dark .ant-menu-item-active:hover) {
-  background-color: inherit;
-  color: white;
+  background-color: inherit !important;
+}
+
+:global(.ant-menu-horizontal .ant-menu-item) {
+  padding-inline: 20px;
+}
+
+:global(.ant-menu-dark .ant-menu-item a) {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+:global(.ant-menu-dark .ant-menu-item a:hover) {
+  color: white !important;
 }
 
 .ice {
@@ -211,7 +236,7 @@ body {
   border-color: transparent !important;
 }
 
-.amplify-label {
+:global(.amplify-label) {
   display: none;
 }
 
