@@ -39,6 +39,7 @@ import {
   getApiUrl,
 } from "@/utils";
 import TOS, { TOSTitleText } from "@/pages/tos";
+import Privacy from "@/pages/privacy";
 // import pageStyles from "../pages/index.less";
 const { darkAlgorithm } = theme;
 
@@ -359,6 +360,7 @@ const Layout = ({ children }: LayoutProps) => {
         >
           <Routes>
           <Route path="/tos" element={<TOS />} />
+          <Route path="/privacy" element={<Privacy />} />
           </Routes>
           {/* <TOS /> */}
           {/* {children} */}
