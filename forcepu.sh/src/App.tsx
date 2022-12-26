@@ -38,6 +38,7 @@ import {
   getAccount,
   getApiUrl,
 } from "@/utils";
+import Gym from "@/pages/gym";
 import TOS, { TOSTitleText } from "@/pages/tos";
 import Privacy from "@/pages/privacy";
 // import pageStyles from "../pages/index.less";
@@ -359,6 +360,7 @@ const Layout = ({ children }: LayoutProps) => {
           value={{ account, accountLoading, loginLoading, setShowLogin }}
         >
           <Routes>
+          <Route path="/gym" element={<Gym />} />
           <Route path="/tos" element={<TOS />} />
           <Route path="/privacy" element={<Privacy />} />
           </Routes>

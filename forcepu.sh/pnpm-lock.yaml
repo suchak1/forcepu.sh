@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@ant-design/icons': ^4.8.0
   '@aws-amplify/ui-react': ^4.3.1
   '@types/react': ^18.0.26
   '@types/react-dom': ^18.0.10
@@ -15,6 +16,7 @@ specifiers:
   vite: ^4.0.0
 
 dependencies:
+  '@ant-design/icons': 4.8.0_biqbaboplfbrettd7655fr4n2y
   '@aws-amplify/ui-react': 4.3.1_jdy5h4l4yqakg3q5rkwc655yja
   antd: 5.1.0_biqbaboplfbrettd7655fr4n2y
   aws-amplify: 5.0.7
