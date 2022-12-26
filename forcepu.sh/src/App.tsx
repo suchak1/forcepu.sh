@@ -38,6 +38,7 @@ import {
   getAccount,
   getApiUrl,
 } from "@/utils";
+import Art from "@/pages/art";
 import Gym from "@/pages/gym";
 import TOS, { TOSTitleText } from "@/pages/tos";
 import Privacy from "@/pages/privacy";
@@ -360,11 +361,13 @@ const Layout = ({ children }: LayoutProps) => {
           value={{ account, accountLoading, loginLoading, setShowLogin }}
         >
           <Routes>
+          <Route path="/art" element={<Art />} />
           <Route path="/gym" element={<Gym />} />
           <Route path="/tos" element={<TOS />} />
           <Route path="/privacy" element={<Privacy />} />
+          {/* This is 404 redirect to home page for unknown routes */}
+          {/* <Route path="*" element={<Home />} /> */}
           </Routes>
-          {/* <TOS /> */}
           {/* {children} */}
         </AccountContext.Provider>
       </AntLayout.Content>
