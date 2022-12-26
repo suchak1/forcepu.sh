@@ -30,10 +30,10 @@ p {
 }
 
 /* width */
-::-webkit-scrollbar {
-  width: 10px;
-  // background-color: rgba(255, 255, 255, 0.1);
-}
+// ::-webkit-scrollbar {
+//   width: 10px;
+//   // background-color: rgba(255, 255, 255, 0.1);
+// }
 
 /* Track */
 ::-webkit-scrollbar-track {
@@ -156,6 +156,10 @@ p {
   }
 }
 
+:global(.ant-btn-default) {
+  background-color: inherit;
+}
+
 :global(.ant-btn-default:hover),
 :global(.ant-btn-default:active) {
   border-color: #52e5ff !important;
@@ -223,7 +227,7 @@ p {
 }
 
 :global(.ant-menu-dark.ant-menu-submenu>.ant-menu) {
-  background-color: #1d1d1d;
+  background-color: #1f1f1f;
 }
 
 :global(.ant-menu.ant-menu-dark .ant-menu-item-active:hover) {
@@ -251,8 +255,8 @@ p {
 // HOVER WHITE
 
 // google sign in button
-.federated-sign-in-button:hover,
-.federated-sign-in-button:focus .federated-sign-in-button:active {
+:global(.federated-sign-in-button:hover),
+:global(.federated-sign-in-button:focus .federated-sign-in-button:active) {
   background-color: #1d1d1d !important;
   border-color: transparent !important;
 }
