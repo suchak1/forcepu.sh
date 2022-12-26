@@ -12,7 +12,7 @@
 // />*/
 
 import { useState, useEffect, createContext } from "react";
-import { BrowserRouter, NavLink } from "react-router-dom";
+import { BrowserRouter, NavLink, Routes, Route } from "react-router-dom";
 import { Layout as AntLayout, Menu, Button, Modal, Checkbox, ConfigProvider, theme } from "antd";
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import {
@@ -357,7 +357,11 @@ const Layout = ({ children }: LayoutProps) => {
         <AccountContext.Provider
           value={{ account, accountLoading, loginLoading, setShowLogin }}
         >
-          {children}
+          <Routes>
+          <Route path="/tos" element={<TOS />} />
+          </Routes>
+          {/* <TOS /> */}
+          {/* {children} */}
         </AccountContext.Provider>
       </AntLayout.Content>
       <AntLayout.Footer
