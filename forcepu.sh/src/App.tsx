@@ -38,6 +38,7 @@ import {
   getAccount,
   getApiUrl,
 } from "@/utils";
+import Algorithm from "@/pages/algorithm";
 import Art from "@/pages/art";
 import Gym from "@/pages/gym";
 import TOS, { TOSTitleText } from "@/pages/tos";
@@ -361,12 +362,15 @@ const Layout = ({ children }: LayoutProps) => {
           value={{ account, accountLoading, loginLoading, setShowLogin }}
         >
           <Routes>
-          <Route path="/art" element={<Art />} />
-          <Route path="/gym" element={<Gym />} />
-          <Route path="/tos" element={<TOS />} />
-          <Route path="/privacy" element={<Privacy />} />
-          {/* This is 404 redirect to home page for unknown routes */}
-          {/* <Route path="*" element={<Home />} /> */}
+            <Route path="/algorithm" element={<Algorithm />} />
+            <Route path="/art" element={<Art />} />
+            <Route path="/gym" element={<Gym />} />
+            <Route path="/tos" element={<TOS />} />
+            <Route path="/privacy" element={<Privacy />} />
+            {/* This is 404 redirect to home page for unknown routes */}
+            {/* <Route path="*" element={<Home />} /> */}
+            {/* This won't redirect, will just display Home component (url will remains same) */}
+            {/* Use Navigate to navigate to "/"? */}
           </Routes>
           {/* {children} */}
         </AccountContext.Provider>
