@@ -10,6 +10,7 @@
     "ci": "pnpm install --frozen-lockfile"
   },
   "dependencies": {
+    "@ant-design/charts": "^1.4.2",
     "@ant-design/icons": "^4.8.0",
     "@aws-amplify/ui-react": "^4.3.1",
     "@nfte/react": "^1.0.4",

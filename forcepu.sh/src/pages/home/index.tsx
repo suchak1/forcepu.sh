@@ -22,9 +22,9 @@ import {
   CaretUpFilled,
   QuestionOutlined,
 } from "@ant-design/icons";
-import styles from "./index.less";
-import layoutStyles from "../layouts/index.less";
-import "./index.less";
+import styles from "./index.module.less";
+import layoutStyles from "@/index.module.less";
+import "./index.module.less";
 import {
   getApiUrl,
   getLoginLoading,
@@ -36,7 +36,7 @@ import {
 import { useAuthenticator } from "@aws-amplify/ui-react";
 const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
-import { AccountContext } from "../layouts";
+import { AccountContext } from "@/App";
 
 const HODL = "HODL";
 const hyperdrive = "hyperdrive";

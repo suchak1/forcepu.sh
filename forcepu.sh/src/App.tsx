@@ -44,6 +44,7 @@ import Art from "@/pages/art";
 import Gym from "@/pages/gym";
 import TOS, { TOSTitleText } from "@/pages/tos";
 import Privacy from "@/pages/privacy";
+import Home from "@/pages/home";
 // import pageStyles from "../pages/index.less";
 const { darkAlgorithm } = theme;
 
@@ -363,6 +364,7 @@ const Layout = ({ children }: LayoutProps) => {
           value={{ account, accountLoading, loginLoading, setShowLogin }}
         >
           <Routes>
+            {/* <Route path="/" element={<Home />} /> */}
             <Route path="/docs" element={<Docs />} />
             <Route path="/algorithm" element={<Algorithm />} />
             <Route path="/art" element={<Art />} />
