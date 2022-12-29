@@ -1,0 +1,70 @@
+openapi: '3.0.2'
+info:
+  title: API
+  version: '1.0'
+servers:
+  - url: https://api.forcepu.sh
+paths:
+  /signals:
+    get:
+      tags:
+        - Algorithm
+      summary: Get the latest BUY / SELL signals
+      responses:
+        '200':
+          description: "**OK**: latest signals for the given asset"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "You have 3 requests left / 1 day(s)."
+                    description: Quota
+                  data:
+                    type: array
+                    description: Signals
+                    items:
+                      $ref: '#/components/schemas/SignalDatum'
+        '401':
+          description: "**Unauthorized:** invalid API key"
+        '402':
+          description: "**Payment Required:** beta subscribers only"
+        '403':
+          description: "**Forbidden:** quota reached"
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+  schemas:
+    SignalDatum:
+      type: object
+      required:
+        - Signal
+        - Date
+        - Day
+        - Asset
+      properties:
+        Signal:
+          type: string
+          enum: [BUY, SELL]
+          example: BUY
+        Date:
+          type: string
+          format: date-time
+          example: '2020-12-25'
+        Day:
+          type: string
+          enum: [Sun, Mon, Tue, Wed, Thu, Fri, Sat]
+          example: Fri
+        Asset:
+          type: string
+          enum: [BTC]
+          example: BTC
+security:
+  - ApiKeyAuth: []
+
+
