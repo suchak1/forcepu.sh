@@ -17,13 +17,15 @@ specifiers:
   react-hover-video-player: ^9.7.1
   react-plotly.js: ^2.6.0
   react-router-dom: ^6.6.1
+  reflect-metadata: ^0.1.13
+  rollup-plugin-typescript2: ^0.34.1
   styled-components: ^5.3.6
   swagger-ui-react: ^4.12.0
   typescript: ^4.9.3
   vite: ^4.0.0
 
 dependencies:
-  '@ant-design/charts': 1.4.2_ugkdx7uiqdxcyinqmif543zheq
+  '@ant-design/charts': 1.4.2_wxnhwqdrqlrqtt46a4nk5qn4xi
   '@ant-design/icons': 4.8.0_biqbaboplfbrettd7655fr4n2y
   '@aws-amplify/ui-react': 4.3.1_jdy5h4l4yqakg3q5rkwc655yja
   '@nfte/react': 1.0.4_react@18.2.0
@@ -34,6 +36,8 @@ dependencies:
   react-dom: 18.2.0_react@18.2.0
   react-hover-video-player: 9.7.1_biqbaboplfbrettd7655fr4n2y
   react-plotly.js: 2.6.0_fkcxkukmqheyiyshrwtcx75gwe
+  reflect-metadata: 0.1.13
+  rollup-plugin-typescript2: 0.34.1_typescript@4.9.4
   styled-components: 5.3.6_biqbaboplfbrettd7655fr4n2y
   swagger-ui-react: 4.12.0_biqbaboplfbrettd7655fr4n2y
 
@@ -60,7 +64,7 @@ packages:
       '@jridgewell/trace-mapping': 0.3.17
     dev: true
 
-  /@ant-design/charts/1.4.2_ugkdx7uiqdxcyinqmif543zheq:
+  /@ant-design/charts/1.4.2_wxnhwqdrqlrqtt46a4nk5qn4xi:
     resolution: {integrity: sha512-BcVx6AAnwxSdzAVUZReSuvUVtnT5AkJivq3wmcYj17scll26HHficg35yimGskAj3Gu1upYjBQBz6Tk7GEMJsQ==}
     peerDependencies:
       '@ant-design/icons': ^4.6.0
@@ -69,7 +73,7 @@ packages:
       react: '>=16.8.4'
       react-dom: '>=16.8.4'
     dependencies:
-      '@ant-design/flowchart': 1.2.1_ugkdx7uiqdxcyinqmif543zheq
+      '@ant-design/flowchart': 1.2.1_wxnhwqdrqlrqtt46a4nk5qn4xi
       '@ant-design/graphs': 1.3.2_biqbaboplfbrettd7655fr4n2y
       '@ant-design/icons': 4.8.0_biqbaboplfbrettd7655fr4n2y
       '@ant-design/maps': 1.0.6_biqbaboplfbrettd7655fr4n2y
@@ -79,6 +83,7 @@ packages:
       react-dom: 18.2.0_react@18.2.0
     transitivePeerDependencies:
       - classnames
+      - reflect-metadata
     dev: false
 
   /@ant-design/colors/4.0.5:
@@ -111,7 +116,7 @@ packages:
       stylis: 4.1.3
     dev: false
 
-  /@ant-design/flowchart/1.2.1_ugkdx7uiqdxcyinqmif543zheq:
+  /@ant-design/flowchart/1.2.1_wxnhwqdrqlrqtt46a4nk5qn4xi:
     resolution: {integrity: sha512-Fo0gfhSLfa3fvw8rV1pBcK2IcIeVUCYx+OwnAu10FqRGZouCSS4NfKcFTTAM5eVB1BlK6RRbFPpqZKjSskQkXA==}
     peerDependencies:
       '@ant-design/icons': ^4.6.0
@@ -125,7 +130,7 @@ packages:
       '@antv/x6': 1.34.6
       '@antv/x6-react-components': 1.1.20_frcm4cf67vqlgoa2fefiuffmcm
       '@antv/x6-react-shape': 1.6.3_ukowffzp3lo3wmxcfcnse3gdcu
-      '@antv/xflow': 1.0.52_ugkdx7uiqdxcyinqmif543zheq
+      '@antv/xflow': 1.0.52_wxnhwqdrqlrqtt46a4nk5qn4xi
       antd: 5.1.0_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-color: 2.17.3_react@18.2.0
@@ -133,6 +138,7 @@ packages:
       react-use: 17.3.1_biqbaboplfbrettd7655fr4n2y
     transitivePeerDependencies:
       - classnames
+      - reflect-metadata
     dev: false
 
   /@ant-design/graphs/1.3.2_biqbaboplfbrettd7655fr4n2y:
@@ -831,7 +837,7 @@ packages:
       rxjs: 6.6.7
     dev: false
 
-  /@antv/xflow-extension/1.0.52_v4t6bqsigijh6mkynlj2ezp2fm:
+  /@antv/xflow-extension/1.0.52_gaurk6y7kiszxqoy4vzuhtau3m:
     resolution: {integrity: sha512-Aw73Ju+CcdMFC+BA+J4MaWalNwoT+GyLvU1lBnjhClu4l/XqQciw3z11+e/NAfdXW4ii2jXLm9PySa/6+xaFgg==}
     peerDependencies:
       '@ant-design/icons': ^4.6.0
@@ -842,6 +848,7 @@ packages:
       classnames: ^2.2.6
       react: ^16.8.0  || ^17.0.0
       react-dom: ^16.8.0  || ^17.0.0
+      reflect-metadata: ^0.1.13
     dependencies:
       '@ant-design/icons': 4.8.0_biqbaboplfbrettd7655fr4n2y
       '@antv/x6': 1.34.6
@@ -867,7 +874,7 @@ packages:
       toposort: 2.0.2
     dev: false
 
-  /@antv/xflow/1.0.52_ugkdx7uiqdxcyinqmif543zheq:
+  /@antv/xflow/1.0.52_wxnhwqdrqlrqtt46a4nk5qn4xi:
     resolution: {integrity: sha512-HInSM/myJNFtzDxaS8rEsiFP2MGhrraZ1x1F8WbuZyXy0ssggGRHBwoMeAb9EFJHEpE22jBdYzpfuxtl0g1wfw==}
     peerDependencies:
       '@ant-design/icons': ^4.6.0
@@ -882,13 +889,14 @@ packages:
       '@antv/x6-react-components': 1.1.20_frcm4cf67vqlgoa2fefiuffmcm
       '@antv/x6-react-shape': 1.6.3_ukowffzp3lo3wmxcfcnse3gdcu
       '@antv/xflow-core': 1.0.52_v4t6bqsigijh6mkynlj2ezp2fm
-      '@antv/xflow-extension': 1.0.52_v4t6bqsigijh6mkynlj2ezp2fm
+      '@antv/xflow-extension': 1.0.52_gaurk6y7kiszxqoy4vzuhtau3m
       '@antv/xflow-hook': 1.0.52
       antd: 5.1.0_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     transitivePeerDependencies:
       - classnames
+      - reflect-metadata
     dev: false
 
   /@aws-amplify/analytics/6.0.7:
@@ -4354,6 +4362,14 @@ packages:
     engines: {node: '>=14'}
     dev: true
 
+  /@rollup/pluginutils/4.2.1:
+    resolution: {integrity: sha512-iKnFXr7NkdZAIHiIWE+BX5ULi/ucVFYWD6TbAV+rZctiRTY2PL6tsIKhoIOaoskiWAkgu+VsbXgUVDNLHf+InQ==}
+    engines: {node: '>= 8.0.0'}
+    dependencies:
+      estree-walker: 2.0.2
+      picomatch: 2.3.1
+    dev: false
+
   /@turf/along/6.5.0:
     resolution: {integrity: sha512-LLyWQ0AARqJCmMcIEAXF4GEu8usmd4Kbz3qk1Oy5HoRNpZX47+i5exQtmIWKdqJ1MMhW26fCTXgpsEs5zgJ5gw==}
     dependencies:
@@ -5255,6 +5271,10 @@ packages:
     engines: {node: '>= 12'}
     dev: false
 
+  /commondir/1.0.1:
+    resolution: {integrity: sha512-W9pAhw0ja1Edb5GVdIF1mjZw/ASI0AlShXM83UUGe2DVr5TdAPEA1OA8m/g8zWp9x6On7gqufY+FatDbC3MDQg==}
+    dev: false
+
   /compute-dims/1.1.0:
     resolution: {integrity: sha512-YHMiIKjH/8Eom8zATk3g8/lH3HxGCZcVQyEfEoVrfWI7od/WRpTgRGShnei3jArYSx77mQqPxZNokjGHCdLfxg==}
     dependencies:
@@ -5943,6 +5963,10 @@ packages:
     engines: {node: '>=4.0'}
     dev: false
 
+  /estree-walker/2.0.2:
+    resolution: {integrity: sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==}
+    dev: false
+
   /esutils/2.0.3:
     resolution: {integrity: sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==}
     engines: {node: '>=0.10.0'}
@@ -6041,6 +6065,15 @@ packages:
 
   /fflate/0.7.3:
     resolution: {integrity: sha512-0Zz1jOzJWERhyhsimS54VTqOteCNwRtIlh8isdL0AXLo0g7xNTfTL7oWrkmCnPhZGocKIkWHBistBrrpoNH3aw==}
+    dev: false
+
+  /find-cache-dir/3.3.2:
+    resolution: {integrity: sha512-wXZV5emFEjrridIgED11OoUKLxiYjAcqot/NJdAkOhlJ+vGzwhOAfcG5OX1jP+S0PcjEn8bdMJv+g2jwQ3Onig==}
+    engines: {node: '>=8'}
+    dependencies:
+      commondir: 1.0.1
+      make-dir: 3.1.0
+      pkg-dir: 4.2.0
     dev: false
 
   /find-up/4.1.0:
@@ -7039,6 +7072,13 @@ packages:
       yallist: 3.1.1
     dev: true
 
+  /lru-cache/6.0.0:
+    resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
+    engines: {node: '>=10'}
+    dependencies:
+      yallist: 4.0.0
+    dev: false
+
   /magic-string/0.27.0:
     resolution: {integrity: sha512-8UnnX2PeRAPZuN12svgR9j7M1uWMovg/CEnIwIG0LFkXSJJe4PdfUGiTGl8V9bsBHFUtfVINcSyYxd7q+kx9fA==}
     engines: {node: '>=12'}
@@ -7055,6 +7095,13 @@ packages:
       semver: 5.7.1
     dev: true
     optional: true
+
+  /make-dir/3.1.0:
+    resolution: {integrity: sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==}
+    engines: {node: '>=8'}
+    dependencies:
+      semver: 6.3.0
+    dev: false
 
   /mana-common/0.3.2:
     resolution: {integrity: sha512-1oylLR9CcyshQcTiBdM96HxIoaA413eudpo1INiOCwyZE554TDJNUD0zrIjmeBvw8CBAjukzaAHn2gn0hZphIg==}
@@ -7589,6 +7636,13 @@ packages:
     engines: {node: '>=6'}
     dev: true
     optional: true
+
+  /pkg-dir/4.2.0:
+    resolution: {integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==}
+    engines: {node: '>=8'}
+    dependencies:
+      find-up: 4.1.0
+    dev: false
 
   /plotly.js/2.17.0:
     resolution: {integrity: sha512-YeSlcriGJFpLFrprhvMIjbJF1uH498enCKwZ9627/PkP9UXsbFMCHeetSmjkNUrJWhVRfo9LRg9kGPx1vSu2YQ==}
@@ -8956,6 +9010,20 @@ packages:
     resolution: {integrity: sha512-DA8+YS+sMIVpbsuKgy+Z67L9Lxb1p05mNxRpDPNksPDEFir4vmBlUtuN9jkTGn9YMMdlBuK7XQgFiz6ws+yhSg==}
     dev: false
 
+  /rollup-plugin-typescript2/0.34.1_typescript@4.9.4:
+    resolution: {integrity: sha512-P4cHLtGikESmqi1CA+tdMDUv8WbQV48mzPYt77TSTOPJpERyZ9TXdDgjSDix8Fkqce6soYz3+fa4lrC93IEkcw==}
+    peerDependencies:
+      rollup: '>=1.26.3'
+      typescript: '>=2.4.0'
+    dependencies:
+      '@rollup/pluginutils': 4.2.1
+      find-cache-dir: 3.3.2
+      fs-extra: 10.1.0
+      semver: 7.3.8
+      tslib: 2.4.1
+      typescript: 4.9.4
+    dev: false
+
   /rollup/0.25.8:
     resolution: {integrity: sha512-a2S4Bh3bgrdO4BhKr2E4nZkjTvrJ2m2bWjMTzVYtoqSCn0HnuxosXnaJUHrMEziOWr3CzL9GjilQQKcyCQpJoA==}
     hasBin: true
@@ -9041,7 +9109,14 @@ packages:
   /semver/6.3.0:
     resolution: {integrity: sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==}
     hasBin: true
-    dev: true
+
+  /semver/7.3.8:
+    resolution: {integrity: sha512-NB1ctGL5rlHrPJtFDVIVzTyQylMLu9N9VICA6HSFJo8MCGVTMW6gfpicwKmmK/dAjTOrqu5l63JJOpDSrAis3A==}
+    engines: {node: '>=10'}
+    hasBin: true
+    dependencies:
+      lru-cache: 6.0.0
+    dev: false
 
   /sentence-case/3.0.4:
     resolution: {integrity: sha512-8LS0JInaQMCRoQ7YUytAo/xUu5W2XnQxV2HI/6uM6U7CITS1RqPElr30V6uIqyMKM9lJGRVFy5/4CuzcixNYSg==}
@@ -9624,7 +9699,6 @@ packages:
     resolution: {integrity: sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==}
     engines: {node: '>=4.2.0'}
     hasBin: true
-    dev: true
 
   /ua-parser-js/0.7.32:
     resolution: {integrity: sha512-f9BESNVhzlhEFf2CHMSj40NWOjYPl1YKYbrvIr/hFTDEmLq7SRbWvm7FcdcpCYT95zrOhC7gZSxjdnnTpBcwVw==}
@@ -10062,6 +10136,10 @@ packages:
   /yallist/3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
     dev: true
+
+  /yallist/4.0.0:
+    resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
+    dev: false
 
   /yargs-parser/18.1.3:
     resolution: {integrity: sha512-o50j0JeToy/4K6OZcaQmW6lyXXKhq7csREXcDwk2omFPJEwUNOVtJKvmDr9EI1fAJZUyZcRF7kxGBWmRXudrCQ==}

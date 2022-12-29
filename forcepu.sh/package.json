@@ -21,6 +21,8 @@
     "react-dom": "^18.2.0",
     "react-hover-video-player": "^9.7.1",
     "react-plotly.js": "^2.6.0",
+    "reflect-metadata": "^0.1.13",
+    "rollup-plugin-typescript2": "^0.34.1",
     "styled-components": "^5.3.6",
     "swagger-ui-react": "^4.12.0"
   },

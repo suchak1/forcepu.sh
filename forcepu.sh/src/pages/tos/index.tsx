@@ -1,4 +1,8 @@
+import "reflect-metadata"
+Reflect.hasOwnMetadata = () => {}
 import { Typography } from "antd";
+import { G2, Line } from "@ant-design/charts";
+
 const { Title } = Typography;
 
 export const TOSTitleText = (modal = false) => (
@@ -11,6 +15,7 @@ const TOSPage = ({ modal } = { modal: false }) => {
   const sublevel = modal ? 5 : 2;
   return (
     <div style={{ wordWrap: "break-word" }}>
+      <Line {...config} />
       {!modal && TOSTitleText()}
       {modal && <Title level={sublevel}>Meta</Title>}
       <p className="small">Effective 4 July 2022</p>

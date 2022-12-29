@@ -1,3 +1,4 @@
+import "reflect-metadata";
 // // import { useState } from 'preact/hooks'
 // // import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // // import About from './pages/About';
