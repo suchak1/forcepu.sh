@@ -364,7 +364,7 @@ const Layout = ({ children }: LayoutProps) => {
           value={{ account, accountLoading, loginLoading, setShowLogin }}
         >
           <Routes>
-            {/* <Route path="/" element={<Home />} /> */}
+            <Route path="/" element={<Home />} />
             <Route path="/docs" element={<Docs />} />
             <Route path="/algorithm" element={<Algorithm />} />
             <Route path="/art" element={<Art />} />
