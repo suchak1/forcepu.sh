@@ -3,6 +3,7 @@ import reactLogo from './assets/react.svg';
 import { Line } from '@ant-design/charts';
 import { BrowserRouter, NavLink, Routes, Route } from 'react-router-dom';
 
+import Algorithm from "@/pages/algorithm";
 import Art from "@/pages/art";
 import Gym from "@/pages/gym";
 import TOS, { TOSTitleText } from "@/pages/tos";
@@ -45,8 +46,8 @@ function App() {
         <BrowserRouter>
         <Routes>
             {/* <Route path="/" element={<Home />} />
-            <Route path="/docs" element={<Docs />} />
-            <Route path="/algorithm" element={<Algorithm />} />*/}
+            <Route path="/docs" element={<Docs />} />*/}
+            <Route path="/algorithm" element={<Algorithm />} />
             <Route path="/art" element={<Art />} /> 
             <Route path="/gym" element={<Gym />} />
             <Route path="/tos" element={<TOS />} />
