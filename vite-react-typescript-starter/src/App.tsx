@@ -2,7 +2,8 @@ import { useState } from 'react';
 import reactLogo from './assets/react.svg';
 import { Line } from '@ant-design/charts';
 import { BrowserRouter, NavLink, Routes, Route } from 'react-router-dom';
-import TOS from './pages/tos';
+import TOS from "@/pages/tos";
+import Privacy from "@/pages/privacy";
 import './App.css';
 
 function App() {
@@ -46,6 +47,7 @@ function App() {
             <Route path="/art" element={<Art />} />
             <Route path="/gym" element={<Gym />} /> */}
             <Route path="/tos" element={<TOS />} />
+            <Route path="/privacy" element={<Privacy />} />
          </Routes>
          </BrowserRouter>
       <Line {...config} />
