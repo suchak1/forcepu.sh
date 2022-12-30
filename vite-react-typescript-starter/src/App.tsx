@@ -1,14 +1,16 @@
-import { useState } from 'react';
+import { useState, createContext } from 'react';
 import reactLogo from './assets/react.svg';
 import { Line } from '@ant-design/charts';
 import { BrowserRouter, NavLink, Routes, Route } from 'react-router-dom';
-
+import Docs from "@/pages/docs";
 import Algorithm from "@/pages/algorithm";
 import Art from "@/pages/art";
 import Gym from "@/pages/gym";
 import TOS, { TOSTitleText } from "@/pages/tos";
 import Privacy from "@/pages/privacy";
 import './App.css';
+
+export const AccountContext = createContext({});
 
 function App() {
   const [count, setCount] = useState(0);
@@ -45,8 +47,8 @@ function App() {
     <div className="App">
         <BrowserRouter>
         <Routes>
-            {/* <Route path="/" element={<Home />} />
-            <Route path="/docs" element={<Docs />} />*/}
+            {/* <Route path="/" element={<Home />} />*/}
+            <Route path="/docs" element={<Docs />} />
             <Route path="/algorithm" element={<Algorithm />} />
             <Route path="/art" element={<Art />} /> 
             <Route path="/gym" element={<Gym />} />

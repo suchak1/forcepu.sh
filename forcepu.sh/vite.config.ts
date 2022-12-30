@@ -6,8 +6,11 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   define: {
-    global: {},
+    global: 'window',
     // global: 'globalThis',
+
+    // globalThis may be better
+    // https://blog.logrocket.com/what-is-globalthis-why-use-it/
   },
   plugins: [react()],
   resolve: {
@@ -26,6 +29,14 @@ export default defineConfig({
   //       }),
   //       javascriptEnabled: true,
   //     },
+  //   },
+  // },
+  // optimizeDeps: {
+  //   esbuildOptions: {
+  //       // Node.js global to browser globalThis
+  //       define: {
+  //           global: 'globalThis',
+  //       },
   //   },
   // },
 })
