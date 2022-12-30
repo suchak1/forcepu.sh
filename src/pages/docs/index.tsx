@@ -1,4 +1,3 @@
-import React from "react";
 import { useContext } from "react";
 import {
   Typography,
@@ -9,13 +8,13 @@ import {
   notification,
 } from "antd";
 import { getApiUrl, signalColors, signalEmojis } from "@/utils";
-import { AccountContext } from "../../layouts";
-import swaggerSpec from "../../api/spec/swagger.json";
+import { AccountContext } from "@/App";
+import swaggerSpec from "@/api/spec/swagger.json";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { CopyOutlined } from "@ant-design/icons";
 import SwaggerUI from "swagger-ui-react";
 import "swagger-ui-react/swagger-ui.css";
-import layoutStyles from "../../layouts/index.less";
+import layoutStyles from "@/index.module.less";
 import "./index.less";
 import styled from "styled-components";
 

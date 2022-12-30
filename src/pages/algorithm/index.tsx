@@ -1,9 +1,8 @@
-import React from "react";
 import { useState, useEffect, useMemo } from "react";
 import { Typography, Segmented, Row, Col, Card, Statistic, Spin } from "antd";
 import Plot from "react-plotly.js";
 import { getApiUrl, getDayDiff, get3DCircle } from "@/utils";
-import pageStyles from "../index.less";
+import pageStyles from "../home/index.module.less";
 import { LoadingOutlined } from "@ant-design/icons";
 import "./index.less";
 

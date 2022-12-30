@@ -471,6 +471,7 @@ const Page = () => {
                   </a>
                 </Title>
                 <Switch
+                style={toggle ? {background: '#F7931A'}: {}}
                   checkedChildren="BTC (₿)"
                   unCheckedChildren="USD ($)"
                   defaultChecked

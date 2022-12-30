@@ -1,8 +1,6 @@
-import React from "react";
 import { useState, useEffect } from "react";
 import { Typography, Table, Input } from "antd";
 import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
-import styles from "./index.less";
 import { getApiUrl } from "@/utils";
 const { Title, Text } = Typography;
 
