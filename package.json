@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build:ui": "tsc && vite build",
+    "typescript": "tsc",
+    "build:ui": "vite build",
     "preview": "vite preview",
     "build:api": "cd src/api && sam build --use-container --cached --parallel",
     "build+start:api": "npm run build:api && npm run start:api",
