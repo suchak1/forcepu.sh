@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "typescript": "tsc",
-    "build:ui": "vite build",
+    "build:ui": "pnpm run swagger && vite build",
     "preview": "vite preview",
     "build:api": "cd src/api && sam build --use-container --cached --parallel",
     "build+start:api": "npm run build:api && npm run start:api",
