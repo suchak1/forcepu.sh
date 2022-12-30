@@ -43,7 +43,9 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: pnpm run ci
+        run: |
+          pnpm run ci
+          pnpm add -g @apidevtools/swagger-cli@4.0.4
 
       - name: Create aws-exports.js file
         run: touch src/aws-exports.js

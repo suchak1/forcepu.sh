@@ -34,6 +34,7 @@ dependencies:
   react-dom: 18.2.0_react@18.2.0
   react-hover-video-player: 9.7.1_biqbaboplfbrettd7655fr4n2y
   react-plotly.js: 2.6.0_fkcxkukmqheyiyshrwtcx75gwe
+  react-router-dom: 6.6.1_biqbaboplfbrettd7655fr4n2y
   styled-components: 5.3.6_biqbaboplfbrettd7655fr4n2y
   swagger-ui-react: 4.12.0_biqbaboplfbrettd7655fr4n2y
 
@@ -42,7 +43,6 @@ devDependencies:
   '@types/react-dom': 18.0.10
   '@vitejs/plugin-react': 3.0.0_vite@4.0.3
   less: 4.1.3
-  react-router-dom: 6.6.1_biqbaboplfbrettd7655fr4n2y
   typescript: 4.9.4
   vite: 4.0.3_less@4.1.3
 
@@ -4352,7 +4352,7 @@ packages:
   /@remix-run/router/1.2.1:
     resolution: {integrity: sha512-XiY0IsyHR+DXYS5vBxpoBe/8veTeoRpMHP+vDosLZxL5bnpetzI0igkxkLZS235ldLzyfkxF+2divEwWHP3vMQ==}
     engines: {node: '>=14'}
-    dev: true
+    dev: false
 
   /@turf/along/6.5.0:
     resolution: {integrity: sha512-LLyWQ0AARqJCmMcIEAXF4GEu8usmd4Kbz3qk1Oy5HoRNpZX47+i5exQtmIWKdqJ1MMhW26fCTXgpsEs5zgJ5gw==}
@@ -7019,6 +7019,7 @@ packages:
     hasBin: true
     dependencies:
       js-tokens: 4.0.0
+    dev: false
 
   /lower-case/2.0.2:
     resolution: {integrity: sha512-7fm3l3NAF9WfN6W3JOmf5drwpVqX78JtoGJ3A6W0a6ZnldM41w2fV5D490psKFTpMds8TJse/eHLFFsNHHjHgg==}
@@ -8477,6 +8478,7 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+    dev: false
 
   /react-generate-context/1.0.1_react@18.2.0:
     resolution: {integrity: sha512-rOFGh3KgC2Ot66DmVCcT1p8lVJCmmCjzGE5WK/KsyDFi43wpIbW1PYcr04cQ3mbF4LaIkY6SpK7k1DOgwtpUXA==}
@@ -8655,7 +8657,7 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-router: 6.6.1_react@18.2.0
-    dev: true
+    dev: false
 
   /react-router/6.6.1_react@18.2.0:
     resolution: {integrity: sha512-YkvlYRusnI/IN0kDtosUCgxqHeulN5je+ew8W+iA1VvFhf86kA+JEI/X/8NqYcr11hCDDp906S+SGMpBheNeYQ==}
@@ -8665,7 +8667,7 @@ packages:
     dependencies:
       '@remix-run/router': 1.2.1
       react: 18.2.0
-    dev: true
+    dev: false
 
   /react-style-singleton/2.2.1_kzbn2opkn2327fwg5yzwzya5o4:
     resolution: {integrity: sha512-ZWj0fHEMyWkHzKYUr2Bs/4zU6XLmq9HsgBURm7g5pAVfyn49DgUiNgY2d4lXRlYSiCif9YBGpQleewkcqddc7g==}
@@ -8736,6 +8738,7 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       loose-envify: 1.4.0
+    dev: false
 
   /reactcss/1.2.3_react@18.2.0:
     resolution: {integrity: sha512-KiwVUcFu1RErkI97ywr8nvx8dNOpT03rbnma0SSalTYjkrPYaEajR4a/MRt6DZ46K6arDRbWMNHF+xH7G7n/8A==}
@@ -9020,6 +9023,7 @@ packages:
     resolution: {integrity: sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==}
     dependencies:
       loose-envify: 1.4.0
+    dev: false
 
   /screenfull/5.2.0:
     resolution: {integrity: sha512-9BakfsO2aUQN2K9Fdbj87RJIEZ82Q9IGim7FqM5OsebfoFC6ZHXgDq/KvniuLTPdeM8wY2o6Dj3WQ7KeQCj3cA==}
