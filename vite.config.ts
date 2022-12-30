@@ -5,18 +5,22 @@ import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  define: {
-    global: 'window',
+  build: {
+    target: 'esnext'
+  },
+  // define: {
+    // ['global.']: 'window.',
     // global: 'globalThis',
 
     // globalThis may be better
     // https://blog.logrocket.com/what-is-globalthis-why-use-it/
-  },
+  // },
   plugins: [react()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
       // react: 'preact/compat',
+      './runtimeConfig': './runtimeConfig.browser',
     },
   },
   // css: {
@@ -31,12 +35,24 @@ export default defineConfig({
   //     },
   //   },
   // },
-  // optimizeDeps: {
-  //   esbuildOptions: {
-  //       // Node.js global to browser globalThis
-  //       define: {
-  //           global: 'globalThis',
-  //       },
-  //   },
-  // },
+  optimizeDeps: {
+    esbuildOptions: {
+        // Node.js global to browser globalThis
+        define: {
+            global: 'globalThis',
+        },
+    },
+  },
 })
+
+// AWS Polyfill issues
+// https://github.com/aws-amplify/amplify-js/issues/9639
+// add this to index.html
+// <script>
+//     var global = global || window;
+//     var Buffer = Buffer || [];
+//     var process = process || {
+//       env: { DEBUG: undefined },
+//       version: []
+//     };
+// </script>
