@@ -4,6 +4,7 @@ import { Line } from '@ant-design/charts';
 import { BrowserRouter, NavLink, Routes, Route } from 'react-router-dom';
 import TOS from "@/pages/tos";
 import Privacy from "@/pages/privacy";
+import Gym from "@/pages/gym";
 import './App.css';
 
 function App() {
@@ -44,8 +45,8 @@ function App() {
             {/* <Route path="/" element={<Home />} />
             <Route path="/docs" element={<Docs />} />
             <Route path="/algorithm" element={<Algorithm />} />
-            <Route path="/art" element={<Art />} />
-            <Route path="/gym" element={<Gym />} /> */}
+            <Route path="/art" element={<Art />} /> */}
+            <Route path="/gym" element={<Gym />} />
             <Route path="/tos" element={<TOS />} />
             <Route path="/privacy" element={<Privacy />} />
          </Routes>
