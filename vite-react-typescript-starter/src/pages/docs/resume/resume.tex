@@ -1,0 +1,97 @@
+\documentclass[margin]{resume}
+\usepackage[hidelinks]{hyperref}
+\usepackage{unicode-math}
+\usepackage[dvipsnames]{xcolor}
+
+\definecolor{blu}{RGB}{15, 165, 227}
+\definecolor{maroon}{RGB}{220, 85, 110}
+
+\begin{document}
+\hspace{-28mm}\textbf {\Large Krish Suchak}
+\hfill \textcolor{blu}{\texttt{\href{mailto:suchak@uchicago.edu}{suchak@uchicago.edu}}}
+\\ \phantom{invisible} \hfill \hspace{5mm} \texttt{\href{https://forcepu.sh}{force}}\textcolor{blu}{\texttt{\href{https://forcepu.sh}{pu.sh}}}
+\vspace{4mm}
+%\centerline{\texttt{\href{https://github.com/suchak1}{github.com/suchak1}} \hspace{10mm} | | \hspace{10mm} \texttt{\href{https://linkedin.com/in/suchak1}{linkedin.com/in/suchak1}}}
+
+    \section{\mysidestyle Education}
+
+    \textcolor{maroon}{\textbf{University of Chicago}}, Chicago, IL \hfill \textbf{June 2020} \vspace{2mm}\\\vspace{1mm}%
+    \textsl{BS, Computer Science} | \textsl{Specialization: Data Science}\hfill SAT: 1550/1600\\
+Scholarships: \textit{University Scholar $\smwhtdiamond$ Dean’s Scholar $\smwhtdiamond$ National Merit Scholar}\\
+Relevant Coursework: \textit{Software Construction, Data Science for CS, Cryptocurrencies, Algorithms}
+
+    \section{\mysidestyle Professional\\Experience}
+
+    
+    \textcolor{blu}{\textbf{Virtru}}, Washington, DC \vspace{2mm}\\\vspace{1mm}%
+   \textsl{Software Engineer II} \hfill \textbf{May 2020 -- present}
+
+\begin{itemize}
+\item Migrated front-end Control Center app to Kubernetes, \\speeding up build and deployment time by 500\%. \phantom{invisible} \hfill \textit{Koa.js, K8s}
+\item Created websocket server proof-of-concept, \\reducing extraneous client network requests by 85\%. \hfill \textit{Socket.io, Node.js}
+\item Transitioned custom component library to one based on Ant Design, \\increasing number of available components by 175\%. \hfill \textit{antd, React.js}
+\item Worked on data visualization work inspired by previous efforts like Audit Map. \hfill \textit{React.js}
+\end{itemize}    
+
+
+    \textsl{Software Engineering Intern} \hfill \textbf{Jun 2019 -- Aug 2019}
+
+\begin{itemize}
+\item Added new components and fixed bugs in Control Center application. \hfill \textit{React.js, Node.js}
+% \item Wrote scripts to automate retries of tests and fetch parameters from AWS SSM. \hfill \textit{Bash}
+\end{itemize}
+
+
+    \textcolor{blu}{\textbf{Chicago Transit Authority}}, Chicago, IL \vspace{2mm}\\\vspace{1mm}%
+    \textsl{Data Science Intern} \hfill \textbf{Sep 2019 -- Apr 2020}
+
+    \begin{itemize}
+\item Created a dynamic, color-coded scatter plot of rail stations v.s. arrival times, \\using color as a function of train punctuality. \hfill \textit{Vue.js \& Python, plotly}
+
+% %\item Corrected headway calculations for time between trains, bypassing incorrect database values. \\ ▪ \hfill \textit{Python, pandas}
+
+% \item Generated automatic rail observations based on database query results. \hfill \textit{SQL, Redshift}
+
+    \end{itemize}
+
+
+
+    \section{\mysidestyle Awards}
+    %\begin{itemize}
+    %\item
+    \textcolor{blu}{\textbf{1st place (\$15k)}} -- Virtru Privacy Engineering Challenge (\textbf {Audit Map} project) \hfill \textbf{Nov 2019} \\ \url{https://www.virtru.com/blog/privacy-engineering-challenge-winner-2019/}
+    %\item
+
+\textbf{National Merit Scholar}, Dean’s Scholar, University Scholar \hfill \textbf{2014 -- 2020} %\url{www.tallahassee.com/story/news/2014/05/07/national-merit-scholars-announced/8808739/}
+%\item
+
+%\textbf{CAAP Scholar} (Chicago Academic Achievement Program) \hfill \textbf{2014 -- 2020}
+%\end{itemize}
+    \section{\mysidestyle Projects}
+
+\texttt{\textbf{force}\textcolor{blu}{\textbf{pu.sh}}} \hfill \textbf{2021 -- present}
+\hrule
+A momentum trading strategy for bitcoin using \texttt{hyperdrive} and AutoML that executes trades in production every day and reports metrics as compared to the benchmark "buy and hold" strategy.
+
+\url{https://forcepu.sh} \hfill \textit{React.js \& Python}
+
+
+\texttt{\textbf{hyperdrive}} (package published on PyPi) \hfill \textbf{2020 -- present}
+\hrule
+An algorithmic trading library to store market data, create trading strategies using machine learning, test strategies against historical data, and execute orders.
+
+\url{https://github.com/suchak1/hyperdrive} \hfill \textit{Python}
+
+\textcolor{blu}{\textbf{Audit Map}} \hfill \textbf{2019}
+\hrule
+1st place (\$15,000 cash prize) winning entry for Virtru Privacy Engineering Challenge \\ 
+Enables tracking and retroactive revocation of access to encrypted files remotely from map view.
+\url{https://github.com/suchak1/audit_map} \hfill \textit{React.js, Mapbox}
+        \section{\mysidestyle Programming\\Experience}
+
+    \emph{Languages:} \textbf{Python, React.js, Node.js, Umi.js, Bash}, Java, Racket, C++, C, \LaTeX \\
+    \emph{Tools:} Cloud [AWS], CI/CD [Buildkite, Github Actions], Containerization [Docker, Kubernetes]
+    
+\textbf {\textit {Note:}} All links are clickable on PDF.
+    
+\end{document}
