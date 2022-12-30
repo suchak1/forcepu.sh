@@ -1,4 +1,4 @@
-name: Deploy UmiJS
+name: Deploy UI
 
 on:
   pull_request:
@@ -16,10 +16,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Use Node.js 16
+      - name: Use Node.js 18
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: 'npm'
 
       - name: Cache node modules
@@ -45,11 +45,11 @@ jobs:
         run: npm run build-dev:umi && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV && echo "CF_DISTRO_ID=${CF_DISTRO_ID}" >> $GITHUB_ENV
         env:
           AWS_S3_BUCKET: ${{ secrets.FORCEPUSH_DEV_BUCKET }}
-          UMI_APP_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-          UMI_APP_IDENTITY_POOL_ID: ${{ secrets.DEV_IDENTITY_POOL_ID }}
-          UMI_APP_USER_POOL_ID: ${{ secrets.DEV_USER_POOL_ID }}
-          UMI_APP_WEB_CLIENT_ID: ${{ secrets.DEV_WEB_CLIENT_ID }}
-          UMI_APP_OAUTH_DOMAIN: ${{ secrets.DEV_OAUTH_DOMAIN }}
+          VITE_APP_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          VITE_APP_IDENTITY_POOL_ID: ${{ secrets.DEV_IDENTITY_POOL_ID }}
+          VITE_APP_USER_POOL_ID: ${{ secrets.DEV_USER_POOL_ID }}
+          VITE_APP_WEB_CLIENT_ID: ${{ secrets.DEV_WEB_CLIENT_ID }}
+          VITE_APP_OAUTH_DOMAIN: ${{ secrets.DEV_OAUTH_DOMAIN }}
           CF_DISTRO_ID: ${{ secrets.DEV_CF_DISTRO_ID }}
         if: ${{ github.ref != 'refs/heads/master' }}
 
@@ -57,11 +57,11 @@ jobs:
         run: npm run build:umi && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV && echo "CF_DISTRO_ID=${CF_DISTRO_ID}" >> $GITHUB_ENV
         env:
           AWS_S3_BUCKET: ${{ secrets.FORCEPUSH_BUCKET }}
-          UMI_APP_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-          UMI_APP_IDENTITY_POOL_ID: ${{ secrets.IDENTITY_POOL_ID }}
-          UMI_APP_USER_POOL_ID: ${{ secrets.USER_POOL_ID }}
-          UMI_APP_WEB_CLIENT_ID: ${{ secrets.WEB_CLIENT_ID }}
-          UMI_APP_OAUTH_DOMAIN: ${{ secrets.OAUTH_DOMAIN }}
+          VITE_APP_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          VITE_APP_IDENTITY_POOL_ID: ${{ secrets.IDENTITY_POOL_ID }}
+          VITE_APP_USER_POOL_ID: ${{ secrets.USER_POOL_ID }}
+          VITE_APP_WEB_CLIENT_ID: ${{ secrets.WEB_CLIENT_ID }}
+          VITE_APP_OAUTH_DOMAIN: ${{ secrets.OAUTH_DOMAIN }}
           CF_DISTRO_ID: ${{ secrets.CF_DISTRO_ID }}
         if: ${{ github.ref == 'refs/heads/master' }}
 
