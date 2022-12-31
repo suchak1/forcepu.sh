@@ -197,18 +197,13 @@ const Layout = ({ children }: LayoutProps) => {
 
   const location = useLocation();
   const { pathname } = location;
-  // const { pathname } = window.location;
-  // if (path)
-  const redirectUrl = `${protocol}://${hostname}${port}${pathname === '/' ? '' : pathname}`;
-  console.log(redirectUrl);
-  // const redirectUrl = `${protocol}://${hostname}${port}`;
 
+  const redirectUrl = `${protocol}://${hostname}${port}${pathname === '/' ? '' : pathname}`;
 
   config.oauth.redirectSignIn = redirectUrl;
   config.oauth.redirectSignOut = redirectUrl;
 
   Amplify.configure(config);
-
 
   return (
     <AntLayout>
@@ -305,7 +300,7 @@ const Layout = ({ children }: LayoutProps) => {
       >
         <Modal
           width={600}
-          visible
+          // visible
           title={TOSTitleText(true)}
           bodyStyle={{
             height: "200px",
