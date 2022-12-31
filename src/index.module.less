@@ -32,6 +32,11 @@ input {
   color: rgba(255, 255, 255, 0.85);
 }
 
+:global(.ant-btn:not(:disabled):focus-visible), :global(.ant-switch:focus-visible) {
+  outline-offset: unset;
+  outline: -webkit-focus-ring-color auto 1px;
+}
+
 :global(.ant-alert) {
   padding: 8px 15px;
 }
@@ -124,24 +129,21 @@ input {
   color: white;
 }
 
-.signOut {
-  border-left-color: magenta;
-  border-right-color: magenta;
-  border-top-color: transparent;
-  border-bottom-color: transparent;
-}
-
-.signOut:hover,
-.signOut:active {
-  border-color: magenta !important;
-  box-shadow: 0 0 5px magenta !important;
-}
-
-.signOut:focus {
+.signOut, .signOut:focus {
   border-left-color: magenta !important;
   border-right-color: magenta !important;
   border-top-color: transparent !important;
   border-bottom-color: transparent !important;
+}
+
+.signOut:hover {
+  border-color: magenta !important;
+  box-shadow: 0 0 5px magenta !important;
+}
+
+.signOut:active {
+    border-color: magenta !important;
+    box-shadow: none !important;
 }
 
 .invisible {
