@@ -12,7 +12,7 @@
 // />*/
 
 import { useState, useEffect, createContext } from "react";
-import { BrowserRouter, NavLink, Routes, Route } from "react-router-dom";
+import { BrowserRouter, NavLink, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { Layout as AntLayout, Menu, Button, Modal, Checkbox, ConfigProvider, theme } from "antd";
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import {
@@ -45,6 +45,7 @@ import Gym from "@/pages/gym";
 import TOS, { TOSTitleText } from "@/pages/tos";
 import Privacy from "@/pages/privacy";
 import Home from "@/pages/home";
+
 // import pageStyles from "../pages/index.less";
 const { darkAlgorithm } = theme;
 
@@ -53,9 +54,6 @@ const isLocal = getEnvironment() === "local";
 const protocol = isLocal ? "http" : "https";
 const hostname = getHostname(false);
 const port = isLocal ? ":8000" : "";
-// const { pathname } = window.location;
-// const redirectUrl = `${protocol}://${hostname}${port}${pathname}`;
-const redirectUrl = `${protocol}://${hostname}${port}`;
 
 if (isLocal) {
   config = (await import("@/aws-exports")).default;
@@ -97,10 +95,7 @@ if (isLocal) {
     aws_cognito_verification_mechanisms: ["EMAIL"],
   };
 }
-// config.oauth.redirectSignIn = redirectUrl;
-// config.oauth.redirectSignOut = redirectUrl;
 
-Amplify.configure(config);
 
 const authTheme = createTheme({
   name: "dark-mode-theme",
@@ -213,7 +208,20 @@ const Layout = ({ children }: LayoutProps) => {
       .finally(() => setAcknowledgeLoading(false));
   };
 
-  
+  const location = useLocation();
+  const { pathname } = location;
+  // const { pathname } = window.location;
+  // if (path)
+  const redirectUrl = `${protocol}://${hostname}${port}${pathname === '/' ? '' : pathname}`;
+  console.log(redirectUrl);
+  // const redirectUrl = `${protocol}://${hostname}${port}`;
+
+
+  config.oauth.redirectSignIn = redirectUrl;
+  config.oauth.redirectSignOut = redirectUrl;
+
+  Amplify.configure(config);
+
 
   return (
     <AntLayout>
@@ -310,7 +318,7 @@ const Layout = ({ children }: LayoutProps) => {
       >
         <Modal
           width={600}
-          // visible
+          visible
           title={TOSTitleText(true)}
           bodyStyle={{
             height: "200px",
@@ -354,9 +362,6 @@ const Layout = ({ children }: LayoutProps) => {
               </Button>
             </div>
           }
-          // footer with checkbox, statement, and grayed out confirm
-          // confirm button hits api to update user
-          // onCancel={() => setShowLogin(false)}
         >
           <TOS modal />
         </Modal>
@@ -372,11 +377,8 @@ const Layout = ({ children }: LayoutProps) => {
             <Route path="/tos" element={<TOS />} />
             <Route path="/privacy" element={<Privacy />} />
             {/* This is 404 redirect to home page for unknown routes */}
-            {/* <Route path="*" element={<Home />} /> */}
-            {/* This won't redirect, will just display Home component (url will remains same) */}
-            {/* Use Navigate to navigate to "/"? */}
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
-          {/* {children} */}
         </AccountContext.Provider>
       </AntLayout.Content>
       <AntLayout.Footer
