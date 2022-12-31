@@ -404,7 +404,12 @@ const Layout = ({ children }: LayoutProps) => {
 
 export default ({ route, children }: LayoutProps) => (
   <ConfigProvider theme={{
-    algorithm: darkAlgorithm
+    algorithm: darkAlgorithm,
+    token: {
+      borderRadius: 2,
+      // borderRadiusLG: 2,
+      // borderRadiusSM: 2,
+    },
   }}>
   <Authenticator.Provider>
     <BrowserRouter>

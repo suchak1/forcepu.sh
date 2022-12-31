@@ -29,11 +29,11 @@ export default defineConfig({
   // css: {
   //   preprocessorOptions: {
   //     less: {
-  //       // modifyVars: { 'primary-color': '#13c2c2' },
-  //       modifyVars: getThemeVariables({
-  //         dark: true,
-  //         // compact: true,
-  //       }),
+  //       modifyVars: { 'borderRadiusLG': 2 },
+  //       // modifyVars: getThemeVariables({
+  //       //   dark: true,
+  //       //   // compact: true,
+  //       // }),
   //       javascriptEnabled: true,
   //     },
   //   },
