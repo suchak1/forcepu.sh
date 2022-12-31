@@ -504,7 +504,7 @@ const Page = () => {
             </div>
           )}
           <div style={{ height: "400px" }} className={styles.child}>
-            {inBeta ? (
+            {true ? (
               <>
                 <Modal
                   visible={showSignalCard}
