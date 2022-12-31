@@ -33,6 +33,27 @@ input {
   border-radius: 4px;
 }
 
+:global(.ant-notification-notice) {
+  background: #1f1f1f;
+  color: rgba(255,255,255,0.85);
+  box-shadow: 0 3px 6px -4px rgb(0 0 0 / 48%), 0 6px 16px 0 rgb(0 0 0 / 32%), 0 9px 28px 8px rgb(0 0 0 / 20%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+:global(.ant-notification-notice .ant-notification-notice-message) {
+  color: rgba(255,255,255,0.85);
+}
+
+// notification x
+:global(.ant-notification-notice .ant-notification-notice-close) {
+  color: hsla(0,0%,100%,.45);
+}
+// notification x - hover
+:global(.ant-notification-notice .ant-notification-notice-close:hover) {
+  color: hsla(0,0%,100%,.85);
+}
+
 :global(.ant-modal .ant-card) {
   background: #1f1f1f;
 }
