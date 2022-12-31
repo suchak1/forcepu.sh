@@ -300,7 +300,7 @@ const Layout = ({ children }: LayoutProps) => {
       >
         <Modal
           width={600}
-          // visible
+          visible
           title={TOSTitleText(true)}
           bodyStyle={{
             height: "200px",
