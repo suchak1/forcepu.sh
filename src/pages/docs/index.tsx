@@ -47,7 +47,7 @@ const DocsPage = () => {
     AccountContext
   );
   const loading = loginLoading || accountLoading;
-
+  message.success(`Copied api key to clipboard.`, 10000000)
   const copyToClipboard = (val: string, name: string) =>
     navigator.clipboard.writeText(val).then(
       () => message.success(`Copied ${name} to clipboard.`),

@@ -407,8 +407,20 @@ export default ({ route, children }: LayoutProps) => (
     algorithm: darkAlgorithm,
     token: {
       borderRadius: 2,
+      boxShadowCard: "0 1px 2px -2px rgb(0 0 0 / 64%), 0 3px 6px 0 rgb(0 0 0 / 48%), 0 5px 12px 4px rgb(0 0 0 / 36%)",
+      colorBgElevated: 'red',
       // borderRadiusLG: 2,
       // borderRadiusSM: 2,
+    },
+    components: {
+      Input: {
+        colorBgContainer: 'transparent',
+      },
+      Message: {
+        colorBgElevated: 'red',
+        colorBgContainer: 'red',
+        colorBgBase: 'red'
+      },
     },
   }}>
   <Authenticator.Provider>
