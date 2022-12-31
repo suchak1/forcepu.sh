@@ -32,9 +32,16 @@ input {
   color: rgba(255, 255, 255, 0.85);
 }
 
-:global(.ant-modal-header) {
+:global(.ant-modal .ant-modal-header) {
   padding: 16px 24px;
   border-bottom: 1px solid #303030;
+  margin-bottom: 0;
+}
+
+:global(.ant-modal .ant-modal-footer) {
+  padding: 10px 16px;
+  border-top: 1px solid #303030;
+  margin-top: 0;
 }
 
 :global(.ant-btn:not(:disabled):focus-visible), :global(.ant-switch:focus-visible) {
