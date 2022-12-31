@@ -127,7 +127,7 @@ input {
 .signOut:hover,
 .signOut:active {
   border-color: magenta !important;
-  box-shadow: 0 0 5px magenta;
+  box-shadow: 0 0 5px magenta !important;
 }
 
 .signOut:focus {
@@ -197,9 +197,13 @@ input {
   background-color: inherit;
 }
 
+:global(.ant-btn-default:not(:disabled):hover) {
+  border-color: #52e5ff;
+}
+
 :global(.ant-btn-default:hover),
 :global(.ant-btn-default:active) {
-  border-color: #52e5ff !important;
+  border-color: #52e5ff;
   box-shadow: 0 0 5px #52e5ff;
   color: rgba(255, 255, 255, 0.85) !important;
 }
