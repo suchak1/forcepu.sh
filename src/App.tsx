@@ -1,16 +1,3 @@
-// // import { useState } from 'preact/hooks'
-// // import { BrowserRouter, Routes, Route } from 'react-router-dom';
-// // import About from './pages/About';
-// // import './app.css'
-
-
-// /*<BrowserRouter>
-//   <Routes>
-//           <Route path="/" element={<HomePage />} />
-//           <Route path="about" element={<About />} />
-//   </Routes>
-// />*/
-
 import { useState, useEffect, createContext } from "react";
 import { BrowserRouter, NavLink, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { Layout as AntLayout, Menu, Button, Modal, Checkbox, ConfigProvider, theme } from "antd";
