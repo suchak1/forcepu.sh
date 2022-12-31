@@ -32,6 +32,14 @@ input {
   color: rgba(255, 255, 255, 0.85);
 }
 
+:global(.ant-btn-default:disabled) {
+  color: hsla(0,0%,100%,.3) !important;
+  border-color: #434343 !important;
+  background: hsla(0,0%,100%,.08);
+  text-shadow: none;
+  box-shadow: none !important;
+}
+
 :global(.ant-modal .ant-modal-header) {
   padding: 16px 24px;
   border-bottom: 1px solid #303030;
@@ -226,7 +234,17 @@ input {
 :global(.ant-btn-default:active) {
   border-color: #52e5ff;
   box-shadow: 0 0 5px #52e5ff;
-  color: rgba(255, 255, 255, 0.85) !important;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+:global(.ant-btn-default:not(:disabled):hover) {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+:global(.ant-btn-default:not(:disabled):active) {
+  box-shadow:none;
+  border-color: #52e5ff;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 :global(.ant-btn-default:focus) {

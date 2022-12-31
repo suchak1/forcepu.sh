@@ -116,9 +116,21 @@
   .mobileBreak {
     display: none;
   }
-  .ant-checkbox + span {
-    padding-left: 16px;
+  :global(.ant-checkbox + span) {
+    padding-left: 16px !important;
   }
+}
+
+:global(.ant-checkbox+span) {
+  padding-left: 16px !important;
+}
+
+.ant-checkbox+span {
+  padding-left: 16px !important;
+}
+
+:where(.css-dev-only-do-not-override-3ir89w).ant-checkbox > span {
+  padding-left: 16px;
 }
 
 :global(.ant-btn-default:hover),
