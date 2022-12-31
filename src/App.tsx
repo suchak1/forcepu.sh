@@ -61,13 +61,13 @@ if (isLocal) {
   config = (await import("@/aws-exports")).default;
 } else {
   config = {
-    aws_project_region: process.env.VITE_APP_REGION,
-    aws_cognito_identity_pool_id: process.env.VITE_APP_IDENTITY_POOL_ID,
-    aws_cognito_region: process.env.VITE_APP_REGION,
-    aws_user_pools_id: process.env.VITE_APP_USER_POOL_ID,
-    aws_user_pools_web_client_id: process.env.VITE_APP_WEB_CLIENT_ID,
+    aws_project_region: import.meta.env.VITE_APP_REGION,
+    aws_cognito_identity_pool_id: import.meta.env.VITE_APP_IDENTITY_POOL_ID,
+    aws_cognito_region: import.meta.env.VITE_APP_REGION,
+    aws_user_pools_id: import.meta.env.VITE_APP_USER_POOL_ID,
+    aws_user_pools_web_client_id: import.meta.env.VITE_APP_WEB_CLIENT_ID,
     oauth: {
-      domain: process.env.VITE_APP_OAUTH_DOMAIN,
+      domain: import.meta.env.VITE_APP_OAUTH_DOMAIN,
       scope: [
         "phone",
         "email",
