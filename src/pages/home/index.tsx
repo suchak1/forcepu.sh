@@ -23,7 +23,7 @@ import {
   QuestionOutlined,
 } from "@ant-design/icons";
 import styles from "./index.module.less";
-import layoutStyles from "@/index.module.less";
+import layoutStyles from "@/layouts/index.module.less";
 import "./index.module.less";
 import {
   getApiUrl,
@@ -36,7 +36,7 @@ import {
 import { useAuthenticator } from "@aws-amplify/ui-react";
 const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
-import { AccountContext } from "@/App";
+import { AccountContext } from "@/layouts";
 
 const HODL = "HODL";
 const hyperdrive = "hyperdrive";
