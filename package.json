@@ -37,7 +37,7 @@
     "react-plotly.js": "^2.6.0",
     "styled-components": "^5.3.6",
     "swagger-ui-react": "^4.12.0",
-    "umi": "3.5.21"
+    "umi": "3.5.36"
   },
   "devDependencies": {
     "eslint": "^8.26.0",
