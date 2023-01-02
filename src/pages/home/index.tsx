@@ -14,7 +14,9 @@ import {
   Modal,
   Skeleton,
   notification,
+  Segmented
 } from "antd";
+import styled from "styled-components";
 import { G2, Line } from "@ant-design/charts";
 import {
   LoadingOutlined,
@@ -37,6 +39,29 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 import { AccountContext } from "@/layouts";
+
+const toggleLabels = {BTC: "BTC (₿)", USD: "USD ($)"};
+// "#F7931A"
+// outline: 1px solid
+// ${(props: { val: boolean }) => (props.val ? "#52e5ff" : "magenta")};
+const Toggle = styled(Segmented)`
+  .ant-segmented-item-selected {
+    background-image: linear-gradient(to bottom right, ${(props: { val: boolean }) => 
+      (props.val ? "#F7931A" : "blue")}, ${(props: { val: boolean }) => (props.val ? "#F7931A" : "red")} );
+    
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .ant-segmented-item:hover,
+  .ant-segmented-item:focus {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .ant-segmented-thumb {
+    background-image: linear-gradient(to bottom right, ${(props: { val: boolean }) => 
+      (!props.val ? "#F7931A" : "blue")}, ${(props: { val: boolean }) => (!props.val ? "#F7931A" : "red")} );
+  }
+`;
 
 const HODL = "HODL";
 const hyperdrive = "hyperdrive";
@@ -470,12 +495,22 @@ const Page = () => {
                     <i style={{ color: "#52e5ff" }}>{hyperdrive}</i>
                   </a>
                 </Title>
-                <Switch
+                {/* <Switch
                 style={toggle ? {background: '#F7931A'}: {}}
                   checkedChildren="BTC (₿)"
                   unCheckedChildren="USD ($)"
                   defaultChecked
                   onChange={(checked) => setToggle(checked)}
+                /> */}
+                {/* USA gradient */}
+                {/* linear-gradient(to bottom right, blue , red ); */}
+                {/* background-image: linear-gradient(to right, blue , rgba(100, 100, 100, 0.35), red); */}
+                {/* BTC (B) for desktop, just symbol B for mobile */}
+                <Toggle
+                  val={toggle}
+                  options={[toggleLabels.BTC, toggleLabels.USD]}
+                  defaultValue={toggleLabels.BTC}
+                  onChange={(val: string) => setToggle(val === toggleLabels.BTC)}
                 />
               </>
             )}
