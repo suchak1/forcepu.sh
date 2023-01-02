@@ -35,7 +35,7 @@ jobs:
 
       - name: Fix SAM installation
         run: |
-          pip install --force-reinstall -v cryptography==38.0.1 pyOpenSSL 22.0.0
+          pip install --force-reinstall -v cryptography==38.0.1 pyOpenSSL==22.0.0
 
       - name: Use Node.js 18
         uses: actions/setup-node@v3
