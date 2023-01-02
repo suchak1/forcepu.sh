@@ -41,6 +41,7 @@ const isLocal = getEnvironment() === "local";
 const protocol = isLocal ? "http" : "https";
 const hostname = getHostname(false);
 const port = isLocal ? ":8000" : "";
+let redirectUrl = `${protocol}://${hostname}${port}`;
 
 if (isLocal) {
   config = (await import("@/aws-exports")).default;
@@ -198,7 +199,7 @@ const Layout = ({ children }: LayoutProps) => {
   const location = useLocation();
   const { pathname } = location;
 
-  const redirectUrl = `${protocol}://${hostname}${port}${pathname === '/' ? '' : pathname}`;
+  redirectUrl = `${protocol}://${hostname}${port}${pathname === '/' ? '' : pathname}`;
 
   config.oauth.redirectSignIn = redirectUrl;
   config.oauth.redirectSignOut = redirectUrl;
