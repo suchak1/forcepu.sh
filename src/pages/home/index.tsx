@@ -525,7 +525,7 @@ const Page = () => {
                       </span>
                       <span
                         style={{
-                          fontFamily: "monospace",
+                          fontFamily: '"Courier","Courier New",monospace',
                           color:
                             signalCardData.Signal === "BUY"
                               ? "lime"
@@ -541,7 +541,7 @@ const Page = () => {
                       <span>
                         <b>{"Date: "}</b>
                       </span>
-                      <span style={{ fontFamily: "monospace" }}>
+                      <span style={{ fontFamily: '"Courier","Courier New",monospace' }}>
                         {signalCardData.Date}
                       </span>
                     </div>
@@ -549,7 +549,7 @@ const Page = () => {
                       <span>
                         <b>{"Asset: "}</b>
                       </span>
-                      <span style={{ fontFamily: "monospace" }}>
+                      <span style={{ fontFamily: '"Courier","Courier New",monospace' }}>
                         {"BTC ("}
                         <span style={{ color: "#F7931A" }}>{"₿"}</span>
                         {")"}

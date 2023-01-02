@@ -117,13 +117,24 @@
   font-family: inherit;
 }
 
+.swagger-ui .auth-wrapper .authorize {
+  margin-right: 0;
+}
+
 // Unlock icon
 .swagger-ui .authorization__btn {
   fill: #49cc90;
 }
 
+// keep API route lock icon full opacity and in sync with Authorize btn lock icon
 .swagger-ui .authorization__btn.unlocked {
+  padding-right: 13px;
   opacity: unset;
+}
+
+// keeps API route lock icon in sync with Authorize btn lock icon
+.swagger-ui .authorization__btn.locked {
+  padding-right: 13px;
 }
 
 // Response schema example
@@ -260,7 +271,7 @@
 
 .swagger-ui input[type=text] {
   background: black;
-  font-family: monospace;
+  font-family: "Courier","Courier New",monospace;
 }
 
 .swagger-ui .dialog-ux .modal-ux-header .close-modal {

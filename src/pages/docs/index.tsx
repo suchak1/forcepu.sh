@@ -23,7 +23,7 @@ swaggerSpec.servers[0].url = getApiUrl();
 
 const APIKey = styled(Input.Password)`
   input {
-    font-family: monospace;
+    font-family: "Courier","Courier New",monospace;
     pointer-events: none;
     user-select: none;
     -webkit-user-select: none;
@@ -65,7 +65,7 @@ const DocsPage = () => {
         <div>{"Use this key to authenticate your API requests."}</div>
         <div>
           <span>{"Header: "}</span>
-          <span style={{ fontFamily: "monospace" }}>{"X-API-Key"}</span>
+          <span style={{ fontFamily: '"Courier","Courier New",monospace' }}>{"X-API-Key"}</span>
         </div>
       </div>
       {!loading && (
@@ -164,7 +164,7 @@ const DocsPage = () => {
                   <span>{"New Signal: "}</span>
                   <span
                     style={{
-                      fontFamily: "monospace",
+                      fontFamily: '"Courier","Courier New",monospace',
                       color: signalColors[signal],
                     }}
                   >
