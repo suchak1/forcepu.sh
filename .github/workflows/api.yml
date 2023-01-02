@@ -30,20 +30,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      # - name: Set up AWS SAM
-      #   uses: aws-actions/setup-sam@v2
-
       - name: Set up AWS SAM
-      # https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip
-        run: |
-          curl https://github.com/aws/aws-sam-cli/releases/download/v1.67.0/aws-sam-cli-linux-x86_64.zip -O -J -L
-          unzip aws-sam-cli-linux-x86_64.zip -d sam-installation
-          sudo ./sam-installation/install --update
-          sam --version
-
-      # - name: Fix SAM installation
-      #   run: |
-      #     pip install --force-reinstall -v pyOpenSSL==23.0.0 urllib3==1.26.12
+        run: util/install_sam.sh || util/upgrade_sam.sh
 
       - name: Use Node.js 18
         uses: actions/setup-node@v3
