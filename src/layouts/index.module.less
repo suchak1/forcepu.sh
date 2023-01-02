@@ -208,6 +208,31 @@ input {
   background-color: unset;
 }
 
+// table row hover color
+:global(.ant-table-wrapper .ant-table-tbody >tr.ant-table-row:hover>td), :global(.ant-table-wrapper .ant-table-tbody >tr >td.ant-table-cell-row-hover) {
+  background: #262626;
+}
+
+// hide table head divider
+:global(.ant-table-wrapper .ant-table-thead >tr>th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before) {
+  width: 0;
+}
+
+// hide table head bottom border
+:global(.ant-table-wrapper .ant-table-thead >tr>th) {
+  border-bottom: 0;
+}
+
+// hide table row top border
+:global(.ant-table-wrapper .ant-table-tbody >tr >td) {
+  border-top: 0;
+}
+
+// hide last row bottom border
+:global(.ant-table-wrapper .ant-table-tbody >tr:last-child>td) {
+  border-bottom: 0;
+}
+
 .ant-btn[disabled]:hover {
   border-color: #434343 !important;
 }

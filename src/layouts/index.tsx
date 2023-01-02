@@ -405,6 +405,12 @@ export default ({ route, children }: LayoutProps) => (
         // input background
         colorBgContainer: 'transparent',
       },
+      Table: {
+        borderRadiusLG: 4
+      },
+      Card: {
+        borderRadiusLG: 4
+      }
       // Button: {
       //   controlTmpOutline: '0 2px 0 rgb(0 0 0 / 2%)'
       // }
