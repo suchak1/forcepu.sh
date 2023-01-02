@@ -33,10 +33,14 @@ jobs:
       - name: Set up AWS SAM
         uses: aws-actions/setup-sam@v2
 
-      - name: Use Node.js 16
+      - name: Fix SAM installation
+        run: |
+          pip install --force-reinstall -v cryptography==38.0.4
+
+      - name: Use Node.js 18
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
 
       - name: Create parameters.env [prod]
         uses: SpicyPizza/create-envfile@v1.3
