@@ -193,15 +193,19 @@ input {
   background: transparent;
 }
 
+:global(.ant-checkbox-wrapper:not(.ant-checkbox-wrapper-disabled):hover .ant-checkbox-checked:not(.ant-checkbox-disabled) .ant-checkbox-inner) {
+  background-color: transparent;
+}
+
 // removes blue border after checking
-.ant-checkbox-checked::after {
+:global(.ant-checkbox-checked::after) {
   border: unset;
 }
 
 // removes cyan border after checking
 :global(.ant-checkbox-checked .ant-checkbox-inner) {
   border-color: transparent !important;
-  background-color: unset;;
+  background-color: unset;
 }
 
 .ant-btn[disabled]:hover {
