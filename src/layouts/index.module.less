@@ -40,6 +40,10 @@ input {
   box-shadow: none !important;
 }
 
+:global(.ant-modal) {
+  max-width: calc(100vw - 16px);
+}
+
 :global(.ant-modal .ant-modal-header) {
   padding: 16px 24px;
   border-bottom: 1px solid #303030;
@@ -102,11 +106,15 @@ input {
   line-height: 1.35;
 }
 
-/* width */
+/* Scrollbar */
+// Use this to disable visible scrollbar
 // ::-webkit-scrollbar {
-//   width: 10px;
-//   // background-color: rgba(255, 255, 255, 0.1);
+//   width: 0px;
 // }
+// This is custom styling for modal
+:global(div.ant-modal-body::-webkit-scrollbar) {
+  width: 10px;
+}
 
 /* Track */
 ::-webkit-scrollbar-track {
