@@ -30,57 +30,65 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
+      # - name: Set up AWS SAM
+      #   uses: aws-actions/setup-sam@v2
+
       - name: Set up AWS SAM
-        uses: aws-actions/setup-sam@v2
-
-      - name: Fix SAM installation
+      # https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip
         run: |
-          pip install --force-reinstall -v pyOpenSSL==23.0.0 urllib3==1.26.12
+          curl https://github.com/aws/aws-sam-cli/releases/download/v1.67.0/aws-sam-cli-linux-x86_64.zip -O -J -L
+          unzip aws-sam-cli-linux-x86_64.zip -d sam-installation
+          sudo ./sam-installation/install
+          sam --version
 
-      - name: Use Node.js 18
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+      # - name: Fix SAM installation
+      #   run: |
+      #     pip install --force-reinstall -v pyOpenSSL==23.0.0 urllib3==1.26.12
 
-      - name: Create parameters.env [prod]
-        uses: SpicyPizza/create-envfile@v1.3
-        with:
-          envkey_S3Bucket: ${{ secrets.HYPERDRIVE_BUCKET }}
-          envkey_Stage: prod
-          envkey_ApiUrl: api.forcepu.sh
-          envkey_CertArn: ${{ secrets.CERT_ARN }}
-          envkey_HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
-          envkey_UserPoolArn: ${{ secrets.USER_POOL_ARN }}
-          directory: src/api
-          file_name: parameters.env
-        if: ${{ github.ref == 'refs/heads/master' }}
+      # - name: Use Node.js 18
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: 18
 
-      - name: Create parameters.env [dev]
-        uses: SpicyPizza/create-envfile@v1.2
-        with:
-          envkey_S3Bucket: ${{ secrets.HYPERDRIVE_DEV_BUCKET }}
-          envkey_Stage: dev
-          envkey_ApiUrl: api.dev.forcepu.sh
-          envkey_CertArn: ${{ secrets.DEV_CERT_ARN }}
-          envkey_HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
-          envkey_UserPoolArn: ${{ secrets.DEV_USER_POOL_ARN }}
-          directory: src/api
-          file_name: dev-parameters.env
-        if: ${{ github.ref != 'refs/heads/master' }}
+      # - name: Create parameters.env [prod]
+      #   uses: SpicyPizza/create-envfile@v1.3
+      #   with:
+      #     envkey_S3Bucket: ${{ secrets.HYPERDRIVE_BUCKET }}
+      #     envkey_Stage: prod
+      #     envkey_ApiUrl: api.forcepu.sh
+      #     envkey_CertArn: ${{ secrets.CERT_ARN }}
+      #     envkey_HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
+      #     envkey_UserPoolArn: ${{ secrets.USER_POOL_ARN }}
+      #     directory: src/api
+      #     file_name: parameters.env
+      #   if: ${{ github.ref == 'refs/heads/master' }}
 
-      - name: Build API
-        run: npm run build:api
+      # - name: Create parameters.env [dev]
+      #   uses: SpicyPizza/create-envfile@v1.2
+      #   with:
+      #     envkey_S3Bucket: ${{ secrets.HYPERDRIVE_DEV_BUCKET }}
+      #     envkey_Stage: dev
+      #     envkey_ApiUrl: api.dev.forcepu.sh
+      #     envkey_CertArn: ${{ secrets.DEV_CERT_ARN }}
+      #     envkey_HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
+      #     envkey_UserPoolArn: ${{ secrets.DEV_USER_POOL_ARN }}
+      #     directory: src/api
+      #     file_name: dev-parameters.env
+      #   if: ${{ github.ref != 'refs/heads/master' }}
 
-      - name: Deploy API [prod]
-        run: npm run deploy:api
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        if: ${{ github.ref == 'refs/heads/master' }}
+      # - name: Build API
+      #   run: npm run build:api
 
-      - name: Deploy API [dev]
-        run: npm run deploy-dev:api
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        if: ${{ github.ref != 'refs/heads/master' }}
+      # - name: Deploy API [prod]
+      #   run: npm run deploy:api
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #   if: ${{ github.ref == 'refs/heads/master' }}
+
+      # - name: Deploy API [dev]
+      #   run: npm run deploy-dev:api
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #   if: ${{ github.ref != 'refs/heads/master' }}
