@@ -141,6 +141,15 @@ const LineChart: React.FC<any> = memo(
         ],
       },
       tooltip: {
+        domStyles: {
+          'g2-tooltip': {
+            'border-radius': '6px',
+            'background-color': 'rgba(45, 45, 45, 0.95)',
+            'box-shadow': '0 0 10px black',
+            color: 'rgba(255, 255, 255, 0.85)',
+            opacity: 'unset'
+          }
+        },
         showCrosshairs: true,
         showMarkers: false,
         customItems: (originalItems: TooltipItem[]) => {
