@@ -1,6 +1,6 @@
-import React, { useState, useEffect, createContext } from "react";
-import { NavLink } from "umi";
-import { Layout as AntLayout, Menu, Button, Modal, Checkbox } from "antd";
+import { useState, useEffect, createContext } from "react";
+import { BrowserRouter, NavLink, Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { Layout as AntLayout, Menu, Button, Modal, Checkbox, ConfigProvider, theme } from "antd";
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import {
   Authenticator,
@@ -11,9 +11,10 @@ import {
 } from "@aws-amplify/ui-react";
 import { Amplify } from "aws-amplify";
 import "@aws-amplify/ui-react/styles.css";
-import BTC_ICE from "../../assets/btc_ice.png";
-import overrides from "./index.less";
-import "./index.less";
+import BTC_ICE from "@/assets/btc_ice.png";
+import overrides from "./index.module.less";
+import "./index.module.less";
+
 import {
   getLoginLoading,
   getEnvironment,
@@ -21,29 +22,34 @@ import {
   getAccount,
   getApiUrl,
 } from "@/utils";
-import TOS, { TOSTitleText } from "../pages/tos";
-// import pageStyles from "../pages/index.less";
+import Docs from "@/pages/docs";
+import Algorithm from "@/pages/algorithm";
+import Art from "@/pages/art";
+import Gym from "@/pages/gym";
+import TOS, { TOSTitleText } from "@/pages/tos";
+import Privacy from "@/pages/privacy";
+import Home from "@/pages/home";
+
+const { darkAlgorithm } = theme;
 
 let config;
 const isLocal = getEnvironment() === "local";
 const protocol = isLocal ? "http" : "https";
 const hostname = getHostname(false);
 const port = isLocal ? ":8000" : "";
-// const { pathname } = window.location;
-// const redirectUrl = `${protocol}://${hostname}${port}${pathname}`;
-const redirectUrl = `${protocol}://${hostname}${port}`;
+let redirectUrl = `${protocol}://${hostname}${port}`;
 
 if (isLocal) {
-  config = require("@/aws-exports").default;
+  config = (await import("@/aws-exports")).default;
 } else {
   config = {
-    aws_project_region: process.env.UMI_APP_REGION,
-    aws_cognito_identity_pool_id: process.env.UMI_APP_IDENTITY_POOL_ID,
-    aws_cognito_region: process.env.UMI_APP_REGION,
-    aws_user_pools_id: process.env.UMI_APP_USER_POOL_ID,
-    aws_user_pools_web_client_id: process.env.UMI_APP_WEB_CLIENT_ID,
+    aws_project_region: import.meta.env.VITE_APP_REGION,
+    aws_cognito_identity_pool_id: import.meta.env.VITE_APP_IDENTITY_POOL_ID,
+    aws_cognito_region: import.meta.env.VITE_APP_REGION,
+    aws_user_pools_id: import.meta.env.VITE_APP_USER_POOL_ID,
+    aws_user_pools_web_client_id: import.meta.env.VITE_APP_WEB_CLIENT_ID,
     oauth: {
-      domain: process.env.UMI_APP_OAUTH_DOMAIN,
+      domain: import.meta.env.VITE_APP_OAUTH_DOMAIN,
       scope: [
         "phone",
         "email",
@@ -73,12 +79,9 @@ if (isLocal) {
     aws_cognito_verification_mechanisms: ["EMAIL"],
   };
 }
-// config.oauth.redirectSignIn = redirectUrl;
-// config.oauth.redirectSignOut = redirectUrl;
 
-Amplify.configure(config);
 
-const theme = createTheme({
+const authTheme = createTheme({
   name: "dark-mode-theme",
   overrides: [
     {
@@ -163,6 +166,9 @@ const Layout = ({ children }: LayoutProps) => {
   );
   const [checked, setChecked] = useState(false);
   const [acknowledgeLoading, setAcknowledgeLoading] = useState(false);
+  const [selectedMenuIdx, setSelectedMenuIdx] = useState(pages.indexOf(window.location.pathname.slice(1)) + 1);
+  // filter out home link from antd's menu "selected" css stylings
+  const selectedMenuItems = selectedMenuIdx ? [selectedMenuIdx.toString()] : [];
 
   useEffect(getLoginLoading(setLoginLoading));
   useEffect(getAccount(loggedIn, setAccount, setAccountLoading), [loggedIn]);
@@ -186,9 +192,15 @@ const Layout = ({ children }: LayoutProps) => {
       .finally(() => setAcknowledgeLoading(false));
   };
 
-  const selectedMenuIdx = pages.indexOf(window.location.pathname.slice(1)) + 1;
-  // filter out home link from antd's menu "selected" css stylings
-  const selectedMenuItems = selectedMenuIdx ? [selectedMenuIdx.toString()] : [];
+  const location = useLocation();
+  const { pathname } = location;
+
+  redirectUrl = `${protocol}://${hostname}${port}${pathname === '/' ? '' : pathname}`;
+
+  config.oauth.redirectSignIn = redirectUrl;
+  config.oauth.redirectSignOut = redirectUrl;
+
+  Amplify.configure(config);
 
   return (
     <AntLayout>
@@ -204,6 +216,7 @@ const Layout = ({ children }: LayoutProps) => {
         <span style={{ display: "flex", alignItems: "center" }}>
           <img className="logo" src={BTC_ICE} width={24} height={24}></img>
           <Menu
+            onClick={(item) => setSelectedMenuIdx(parseInt(item.key))}
             style={{ height: headerHeight, width: "100%" }}
             theme="dark"
             mode="horizontal"
@@ -211,7 +224,7 @@ const Layout = ({ children }: LayoutProps) => {
             selectedKeys={selectedMenuItems}
             items={routes.map((route, idx) => ({
               className: [overrides.white, overrides.ice].join(" "),
-              key: idx,
+              key: idx.toString(),
               style:
                 idx === 0
                   ? {
@@ -221,7 +234,7 @@ const Layout = ({ children }: LayoutProps) => {
                       display: "flex",
                       alignItems: "center",
                     },
-              label: <NavLink to={route.to}>{route.text}</NavLink>,
+              label: <NavLink to={route.to}>{route.text}</NavLink>
             }))}
           ></Menu>
           {dummy}
@@ -239,7 +252,7 @@ const Layout = ({ children }: LayoutProps) => {
               )}
               {loggedIn ? (
                 <Button
-                  className="signOut"
+                  className={overrides.signOut}
                   onClick={() => {
                     setShowLogin(false);
                     signOut();
@@ -259,13 +272,13 @@ const Layout = ({ children }: LayoutProps) => {
               <Modal
                 // changing this would change position of modal when you alternate between Sign In and Create Account
                 style={{ height: "462px" }}
-                visible={showModal}
+                open={showModal}
                 closable={false}
                 centered
                 onCancel={() => setShowLogin(false)}
                 footer={null}
               >
-                <AmplifyProvider theme={theme} colorMode="dark">
+                <AmplifyProvider theme={authTheme} colorMode="dark">
                   <Authenticator />
                 </AmplifyProvider>
               </Modal>
@@ -292,7 +305,7 @@ const Layout = ({ children }: LayoutProps) => {
             overflowY: "scroll",
             color: "rgba(255, 255, 255, 0.45)",
           }}
-          visible={account && !account?.permissions?.read_disclaimer}
+          open={account && !account?.permissions?.read_disclaimer}
           closable={false}
           centered
           footer={
@@ -328,16 +341,23 @@ const Layout = ({ children }: LayoutProps) => {
               </Button>
             </div>
           }
-          // footer with checkbox, statement, and grayed out confirm
-          // confirm button hits api to update user
-          // onCancel={() => setShowLogin(false)}
         >
           <TOS modal />
         </Modal>
         <AccountContext.Provider
           value={{ account, accountLoading, loginLoading, setShowLogin }}
         >
-          {children}
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/docs" element={<Docs />} />
+            <Route path="/algorithm" element={<Algorithm />} />
+            <Route path="/art" element={<Art />} />
+            <Route path="/gym" element={<Gym />} />
+            <Route path="/tos" element={<TOS />} />
+            <Route path="/privacy" element={<Privacy />} />
+            {/* This is 404 redirect to home page for unknown routes */}
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
         </AccountContext.Provider>
       </AntLayout.Content>
       <AntLayout.Footer
@@ -352,10 +372,10 @@ const Layout = ({ children }: LayoutProps) => {
         <span className={overrides.footerLink}>
           _move fast; break everything
         </span>
-        <NavLink className={overrides.footerLink} to="/tos">
+        <NavLink onClick={() => setSelectedMenuIdx(0)} className={overrides.footerLink} to="/tos">
           Terms of Service & Financial Disclaimer
         </NavLink>
-        <NavLink className={overrides.footerLink} to="/privacy">
+        <NavLink onClick={() => setSelectedMenuIdx(0)} className={overrides.footerLink} to="/privacy">
           Privacy
         </NavLink>
       </AntLayout.Footer>
@@ -364,7 +384,42 @@ const Layout = ({ children }: LayoutProps) => {
 };
 
 export default ({ route, children }: LayoutProps) => (
+  <ConfigProvider theme={{
+    algorithm: darkAlgorithm,
+    token: {
+      // rounded edges
+      borderRadius: 2,
+      // card box shadow
+      boxShadowCard: "0 1px 2px -2px rgb(0 0 0 / 64%), 0 3px 6px 0 rgb(0 0 0 / 48%), 0 5px 12px 4px rgb(0 0 0 / 36%)",
+      // button box shadow
+      controlTmpOutline: '0 2px 0 rgb(0 0 0 / 2%)'
+      // borderRadiusLG: 2,
+      // borderRadiusSM: 2,
+    },
+    components: {
+      Input: {
+        // input background
+        colorBgContainer: 'transparent',
+      },
+      Table: {
+        borderRadiusLG: 4
+      },
+      Card: {
+        borderRadiusLG: 4
+      }
+      // Button: {
+      //   controlTmpOutline: '0 2px 0 rgb(0 0 0 / 2%)'
+      // }
+    },
+  }}>
   <Authenticator.Provider>
+    <BrowserRouter>
     <Layout route={route}>{children}</Layout>
+    </BrowserRouter>
   </Authenticator.Provider>
+  </ConfigProvider>
 );
+
+
+
+          

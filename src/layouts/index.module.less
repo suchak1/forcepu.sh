@@ -1,0 +1,439 @@
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  color: hsla(0,0%,100%,.85);
+  font-size: 14px;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  font-variant: tabular-nums;
+  // display: flex;
+  // place-items: center;
+  // min-width: 320px;
+  // min-height: 100vh;
+}
+
+a {
+  color: #177ddc;
+}
+
+p {
+  margin-top: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  color: hsla(0,0%,100%,.85);
+  font-weight: 500;
+}
+
+input {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+:global(.ant-btn-default:disabled) {
+  color: hsla(0,0%,100%,.3) !important;
+  border-color: #434343 !important;
+  background: hsla(0,0%,100%,.08);
+  text-shadow: none;
+  box-shadow: none !important;
+}
+
+:global(.ant-modal) {
+  max-width: calc(100vw - 16px);
+}
+
+:global(.ant-modal .ant-modal-header) {
+  padding: 16px 24px;
+  border-bottom: 1px solid #303030;
+  margin-bottom: 0;
+}
+
+:global(.ant-modal .ant-modal-footer) {
+  padding: 10px 16px;
+  border-top: 1px solid #303030;
+  margin-top: 0;
+}
+
+:global(.ant-btn:not(:disabled):focus-visible), :global(.ant-switch:focus-visible) {
+  outline-offset: unset;
+  outline: -webkit-focus-ring-color auto 1px;
+}
+
+:global(.ant-alert) {
+  padding: 8px 15px;
+}
+
+:global(.ant-message-notice .ant-message-notice-content) {
+  background: #1f1f1f;
+  color: rgba(255,255,255,0.85);
+  box-shadow: 0 3px 6px -4px rgb(0 0 0 / 48%), 0 6px 16px 0 rgb(0 0 0 / 32%), 0 9px 28px 8px rgb(0 0 0 / 20%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+:global(.ant-notification-notice) {
+  background: #1f1f1f;
+  color: rgba(255,255,255,0.85);
+  box-shadow: 0 3px 6px -4px rgb(0 0 0 / 48%), 0 6px 16px 0 rgb(0 0 0 / 32%), 0 9px 28px 8px rgb(0 0 0 / 20%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+:global(.ant-notification-notice .ant-notification-notice-message) {
+  color: rgba(255,255,255,0.85);
+}
+
+// notification x
+:global(.ant-notification-notice .ant-notification-notice-close) {
+  color: hsla(0,0%,100%,.45);
+}
+// notification x - hover
+:global(.ant-notification-notice .ant-notification-notice-close:hover) {
+  color: hsla(0,0%,100%,.85);
+}
+
+:global(.ant-modal .ant-card) {
+  background: #1f1f1f;
+}
+
+:global(.ant-typography) {
+  margin-top: 0px;
+}
+
+:global(h2.ant-typography) {
+  line-height: 1.35;
+}
+
+/* Scrollbar */
+// Use this to disable visible scrollbar
+// ::-webkit-scrollbar {
+//   width: 0px;
+// }
+// This is custom styling for modal
+:global(div.ant-modal-body::-webkit-scrollbar) {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+}
+
+// /* Handle */
+::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.account {
+  padding-right: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+@media (max-width: 700px) {
+  .account {
+    display: none;
+    width: 0;
+  }
+}
+
+.home {
+  font-size: 20px;
+  color: #52e5ff;
+  margin-left: -10px;
+}
+
+.home:hover {
+  color: white;
+}
+
+.signOut, .signOut:focus {
+  border-left-color: magenta !important;
+  border-right-color: magenta !important;
+  border-top-color: transparent !important;
+  border-bottom-color: transparent !important;
+}
+
+.signOut:hover {
+  border-color: magenta !important;
+  box-shadow: 0 0 5px magenta !important;
+}
+
+.signOut:active {
+    border-color: magenta !important;
+    box-shadow: none !important;
+}
+
+.invisible {
+  display: none;
+  z-index: -1000 !important;
+}
+
+:global(.ant-modal-mask) {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+:global(.ant-modal-content) {
+  padding: 0 !important;
+}
+
+// adds cyan border when unchecked
+:global(.ant-checkbox .ant-checkbox-inner), :global(.ant-checkbox:not(.ant-checkbox-disabled):hover .ant-checkbox-inner), :global(.ant-checkbox-wrapper:not(.ant-checkbox-wrapper-disabled):hover .ant-checkbox-inner) {
+  border-color: #52e5ff;
+  background: transparent;
+}
+
+:global(.ant-checkbox-wrapper:not(.ant-checkbox-wrapper-disabled):hover .ant-checkbox-checked:not(.ant-checkbox-disabled) .ant-checkbox-inner) {
+  background-color: transparent;
+}
+
+// removes blue border after checking
+:global(.ant-checkbox-checked::after) {
+  border: unset;
+}
+
+// removes cyan border after checking
+:global(.ant-checkbox-checked .ant-checkbox-inner) {
+  border-color: transparent !important;
+  background-color: unset;
+}
+
+// table row hover color
+:global(.ant-table-wrapper .ant-table-tbody >tr.ant-table-row:hover>td), :global(.ant-table-wrapper .ant-table-tbody >tr >td.ant-table-cell-row-hover) {
+  background: #262626;
+}
+
+// hide table head divider
+:global(.ant-table-wrapper .ant-table-thead >tr>th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before) {
+  width: 0;
+}
+
+// hide table head bottom border
+:global(.ant-table-wrapper .ant-table-thead >tr>th) {
+  border-bottom: 0;
+}
+
+// hide table row top border
+:global(.ant-table-wrapper .ant-table-tbody >tr >td) {
+  border-top: 0;
+}
+
+// hide last row bottom border
+:global(.ant-table-wrapper .ant-table-tbody >tr:last-child>td) {
+  border-bottom: 0;
+}
+
+.ant-btn[disabled]:hover {
+  border-color: #434343 !important;
+}
+
+.start {
+  border-color: #52e5ff;
+}
+
+// mobile
+@media (max-width: 475px) {
+  .checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+// desktop
+@media (min-width: 475px) {
+  .mobileBreak {
+    display: none;
+  }
+  :global(.ant-checkbox + span) {
+    padding-left: 16px;
+  }
+}
+
+:global(.ant-btn-default) {
+  background-color: inherit;
+}
+
+:global(.ant-btn-default:not(:disabled):hover) {
+  border-color: #52e5ff;
+}
+
+:global(.ant-btn-default:hover),
+:global(.ant-btn-default:active) {
+  border-color: #52e5ff;
+  box-shadow: 0 0 5px #52e5ff;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+:global(.ant-btn-default:not(:disabled):hover) {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+:global(.ant-btn-default:not(:disabled):active) {
+  box-shadow:none;
+  border-color: #52e5ff;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+:global(.ant-btn-default:focus) {
+  border-color: #52e5ff;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+:global(.ant-layout-footer) {
+  padding: 0 24px !important;
+}
+
+.footerLink {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+.footerLink:hover {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+:global(.ant-layout-header) {
+  background: #1f1f1f !important;
+  padding: 0 24px 0 20px !important;
+  // change right align (2nd param) to 20px or left align (4th param) to 24px?
+}
+
+:global(.ant-menu.ant-menu-dark) {
+  background: transparent !important;
+}
+
+// set menu item semi-bold font weight
+:global(.ant-menu.ant-menu-dark .ant-menu-item) {
+  font-weight: 600;
+}
+
+:global(.ant-menu.ant-menu-dark .ant-menu-item-selected) {
+  color: #52e5ff;
+  background-color: transparent;
+}
+
+// selected menu item style
+:global(.ant-menu-dark .ant-menu-item-selected > span > a) {
+  // color: #52e5ff;
+  display: flex;
+  margin-top: -2px;
+}
+
+:global(.ant-menu-item .ant-menu-title-content) {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+:global(.ant-menu-item-selected .ant-menu-title-content) {
+  border-top: 2px solid #52e5ff !important;
+  color: white !important;
+  // border-radius: 2px;
+}
+
+:global(.ant-menu-dark) {
+  background: black;
+}
+
+:global(.ant-menu-dark.ant-menu-submenu>.ant-menu) {
+  background-color: #1f1f1f;
+}
+
+:global(.ant-menu.ant-menu-dark .ant-menu-item-active:hover) {
+  background-color: inherit !important;
+}
+
+:global(.ant-menu-horizontal .ant-menu-item) {
+  padding-inline: 20px;
+}
+
+:global(.ant-menu-dark .ant-menu-item a:hover) {
+  color: white !important;
+}
+
+.ice {
+  color: #52e5ff;
+  font-weight: 600;
+}
+
+.white {
+  color: white;
+  font-weight: 600;
+}
+
+// HOVER WHITE
+
+// google sign in button
+:global(.federated-sign-in-button:hover),
+:global(.federated-sign-in-button:focus .federated-sign-in-button:active) {
+  background-color: #1d1d1d !important;
+  border-color: transparent !important;
+}
+
+:global(.amplify-label) {
+  display: none;
+}
+
+// inactive tab
+[data-amplify-authenticator] [data-state="inactive"] {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+[data-amplify-authenticator] [data-state="inactive"]:hover {
+  color: white !important;
+}
+
+[data-amplify-theme="dark-mode-theme"] {
+  --amplify-colors-brand-primary-80: #52e5ff !important;
+  --amplify-font-weights-bold: 600 !important;
+  --amplify-colors-font-hover: white !important;
+  --amplify-colors-font-focus: white !important;
+  --amplify-colors-font-active: white !important;
+
+  --amplify-components-tabs-item-active-color: white !important;
+
+  // inactive tab
+  --amplify-colors-background-secondary: transparent !important;
+  --amplify-components-fieldcontrol-focus-border-color: white !important;
+
+  // forgot your password
+  --amplify-components-button-link-hover-background-color: transparent !important;
+  --amplify-components-button-link-focus-background-color: transparent !important;
+  --amplify-components-button-link-active-background-color: transparent !important;
+  --amplify-components-button-link-color: rgba(255, 255, 255, 0.65) !important;
+
+  // reveal password button
+  --amplify-components-button-hover-color: #52e5ff !important;
+  --amplify-components-button-focus-color: #52e5ff !important;
+  --amplify-components-button-active-color: #52e5ff !important;
+  --amplify-components-button-hover-background-color: transparent !important;
+  --amplify-components-button-focus-background-color: transparent !important;
+  --amplify-components-button-active-background-color: transparent !important;
+  --amplify-components-button-hover-border-color: rgba(255,
+      255,
+      255,
+      0.2) !important;
+  --amplify-components-button-focus-border-color: rgba(255,
+      255,
+      255,
+      0.2) !important;
+  --amplify-components-button-active-border-color: rgba(255,
+      255,
+      255,
+      0.2) !important;
+
+  // border outline for modal and inputs
+  --amplify-colors-border-primary: rgba(255, 255, 255, 0.2) !important;
+}
+
+[data-amplify-authenticator] [data-amplify-container] {
+  width: 100%;
+}
