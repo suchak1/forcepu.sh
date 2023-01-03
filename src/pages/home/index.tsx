@@ -106,19 +106,14 @@ const LineChart: React.FC<any> = memo(
         //   return `<div>${title}</div>`;
         // }
         customItems: (originalItems: TooltipItem[]) => {
-          // process originalItems, 
-          console.log(originalItems);
-          // const signalDatum = originalItems[0];
-          // signalDatum.marker = {symbol: "triangle"};
-          // signalDatum.symbol = "triangle";
-          // signalDatum.mappingData.shape = "triangle";
           const hyperdriveItem = originalItems[0].name === hyperdrive ? originalItems[0] : originalItems[1];
+          // console.log(hyperdriveItem);
           if (hyperdriveItem.data.Sig !== null) {
             const signal = hyperdriveItem.data.Sig;
             const signalDatum = {
               color: signal ? 'lime' : 'red', 
               // color: 'white', 
-              name: 'Signal', 
+              name: 'SIGNAL', 
               value: signal ? '▲ BUY' : '▼ SELL'
             };
 
