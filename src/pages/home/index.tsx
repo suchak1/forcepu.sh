@@ -58,8 +58,13 @@ const Toggle = styled(Segmented)`
   }
 
   .ant-segmented-thumb {
-    background-image: linear-gradient(to bottom right, ${(props: { val: boolean }) => 
-      (!props.val ? "#F7931A" : "blue")}, ${(props: { val: boolean }) => (!props.val ? "#F7931A" : "red")} );
+    background-color: transparent;
+    border-width: 1px;
+    border-style: solid;
+    border-left-color: ${(props: { val: boolean }) => (props.val ? "cyan" : "#F7931A")};
+    border-top-color: ${(props: { val: boolean }) => (props.val ? "cyan" : "#F7931A")};
+    border-right-color: ${(props: { val: boolean }) => (props.val ? "magenta" : "#F7931A")};
+    border-bottom-color: ${(props: { val: boolean }) => (props.val ? "magenta" : "#F7931A")};
   }
 `;
 
