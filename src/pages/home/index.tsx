@@ -4,7 +4,6 @@ import {
   Typography,
   Spin,
   Table,
-  Switch,
   Alert,
   Card,
   Row,
@@ -560,17 +559,6 @@ const Page = () => {
                     <i style={{ color: "#52e5ff" }}>{hyperdrive}</i>
                   </a>
                 </Title>
-                {/* <Switch
-                style={toggle ? {background: '#F7931A'}: {}}
-                  checkedChildren="BTC (₿)"
-                  unCheckedChildren="USD ($)"
-                  defaultChecked
-                  onChange={(checked) => setToggle(checked)}
-                /> */}
-                {/* USA gradient */}
-                {/* linear-gradient(to bottom right, blue , red ); */}
-                {/* background-image: linear-gradient(to right, blue , rgba(100, 100, 100, 0.35), red); */}
-                {/* BTC (B) for desktop, just symbol B for mobile */}
                 <Toggle
                   val={toggle}
                   options={[toggleLabels.BTC, toggleLabels.USD]}
