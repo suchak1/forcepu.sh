@@ -98,7 +98,7 @@ const LineChart: React.FC<any> = memo(
             value: HODL,
             name: HODL,
             marker: {
-              symbol: 'circle',
+              symbol: 'hexagon',
               style: {
                 fill: 'magenta',
                 r: sqSize,
@@ -109,7 +109,7 @@ const LineChart: React.FC<any> = memo(
             value: hyperdrive,
             name: hyperdrive,
             marker: {
-              symbol: 'circle',
+              symbol: 'hexagon',
               style: {
                 fill: '#52e5ff',
                 r: sqSize,
@@ -123,7 +123,7 @@ const LineChart: React.FC<any> = memo(
               symbol: 'triangle',
               style: {
                 fill: 'lime',
-                r: triSize,
+                r: sqSize,
               },
             },
           },
@@ -134,7 +134,7 @@ const LineChart: React.FC<any> = memo(
               symbol: 'triangle-down',
               style: {
                 fill: 'red',
-                r: triSize,
+                r: sqSize,
               },
             },
           },
