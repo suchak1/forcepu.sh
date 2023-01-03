@@ -108,18 +108,15 @@ const LineChart: React.FC<any> = memo(
         customItems: (originalItems: TooltipItem[]) => {
           const hyperdriveItem = originalItems[0].name === hyperdrive ? originalItems[0] : originalItems[1];
           // console.log(hyperdriveItem);
-          if (hyperdriveItem.data.Sig !== null) {
-            const signal = hyperdriveItem.data.Sig;
-            const signalDatum = {
-              color: signal ? 'lime' : 'red', 
-              // color: 'white', 
-              name: 'SIGNAL', 
-              value: signal ? '▲ BUY' : '▼ SELL'
-            };
-
+          const signal = hyperdriveItem.data.Full_Sig;
+          const signalDatum = {
+            color: signal ? 'lime' : 'red', 
+            // color: 'white', 
+            name: 'SIGNAL', 
+            value: signal ? '▲ BUY' : '▼ SELL'
+          };
             originalItems.push(signalDatum);
-          } 
-          return originalItems;
+            return originalItems;
         }
       },
       autoFit: true,
