@@ -261,21 +261,21 @@ const Page = () => {
       if (data.Name === hyperdrive && data.Sig !== null) {
         const fill = data.Sig ? "lime" : "red";
         const symbol = data.Sig ? "triangle" : "triangle-down";
-        const text = data.Sig ? "BUY" : "SELL";
-        const fontSize = 10;
-        group.addShape("text", {
-          attrs: {
-            text,
-            x: point.x - fontSize,
-            y: point.y - fontSize / 2,
-            fill,
-            fontWeight: 400,
-            shadowOffsetX: 10,
-            shadowOffsetY: 10,
-            shadowBlur: 10,
-            fontSize,
-          },
-        });
+        // const text = data.Sig ? "BUY" : "SELL";
+        // const fontSize = 10;
+        // group.addShape("text", {
+        //   attrs: {
+        //     text,
+        //     x: point.x - fontSize,
+        //     y: point.y - fontSize / 2,
+        //     fill,
+        //     fontWeight: 400,
+        //     shadowOffsetX: 10,
+        //     shadowOffsetY: 10,
+        //     shadowBlur: 10,
+        //     fontSize,
+        //   },
+        // });
 
         group.addShape("marker", {
           attrs: {
@@ -284,26 +284,6 @@ const Page = () => {
             r: 5,
             fill,
             opacity: 1,
-            symbol,
-          },
-        });
-
-        group.addShape("marker", {
-          attrs: {
-            x: point.x,
-            y: point.y,
-            r: 3,
-            fill,
-            opacity: 0.7,
-            symbol,
-          },
-        });
-        group.addShape("marker", {
-          attrs: {
-            x: point.x,
-            y: point.y,
-            r: 0.75,
-            fill,
             symbol,
           },
         });
