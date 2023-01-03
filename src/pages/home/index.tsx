@@ -91,14 +91,14 @@ const LineChart: React.FC<any> = memo(
       // https://github.com/search?q=org%3Aantvis+bowtie+-filename%3A*.json+-filename%3A*.html+-filename%3A*.md&type=Code
       legend: {
         layout: 'horizontal',
-        position: 'top-left',
+        position: 'top-right',
         custom: true,
         items: [
           {
             value: HODL,
             name: HODL,
             marker: {
-              symbol: 'square',
+              symbol: 'circle',
               style: {
                 fill: 'magenta',
                 r: sqSize,
@@ -109,7 +109,7 @@ const LineChart: React.FC<any> = memo(
             value: hyperdrive,
             name: hyperdrive,
             marker: {
-              symbol: 'square',
+              symbol: 'circle',
               style: {
                 fill: '#52e5ff',
                 r: sqSize,
