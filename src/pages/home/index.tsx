@@ -84,6 +84,49 @@ const formatUSD = (v: number) => {
 const LineChart: React.FC<any> = memo(
   ({ data, formatFx }) => {
     const config = {
+      // legend: {
+      //   // items: [{id: 'Name', name: 'HODL', color: 'magenta', value: 'hyperdrive', marker: {symbol: 'triangle '}}],
+      //   customContent (title: string, items: ILegendListItem[]) {
+      //     // const container = document.createElement('div');
+      //     // container.innerHTML = '内容'
+      //     console.log(items);
+      //     return container;
+      //   },
+      //   custom: true,
+      // },
+      tooltip: {
+        showCrosshairs: true,
+        showMarkers: false,
+        // fields: ['x', 'y', 'Sig'],
+        // formatter: (datum: Datum) => {
+        //   return { Time: datum.Time, Bal: datum.Bal, Sig: datum?.Sig };
+        // },
+        // customContent: (title, data) => {
+        //   console.log(data);
+        //   return `<div>${title}</div>`;
+        // }
+        customItems: (originalItems: TooltipItem[]) => {
+          // process originalItems, 
+          console.log(originalItems);
+          // const signalDatum = originalItems[0];
+          // signalDatum.marker = {symbol: "triangle"};
+          // signalDatum.symbol = "triangle";
+          // signalDatum.mappingData.shape = "triangle";
+          const hyperdriveItem = originalItems[0].name === hyperdrive ? originalItems[0] : originalItems[1];
+          if (hyperdriveItem.data.Sig !== null) {
+            const signal = hyperdriveItem.data.Sig;
+            const signalDatum = {
+              color: signal ? 'lime' : 'red', 
+              // color: 'white', 
+              name: 'Signal', 
+              value: signal ? '▲ BUY' : '▼ SELL'
+            };
+
+            originalItems.push(signalDatum);
+          } 
+          return originalItems;
+        }
+      },
       autoFit: true,
       data,
       xField: "Time",
