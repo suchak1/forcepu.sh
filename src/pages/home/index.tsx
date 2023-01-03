@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useRef } from "react";
 import { useState, useEffect, useContext } from "react";
 import {
   Typography,
@@ -82,41 +82,75 @@ const formatUSD = (v: number) => {
 // Look up memo vs useMemo
 // https://blog.logrocket.com/react-memo-vs-usememo/
 const LineChart: React.FC<any> = memo(
-  ({ data, formatFx }) => {
+  ({ data, formatFx, chartRef }) => {
+    const sqSize = 5;
+    let triSize = Math.sqrt(Math.pow(sqSize, 2) * (4 / Math.sqrt(3)));
+    triSize = triSize / 1.3;
     const config = {
-      // legend: {
-      //   // items: [{id: 'Name', name: 'HODL', color: 'magenta', value: 'hyperdrive', marker: {symbol: 'triangle '}}],
-      //   customContent (title: string, items: ILegendListItem[]) {
-      //     // const container = document.createElement('div');
-      //     // container.innerHTML = '内容'
-      //     console.log(items);
-      //     return container;
-      //   },
-      //   custom: true,
-      // },
+      // search for symbols:
+      // https://github.com/search?q=org%3Aantvis+bowtie+-filename%3A*.json+-filename%3A*.html+-filename%3A*.md&type=Code
+      legend: {
+        custom: true,
+        items: [
+          {
+            value: HODL,
+            name: HODL,
+            marker: {
+              symbol: 'square',
+              style: {
+                fill: 'magenta',
+                r: sqSize,
+              },
+            },
+          },
+          {
+            value: hyperdrive,
+            name: hyperdrive,
+            marker: {
+              symbol: 'square',
+              style: {
+                fill: '#52e5ff',
+                r: sqSize,
+              },
+            },
+          },
+          {
+            value: 'BUY',
+            name: 'BUY',
+            marker: {
+              symbol: 'triangle',
+              style: {
+                fill: 'lime',
+                r: triSize,
+              },
+            },
+          },
+          {
+            value: 'SELL',
+            name: 'SELL',
+            marker: {
+              symbol: 'triangle-down',
+              style: {
+                fill: 'red',
+                r: triSize,
+              },
+            },
+          },
+        ],
+      },
       tooltip: {
         showCrosshairs: true,
         showMarkers: false,
-        // fields: ['x', 'y', 'Sig'],
-        // formatter: (datum: Datum) => {
-        //   return { Time: datum.Time, Bal: datum.Bal, Sig: datum?.Sig };
-        // },
-        // customContent: (title, data) => {
-        //   console.log(data);
-        //   return `<div>${title}</div>`;
-        // }
         customItems: (originalItems: TooltipItem[]) => {
           const hyperdriveItem = originalItems[0].name === hyperdrive ? originalItems[0] : originalItems[1];
-          // console.log(hyperdriveItem);
           const signal = hyperdriveItem.data.Full_Sig;
           const signalDatum = {
             color: signal ? 'lime' : 'red', 
-            // color: 'white', 
             name: 'SIGNAL', 
             value: signal ? '▲ BUY' : '▼ SELL'
           };
-            originalItems.push(signalDatum);
-            return originalItems;
+          originalItems.push(signalDatum);
+          return originalItems;
         }
       },
       autoFit: true,
@@ -174,7 +208,8 @@ const LineChart: React.FC<any> = memo(
         shape: "breath-point",
       },
     };
-    return <Line {...config} />;
+    // console.log(<Line {...config} />);
+    return <Line ref={chartRef} {...config} />;
   },
   (pre, next) => JSON.stringify(pre?.data) === JSON.stringify(next?.data)
 );
@@ -228,6 +263,7 @@ const Page = () => {
   const [quotaReached, setQuotaReached] = useState(false);
   const loading = previewLoading || accountLoading || loginLoading;
   const inBeta = loggedIn && account?.permissions?.in_beta;
+  const chartRef = useRef();
 
   useEffect(() => {
     // find a way to not load this for in_beta
@@ -346,7 +382,7 @@ const Page = () => {
   const betaTitle = (
     <div className={styles.content}>
       <div className={styles.betaContainer}>
-        <div className={styles.text}>{betaTitlePrefix}</div>
+        <div className={styles.text}>{console.log(chartRef?.current?.getChart())}</div>
         <div className={styles.list}>
           <div>
             <span style={{ fontSize: "30px" }}>
@@ -554,6 +590,7 @@ const Page = () => {
               <LineChart
                 data={toggle ? previewData.BTC.data : previewData.USD.data}
                 formatFx={toggle ? formatBTC : formatUSD}
+                chartRef={chartRef}
               />
             </div>
           )}
