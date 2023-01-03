@@ -210,7 +210,6 @@ const LineChart: React.FC<any> = memo(
         shape: "breath-point",
       },
     };
-    // console.log(<Line {...config} />);
     return <Line ref={chartRef} {...config} />;
   },
   (pre, next) => JSON.stringify(pre?.data) === JSON.stringify(next?.data)
@@ -384,7 +383,7 @@ const Page = () => {
   const betaTitle = (
     <div className={styles.content}>
       <div className={styles.betaContainer}>
-        <div className={styles.text}>{console.log(chartRef?.current?.getChart())}</div>
+        <div className={styles.text}>{betaTitlePrefix}</div>
         <div className={styles.list}>
           <div>
             <span style={{ fontSize: "30px" }}>
