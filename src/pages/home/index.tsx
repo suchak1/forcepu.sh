@@ -90,6 +90,8 @@ const LineChart: React.FC<any> = memo(
       // search for symbols:
       // https://github.com/search?q=org%3Aantvis+bowtie+-filename%3A*.json+-filename%3A*.html+-filename%3A*.md&type=Code
       legend: {
+        layout: 'horizontal',
+        position: 'top-left',
         custom: true,
         items: [
           {
