@@ -40,14 +40,15 @@ const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 import { AccountContext } from "@/layouts";
 
-const toggleLabels = {BTC: "BTC (₿)", USD: "USD ($)"};
+const toggleLabels = {BTC: "₿", USD: "$"};
 // "#F7931A"
 // outline: 1px solid
 // ${(props: { val: boolean }) => (props.val ? "#52e5ff" : "magenta")};
+const darkGray = 'rgba(255, 255, 255, 0.1)';
 const Toggle = styled(Segmented)`
   .ant-segmented-item-selected {
     background-image: linear-gradient(to bottom right, ${(props: { val: boolean }) => 
-      (props.val ? "#F7931A" : "blue")}, ${(props: { val: boolean }) => (props.val ? "#F7931A" : "red")} );
+      (props.val ? "#F7931A" : darkGray)}, ${(props: { val: boolean }) => (props.val ? "#F7931A" : darkGray)} );
     
     color: rgba(255, 255, 255, 0.85);
   }
@@ -61,10 +62,10 @@ const Toggle = styled(Segmented)`
     background-color: transparent;
     border-width: 1px;
     border-style: solid;
-    border-left-color: ${(props: { val: boolean }) => (props.val ? "cyan" : "#F7931A")};
-    border-top-color: ${(props: { val: boolean }) => (props.val ? "cyan" : "#F7931A")};
-    border-right-color: ${(props: { val: boolean }) => (props.val ? "magenta" : "#F7931A")};
-    border-bottom-color: ${(props: { val: boolean }) => (props.val ? "magenta" : "#F7931A")};
+    border-left-color: ${(props: { val: boolean }) => (props.val ? darkGray : "#F7931A")};
+    border-top-color: ${(props: { val: boolean }) => (props.val ? darkGray : "#F7931A")};
+    border-right-color: ${(props: { val: boolean }) => (props.val ? darkGray : "#F7931A")};
+    border-bottom-color: ${(props: { val: boolean }) => (props.val ? darkGray : "#F7931A")};
   }
 `;
 
