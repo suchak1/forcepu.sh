@@ -4,4 +4,4 @@ COPY app.py requirements.txt ./
 
 RUN python3.8 -m pip install -r requirements.txt -t .
 
-CMD ["app.post_subscribe"]
+CMD ["app.lambda_handler"]

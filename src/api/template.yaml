@@ -234,6 +234,8 @@ Resources:
         - DynamoDBCrudPolicy:
             TableName: !Ref UsersTable
       PackageType: Image
+      ImageConfig:
+        Command: ["app.post_subscribe"]
       Events:
         PostSubscribe:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -248,6 +250,42 @@ Resources:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /subscribe
+            Method: options
+            RestApiId: !Ref ApiGatewayApi
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./subscribe
+      DockerTag: python3.8-v1
+  CheckoutFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Environment:
+        Variables:
+          STRIPE_SECRET_KEY: !Ref StripeSecretKey
+          # remove table name if not needed
+          TABLE_NAME: !Ref UsersTable
+      # remove policy if not needed
+      Policies:
+      # remove policy if not needed
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UsersTable
+      PackageType: Image
+      ImageConfig:
+        Command: ["app.post_checkout"]
+      Events:
+        PostCheckout:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /checkout
+            Method: post
+            RestApiId: !Ref ApiGatewayApi
+            Auth:
+              Authorizer: CognitoAuth
+              # header Authorization: id_token from /token endpoint
+        Options:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /checkout
             Method: options
             RestApiId: !Ref ApiGatewayApi
     Metadata:
