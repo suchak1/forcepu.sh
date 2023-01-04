@@ -1,10 +1,9 @@
-import React, { memo } from "react";
+import React, { memo, useRef } from "react";
 import { useState, useEffect, useContext } from "react";
 import {
   Typography,
   Spin,
   Table,
-  Switch,
   Alert,
   Card,
   Row,
@@ -14,7 +13,9 @@ import {
   Modal,
   Skeleton,
   notification,
+  Segmented
 } from "antd";
+import styled from "styled-components";
 import { G2, Line } from "@ant-design/charts";
 import {
   LoadingOutlined,
@@ -22,9 +23,9 @@ import {
   CaretUpFilled,
   QuestionOutlined,
 } from "@ant-design/icons";
-import styles from "./index.less";
-import layoutStyles from "../layouts/index.less";
-import "./index.less";
+import styles from "./index.module.less";
+import layoutStyles from "@/layouts/index.module.less";
+import "./index.module.less";
 import {
   getApiUrl,
   getLoginLoading,
@@ -36,7 +37,34 @@ import {
 import { useAuthenticator } from "@aws-amplify/ui-react";
 const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
-import { AccountContext } from "../layouts";
+import { AccountContext } from "@/layouts";
+
+const toggleLabels = {BTC: "₿", USD: "$"};
+
+const toggleGray = 'rgba(255, 255, 255, 0.2)';
+const Toggle = styled(Segmented)`
+  .ant-segmented-item-selected {
+    background-image: linear-gradient(to bottom right, ${(props: { val: boolean }) => 
+      (props.val ? "#F7931A" : toggleGray)}, ${(props: { val: boolean }) => (props.val ? "#F7931A" : toggleGray)} );
+    
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .ant-segmented-item:hover,
+  .ant-segmented-item:focus {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .ant-segmented-thumb {
+    background-color: transparent;
+    border-width: 1px;
+    border-style: solid;
+    border-left-color: ${(props: { val: boolean }) => (props.val ? toggleGray : "#F7931A")};
+    border-top-color: ${(props: { val: boolean }) => (props.val ? toggleGray : "#F7931A")};
+    border-right-color: ${(props: { val: boolean }) => (props.val ? toggleGray : "#F7931A")};
+    border-bottom-color: ${(props: { val: boolean }) => (props.val ? toggleGray : "#F7931A")};
+  }
+`;
 
 const HODL = "HODL";
 const hyperdrive = "hyperdrive";
@@ -53,8 +81,88 @@ const formatUSD = (v: number) => {
 // Look up memo vs useMemo
 // https://blog.logrocket.com/react-memo-vs-usememo/
 const LineChart: React.FC<any> = memo(
-  ({ data, formatFx }) => {
+  ({ data, formatFx, chartRef }) => {
+    const sqSize = 5;
+    let triSize = Math.sqrt(Math.pow(sqSize, 2) * (4 / Math.sqrt(3)));
+    triSize = triSize / 1.3;
     const config = {
+      // search for symbols:
+      // https://github.com/search?q=org%3Aantvis+bowtie+-filename%3A*.json+-filename%3A*.html+-filename%3A*.md&type=Code
+      legend: {
+        layout: 'horizontal',
+        position: 'top-right',
+        custom: true,
+        items: [
+          {
+            value: HODL,
+            name: HODL,
+            marker: {
+              symbol: 'hexagon',
+              style: {
+                fill: 'magenta',
+                r: sqSize,
+              },
+            },
+          },
+          {
+            value: hyperdrive,
+            name: hyperdrive,
+            marker: {
+              symbol: 'hexagon',
+              style: {
+                fill: '#52e5ff',
+                r: sqSize,
+              },
+            },
+          },
+          {
+            value: 'BUY',
+            name: 'BUY',
+            marker: {
+              symbol: 'triangle',
+              style: {
+                fill: 'lime',
+                r: sqSize,
+              },
+            },
+          },
+          {
+            value: 'SELL',
+            name: 'SELL',
+            marker: {
+              symbol: 'triangle-down',
+              style: {
+                fill: 'red',
+                r: sqSize,
+              },
+            },
+          },
+        ],
+      },
+      tooltip: {
+        domStyles: {
+          'g2-tooltip': {
+            'border-radius': '6px',
+            'background-color': 'rgba(45, 45, 45, 0.95)',
+            'box-shadow': '0 0 10px black',
+            color: 'rgba(255, 255, 255, 0.85)',
+            opacity: 'unset'
+          }
+        },
+        showCrosshairs: true,
+        showMarkers: false,
+        customItems: (originalItems: TooltipItem[]) => {
+          const hyperdriveItem = originalItems[0].name === hyperdrive ? originalItems[0] : originalItems[1];
+          const signal = hyperdriveItem.data.Full_Sig;
+          const signalDatum = {
+            color: signal ? 'lime' : 'red', 
+            name: 'SIGNAL', 
+            value: signal ? '▲ BUY' : '▼ SELL'
+          };
+          originalItems.push(signalDatum);
+          return originalItems;
+        }
+      },
       autoFit: true,
       data,
       xField: "Time",
@@ -110,7 +218,7 @@ const LineChart: React.FC<any> = memo(
         shape: "breath-point",
       },
     };
-    return <Line {...config} />;
+    return <Line ref={chartRef} {...config} />;
   },
   (pre, next) => JSON.stringify(pre?.data) === JSON.stringify(next?.data)
 );
@@ -164,6 +272,7 @@ const Page = () => {
   const [quotaReached, setQuotaReached] = useState(false);
   const loading = previewLoading || accountLoading || loginLoading;
   const inBeta = loggedIn && account?.permissions?.in_beta;
+  const chartRef = useRef();
 
   useEffect(() => {
     // find a way to not load this for in_beta
@@ -232,21 +341,21 @@ const Page = () => {
       if (data.Name === hyperdrive && data.Sig !== null) {
         const fill = data.Sig ? "lime" : "red";
         const symbol = data.Sig ? "triangle" : "triangle-down";
-        const text = data.Sig ? "BUY" : "SELL";
-        const fontSize = 10;
-        group.addShape("text", {
-          attrs: {
-            text,
-            x: point.x - fontSize,
-            y: point.y - fontSize / 2,
-            fill,
-            fontWeight: 400,
-            shadowOffsetX: 10,
-            shadowOffsetY: 10,
-            shadowBlur: 10,
-            fontSize,
-          },
-        });
+        // const text = data.Sig ? "BUY" : "SELL";
+        // const fontSize = 10;
+        // group.addShape("text", {
+        //   attrs: {
+        //     text,
+        //     x: point.x - fontSize,
+        //     y: point.y - fontSize / 2,
+        //     fill,
+        //     fontWeight: 400,
+        //     shadowOffsetX: 10,
+        //     shadowOffsetY: 10,
+        //     shadowBlur: 10,
+        //     fontSize,
+        //   },
+        // });
 
         group.addShape("marker", {
           attrs: {
@@ -255,26 +364,6 @@ const Page = () => {
             r: 5,
             fill,
             opacity: 1,
-            symbol,
-          },
-        });
-
-        group.addShape("marker", {
-          attrs: {
-            x: point.x,
-            y: point.y,
-            r: 3,
-            fill,
-            opacity: 0.7,
-            symbol,
-          },
-        });
-        group.addShape("marker", {
-          attrs: {
-            x: point.x,
-            y: point.y,
-            r: 0.75,
-            fill,
             symbol,
           },
         });
@@ -470,11 +559,11 @@ const Page = () => {
                     <i style={{ color: "#52e5ff" }}>{hyperdrive}</i>
                   </a>
                 </Title>
-                <Switch
-                  checkedChildren="BTC (₿)"
-                  unCheckedChildren="USD ($)"
-                  defaultChecked
-                  onChange={(checked) => setToggle(checked)}
+                <Toggle
+                  val={toggle}
+                  options={[toggleLabels.BTC, toggleLabels.USD]}
+                  defaultValue={toggleLabels.BTC}
+                  onChange={(val: string) => setToggle(val === toggleLabels.BTC)}
                 />
               </>
             )}
@@ -499,6 +588,7 @@ const Page = () => {
               <LineChart
                 data={toggle ? previewData.BTC.data : previewData.USD.data}
                 formatFx={toggle ? formatBTC : formatUSD}
+                chartRef={chartRef}
               />
             </div>
           )}
@@ -524,7 +614,7 @@ const Page = () => {
                       </span>
                       <span
                         style={{
-                          fontFamily: "monospace",
+                          fontFamily: '"Courier","Courier New",monospace',
                           color:
                             signalCardData.Signal === "BUY"
                               ? "lime"
@@ -540,7 +630,7 @@ const Page = () => {
                       <span>
                         <b>{"Date: "}</b>
                       </span>
-                      <span style={{ fontFamily: "monospace" }}>
+                      <span style={{ fontFamily: '"Courier","Courier New",monospace' }}>
                         {signalCardData.Date}
                       </span>
                     </div>
@@ -548,7 +638,7 @@ const Page = () => {
                       <span>
                         <b>{"Asset: "}</b>
                       </span>
-                      <span style={{ fontFamily: "monospace" }}>
+                      <span style={{ fontFamily: '"Courier","Courier New",monospace' }}>
                         {"BTC ("}
                         <span style={{ color: "#F7931A" }}>{"₿"}</span>
                         {")"}

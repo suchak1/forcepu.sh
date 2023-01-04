@@ -1,0 +1,91 @@
+name: Deploy UI
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 7
+          run_install: false
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: |
+          pnpm run ci
+          pnpm add -g @apidevtools/swagger-cli@4.0.4
+
+      - name: Create aws-exports.js file
+        run: touch src/aws-exports.js
+
+      - name: Build app [dev]
+        run: pnpm run build:ui && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV && echo "CF_DISTRO_ID=${CF_DISTRO_ID}" >> $GITHUB_ENV
+        env:
+          AWS_S3_BUCKET: ${{ secrets.FORCEPUSH_DEV_BUCKET }}
+          VITE_APP_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          VITE_APP_IDENTITY_POOL_ID: ${{ secrets.DEV_IDENTITY_POOL_ID }}
+          VITE_APP_USER_POOL_ID: ${{ secrets.DEV_USER_POOL_ID }}
+          VITE_APP_WEB_CLIENT_ID: ${{ secrets.DEV_WEB_CLIENT_ID }}
+          VITE_APP_OAUTH_DOMAIN: ${{ secrets.DEV_OAUTH_DOMAIN }}
+          CF_DISTRO_ID: ${{ secrets.DEV_CF_DISTRO_ID }}
+        if: ${{ github.ref != 'refs/heads/master' }}
+
+      - name: Build app [prod]
+        run: pnpm run build:ui && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV && echo "CF_DISTRO_ID=${CF_DISTRO_ID}" >> $GITHUB_ENV
+        env:
+          AWS_S3_BUCKET: ${{ secrets.FORCEPUSH_BUCKET }}
+          VITE_APP_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          VITE_APP_IDENTITY_POOL_ID: ${{ secrets.IDENTITY_POOL_ID }}
+          VITE_APP_USER_POOL_ID: ${{ secrets.USER_POOL_ID }}
+          VITE_APP_WEB_CLIENT_ID: ${{ secrets.WEB_CLIENT_ID }}
+          VITE_APP_OAUTH_DOMAIN: ${{ secrets.OAUTH_DOMAIN }}
+          CF_DISTRO_ID: ${{ secrets.CF_DISTRO_ID }}
+        if: ${{ github.ref == 'refs/heads/master' }}
+
+      - name: Deploy ui
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --acl public-read --follow-symlinks --delete
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          SOURCE_DIR: "dist"
+
+      - name: Invalidate cache
+        run: aws cloudfront create-invalidation --distribution-id "${CF_DISTRO_ID}" --paths "/*"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_EC2_METADATA_DISABLED: true

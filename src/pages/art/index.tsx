@@ -1,4 +1,3 @@
-import React from "react";
 import { Card, Typography, Row, Col, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { NFTE } from "@nfte/react";
@@ -6,7 +5,7 @@ import HoverVideoPlayer from "react-hover-video-player";
 
 // try use-nft instead
 
-import styles from "./index.less";
+import styles from "./index.module.less";
 
 const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
