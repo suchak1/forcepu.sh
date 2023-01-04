@@ -2,23 +2,22 @@ import React from "react";
 import { useState, useEffect, useMemo, useContext } from "react";
 import { Typography, Segmented, Row, Col, Card, Statistic, Spin } from "antd";
 import Plot from "react-plotly.js";
-import { loadStripe } from "@stripe/stripe-js";
-import {
-  Elements,
-  PaymentElement,
-  AddressElement,
-} from "@stripe/react-stripe-js";
+// import { loadStripe } from "@stripe/stripe-js";
+// import {
+//   Elements,
+//   PaymentElement,
+//   AddressElement,
+// } from "@stripe/react-stripe-js";
 import { getApiUrl, getDayDiff, get3DCircle, linspace } from "@/utils";
-import pageStyles from "../index.less";
+import pageStyles from "@/pages/home/index.module.less";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { AccountContext } from "../../layouts";
-import CUBE from "../../../assets/cube.webp";
+import CUBE from "../../../assets/cube.gif";
 
 import "./index.less";
 
 import styled from "styled-components";
-import { ConsoleLogger } from "@aws-amplify/core";
 
 const { Title } = Typography;
 
@@ -48,7 +47,7 @@ const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 const spinner = <Spin style={{ width: "100%" }} indicator={antIcon} />;
 // const stripePromise = loadStripe("pk_test_TYooMQauvdEDq54NiTphI7jx");
 // youtube
-const stripePromise = loadStripe("pk_test_vAZ3gh1LcuM7fW4rKNvqafgB00DR9RKOjN");
+// const stripePromise = loadStripe("pk_test_vAZ3gh1LcuM7fW4rKNvqafgB00DR9RKOjN");
 const SubscriptionPage = () => {
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const { account, accountLoading } = useContext(AccountContext);
@@ -336,7 +335,7 @@ const SubscriptionPage = () => {
               <Title level={3}>Signals API</Title>
               {/* should be level 3-5 */}
               <span>{"Access to the "}</span>
-              <span style={{ fontFamily: "monospace", color: "#52e5ff" }}>
+              <span style={{ fontFamily: '"Courier","Courier New",monospace', color: "#52e5ff" }}>
                 /signals
               </span>
               <span>
@@ -383,10 +382,10 @@ const SubscriptionPage = () => {
         {metadata.length ? (
           <div className={pageStyles.child}>
             <Title level={3}>Payment</Title>
-            <Elements stripe={stripePromise} options={options}>
-              <AddressElement options={addressOptions} />
-              <PaymentElement options={paymentOptions} />
-            </Elements>
+            {/* <Elements stripe={stripePromise} options={options}> */}
+              {/* <AddressElement options={addressOptions} /> */}
+              {/* <PaymentElement options={paymentOptions} /> */}
+            {/* </Elements> */}
             {/* <Row gutter={[24, 24]}>
               <Col span={24} style={{ textAlign: "justify" }}>
                 The points on the plot represent historical market data reduced

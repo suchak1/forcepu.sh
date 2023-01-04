@@ -24,6 +24,7 @@ import {
 } from "@/utils";
 import Docs from "@/pages/docs";
 import Algorithm from "@/pages/algorithm";
+import Subscription from "@/pages/subscription";
 import Art from "@/pages/art";
 import Gym from "@/pages/gym";
 import TOS, { TOSTitleText } from "@/pages/tos";
@@ -36,7 +37,7 @@ const { darkAlgorithm } = theme;
 // console.log(dotenv.config({ debug: true, path: "./../config.env" }));
 // console.log(dotenv.config({ debug: true, path: "./config.env" }));
 
-console.log(process.env);
+console.log(import.meta.env);
 
 let config;
 const isLocal = getEnvironment() === "local";
@@ -357,6 +358,7 @@ const Layout = ({ children }: LayoutProps) => {
             <Route path="/" element={<Home />} />
             <Route path="/docs" element={<Docs />} />
             <Route path="/algorithm" element={<Algorithm />} />
+            <Route path="/subscription" element={<Subscription />} />
             <Route path="/art" element={<Art />} />
             <Route path="/gym" element={<Gym />} />
             <Route path="/tos" element={<TOS />} />
