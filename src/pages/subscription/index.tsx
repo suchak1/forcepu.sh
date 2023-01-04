@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect, useMemo, useContext } from "react";
-import { Typography, Segmented, Row, Col, Card, Statistic, Spin } from "antd";
+import { Typography, Segmented, Row, Col, Card, Button, Spin } from "antd";
 import Plot from "react-plotly.js";
 // import { loadStripe } from "@stripe/stripe-js";
 // import {
@@ -10,12 +10,13 @@ import Plot from "react-plotly.js";
 // } from "@stripe/react-stripe-js";
 import { getApiUrl, getDayDiff, get3DCircle, linspace } from "@/utils";
 import pageStyles from "@/pages/home/index.module.less";
+import layoutStyles from "@/layouts/index.module.less";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { AccountContext } from "../../layouts";
 import CUBE from "../../../assets/cube.gif";
 
-import "./index.less";
+import overrides from "./index.module.less";
 
 import styled from "styled-components";
 
@@ -382,6 +383,8 @@ const SubscriptionPage = () => {
         {metadata.length ? (
           <div className={pageStyles.child}>
             <Title level={3}>Payment</Title>
+            <img height="200px" src={CUBE}></img>
+            <Button className={overrides.subscribe}>Subscribe</Button>
             {/* <Elements stripe={stripePromise} options={options}> */}
               {/* <AddressElement options={addressOptions} /> */}
               {/* <PaymentElement options={paymentOptions} /> */}
