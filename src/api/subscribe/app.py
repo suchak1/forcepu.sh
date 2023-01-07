@@ -1,4 +1,20 @@
+import json
 import stripe
+
+stripe.api_key = os.environ['StripeSecretKey']
+
+def get_price(event, _):
+    params = event["queryStringParameters"]
+    price_id = params["id"]
+    price = stripe.Price.retrieve(price_id)
+    status_code = 200
+    body = json.dumps(price)
+    return {
+        "statusCode": status_code,
+        "body": body,
+        "headers": {"Access-Control-Allow-Origin": "*"}
+    }
+    return price
 
 
 def post_checkout(*_):

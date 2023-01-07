@@ -220,6 +220,26 @@ Resources:
       Dockerfile: signals/Dockerfile
       DockerContext: ./
       DockerTag: python3.8-v1
+  PriceFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Environment:
+        Variables:
+          STRIPE_SECRET_KEY: !Ref StripeSecretKey
+      PackageType: Image
+      ImageConfig:
+        Command: ["app.get_price"]
+      Events:
+        GetPrice:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /price
+            Method: get
+            RestApiId: !Ref ApiGatewayApi
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./subscribe
+      DockerTag: python3.8-v1
   SubscribeFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -243,15 +263,6 @@ Resources:
             Path: /subscribe
             Method: post
             RestApiId: !Ref ApiGatewayApi
-            Auth:
-              Authorizer: CognitoAuth
-              # header Authorization: id_token from /token endpoint
-        Options:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /subscribe
-            Method: options
-            RestApiId: !Ref ApiGatewayApi
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./subscribe
@@ -262,13 +273,6 @@ Resources:
       Environment:
         Variables:
           STRIPE_SECRET_KEY: !Ref StripeSecretKey
-          # remove table name if not needed
-          TABLE_NAME: !Ref UsersTable
-      # remove policy if not needed
-      Policies:
-      # remove policy if not needed
-        - DynamoDBCrudPolicy:
-            TableName: !Ref UsersTable
       PackageType: Image
       ImageConfig:
         Command: ["app.post_checkout"]

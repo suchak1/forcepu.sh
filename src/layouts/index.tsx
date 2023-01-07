@@ -136,6 +136,8 @@ const routes = [
     text: (
       <>
         <div className={overrides.home}>
+          {/* consider making capital FORCEPU.SH */}
+          {/* use "force" to find and replace accordingly */}
           <span className={overrides.white}>force</span>
           <span>pu.sh</span>
         </div>
