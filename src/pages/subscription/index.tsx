@@ -1,13 +1,6 @@
 import React from "react";
 import { useState, useEffect, useMemo, useContext } from "react";
 import { Typography, Segmented, Row, Col, Card, Button, Spin } from "antd";
-import Plot from "react-plotly.js";
-// import { loadStripe } from "@stripe/stripe-js";
-// import {
-//   Elements,
-//   PaymentElement,
-//   AddressElement,
-// } from "@stripe/react-stripe-js";
 import { getApiUrl, getDayDiff, get3DCircle, linspace } from "@/utils";
 import pageStyles from "@/pages/home/index.module.less";
 import layoutStyles from "@/layouts/index.module.less";
@@ -22,28 +15,9 @@ import styled from "styled-components";
 
 const { Title } = Typography;
 
-const xs = [];
-const ys = [];
-const zs = [];
-const base = linspace(-2, 2, 100);
-base.forEach((x, i) => {
-  base.forEach((y, j) => {
-    const z = ((7 * x * y) / Math.E) ^ (x ** 2 + y ** 2);
-    xs.push(x);
-    ys.push(y);
-    zs.push(z);
-  });
-});
+
 // const xs = linspace(-2, 2, 10);
-// const ys = xs;
-// const zs = xs.map((x, i) => ((7 * x * ys[i]) / Math.E) ^ (x ** 2 + ys[i] ** 2));
-const numPoints = 360;
-const eyes = get3DCircle(
-  [0, 0, 0],
-  [1.25, 1.25, 1.25],
-  [1.25, 1.25, -1.25],
-  numPoints
-);
+
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 const spinner = <Spin style={{ width: "100%" }} indicator={antIcon} />;
 // const stripePromise = loadStripe("pk_test_TYooMQauvdEDq54NiTphI7jx");
@@ -54,22 +28,9 @@ const SubscriptionPage = () => {
   const { account, accountLoading } = useContext(AccountContext);
   const inBeta = loggedIn && account?.permissions?.in_beta;
   const [minInvestment, setMinInvestment] = useState();
-  const default2DToggle = false;
-  const [toggle2D, setToggle2D] = useState(default2DToggle);
-  const [metadata, setMetadata] = useState([]);
   const [price, setPrice] = useState();
   // const loading = !(metadata.length && viz2D && viz3D);
-  const size = 0.4999;
-  const [eyeIdx, setEyeIdx] = useState(0);
-  const [up, setUp] = useState({ x: 0, y: 0, z: 1 });
-  // const size = 0.3333;
-  const width = 3;
-  const numTicks = Math.ceil(1 / size);
-  const tickText = Array(numTicks).fill("");
-  tickText[0] = "SELL";
-  tickText[numTicks - 1] = "BUY";
-  tickText[Math.floor(numTicks / 2)] = "HODL";
-  const tickVals = tickText.map((_, idx) => size * idx);
+
   console.log(loggedIn);
   const paymentOptions = {
     defaultValues: {
@@ -161,129 +122,6 @@ const SubscriptionPage = () => {
       .catch((err) => console.error(err));
   }, []);
 
-  // useEffect(() => {
-  //   // use frames and useMemo instead
-  //   // https://codesandbox.io/s/pier-stat-flood-w1ed4?file=/src/Flood.js
-
-  //   const interval = setInterval(() => {
-  //     const newEyeIdx = (eyeIdx + 1) % eyes.length;
-  //     const multiplier = numPoints / 360;
-  //     const theta = Math.floor(newEyeIdx / multiplier);
-
-  //     const roundAngle = (angle: number) => {
-  //       // works with numPoints <= 360
-  //       const divisor = Math.floor(360 / numPoints);
-  //       const remainder = angle % divisor;
-  //       return angle + (remainder ? divisor - (angle % divisor) : 0);
-  //     };
-
-  //     if (theta === roundAngle(55)) {
-  //       // setUp({ x: -1, y: -1, z: -1 });
-  //     } else if (theta === roundAngle(180)) {
-  //       // setUp({ x: 1, y: 1, z: -1 });
-  //     } else if (theta === 290) {
-  //       // setUp({ x: -1, y: -1, z: 1 });
-  //     }
-
-  //     setEyeIdx(newEyeIdx);
-
-  //     // 15 ms => 60fps
-  //     // 30 ms => 30fps
-  //     // 40 ms => 24fps
-  //   }, 15);
-  //   return () => {
-  //     clearInterval(interval);
-  //   };
-  // }, [eyeIdx]);
-  // const plot3D = useMemo(
-  //   () => (
-  //     <Plot
-  //       data={[
-  //         {
-  //           x: xs,
-  //           y: ys,
-  //           z: zs,
-  //           type: "scatter3d",
-  //           mode: "markers",
-  //           // change marker outline to white after making bg black/transparent?
-  //           marker: { color: "cyan", line: { color: "black", width: 1 } },
-  //           hoverinfo: "skip",
-  //           // showlegend: true,
-  //           // text: "BUY [actual]",
-  //           // name: "BUY",
-  //         },
-  //         // 8 points of cube
-  //         // (-1, )
-  //         // {
-  //         //   x: xs,
-  //         //   y: ys,
-  //         //   z: zs,
-  //         //   type: "volume",
-  //         //   opacity: 0.4,
-  //         //   // value: viz3D?.preds,
-  //         //   colorscale: [
-  //         //     ["0", "magenta"],
-  //         //     ["1", "cyan"],
-  //         //   ],
-  //         //   colorbar: {
-  //         //     title: "Predicted",
-  //         //     tickmode: "array",
-  //         //     ticktext: tickText,
-  //         //     tickvals: tickVals,
-  //         //   },
-  //         //   hoverinfo: "skip",
-  //         //   // change marker outline to white after making bg black/transparent?
-  //         //   // marker: {
-  //         //   //   color: "magenta",
-  //         //   //   line: { color: "black", width: 1 },
-  //         //   // },
-  //         //   // showlegend: true,
-  //         // },
-  //       ]}
-  //       // disable x, y, z titles?
-  //       layout={{
-  //         scene: {
-  //           xaxis: {
-  //             showgrid: false,
-  //             showticklabels: false,
-  //           },
-  //           yaxis: {
-  //             showgrid: false,
-  //             showticklabels: false,
-  //           },
-  //           zaxis: {
-  //             showgrid: false,
-  //             showticklabels: false,
-  //           },
-  //           camera: {
-  //             eye: eyes[eyeIdx],
-  //             up,
-  //           },
-  //         },
-  //         font: {
-  //           color: "rgba(255, 255, 255, 0.85)",
-  //           // family:
-  //           //   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;",
-  //           family: "inherit",
-  //         },
-  //         autosize: true,
-  //         // make responsive
-  //         // https://codesandbox.io/s/nostalgic-jones-4kuww
-  //         paper_bgcolor: "transparent",
-  //         plot_bgcolor: "transparent",
-  //         // legend: {
-  //         //   y: 0,
-  //         //   x: 0,
-  //         //   title: { text: "Actual" },
-  //         // },
-  //       }}
-  //       style={{ width: "100%", height: "250px" }}
-  //       useResizeHandler
-  //       config={{ displayModeBar: false }}
-  //     />
-  //   ),
-  //   [viz3D, eyeIdx, up]
-  // );
 
   return (
     <>
@@ -358,10 +196,11 @@ const SubscriptionPage = () => {
         else test if active subscription | if so, show plan/sub amount, payment method, and option to cancel / manage - should have to open modal and click button or type in phrase to cancel
         else show stripe subscription page*/}
         {/* https://stripe.com/docs/billing/subscriptions/build-subscriptions?ui=elements */}
-        {metadata.length ? (
+        {true ? (
           <div className={pageStyles.child}>
             <Title level={3}>Payment</Title>
             <img height="200px" src={CUBE}></img>
+            {`$${Number(price?.unit_amount / 100).toFixed(2)} per ${price?.recurring?.interval_count > 1 ? `${price?.recurring?.interval_count} ` : ''}${price?.recurring?.interval}`}
             <Button className={overrides.subscribe}>Subscribe</Button>
             {/* <Elements stripe={stripePromise} options={options}> */}
               {/* <AddressElement options={addressOptions} /> */}
