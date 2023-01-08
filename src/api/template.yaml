@@ -27,6 +27,7 @@ Parameters:
   StripeSecretKey:
     Type: "String"
     NoEcho: true
+    Default: "123"
 
 Globals:
   Function:
