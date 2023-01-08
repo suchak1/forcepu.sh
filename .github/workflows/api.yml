@@ -25,31 +25,45 @@ jobs:
           node-version: 18
 
       - name: Create parameters.env [prod]
-        uses: SpicyPizza/create-envfile@v1.3
-        with:
-          envkey_StripeSecretKey: ${{ secrets.STRIPE_SECRET_KEY }}
-          envkey_S3Bucket: ${{ secrets.HYPERDRIVE_BUCKET }}
-          envkey_Stage: prod
-          envkey_ApiUrl: api.forcepu.sh
-          envkey_CertArn: ${{ secrets.CERT_ARN }}
-          envkey_HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
-          envkey_UserPoolArn: ${{ secrets.USER_POOL_ARN }}
-          directory: src/api
-          file_name: parameters.env
+        env:
+          StripeSecretKey: ${{ secrets.STRIPE_SECRET_KEY }}
+          S3Bucket: ${{ secrets.HYPERDRIVE_BUCKET }}
+          Stage: prod
+          ApiUrl: api.forcepu.sh
+          CertArn: ${{ secrets.CERT_ARN }}
+          HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
+          UserPoolArn: ${{ secrets.USER_POOL_ARN }}
+        run: |
+          echo "
+          StripeSecretKey=${StripeSecretKey}
+          S3Bucket=${S3Bucket}
+          Stage=${Stage}
+          ApiUrl=${ApiUrl}
+          CertArn=${CertArn}
+          HostedZoneId=${HostedZoneId}
+          UserPoolArn=${UserPoolArn}
+          " >> src/api/parameters.env
         if: ${{ github.ref == 'refs/heads/master' }}
 
       - name: Create parameters.env [dev]
-        uses: SpicyPizza/create-envfile@v1.2
-        with:
-          envkey_StripeSecretKey: ${{ secrets.DEV_STRIPE_SECRET_KEY }}
-          envkey_S3Bucket: ${{ secrets.HYPERDRIVE_DEV_BUCKET }}
-          envkey_Stage: dev
-          envkey_ApiUrl: api.dev.forcepu.sh
-          envkey_CertArn: ${{ secrets.DEV_CERT_ARN }}
-          envkey_HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
-          envkey_UserPoolArn: ${{ secrets.DEV_USER_POOL_ARN }}
-          directory: src/api
-          file_name: dev-parameters.env
+        env:
+          StripeSecretKey: ${{ secrets.DEV_STRIPE_SECRET_KEY }}
+          S3Bucket: ${{ secrets.HYPERDRIVE_DEV_BUCKET }}
+          Stage: dev
+          ApiUrl: api.dev.forcepu.sh
+          CertArn: ${{ secrets.DEV_CERT_ARN }}
+          HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
+          UserPoolArn: ${{ secrets.DEV_USER_POOL_ARN }}
+        run: |
+          echo "
+          StripeSecretKey=${StripeSecretKey}
+          S3Bucket=${S3Bucket}
+          Stage=${Stage}
+          ApiUrl=${ApiUrl}
+          CertArn=${CertArn}
+          HostedZoneId=${HostedZoneId}
+          UserPoolArn=${UserPoolArn}
+          " >> src/api/dev-parameters.env
         if: ${{ github.ref != 'refs/heads/master' }}
 
       - name: Build API
