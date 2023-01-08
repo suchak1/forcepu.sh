@@ -2,7 +2,7 @@ AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 
 Parameters:
-  S3_BUCKET:
+  S3BUCKET:
     Type: "String"
     NoEcho: true
   STAGE:
@@ -10,21 +10,21 @@ Parameters:
     AllowedValues:
       - dev
       - prod
-  API_URL:
+  APIURL:
     Type: "String"
     AllowedValues:
       - api.dev.forcepu.sh
       - api.forcepu.sh
-  CERT_ARN:
+  CERTARN:
     Type: "String"
     NoEcho: true
-  HOSTED_ZONE_ID:
+  HOSTEDZONEID:
     Type: "String"
     NoEcho: true
-  USER_POOL_ARN:
+  USERPOOLARN:
     Type: "String"
     NoEcho: true
-  STRIPE_SECRET_KEY:
+  STRIPESECRETKEY:
     Type: "String"
     NoEcho: true
 
@@ -39,15 +39,15 @@ Resources:
     Properties:
       StageName: !Ref STAGE
       Domain:
-        DomainName: !Ref API_URL
-        CertificateArn: !Ref CERT_ARN
+        DomainName: !Ref APIURL
+        CertificateArn: !Ref CERTARN
         EndpointConfiguration: EDGE
         Route53:
-          HostedZoneId: !Ref HOSTED_ZONE_ID
+          HostedZoneId: !Ref HOSTEDZONEID
       Auth:
         Authorizers:
           CognitoAuth:
-            UserPoolArn: !Ref USER_POOL_ARN
+            UserPoolArn: !Ref USERPOOLARN
   AccountFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -107,14 +107,14 @@ Resources:
     Properties:
       Environment:
         Variables:
-          S3_BUCKET: !Ref S3_BUCKET
+          S3_BUCKET: !Ref S3BUCKET
       Policies:
         - Statement:
             - Sid: S3ReadPolicy
               Effect: Allow
               Action:
                 - s3:GetObject
-              Resource: !Sub "arn:aws:s3:::${S3_BUCKET}/data/api/*"
+              Resource: !Sub "arn:aws:s3:::${S3BUCKET}/data/api/*"
       PackageType: Image
       ImageConfig:
         Command: ["app.get_preview"]
@@ -134,14 +134,14 @@ Resources:
     Properties:
       Environment:
         Variables:
-          S3_BUCKET: !Ref S3_BUCKET
+          S3_BUCKET: !Ref S3BUCKET
       Policies:
         - Statement:
             - Sid: S3ReadPolicy
               Effect: Allow
               Action:
                 - s3:GetObject
-              Resource: !Sub "arn:aws:s3:::${S3_BUCKET}/models/latest/metadata.json"
+              Resource: !Sub "arn:aws:s3:::${S3BUCKET}/models/latest/metadata.json"
       PackageType: Image
       ImageConfig:
         Command: ["app.get_model"]
@@ -161,7 +161,7 @@ Resources:
     Properties:
       Environment:
         Variables:
-          S3_BUCKET: !Ref S3_BUCKET
+          S3_BUCKET: !Ref S3BUCKET
       Policies:
         - Statement:
             - Sid: S3ReadPolicy
@@ -170,8 +170,8 @@ Resources:
                 - s3:GetObject
               Resource:
                 [
-                  !Sub "arn:aws:s3:::${S3_BUCKET}/models/latest/2D/*",
-                  !Sub "arn:aws:s3:::${S3_BUCKET}/models/latest/3D/*",
+                  !Sub "arn:aws:s3:::${S3BUCKET}/models/latest/2D/*",
+                  !Sub "arn:aws:s3:::${S3BUCKET}/models/latest/3D/*",
                 ]
       PackageType: Image
       ImageConfig:
@@ -192,7 +192,7 @@ Resources:
     Properties:
       Environment:
         Variables:
-          S3_BUCKET: !Ref S3_BUCKET
+          S3_BUCKET: !Ref S3BUCKET
           TABLE_NAME: !Ref UsersTable
       Policies:
         - DynamoDBCrudPolicy:
@@ -202,7 +202,7 @@ Resources:
               Effect: Allow
               Action:
                 - s3:GetObject
-              Resource: !Sub "arn:aws:s3:::${S3_BUCKET}/models/latest/signals.csv"
+              Resource: !Sub "arn:aws:s3:::${S3BUCKET}/models/latest/signals.csv"
       PackageType: Image
       Events:
         Signals:
@@ -226,7 +226,7 @@ Resources:
     Properties:
       Environment:
         Variables:
-          STRIPE_SECRET_KEY: !Ref STRIPE_SECRET_KEY
+          STRIPE_SECRET_KEY: !Ref STRIPESECRETKEY
       PackageType: Image
       ImageConfig:
         Command: ["app.get_price"]
@@ -246,7 +246,7 @@ Resources:
     Properties:
       Environment:
         Variables:
-          STRIPE_SECRET_KEY: !Ref STRIPE_SECRET_KEY
+          STRIPE_SECRET_KEY: !Ref STRIPESECRETKEY
           # remove table name if not needed
           TABLE_NAME: !Ref UsersTable
       # remove policy if not needed
@@ -273,7 +273,7 @@ Resources:
     Properties:
       Environment:
         Variables:
-          STRIPE_SECRET_KEY: !Ref STRIPE_SECRET_KEY
+          STRIPE_SECRET_KEY: !Ref STRIPESECRETKEY
       PackageType: Image
       ImageConfig:
         Command: ["app.post_checkout"]
