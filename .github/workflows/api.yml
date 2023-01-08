@@ -27,13 +27,13 @@ jobs:
       - name: Create parameters.env [prod]
         uses: SpicyPizza/create-envfile@v1.3
         with:
-          envkey_STRIPESECRETKEY: ${{ secrets.STRIPE_SECRET_KEY }}
-          envkey_S3BUCKET: ${{ secrets.HYPERDRIVE_BUCKET }}
-          envkey_STAGE: prod
-          envkey_APIURL: api.forcepu.sh
-          envkey_CERTARN: ${{ secrets.CERT_ARN }}
-          envkey_HOSTEDZONEID: ${{ secrets.HOSTED_ZONE_ID }}
-          envkey_USERPOOLARN: ${{ secrets.USER_POOL_ARN }}
+          envkey_StripeSecretKey: ${{ secrets.STRIPE_SECRET_KEY }}
+          envkey_S3Bucket: ${{ secrets.HYPERDRIVE_BUCKET }}
+          envkey_Stage: prod
+          envkey_ApiUrl: api.forcepu.sh
+          envkey_CertArn: ${{ secrets.CERT_ARN }}
+          envkey_HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
+          envkey_UserPoolArn: ${{ secrets.USER_POOL_ARN }}
           directory: src/api
           file_name: parameters.env
         if: ${{ github.ref == 'refs/heads/master' }}
@@ -41,13 +41,13 @@ jobs:
       - name: Create parameters.env [dev]
         uses: SpicyPizza/create-envfile@v1.2
         with:
-          envkey_STRIPESECRETKEY: ${{ secrets.DEV_STRIPE_SECRET_KEY }}
-          envkey_S3BUCKET: ${{ secrets.HYPERDRIVE_DEV_BUCKET }}
-          envkey_STAGE: dev
-          envkey_APIURL: api.dev.forcepu.sh
-          envkey_CERTARN: ${{ secrets.DEV_CERT_ARN }}
-          envkey_HOSTEDZONEID: ${{ secrets.HOSTED_ZONE_ID }}
-          envkey_USERPOOLARN: ${{ secrets.DEV_USER_POOL_ARN }}
+          envkey_StripeSecretKey: ${{ secrets.DEV_STRIPE_SECRET_KEY }}
+          envkey_S3Bucket: ${{ secrets.HYPERDRIVE_DEV_BUCKET }}
+          envkey_Stage: dev
+          envkey_ApiUrl: api.dev.forcepu.sh
+          envkey_CertArn: ${{ secrets.DEV_CERT_ARN }}
+          envkey_HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
+          envkey_UserPoolArn: ${{ secrets.DEV_USER_POOL_ARN }}
           directory: src/api
           file_name: dev-parameters.env
         if: ${{ github.ref != 'refs/heads/master' }}

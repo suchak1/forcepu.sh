@@ -57,6 +57,7 @@ const SubscriptionPage = () => {
   const default2DToggle = false;
   const [toggle2D, setToggle2D] = useState(default2DToggle);
   const [metadata, setMetadata] = useState([]);
+  const [price, setPrice] = useState();
   // const loading = !(metadata.length && viz2D && viz3D);
   const size = 0.4999;
   const [eyeIdx, setEyeIdx] = useState(0);
@@ -112,41 +113,18 @@ const SubscriptionPage = () => {
       "pi_1ISrCzCZ6qsJgndJwlPxeAzG_secret_eZ2nKJLTfQZB0pAnLNqtm1Ns6",
   };
   useEffect(() => {
-    const url = `${getApiUrl({ localOverride: "prod" })}/model`;
+    const url = `${getApiUrl({ localOverride: "dev" })}/price?id=${import.meta.env.VITE_APP_STRIPE_PRICE}`;
     fetch(url, { method: "GET" })
       .then((response) => response.json())
       .then((data) => {
         const {
-          created,
-          start,
-          end,
-          num_features: numFeatures,
-          accuracy,
+          unit_amount,
+          recurring,
         } = data;
-        const lastUpdated = `${Math.floor(
-          getDayDiff(created, new Date()) / 30
-        )} months ago`;
-        const dataRange = `${Math.floor(getDayDiff(start, end) / 365)} years`;
-        const labels = [
-          "Last Updated",
-          "Training Data Range",
-          "Number of Features",
-          "Test Accuracy",
-        ];
-        const values = [
-          lastUpdated,
-          dataRange,
-          numFeatures,
-          `${Math.round(accuracy * 1000) / 10}%`,
-        ];
-        const newData = labels.map((label, idx) => ({
-          key: idx,
-          metadata: label,
-          stat: values[idx],
-        }));
-        return newData;
+        const { interval, interval_count } = recurring;
+        return data;
       })
-      .then((data) => setMetadata(data))
+      .then((data) => setPrice(data))
       .catch((err) => console.error(err));
   }, []);
 
