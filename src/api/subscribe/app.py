@@ -2,7 +2,7 @@ import os
 import json
 import stripe
 
-stripe.api_key = os.environ['StripeSecretKey']
+stripe.api_key = os.environ['STRIPE_SECRET_KEY']
 
 
 def get_price(event, _):
@@ -16,7 +16,6 @@ def get_price(event, _):
         "body": body,
         "headers": {"Access-Control-Allow-Origin": "*"}
     }
-    return price
 
 
 def post_checkout(*_):
