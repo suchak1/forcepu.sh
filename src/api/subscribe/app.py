@@ -28,7 +28,7 @@ def post_billing(*_):
     # (where customer can cancel, change payment method, see payment history, etc)
     # find a way of embedding html directly into right side or modal
     # vs just redirect to stripe hosted (?) customer portal page
-
+    pass
 # def post_subscribe(*_):
     # handle webhooks
 
