@@ -24,7 +24,7 @@ Parameters:
   UserPoolArn:
     Type: "String"
     NoEcho: true
-  StripeSecretKey:
+  STRIPESECRETKEY:
     Type: "String"
     NoEcho: true
 
@@ -168,10 +168,11 @@ Resources:
               Effect: Allow
               Action:
                 - s3:GetObject
-              Resource: [
-                !Sub "arn:aws:s3:::${S3Bucket}/models/latest/2D/*",
-                !Sub "arn:aws:s3:::${S3Bucket}/models/latest/3D/*"
-              ]
+              Resource:
+                [
+                  !Sub "arn:aws:s3:::${S3Bucket}/models/latest/2D/*",
+                  !Sub "arn:aws:s3:::${S3Bucket}/models/latest/3D/*",
+                ]
       PackageType: Image
       ImageConfig:
         Command: ["app.get_visualization"]
@@ -225,7 +226,7 @@ Resources:
     Properties:
       Environment:
         Variables:
-          STRIPE_SECRET_KEY: !Ref StripeSecretKey
+          STRIPE_SECRET_KEY: !Ref STRIPESECRETKEY
       PackageType: Image
       ImageConfig:
         Command: ["app.get_price"]
@@ -245,12 +246,12 @@ Resources:
     Properties:
       Environment:
         Variables:
-          STRIPE_SECRET_KEY: !Ref StripeSecretKey
+          STRIPE_SECRET_KEY: !Ref STRIPESECRETKEY
           # remove table name if not needed
           TABLE_NAME: !Ref UsersTable
       # remove policy if not needed
       Policies:
-      # remove policy if not needed
+        # remove policy if not needed
         - DynamoDBCrudPolicy:
             TableName: !Ref UsersTable
       PackageType: Image
@@ -272,7 +273,7 @@ Resources:
     Properties:
       Environment:
         Variables:
-          STRIPE_SECRET_KEY: !Ref StripeSecretKey
+          STRIPE_SECRET_KEY: !Ref STRIPESECRETKEY
       PackageType: Image
       ImageConfig:
         Command: ["app.post_checkout"]

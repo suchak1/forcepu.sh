@@ -27,7 +27,7 @@ jobs:
       - name: Create parameters.env [prod]
         uses: SpicyPizza/create-envfile@v1.3
         with:
-          envkey_StripeSecretKey: ${{ secrets.STRIPE_SECRET_KEY }}
+          envkey_STRIPESECRETKEY: ${{ secrets.STRIPE_SECRET_KEY }}
           envkey_S3Bucket: ${{ secrets.HYPERDRIVE_BUCKET }}
           envkey_Stage: prod
           envkey_ApiUrl: api.forcepu.sh
@@ -41,7 +41,7 @@ jobs:
       - name: Create parameters.env [dev]
         uses: SpicyPizza/create-envfile@v1.2
         with:
-          envkey_StripeSecretKey: ${{ secrets.DEV_STRIPE_SECRET_KEY }}
+          envkey_STRIPESECRETKEY: ${{ secrets.DEV_STRIPE_SECRET_KEY }}
           envkey_S3Bucket: ${{ secrets.HYPERDRIVE_DEV_BUCKET }}
           envkey_Stage: dev
           envkey_ApiUrl: api.dev.forcepu.sh
