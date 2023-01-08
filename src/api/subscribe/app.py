@@ -1,7 +1,9 @@
+import os
 import json
 import stripe
 
 stripe.api_key = os.environ['StripeSecretKey']
+
 
 def get_price(event, _):
     params = event["queryStringParameters"]
@@ -22,6 +24,7 @@ def post_checkout(*_):
     # use trial period
     # mode: subscription
     pass
+
 
 def post_billing(*_):
     # create customer portal session
