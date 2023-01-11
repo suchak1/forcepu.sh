@@ -119,36 +119,39 @@ const SubscriptionPage = () => {
             spinner
           ) : (
             <>
-              <Title level={3}>Signals API</Title>
-              {/* should be level 3-5 */}
-              <span>{"Access to the "}</span>
-              <span style={{ fontFamily: '"Courier","Courier New",monospace', color: "#52e5ff" }}>
-                /signals
-              </span>
-              <span>
-                {
-                  " API which provides up to a week's worth of the latest BUY and SELL signals."
-                }
-              </span>
-              {/* example of json datum? */}
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                {/* replace this with card with price per month (finally from backend config endpoint) heading and 5 requests / day (constant from backend) subheading*/}
-                <img height="200px" src={CUBE}></img>
-              </div>
-              {/* eventually $100/month */}
-              {`$${Number(price?.unit_amount / 100).toFixed(2)} per ${price?.recurring?.interval_count > 1 ? `${price?.recurring?.interval_count} ` : ''}${price?.recurring?.interval}${price?.recurring?.interval_count > 1 ? 's' : ''}`}
-              {loggedIn ? subscribeButton : <Button
-                className={layoutStyles.start}
-                onClick={() => setShowLogin(true)}
-              >
-                Sign in to subscribe
-              </Button>}
+              <Card style={{ maxWidth: '400px' }}>
+                <Title level={3}>Signals API</Title>
+                {/* should be level 3-5 */}
+                <span>{"Access to the "}</span>
+                <span style={{ fontFamily: '"Courier","Courier New",monospace', color: "#52e5ff" }}>
+                  /signals
+                </span>
+                <span>
+                  {
+                    " API which provides up to a week's worth of the latest BUY and SELL signals."
+                  }
+                </span>
+                {/* example of json datum? */}
+                <div>5 requests / day</div>
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  {/* replace this with card with price per month (finally from backend config endpoint) heading and 5 requests / day (constant from backend) subheading*/}
+                  <img height="200px" src={CUBE}></img>
+                </div>
+                {/* eventually $100/month, $85/month for 6 or 12 month subscription */}
+                {`$${Number(price?.unit_amount / 100).toFixed(2)} per ${price?.recurring?.interval_count > 1 ? `${price?.recurring?.interval_count} ` : ''}${price?.recurring?.interval}${price?.recurring?.interval_count > 1 ? 's' : ''}`}
+                {loggedIn ? subscribeButton : <Button
+                  className={layoutStyles.start}
+                  onClick={() => setShowLogin(true)}
+                >
+                  Sign in to subscribe
+                </Button>}
+              </Card>
               <div>New signals are produced by 12:05 UTC.</div>
               {minInvestment && (
                 <div

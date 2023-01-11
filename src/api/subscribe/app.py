@@ -1,6 +1,7 @@
 import os
 import json
 import stripe
+from shared.utils import verify_user
 
 stripe.api_key = os.environ['STRIPE_SECRET_KEY']
 
@@ -32,26 +33,41 @@ def get_product(event, _):
 
 
 def post_checkout(event, _):
-    # use auto tax
-    # use trial period
-    # mode: subscription
-    session = stripe.checkout.Session.create(
-        customer_email=email,
-        # use url (domain/subscription) from req.origin?
-        success_url=f'{domain}/subscription?success=true&session_id={{CHECKOUT_SESSION_ID}}',
-        cancel_url=f'{domain}/subscription?canceled=true',
-        mode='subscription',
-        line_items=[{
-            'price': price_id,
-            # For metered billing, do not pass quantity
-            'quantity': 1
-        }],
-        automatic_tax={
-            'enabled': True
-        },
-    )
-    status_code = 200
-    body = json.dumps(session)
+    # TODO: TEST IF VERIFIED
+
+    # TODO: IMPLEMENT FRAUD DETECTION for Checkout
+    # e.g. require full billing address, CVC, ??
+    # https://stripe.com/docs/radar/integration#recommendations
+
+    # TODO: figure out 3DS Secure 2 and Chargeback Protection
+    claims = event['requestContext']['authorizer']['claims']
+    verified = verify_user(claims)
+
+    status_code = 401
+    body = json.dumps({'message': 'This account is not verified.'})
+
+    if verified:
+        req_body = json.loads(event['body'])
+        price_id = req_body['price_id']
+        email = claims['email']
+
+        session = stripe.checkout.Session.create(
+            customer_email=email,
+            # use url (domain/subscription) from req.origin?
+            success_url=f'{domain}/subscription?success=true&session_id={{CHECKOUT_SESSION_ID}}',
+            cancel_url=f'{domain}/subscription?canceled=true',
+            mode='subscription',
+            line_items=[{
+                'price': price_id,
+                # For metered billing, do not pass quantity
+                'quantity': 1
+            }],
+            automatic_tax={
+                'enabled': True
+            },
+        )
+        status_code = 200
+        body = json.dumps(session)
     return {
         "statusCode": status_code,
         "body": body,

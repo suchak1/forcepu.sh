@@ -1,6 +1,6 @@
 import json
 from shared.models import UserModel
-from shared.utils import handle_options
+from shared.utils import handle_options, verify_user
 
 
 def get_account(event, _):
@@ -12,24 +12,6 @@ def get_account(event, _):
         response = handle_get(event)
 
     return response
-
-
-def verify_user(claims):
-    email_verified = claims['email_verified']
-    # ['email']
-    # ['email_verified']
-    # ['name']
-    providers = ['Google']
-    actually_verified = email_verified == 'true'
-    if email_verified == 'false':
-        if 'identities' in claims:
-            identities = json.loads(claims['identities'])
-            # => ['providerName'] == 'Google'
-            # => ['providerType'] == 'Google'
-            if 'providerName' in identities:
-                if identities['providerName'] in providers:
-                    actually_verified = True
-    return actually_verified
 
 
 def handle_get(event):

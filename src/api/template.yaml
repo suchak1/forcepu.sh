@@ -238,8 +238,8 @@ Resources:
             Method: get
             RestApiId: !Ref ApiGatewayApi
     Metadata:
-      Dockerfile: Dockerfile
-      DockerContext: ./subscribe
+      Dockerfile: subscribe/Dockerfile
+      DockerContext: ./
       DockerTag: python3.8-v1
   SubscribeFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -265,8 +265,8 @@ Resources:
             Method: post
             RestApiId: !Ref ApiGatewayApi
     Metadata:
-      Dockerfile: Dockerfile
-      DockerContext: ./subscribe
+      Dockerfile: subscribe/Dockerfile
+      DockerContext: ./
       DockerTag: python3.8-v1
   CheckoutFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -294,8 +294,8 @@ Resources:
             Method: options
             RestApiId: !Ref ApiGatewayApi
     Metadata:
-      Dockerfile: Dockerfile
-      DockerContext: ./subscribe
+      Dockerfile: subscribe/Dockerfile
+      DockerContext: ./
       DockerTag: python3.8-v1
   UsersTable:
     Type: AWS::DynamoDB::Table
