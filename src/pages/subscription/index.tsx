@@ -28,6 +28,7 @@ const SubscriptionPage = () => {
   const inBeta = loggedIn && account?.permissions?.in_beta;
   const [minInvestment, setMinInvestment] = useState();
   const [price, setPrice] = useState();
+  const [priceLoading, setPriceLoading] = useState(true);
 
   let subscribeButton = <Button disabled={!account} className={account && overrides.subscribe}>Subscribe</Button>;
   if (!account) {
@@ -53,41 +54,43 @@ const SubscriptionPage = () => {
       //   return data;
       // })
       .then((data) => setPrice(data))
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
+      .finally(() => setPriceLoading(false));
   }, []);
 
   useEffect(() => {
-    const url = `${getApiUrl({ localOverride: "prod" })}/preview`;
-    fetch(url, { method: "GET" })
-      .then((response) => response.json())
-      .then((data) => {
-        const previewBTC = data.BTC.data;
-        const previewUSD = data.USD.data;
-        let lastUSD = previewUSD.slice(previewUSD.length - 2);
-        lastUSD = lastUSD[0].Name === "HODL" ? lastUSD[0] : lastUSD[1];
-        const btcPrice = lastUSD.Bal;
-        console.log(btcPrice);
-        let first = previewBTC.slice(0, 2);
-        first = first[0].Name === "hyperdrive" ? first[0] : first[1];
-        const start = first.Time;
-        let last = previewBTC.slice(previewBTC.length - 2);
-        last = last[0].Name === "hyperdrive" ? last[0] : last[1];
-        const end = last.Time;
-        const days = getDayDiff(start, end);
-        const totalBTCRate = last.Bal - 1;
-        const monthlyBTCRate = (totalBTCRate / days) * 30;
-        // this should be tied to val in backend / maybe make endpoint that returns backend constant
-        const monthlySubUSD = 5;
-        const monthlySubBTC = monthlySubUSD / btcPrice;
-        // principal * monthly rate >= monthlysubrate
-        const minBTCInvestment = (monthlySubBTC / monthlyBTCRate).toPrecision(
-          2
-        );
-        console.log(minBTCInvestment);
-        setMinInvestment(minBTCInvestment);
-      })
-      .catch((err) => console.error(err));
-  }, []);
+    if (!priceLoading) {
+      const url = `${getApiUrl({ localOverride: "prod" })}/preview`;
+      fetch(url, { method: "GET" })
+        .then((response) => response.json())
+        .then((data) => {
+          const previewBTC = data.BTC.data;
+          const previewUSD = data.USD.data;
+          let lastUSD = previewUSD.slice(previewUSD.length - 2);
+          lastUSD = lastUSD[0].Name === "HODL" ? lastUSD[0] : lastUSD[1];
+          const btcPrice = lastUSD.Bal;
+          console.log(btcPrice);
+          let first = previewBTC.slice(0, 2);
+          first = first[0].Name === "hyperdrive" ? first[0] : first[1];
+          const start = first.Time;
+          let last = previewBTC.slice(previewBTC.length - 2);
+          last = last[0].Name === "hyperdrive" ? last[0] : last[1];
+          const end = last.Time;
+          const days = getDayDiff(start, end);
+          const totalBTCRate = last.Bal - 1;
+          const monthlyBTCRate = (totalBTCRate / days) * 30;
+          // this should be tied to val in backend / maybe make endpoint that returns backend constant
+          const monthlySubUSD = price?.unit_amount / 100;
+          const monthlySubBTC = monthlySubUSD / btcPrice;
+          // principal * monthly rate >= monthlysubrate
+          const minBTCInvestment = (monthlySubBTC / monthlyBTCRate).toPrecision(
+            2
+          );
+          setMinInvestment(minBTCInvestment);
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [price, priceLoading]);
 
 
   return (
@@ -138,7 +141,8 @@ const SubscriptionPage = () => {
                 {/* replace this with card with price per month (finally from backend config endpoint) heading and 5 requests / day (constant from backend) subheading*/}
                 <img height="200px" src={CUBE}></img>
               </div>
-              {`$${Number(price?.unit_amount / 100).toFixed(2)} per ${price?.recurring?.interval_count > 1 ? `${price?.recurring?.interval_count} ` : ''}${price?.recurring?.interval}`}
+              {/* eventually $100/month */}
+              {`$${Number(price?.unit_amount / 100).toFixed(2)} per ${price?.recurring?.interval_count > 1 ? `${price?.recurring?.interval_count} ` : ''}${price?.recurring?.interval}${price?.recurring?.interval_count > 1 ? 's' : ''}`}
               {loggedIn ? subscribeButton : <Button
                 className={layoutStyles.start}
                 onClick={() => setShowLogin(true)}
