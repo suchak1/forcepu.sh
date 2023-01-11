@@ -32,7 +32,28 @@ const SubscriptionPage = () => {
   const [priceLoading, setPriceLoading] = useState(true);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
 
-  let subscribeButton = <Button loading={checkoutLoading} disabled={!account} className={account && overrides.subscribe}>Subscribe</Button>;
+  const onCheckout = () => {
+    setCheckoutLoading(true);
+    const { idToken } = loggedIn.signInUserSession;
+    const url = `${getApiUrl()}/checkout`;
+    fetch(url, {
+      method: "POST",
+      headers: { Authorization: idToken.jwtToken },
+      body: JSON.stringify({ price_id: priceId }),
+    })
+      .then((response) => response.json())
+      // .then((data) => setAccount(data))
+      .catch((err) => console.error(err))
+      .finally(() => setCheckoutLoading(false));
+  };
+
+  let subscribeButton =
+    <Button
+      onClick={onCheckout}
+      loading={checkoutLoading}
+      disabled={!account}
+      className={account && overrides.subscribe}>Subscribe
+    </Button>;
   if (!account) {
     subscribeButton = <Tooltip
       trigger={["hover", "focus"]}
@@ -93,21 +114,6 @@ const SubscriptionPage = () => {
         .catch((err) => console.error(err));
     }
   }, [price, priceLoading]);
-
-  const onCheckout = () => {
-    setCheckoutLoading(true);
-    const { idToken } = loggedIn.signInUserSession;
-    const url = `${getApiUrl()}/checkout`;
-    fetch(url, {
-      method: "POST",
-      headers: { Authorization: idToken.jwtToken },
-      body: JSON.stringify({ price_id: priceId }),
-    })
-      .then((response) => response.json())
-      // .then((data) => setAccount(data))
-      .catch((err) => console.error(err))
-      .finally(() => setCheckoutLoading(false));
-  };
 
   return (
     <>
