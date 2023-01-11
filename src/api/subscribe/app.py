@@ -41,7 +41,7 @@ def handle_checkout(event, _):
     return response
 
 
-def post_checkout(event, _):
+def post_checkout(event):
     # TODO: IMPLEMENT FRAUD DETECTION for Checkout
     # e.g. require full billing address, CVC, ??
     # https://stripe.com/docs/radar/integration#recommendations
