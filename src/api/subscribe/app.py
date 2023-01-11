@@ -31,11 +31,32 @@ def get_product(event, _):
     }
 
 
-def post_checkout(*_):
+def post_checkout(event, _):
     # use auto tax
     # use trial period
     # mode: subscription
-    pass
+    session = stripe.checkout.Session.create(
+        customer_email=email,
+        # use url (domain/subscription) from req.origin?
+        success_url=f'{domain}/subscription?success=true&session_id={{CHECKOUT_SESSION_ID}}',
+        cancel_url=f'{domain}/subscription?canceled=true',
+        mode='subscription',
+        line_items=[{
+            'price': price_id,
+            # For metered billing, do not pass quantity
+            'quantity': 1
+        }],
+        automatic_tax={
+            'enabled': True
+        },
+    )
+    status_code = 200
+    body = json.dumps(session)
+    return {
+        "statusCode": status_code,
+        "body": body,
+        "headers": {"Access-Control-Allow-Origin": "*"}
+    }
 
 
 def post_billing(*_):
