@@ -33,8 +33,6 @@ def get_product(event, _):
 
 
 def post_checkout(event, _):
-    # TODO: TEST IF VERIFIED
-
     # TODO: IMPLEMENT FRAUD DETECTION for Checkout
     # e.g. require full billing address, CVC, ??
     # https://stripe.com/docs/radar/integration#recommendations
@@ -50,12 +48,15 @@ def post_checkout(event, _):
         req_body = json.loads(event['body'])
         price_id = req_body['price_id']
         email = claims['email']
+        req_headers = event['headers']
+        print(req_headers)
+        origin = req_headers['origin']
 
         session = stripe.checkout.Session.create(
             customer_email=email,
             # use url (domain/subscription) from req.origin?
-            success_url=f'{domain}/subscription?success=true&session_id={{CHECKOUT_SESSION_ID}}',
-            cancel_url=f'{domain}/subscription?canceled=true',
+            success_url=f'{origin}/subscription?success=true&session_id={{CHECKOUT_SESSION_ID}}',
+            cancel_url=f'{origin}/subscription?canceled=true',
             mode='subscription',
             line_items=[{
                 'price': price_id,

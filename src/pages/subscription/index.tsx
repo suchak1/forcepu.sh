@@ -19,6 +19,7 @@ const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 const spinner = <Spin style={{ width: "100%" }} indicator={antIcon} />;
 
 const SubscriptionPage = () => {
+  const priceId = import.meta.env.VITE_APP_STRIPE_PRICE;
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const { account, accountLoading, loginLoading, setShowLogin } = useContext(
     AccountContext
@@ -29,8 +30,9 @@ const SubscriptionPage = () => {
   const [minInvestment, setMinInvestment] = useState();
   const [price, setPrice] = useState();
   const [priceLoading, setPriceLoading] = useState(true);
+  const [checkoutLoading, setCheckoutLoading] = useState(true);
 
-  let subscribeButton = <Button disabled={!account} className={account && overrides.subscribe}>Subscribe</Button>;
+  let subscribeButton = <Button loading={checkoutLoading} disabled={!account} className={account && overrides.subscribe}>Subscribe</Button>;
   if (!account) {
     subscribeButton = <Tooltip
       trigger={["hover", "focus"]}
@@ -42,7 +44,7 @@ const SubscriptionPage = () => {
   }
 
   useEffect(() => {
-    const url = `${getApiUrl({ localOverride: "dev" })}/price?id=${import.meta.env.VITE_APP_STRIPE_PRICE}`;
+    const url = `${getApiUrl({ localOverride: "dev" })}/price?id=${priceId}`;
     fetch(url, { method: "GET" })
       .then((response) => response.json())
       // .then((data) => {
@@ -92,6 +94,20 @@ const SubscriptionPage = () => {
     }
   }, [price, priceLoading]);
 
+  const onCheckout = () => {
+    setCheckoutLoading(true);
+    const { idToken } = loggedIn.signInUserSession;
+    const url = `${getApiUrl()}/checkout`;
+    fetch(url, {
+      method: "POST",
+      headers: { Authorization: idToken.jwtToken },
+      body: JSON.stringify({ price_id: priceId }),
+    })
+      .then((response) => response.json())
+      // .then((data) => setAccount(data))
+      .catch((err) => console.error(err))
+      .finally(() => setCheckoutLoading(false));
+  };
 
   return (
     <>
