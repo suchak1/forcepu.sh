@@ -1,5 +1,6 @@
 import React from "react";
 import { useState, useEffect, useMemo, useContext } from "react";
+import { useLocation } from "react-router-dom";
 import { Typography, Segmented, Tooltip, Col, Card, Button, Spin } from "antd";
 import { getApiUrl, getDayDiff, get3DCircle, linspace } from "@/utils";
 import pageStyles from "@/pages/home/index.module.less";
@@ -31,6 +32,8 @@ const SubscriptionPage = () => {
   const [price, setPrice] = useState();
   const [priceLoading, setPriceLoading] = useState(true);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const location = useLocation();
+  console.log(location);
 
   const onCheckout = () => {
     setCheckoutLoading(true);
@@ -42,7 +45,8 @@ const SubscriptionPage = () => {
       body: JSON.stringify({ price_id: priceId }),
     })
       .then((response) => response.json())
-      // .then((data) => setAccount(data))
+      // https://checkout.stripe.com/c/pay/cs_test_a1gHIo0Ye5gGWyvdkNL2L6o0lAMujHAfbE1aWixUzGTzJW6CpD4zBrHcFb#fidkdWxOYHwnPyd1blpxYHZxWjA0SEFKaTBOYFBLcGR%2FfTVWUTdNcVw8TFZ0dTFtUH9vQH9IZFVEdGJARHVnPVVnYE1WUDBqUEZRUk11PFYwfEY9PHV3SDRwXGBidW5GPFZSMk5tcDQ1VFRUNTVLMWduT1BgNycpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl
+      .then((data) => data.url)
       .catch((err) => console.error(err))
       .finally(() => setCheckoutLoading(false));
   };
@@ -77,6 +81,7 @@ const SubscriptionPage = () => {
       //   return data;
       // })
       .then((data) => setPrice(data))
+      .then(() => location.replace('https://google.com'))
       .catch((err) => console.error(err))
       .finally(() => setPriceLoading(false));
   }, []);
