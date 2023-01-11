@@ -30,7 +30,7 @@ const SubscriptionPage = () => {
   const [minInvestment, setMinInvestment] = useState();
   const [price, setPrice] = useState();
   const [priceLoading, setPriceLoading] = useState(true);
-  const [checkoutLoading, setCheckoutLoading] = useState(true);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   let subscribeButton = <Button loading={checkoutLoading} disabled={!account} className={account && overrides.subscribe}>Subscribe</Button>;
   if (!account) {
