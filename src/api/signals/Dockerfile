@@ -5,4 +5,4 @@ COPY shared shared
 
 RUN python3.8 -m pip install -r requirements.txt -t .
 
-CMD ["app.get_signals"]
+CMD ["app.handle_signals"]

@@ -5,4 +5,4 @@ COPY shared shared
 
 RUN python3.8 -m pip install -r requirements.txt -t .
 
-CMD ["app.get_account"]
+CMD ["app.handle_account"]

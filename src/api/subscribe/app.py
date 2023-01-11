@@ -1,7 +1,7 @@
 import os
 import json
 import stripe
-from shared.utils import verify_user
+from shared.utils import verify_user, options
 
 stripe.api_key = os.environ['STRIPE_SECRET_KEY']
 
@@ -30,6 +30,15 @@ def get_product(event, _):
         "body": body,
         "headers": {"Access-Control-Allow-Origin": "*"}
     }
+
+
+def handle_checkout(event, _):
+    if event['httpMethod'].upper() == 'OPTIONS':
+        response = options()
+    else:
+        response = post_checkout(event)
+
+    return response
 
 
 def post_checkout(event, _):

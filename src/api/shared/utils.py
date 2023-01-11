@@ -1,7 +1,7 @@
 import json
 
 
-def handle_options():
+def options():
     return {
         "statusCode": 200,
         "headers": {

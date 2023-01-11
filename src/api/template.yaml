@@ -276,7 +276,7 @@ Resources:
           STRIPE_SECRET_KEY: !Ref StripeSecretKey
       PackageType: Image
       ImageConfig:
-        Command: ["app.post_checkout"]
+        Command: ["app.handle_checkout"]
       Events:
         PostCheckout:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
