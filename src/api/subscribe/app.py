@@ -18,6 +18,19 @@ def get_price(event, _):
     }
 
 
+def get_product(event, _):
+    params = event["queryStringParameters"]
+    product_id = params["id"]
+    product = stripe.Product.retrieve(product_id)
+    status_code = 200
+    body = json.dumps(product)
+    return {
+        "statusCode": status_code,
+        "body": body,
+        "headers": {"Access-Control-Allow-Origin": "*"}
+    }
+
+
 def post_checkout(*_):
     # use auto tax
     # use trial period
