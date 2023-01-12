@@ -96,7 +96,25 @@ def post_subscribe(event, _):
     webhook_secret = os.environ['STRIPE_WEBHOOK_SECRET']
     req_body = json.loads(event['body'])
     req_headers = event['headers']
-    print(req_headers)
+    signature = req_headers['Stripe-Signature']
+    try:
+        event = stripe.Webhook.construct_event(
+            req_body, signature, webhook_secret)
+    except ValueError as e:
+        # Invalid payload
+        raise e
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        raise e
+
+    event_type = event['type']
+    print(event)
+    body = json.dumps({'status': 'success'})
+    return {
+        "statusCode": 200,
+        "body": body,
+        "headers": {"Access-Control-Allow-Origin": "*"}
+    }
 
     # handle webhooks
 
