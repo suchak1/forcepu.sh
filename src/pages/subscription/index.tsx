@@ -123,14 +123,9 @@ const SubscriptionPage = () => {
   // https://dev.forcepu.sh/subscription?success=true&session_id=cs_test_a1KTdAWHEplNHN6y5ho6gumPjUf8CGNDIJFSVv5De44OSh8bICtmPG4tjQ
   return (
     <>
-      {/* loggedIn && account &&  */}
       {loggedIn && account && showSuccessAlert && (
         <Alert
-          message={
-            inBeta
-              ? "Congrats! You've been selected for the closed beta. 🎊"
-              : "You are not in the closed beta, but you may receive an invitation in the future. 📧"
-          }
+          message={"Your payment was successful. You have unlocked API access. 🔓"}
           type={"success"}
           showIcon
           closable
