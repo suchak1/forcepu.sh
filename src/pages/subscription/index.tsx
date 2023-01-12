@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect, useMemo, useContext } from "react";
-import { Typography, Segmented, Tooltip, Col, Card, Button, Spin } from "antd";
+import { useSearchParams } from "react-router-dom";
+import { Typography, Segmented, Tooltip, Col, Card, Button, Spin, Alert } from "antd";
 import { getApiUrl, getDayDiff, get3DCircle, linspace } from "@/utils";
 import pageStyles from "@/pages/home/index.module.less";
 import layoutStyles from "@/layouts/index.module.less";
@@ -31,6 +32,9 @@ const SubscriptionPage = () => {
   const [price, setPrice] = useState();
   const [priceLoading, setPriceLoading] = useState(true);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [searchParams] = useSearchParams();
+  const showSuccessAlert = searchParams.get('success')?.toLowerCase() === 'true'
+  const checkoutSessionId = searchParams.get('session_id')
 
   const onCheckout = () => {
     setCheckoutLoading(true);
@@ -92,7 +96,6 @@ const SubscriptionPage = () => {
           let lastUSD = previewUSD.slice(previewUSD.length - 2);
           lastUSD = lastUSD[0].Name === "HODL" ? lastUSD[0] : lastUSD[1];
           const btcPrice = lastUSD.Bal;
-          console.log(btcPrice);
           let first = previewBTC.slice(0, 2);
           first = first[0].Name === "hyperdrive" ? first[0] : first[1];
           const start = first.Time;
@@ -115,8 +118,25 @@ const SubscriptionPage = () => {
     }
   }, [price, priceLoading]);
 
+
+  // make success alert for url in form
+  // https://dev.forcepu.sh/subscription?success=true&session_id=cs_test_a1KTdAWHEplNHN6y5ho6gumPjUf8CGNDIJFSVv5De44OSh8bICtmPG4tjQ
   return (
     <>
+      {/* loggedIn && account &&  */}
+      {loggedIn && account && showSuccessAlert && (
+        <Alert
+          message={
+            inBeta
+              ? "Congrats! You've been selected for the closed beta. 🎊"
+              : "You are not in the closed beta, but you may receive an invitation in the future. 📧"
+          }
+          type={"success"}
+          showIcon
+          closable
+          style={{ marginBottom: "12px" }}
+        />
+      )}
       <Title>Premium Access</Title>
       <span
         style={{
@@ -141,6 +161,8 @@ const SubscriptionPage = () => {
             spinner
           ) : (
             <>
+              {/* add badge to card "Current Plan" and replace sub button with Manage Subscription (cyan button )=> customer portal */}
+              {/* additional cards say Downgrade or Upgrade (magenta btn) and backend uses stripe.Subscription.modify + prorating  */}
               <Card style={{ maxWidth: '400px' }}>
                 <Title level={3}>Signals API</Title>
                 {/* should be level 3-5 */}
