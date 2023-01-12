@@ -27,6 +27,9 @@ Parameters:
   StripeSecretKey:
     Type: "String"
     NoEcho: true
+  StripeWebhookSecret:
+    Type: "String"
+    NoEcho: true
 
 Globals:
   Function:
@@ -247,6 +250,7 @@ Resources:
       Environment:
         Variables:
           STRIPE_SECRET_KEY: !Ref StripeSecretKey
+          STRIPE_WEBHOOK_SECRET: !Ref StripeWebhookSecret
           # remove table name if not needed
           TABLE_NAME: !Ref UsersTable
       # remove policy if not needed

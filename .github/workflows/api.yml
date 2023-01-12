@@ -48,6 +48,7 @@ jobs:
       - name: Create parameters.env [dev]
         env:
           StripeSecretKey: ${{ secrets.DEV_STRIPE_SECRET_KEY }}
+          StripeWebhookSecret: ${{ secrets.DEV_STRIPE_WEBHOOK_SECRET }}
           S3Bucket: ${{ secrets.HYPERDRIVE_DEV_BUCKET }}
           Stage: dev
           ApiUrl: api.dev.forcepu.sh
@@ -57,6 +58,7 @@ jobs:
         run: |
           echo "
           StripeSecretKey=${StripeSecretKey}
+          StripeWebhookSecret=${StripeWebhookSecret}
           S3Bucket=${S3Bucket}
           Stage=${Stage}
           ApiUrl=${ApiUrl}

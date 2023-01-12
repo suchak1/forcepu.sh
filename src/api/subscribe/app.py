@@ -58,7 +58,6 @@ def post_checkout(event):
         price_id = req_body['price_id']
         email = claims['email']
         req_headers = event['headers']
-        print(req_headers)
         origin = req_headers['origin']
 
         session = stripe.checkout.Session.create(
@@ -91,7 +90,14 @@ def post_billing(*_):
     # find a way of embedding html directly into right side or modal
     # vs just redirect to stripe hosted (?) customer portal page
     pass
-# def post_subscribe(*_):
+
+
+def post_subscribe(event, _):
+    webhook_secret = os.environ['STRIPE_WEBHOOK_SECRET']
+    req_body = json.loads(event['body'])
+    req_headers = event['headers']
+    print(req_headers)
+
     # handle webhooks
 
 #     stripe.api_key = "sk_test_abc"
