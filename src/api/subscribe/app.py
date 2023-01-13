@@ -76,6 +76,7 @@ def post_checkout(event):
         # use customerId in checkout session create call below
         session = stripe.checkout.Session.create(
             customer=customer_id,
+            customer_update={'address': 'auto', 'name': 'auto'},
             # use url (domain/subscription) from req.origin?
             success_url=f'{origin}/subscription?success=true&session_id={{CHECKOUT_SESSION_ID}}',
             cancel_url=f'{origin}/subscription?canceled=true',
