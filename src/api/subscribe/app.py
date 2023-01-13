@@ -68,7 +68,8 @@ def post_checkout(event):
 
         # If it doesn't exist, then create customer and save id to db
         if not customer_id:
-            customer = stripe.Customer.create(email=email)
+            name = claims['name']
+            customer = stripe.Customer.create(email=email, name=name)
             customer_id = customer['id']
             stripe_lookup.customer_id = customer_id
             user.update(actions=[UserModel.stripe.set(stripe_lookup)])
