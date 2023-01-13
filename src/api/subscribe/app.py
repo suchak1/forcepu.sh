@@ -1,6 +1,7 @@
 import os
 import json
 import stripe
+from shared.models import UserModel
 from shared.utils import verify_user, options
 
 stripe.api_key = os.environ['STRIPE_SECRET_KEY']
@@ -60,8 +61,22 @@ def post_checkout(event):
         req_headers = event['headers']
         origin = req_headers['origin']
 
+        # Get customerId from user.stripe {} obj
+        user = UserModel.get(email)
+        stripe_lookup = user.stripe
+        customer_id = stripe_lookup.customer_id
+
+        # If it doesn't exist, then create customer and save id to db
+        if not customer_id:
+            customer = stripe.Customer.create(email=email)
+            customer_id = customer['id']
+            stripe_lookup.customer_id = customer_id
+            user.update(actions=[UserModel.stripe.set(stripe_lookup)])
+
+        # use customerId in checkout session create call below
         session = stripe.checkout.Session.create(
             customer_email=email,
+            customer=customer_id,
             # use url (domain/subscription) from req.origin?
             success_url=f'{origin}/subscription?success=true&session_id={{CHECKOUT_SESSION_ID}}',
             cancel_url=f'{origin}/subscription?canceled=true',

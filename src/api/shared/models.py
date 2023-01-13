@@ -29,6 +29,10 @@ class Permissions(MapAttribute):
     read_disclaimer = BooleanAttribute(default=False)
 
 
+class Stripe(MapAttribute):
+    customer_id = UnicodeAttribute(default="")
+
+
 class APIKeyIndex(GlobalSecondaryIndex):
     """
     This class represents a global secondary index
@@ -53,6 +57,7 @@ class UserModel(Model):
     email = UnicodeAttribute(hash_key=True)
     api_key = UnicodeAttribute(default=get_api_key)
     permissions = MapAttribute(default=Permissions)
+    stripe = MapAttribute(default=Stripe)
     access_queue = ListAttribute(
         of=UTCDateTimeAttribute,
         default=get_default_access_queue
