@@ -74,6 +74,9 @@ def post_checkout(event):
             stripe_lookup.customer_id = customer_id
             user.update(actions=[UserModel.stripe.set(stripe_lookup)])
 
+        # check if user has active subscription to product
+        # if so, throw error saying already subscribed
+
         # use customerId in checkout session create call below
         session = stripe.checkout.Session.create(
             customer=customer_id,
@@ -90,6 +93,8 @@ def post_checkout(event):
             automatic_tax={
                 'enabled': True
             },
+            # specify terms of service agreement?
+            # consent_collection.terms_of_service
         )
         status_code = 200
         body = json.dumps(session)

@@ -156,6 +156,15 @@ const SubscriptionPage = () => {
               {/* add badge to card "Current Plan" and replace sub button with Manage Subscription (cyan button )=> customer portal */}
               {/* additional cards say Downgrade or Upgrade (magenta btn) and backend uses stripe.Subscription.modify + prorating  */}
               <Card style={{ maxWidth: '400px' }}>
+                {/* entire card should be centered horizontally on page */}
+                {/* cube gif as icon on left, then title */}
+                {/* price on right in large font - per month in gray text */}
+                {/* then info split into 3 bullet points */}
+                {/* - Access to the /signals API  */}
+                {/* - up to a week's worth of the latest BUY and SELL signals */}
+                {/* - maximum of 5 requests / day */}
+                {/* each bullet point should be a green, cyan, or magent checkmark or bullet - whatever looks best */}
+                {/* subscribe button centered at bottom in magenta, manage subscription in cyan centered at bottom */}
                 <Title level={3}>Signals API</Title>
                 {/* should be level 3-5 */}
                 <span>{"Access to the "}</span>
