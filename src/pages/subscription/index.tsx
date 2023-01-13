@@ -118,9 +118,6 @@ const SubscriptionPage = () => {
     }
   }, [price, priceLoading]);
 
-
-  // make success alert for url in form
-  // https://dev.forcepu.sh/subscription?success=true&session_id=cs_test_a1KTdAWHEplNHN6y5ho6gumPjUf8CGNDIJFSVv5De44OSh8bICtmPG4tjQ
   return (
     <>
       {loggedIn && account && showSuccessAlert && (
