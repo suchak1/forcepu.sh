@@ -230,6 +230,7 @@ Resources:
       Environment:
         Variables:
           STRIPE_SECRET_KEY: !Ref StripeSecretKey
+          TABLE_NAME: !Ref UsersTable
       PackageType: Image
       ImageConfig:
         Command: ["app.get_price"]
@@ -251,11 +252,8 @@ Resources:
         Variables:
           STRIPE_SECRET_KEY: !Ref StripeSecretKey
           STRIPE_WEBHOOK_SECRET: !Ref StripeWebhookSecret
-          # remove table name if not needed
           TABLE_NAME: !Ref UsersTable
-      # remove policy if not needed
       Policies:
-        # remove policy if not needed
         - DynamoDBCrudPolicy:
             TableName: !Ref UsersTable
       PackageType: Image
@@ -278,6 +276,10 @@ Resources:
       Environment:
         Variables:
           STRIPE_SECRET_KEY: !Ref StripeSecretKey
+          TABLE_NAME: !Ref UsersTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UsersTable
       PackageType: Image
       ImageConfig:
         Command: ["app.handle_checkout"]
