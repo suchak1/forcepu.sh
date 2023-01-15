@@ -66,6 +66,28 @@ def post_checkout(event):
         stripe_lookup = user.stripe
         customer_id = stripe_lookup.customer_id
 
+        # check if user has active subscription to product
+        # if so, throw error saying already subscribed
+        # customer = stripe.Customer.retrieve(
+        #     customer_id, expand=['subscriptions']
+        # )
+        # use product_id or name that is passed in
+        # don't take price_id from req, use from backend (make get /subscribe endpoint w all prices, products)
+        # e.g. { BTC: productId: xxx, priceId: yyy }
+        # should this be a table created and updated on deploy?
+        # prices table - priceId, cost, interval_count, interval
+        # or create table thru template.yaml and on first GET /price for a given priceId,
+        # pull from stripe if doesn't exist in db, else pull script from db
+        # webhooks for price changes ? updates/deletions/creations
+        # use webhooks to manage subscription active state in users db
+
+        # create checkout session table
+        # That way, api can return existing session instead of creating new one.
+        # Unexpire session? - but would have to manage prices make sure current priceid
+
+        # Batch queue for Stripe calls of same type?
+        # batch all get price calls from last second into same Stripe call?
+
         # If it doesn't exist, then create customer and save id to db
         if not customer_id:
             name = claims['name']
@@ -73,9 +95,6 @@ def post_checkout(event):
             customer_id = customer['id']
             stripe_lookup.customer_id = customer_id
             user.update(actions=[UserModel.stripe.set(stripe_lookup)])
-
-        # check if user has active subscription to product
-        # if so, throw error saying already subscribed
 
         # use customerId in checkout session create call below
         session = stripe.checkout.Session.create(
