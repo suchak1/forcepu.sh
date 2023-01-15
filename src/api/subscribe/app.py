@@ -2,7 +2,7 @@ import os
 import json
 import stripe
 from shared.models import UserModel
-from shared.utils import verify_user, options
+from shared.utils import verify_user, options, error, res_headers
 
 stripe.api_key = os.environ['STRIPE_SECRET_KEY']
 
@@ -16,7 +16,7 @@ def get_price(event, _):
     return {
         "statusCode": status_code,
         "body": body,
-        "headers": {"Access-Control-Allow-Origin": "*"}
+        "headers": res_headers
     }
 
 
@@ -29,7 +29,7 @@ def get_product(event, _):
     return {
         "statusCode": status_code,
         "body": body,
-        "headers": {"Access-Control-Allow-Origin": "*"}
+        "headers": res_headers
     }
 
 
@@ -51,76 +51,79 @@ def post_checkout(event):
     claims = event['requestContext']['authorizer']['claims']
     verified = verify_user(claims)
 
-    status_code = 401
-    body = json.dumps({'message': 'This account is not verified.'})
+    if not verified:
+        return error(401, 'This account is not verified.')
 
-    if verified:
-        req_body = json.loads(event['body'])
-        price_id = req_body['price_id']
-        email = claims['email']
-        req_headers = event['headers']
-        origin = req_headers['origin']
+    req_body = json.loads(event['body'])
+    price_id = req_body['price_id']
+    email = claims['email']
+    req_headers = event['headers']
+    origin = req_headers['origin']
 
-        # Get customerId from user.stripe {} obj
-        user = UserModel.get(email)
-        stripe_lookup = user.stripe
-        customer_id = stripe_lookup.customer_id
+    # Get customerId from user.stripe {} obj
+    user = UserModel.get(email)
+    stripe_lookup = user.stripe
+    customer_id = stripe_lookup.customer_id
 
+    if customer_id:
         # check if user has active subscription to product
         # if so, throw error saying already subscribed
         # customer = stripe.Customer.retrieve(
         #     customer_id, expand=['subscriptions']
         # )
-        # use product_id or name that is passed in
-        # don't take price_id from req, use from backend (make get /subscribe endpoint w all prices, products)
-        # e.g. { BTC: productId: xxx, priceId: yyy }
-        # should this be a table created and updated on deploy?
-        # prices table - priceId, cost, interval_count, interval
-        # or create table thru template.yaml and on first GET /price for a given priceId,
-        # pull from stripe if doesn't exist in db, else pull script from db
-        # webhooks for price changes ? updates/deletions/creations
-        # use webhooks to manage subscription active state in users db
+        if not stripe_lookup.subscription_active:
+            return error(400, 'User is already subscribed.')
+            # use product_id or name that is passed in
+            # don't take price_id from req, use from backend (make get /subscribe endpoint w all prices, products)
+            # e.g. { BTC: productId: xxx, priceId: yyy }
+            # should this be a table created and updated on deploy?
+            # prices table - priceId, cost, interval_count, interval
+            # or create table thru template.yaml and on first GET /price for a given priceId,
+            # pull from stripe if doesn't exist in db, else pull script from db
+            # webhooks for price changes ? updates/deletions/creations
+            # use webhooks to manage subscription active state in users db
 
-        # create checkout session table
-        # That way, api can return existing session instead of creating new one.
-        # Unexpire session? - but would have to manage prices make sure current priceid
+            # create checkout session table
+            # That way, api can return existing session instead of creating new one.
+            # Unexpire session? - but would have to manage prices make sure current priceid
 
-        # Batch queue for Stripe calls of same type?
-        # batch all get price calls from last second into same Stripe call?
+            # Batch queue for Stripe calls of same type?
+            # batch all get price calls from last second into same Stripe call?
 
-        # If it doesn't exist, then create customer and save id to db
-        if not customer_id:
-            name = claims['name']
-            customer = stripe.Customer.create(email=email, name=name)
-            customer_id = customer['id']
-            stripe_lookup.customer_id = customer_id
-            user.update(actions=[UserModel.stripe.set(stripe_lookup)])
+            # If it doesn't exist, then create customer and save id to db
+    else:
+        name = claims['name']
+        customer = stripe.Customer.create(email=email, name=name)
+        customer_id = customer['id']
+        stripe_lookup.customer_id = customer_id
+        user.update(actions=[UserModel.stripe.set(stripe_lookup)])
 
-        # use customerId in checkout session create call below
-        session = stripe.checkout.Session.create(
-            customer=customer_id,
-            customer_update={'address': 'auto', 'name': 'auto'},
-            # use url (domain/subscription) from req.origin?
-            success_url=f'{origin}/subscription?success=true&session_id={{CHECKOUT_SESSION_ID}}',
-            cancel_url=f'{origin}/subscription?canceled=true',
-            mode='subscription',
-            line_items=[{
-                'price': price_id,
-                # For metered billing, do not pass quantity
-                'quantity': 1
-            }],
-            automatic_tax={
-                'enabled': True
-            },
-            # specify terms of service agreement?
-            # consent_collection.terms_of_service
-        )
-        status_code = 200
-        body = json.dumps(session)
+    # use customerId in checkout session create call below
+    session = stripe.checkout.Session.create(
+        customer=customer_id,
+        customer_update={'address': 'auto', 'name': 'auto'},
+        # use url (domain/subscription) from req.origin?
+        success_url=f'{origin}/subscription?success=true&session_id={{CHECKOUT_SESSION_ID}}',
+        cancel_url=f'{origin}/subscription?canceled=true',
+        mode='subscription',
+        line_items=[{
+            'price': price_id,
+            # For metered billing, do not pass quantity
+            'quantity': 1
+        }],
+        automatic_tax={
+            'enabled': True
+        },
+        # specify terms of service agreement?
+        # consent_collection.terms_of_service
+    )
+    status_code = 200
+    body = json.dumps(session)
+
     return {
         "statusCode": status_code,
         "body": body,
-        "headers": {"Access-Control-Allow-Origin": "*"}
+        "headers": res_headers
     }
 
 
@@ -153,7 +156,7 @@ def post_subscribe(event, _):
     return {
         "statusCode": 200,
         "body": body,
-        "headers": {"Access-Control-Allow-Origin": "*"}
+        "headers": res_headers
     }
 
     # handle webhooks

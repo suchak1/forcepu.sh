@@ -31,6 +31,9 @@ class Permissions(MapAttribute):
 
 class Stripe(MapAttribute):
     customer_id = UnicodeAttribute(default="")
+    subscription_active = BooleanAttribute(default=False)
+    # subscription_end?
+    # trialing?
 
 
 class APIKeyIndex(GlobalSecondaryIndex):

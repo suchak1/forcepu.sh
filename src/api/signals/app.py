@@ -3,11 +3,9 @@ import json
 import boto3
 from datetime import datetime, timedelta, timezone
 from shared.models import query_by_api_key, UserModel
-from shared.utils import options
+from shared.utils import options, error, res_headers
 
 s3 = boto3.client('s3')
-
-res_headers = {"Access-Control-Allow-Origin": "*"}
 
 
 def handle_signals(event, _):
@@ -17,16 +15,6 @@ def handle_signals(event, _):
         response = get_signals(event)
 
     return response
-
-
-def error(status, message):
-    return {
-        "statusCode": status,
-        "body": json.dumps(
-            {'message': message}
-        ),
-        "headers": res_headers
-    }
 
 
 def enough_time_has_passed(start, end, delta):

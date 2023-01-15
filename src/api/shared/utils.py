@@ -1,5 +1,17 @@
 import json
 
+res_headers = {"Access-Control-Allow-Origin": "*"}
+
+
+def error(status, message):
+    return {
+        "statusCode": status,
+        "body": json.dumps(
+            {'message': message}
+        ),
+        "headers": res_headers
+    }
+
 
 def options():
     return {
