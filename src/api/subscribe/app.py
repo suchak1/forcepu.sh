@@ -135,14 +135,13 @@ def post_billing(*_):
     pass
 
 
-def post_subscribe(event, context):
+def post_subscribe(event, _):
+    # signing key for specific endpoint in Stripe Dashboard
+    # not the same as CLI secret
     webhook_secret = os.environ['STRIPE_WEBHOOK_SECRET']
     req_body = event['body']
     req_headers = event['headers']
     signature = req_headers['Stripe-Signature']
-    # print('event', event)
-    # print('context', context)
-    # req_body = bytes(req_body, 'utf-8')
     try:
         event = stripe.Webhook.construct_event(
             req_body, signature, webhook_secret)
