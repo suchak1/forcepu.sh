@@ -45,7 +45,12 @@ const SubscriptionPage = () => {
       headers: { Authorization: idToken.jwtToken },
       body: JSON.stringify({ price_id: priceId }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Unable to generate checkout page.');
+        }
+        return response.json();
+      })
       .then((data) => window.location.href = data.url)
       .catch((err) => console.error(err))
       .finally(() => setCheckoutLoading(false));
