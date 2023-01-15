@@ -137,7 +137,7 @@ def post_billing(*_):
 
 def post_subscribe(event, _):
     webhook_secret = os.environ['STRIPE_WEBHOOK_SECRET']
-    req_body = json.loads(event['body'])
+    req_body = event['body']
     req_headers = event['headers']
     signature = req_headers['Stripe-Signature']
     try:
