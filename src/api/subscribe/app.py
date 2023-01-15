@@ -140,9 +140,9 @@ def post_subscribe(event, context):
     req_body = event['body']
     req_headers = event['headers']
     signature = req_headers['Stripe-Signature']
-    print('event', event)
-    print('context', context)
-    req_body = bytes(req_body, 'utf-8')
+    # print('event', event)
+    # print('context', context)
+    # req_body = bytes(req_body, 'utf-8')
     try:
         event = stripe.Webhook.construct_event(
             req_body, signature, webhook_secret)
