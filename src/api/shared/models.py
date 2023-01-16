@@ -51,6 +51,21 @@ class APIKeyIndex(GlobalSecondaryIndex):
     api_key = UnicodeAttribute(hash_key=True)
 
 
+class CustomerIdIndex(GlobalSecondaryIndex):
+    """
+    This class represents a global secondary index
+    """
+    class Meta:
+        # index_name is optional, but can be provided to override the default name
+        index_name = 'customer_id_index'
+        # All attributes are projected
+        projection = AllProjection()
+
+    # This attribute is the hash key for the index
+    # Note that this attribute must also exist in the model
+    customer_id = UnicodeAttribute(hash_key=True)
+
+
 class UserModel(Model):
     """
     A DynamoDB User
@@ -65,4 +80,6 @@ class UserModel(Model):
         of=UTCDateTimeAttribute,
         default=get_default_access_queue
     )
+    customer_id = UnicodeAttribute(default="")
     api_key_index = APIKeyIndex()
+    customer_id_index = CustomerIdIndex()

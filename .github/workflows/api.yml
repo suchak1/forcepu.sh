@@ -48,6 +48,7 @@ jobs:
       - name: Create parameters.env [dev]
         env:
           StripeSecretKey: ${{ secrets.DEV_STRIPE_SECRET_KEY }}
+          # Webhook signing key secret for endpoint (not for CLI)
           StripeWebhookSecret: ${{ secrets.DEV_STRIPE_WEBHOOK_SECRET }}
           S3Bucket: ${{ secrets.HYPERDRIVE_DEV_BUCKET }}
           Stage: dev
