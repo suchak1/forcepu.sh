@@ -313,6 +313,8 @@ Resources:
           AttributeType: S
         - AttributeName: api_key
           AttributeType: S
+        - AttributeName: customer_id
+          AttributeType: S
       KeySchema:
         - AttributeName: email
           KeyType: HASH
