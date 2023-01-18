@@ -78,7 +78,7 @@ def post_checkout(event):
         # customer = stripe.Customer.retrieve(
         #     customer_id, expand=['subscriptions']
         # )
-        if stripe_lookup.subscription.active:
+        if stripe_lookup.subscription['active']:
             return error(400, 'User is already subscribed.')
             # use product_id or name that is passed in
             # don't take price_id from req, use from backend (make get /subscribe endpoint w all prices, products)
