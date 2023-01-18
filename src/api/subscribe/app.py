@@ -136,7 +136,7 @@ def post_checkout(event):
         stripe_lookup.checkout = checkout
         user.update(actions=[UserModel.stripe.set(stripe_lookup)])
 
-    url = checkout.url
+    url = checkout['url']
     status_code = 200
     body = json.dumps(url)
 
