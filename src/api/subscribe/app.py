@@ -104,7 +104,7 @@ def post_checkout(event):
     checkout = stripe_lookup.checkout
     duration_days = 1
     reset_duration = timedelta(days=duration_days)
-    start = checkout['created']
+    start = UTCDateTimeAttribute().deserialize(checkout['created'])
     now = datetime.now(timezone.utc)
     # check stripe_lookup.checkout.created
     # if (current time in UTC - created) delta > 1 day delta:
