@@ -3,7 +3,7 @@ import secrets
 from pynamodb.models import Model
 from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
 from pynamodb.attributes import UnicodeAttribute, MapAttribute, BooleanAttribute, ListAttribute, UTCDateTimeAttribute
-from utils import past_date
+from .utils import past_date
 
 
 def query_by_api_key(api_key):
