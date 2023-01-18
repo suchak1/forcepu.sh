@@ -101,6 +101,11 @@ def post_checkout(event):
         customer_id = customer['id']
         user.update(actions=[UserModel.customer_id.set(customer_id)])
 
+    # check strip_lookup.checkout.expiration
+    # if (current time in UTC - expiration) delta > 1 day delta:
+    # then create new session, save session created, save id, serve session.url
+    # else, create url using saved checkout id and serve
+
     # use customerId in checkout session create call below
     session = stripe.checkout.Session.create(
         customer=customer_id,

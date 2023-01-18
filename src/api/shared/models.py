@@ -34,7 +34,7 @@ class Permissions(MapAttribute):
 
 class Checkout(MapAttribute):
     id = UnicodeAttribute(default="")
-    expiration = UTCDateTimeAttribute(default=past_date)
+    created = UTCDateTimeAttribute(default=past_date)
 
 
 class Subscription(MapAttribute):
