@@ -33,7 +33,7 @@ class Permissions(MapAttribute):
 
 
 class Checkout(MapAttribute):
-    id = UnicodeAttribute(default="")
+    url = UnicodeAttribute(default="")
     created = UTCDateTimeAttribute(default=past_date)
 
 

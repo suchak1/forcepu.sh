@@ -3,6 +3,10 @@ import json
 res_headers = {"Access-Control-Allow-Origin": "*"}
 
 
+def enough_time_has_passed(start, end, delta):
+    return end - start >= delta
+
+
 def error(status, message):
     return {
         "statusCode": status,

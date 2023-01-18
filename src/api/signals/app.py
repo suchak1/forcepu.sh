@@ -3,7 +3,7 @@ import json
 import boto3
 from datetime import datetime, timedelta, timezone
 from shared.models import query_by_api_key, UserModel
-from shared.utils import options, error, res_headers
+from shared.utils import options, error, enough_time_has_passed, res_headers
 
 s3 = boto3.client('s3')
 
@@ -17,10 +17,6 @@ def handle_signals(event, _):
     return response
 
 
-def enough_time_has_passed(start, end, delta):
-    return end - start >= delta
-
-
 def get_signals(event):
     # first get user by api key
     req_headers = event['headers']
@@ -32,9 +28,8 @@ def get_signals(event):
         return error(401, 'Provide a valid API key.')
     user = query_results[0]
 
-    if not user.permissions.in_beta and not user.stripe.subscription.active:
+    if not (user.permissions.in_beta or user.stripe.subscription.active):
         return error(402, 'This endpoint is for subscribers only.')
-    # proceed
 
     # Notes: Instead of using usage plan,
     # store list of last 5 access times

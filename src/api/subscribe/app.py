@@ -3,12 +3,13 @@ import json
 import stripe
 from shared.models import UserModel
 from datetime import datetime, timedelta, timezone
-from shared.utils import verify_user, options, error, res_headers
+from shared.utils import verify_user, options, error, enough_time_has_passed, res_headers
 
 stripe.api_key = os.environ['STRIPE_SECRET_KEY']
 
 
 def get_plans(event, _):
+    # serve priceId here
     pass
 
 
@@ -86,7 +87,6 @@ def post_checkout(event):
             # or create table thru template.yaml and on first GET /price for a given priceId,
             # pull from stripe if doesn't exist in db, else pull script from db
             # webhooks for price changes ? updates/deletions/creations
-            # use webhooks to manage subscription active state in users db
 
             # create checkout session table
             # That way, api can return existing session instead of creating new one.
@@ -94,8 +94,6 @@ def post_checkout(event):
 
             # Batch queue for Stripe calls of same type?
             # batch all get price calls from last second into same Stripe call?
-
-            # If it doesn't exist, then create customer and save id to db
     else:
         name = claims['name']
         customer = stripe.Customer.create(email=email, name=name)
@@ -108,30 +106,37 @@ def post_checkout(event):
     now = datetime.now(timezone.utc)
     # check stripe_lookup.checkout.created
     # if (current time in UTC - created) delta > 1 day delta:
-    # then create new session, save session created time in UTC, save id, serve session.url
-    # else, create url using saved checkout id and serve
+    if enough_time_has_passed(checkout.created, now, reset_duration):
+        # then create new session, save session created time in UTC, save url, serve session.url
+        # else, serve checkout url
 
-    # use customerId in checkout session create call below
-    session = stripe.checkout.Session.create(
-        customer=customer_id,
-        customer_update={'address': 'auto', 'name': 'auto'},
-        # use url (domain/subscription) from req.origin?
-        success_url=f'{origin}/subscription?success=true&session_id={{CHECKOUT_SESSION_ID}}',
-        cancel_url=f'{origin}/subscription?canceled=true',
-        mode='subscription',
-        line_items=[{
-            'price': price_id,
-            # For metered billing, do not pass quantity
-            'quantity': 1
-        }],
-        automatic_tax={
-            'enabled': True
-        },
-        # specify terms of service agreement?
-        # consent_collection.terms_of_service
-    )
+        # use customerId in checkout session create call below
+        session = stripe.checkout.Session.create(
+            customer=customer_id,
+            customer_update={'address': 'auto', 'name': 'auto'},
+            # use url (domain/subscription) from req.origin?
+            success_url=f'{origin}/subscription?success=true&session_id={{CHECKOUT_SESSION_ID}}',
+            cancel_url=f'{origin}/subscription?canceled=true',
+            mode='subscription',
+            line_items=[{
+                'price': price_id,
+                # For metered billing, do not pass quantity
+                'quantity': 1
+            }],
+            automatic_tax={
+                'enabled': True
+            },
+            # specify terms of service agreement?
+            # consent_collection.terms_of_service
+        )
+        checkout.created = now
+        checkout.url = session.url
+        stripe_lookup.checkout = checkout
+        user.update(actions=[UserModel.stripe.set(stripe_lookup)])
+
+    url = checkout.url
     status_code = 200
-    body = json.dumps(session)
+    body = json.dumps(url)
 
     return {
         "statusCode": status_code,
