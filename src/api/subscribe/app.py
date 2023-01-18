@@ -174,6 +174,8 @@ def post_subscribe(event, _):
         # Invalid signature
         raise e
 
+    # ONLY events approved in Stripe Dashboard Settings > Webhooks
+    # will come through
     event_type = event['type']
     subscription_events = set([
         'customer.subscription.created',
