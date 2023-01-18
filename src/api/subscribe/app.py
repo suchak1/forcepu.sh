@@ -188,9 +188,9 @@ def post_subscribe(event, _):
         user = list(UserModel.customer_id_index.query(customer_id))[0]
         sub_is_active = sub['status'] == 'active'
         stripe_lookup = user.stripe
-        sub_was_active = stripe_lookup.subscription.active
+        sub_was_active = stripe_lookup.subscription['active']
         if sub_was_active != sub_is_active:
-            stripe_lookup.subscription.active = sub_is_active
+            stripe_lookup.subscription['active'] = sub_is_active
             user.update(actions=[UserModel.stripe.set(stripe_lookup)])
 
     print(event)
