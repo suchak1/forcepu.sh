@@ -104,10 +104,11 @@ def post_checkout(event):
     checkout = stripe_lookup.checkout
     duration_days = 1
     reset_duration = timedelta(days=duration_days)
+    start = checkout['created']
     now = datetime.now(timezone.utc)
     # check stripe_lookup.checkout.created
     # if (current time in UTC - created) delta > 1 day delta:
-    if enough_time_has_passed(checkout.created, now, reset_duration):
+    if enough_time_has_passed(start, now, reset_duration):
         # then create new session, save session created time in UTC, save url, serve session.url
         # else, serve checkout url
 
@@ -130,8 +131,8 @@ def post_checkout(event):
             # specify terms of service agreement?
             # consent_collection.terms_of_service
         )
-        checkout.created = UTCDateTimeAttribute().serialize(now)
-        checkout.url = session.url
+        checkout['created'] = UTCDateTimeAttribute().serialize(now)
+        checkout['url'] = session.url
         stripe_lookup.checkout = checkout
         user.update(actions=[UserModel.stripe.set(stripe_lookup)])
 
