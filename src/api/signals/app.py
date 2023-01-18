@@ -32,24 +32,8 @@ def get_signals(event):
         return error(401, 'Provide a valid API key.')
     user = query_results[0]
 
-    # if in beta:
-    if user.permissions.in_beta:
-        #   hit verify_api_key endpoint
-        #   if not verified (error response):
-        #       add key to usage plan
-        pass
-    # if not in_beta:
-    else:
-        #   hit verify_api_key endpoint (dummy endpoint connected to usage plan, pass headers on from this fx)
-        #   AND hit stripe subscription endpoint
-        #       if verified (simple ok response) but not active sub:
-        #           remove key from usage plan
-        #           error out as 402, inactive subscription / renew sub
-        #       elif not verified (error response) but active sub:
-        #           add key to usage plan
-        #       elif not verified and not active:
-        #           error out as 402, This endpoint is for subscribers only.
-        return error(402, 'This endpoint is for beta subscribers only.')
+    if not user.permissions.in_beta and not user.stripe.subscription.active:
+        return error(402, 'This endpoint is for subscribers only.')
     # proceed
 
     # Notes: Instead of using usage plan,

@@ -2,6 +2,7 @@ import os
 import json
 import stripe
 from shared.models import UserModel
+from datetime import datetime, timedelta, timezone
 from shared.utils import verify_user, options, error, res_headers
 
 stripe.api_key = os.environ['STRIPE_SECRET_KEY']
@@ -101,9 +102,13 @@ def post_checkout(event):
         customer_id = customer['id']
         user.update(actions=[UserModel.customer_id.set(customer_id)])
 
-    # check strip_lookup.checkout.expiration
-    # if (current time in UTC - expiration) delta > 1 day delta:
-    # then create new session, save session created, save id, serve session.url
+    checkout = stripe_lookup.checkout
+    duration_days = 1
+    reset_duration = timedelta(days=duration_days)
+    now = datetime.now(timezone.utc)
+    # check stripe_lookup.checkout.created
+    # if (current time in UTC - created) delta > 1 day delta:
+    # then create new session, save session created time in UTC, save id, serve session.url
     # else, create url using saved checkout id and serve
 
     # use customerId in checkout session create call below
