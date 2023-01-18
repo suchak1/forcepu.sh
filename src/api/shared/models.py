@@ -3,7 +3,7 @@ import secrets
 from datetime import datetime, timezone
 from pynamodb.models import Model
 from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
-from pynamodb.attributes import UnicodeAttribute, MapAttribute, BooleanAttribute, ListAttribute, UTCDateTimeAttribute
+from pynamodb.attributes import UnicodeAttribute, MapAttribute, DynamicMapAttribute, BooleanAttribute, ListAttribute, UTCDateTimeAttribute
 
 
 def query_by_api_key(api_key):
@@ -32,7 +32,7 @@ class Permissions(MapAttribute):
     read_disclaimer = BooleanAttribute(default=False)
 
 
-class Checkout(MapAttribute):
+class Checkout(DynamicMapAttribute):
     url = UnicodeAttribute(default="")
     created = UTCDateTimeAttribute(default=past_date)
 
@@ -41,7 +41,7 @@ class Subscription(MapAttribute):
     active = BooleanAttribute(default=False)
 
 
-class Stripe(MapAttribute):
+class Stripe(DynamicMapAttribute):
     checkout = MapAttribute(default=Checkout)
     subscription = MapAttribute(default=Subscription)
 

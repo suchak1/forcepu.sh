@@ -3,6 +3,7 @@ import json
 import stripe
 from shared.models import UserModel
 from datetime import datetime, timedelta, timezone
+from pynamodb.attributes import UTCDateTimeAttribute
 from shared.utils import verify_user, options, error, enough_time_has_passed, res_headers
 
 stripe.api_key = os.environ['STRIPE_SECRET_KEY']
@@ -129,7 +130,7 @@ def post_checkout(event):
             # specify terms of service agreement?
             # consent_collection.terms_of_service
         )
-        checkout.created = now
+        checkout.created = UTCDateTimeAttribute().serialize(now)
         checkout.url = session.url
         stripe_lookup.checkout = checkout
         user.update(actions=[UserModel.stripe.set(stripe_lookup)])
