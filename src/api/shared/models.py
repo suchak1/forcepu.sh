@@ -32,7 +32,7 @@ class Permissions(MapAttribute):
     read_disclaimer = BooleanAttribute(default=False)
 
 
-class Checkout(DynamicMapAttribute):
+class Checkout(MapAttribute):
     url = UnicodeAttribute(default="")
     created = UTCDateTimeAttribute(default=past_date)
 
@@ -41,7 +41,7 @@ class Subscription(MapAttribute):
     active = BooleanAttribute(default=False)
 
 
-class Stripe(DynamicMapAttribute):
+class Stripe(MapAttribute):
     checkout = MapAttribute(default=Checkout)
     subscription = MapAttribute(default=Subscription)
 
