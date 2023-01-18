@@ -4,7 +4,10 @@ import stripe
 from shared.models import UserModel
 from datetime import datetime, timedelta, timezone
 from pynamodb.attributes import UTCDateTimeAttribute
-from shared.utils import verify_user, options, error, enough_time_has_passed, res_headers
+from shared.utils import \
+    verify_user, options, \
+    error, enough_time_has_passed, \
+    past_date, res_headers
 
 stripe.api_key = os.environ['STRIPE_SECRET_KEY']
 
@@ -190,10 +193,12 @@ def post_subscribe(event, _):
         stripe_lookup = user.stripe
         sub_was_active = stripe_lookup.subscription['active']
         if sub_was_active != sub_is_active:
+            if not sub_is_active:
+                stripe_lookup.checkout['created'] = UTCDateTimeAttribute(
+                ).serialize(past_date)
             stripe_lookup.subscription['active'] = sub_is_active
             user.update(actions=[UserModel.stripe.set(stripe_lookup)])
 
-    print(event)
     body = json.dumps({'status': 'success'})
     return {
         "statusCode": 200,

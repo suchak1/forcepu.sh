@@ -1,6 +1,9 @@
 import json
+from datetime import datetime, timezone
 
 res_headers = {"Access-Control-Allow-Origin": "*"}
+
+past_date = datetime(2020, 1, 1, tzinfo=timezone.utc)
 
 
 def enough_time_has_passed(start, end, delta):

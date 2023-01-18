@@ -1,9 +1,9 @@
 import os
 import secrets
-from datetime import datetime, timezone
 from pynamodb.models import Model
 from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
-from pynamodb.attributes import UnicodeAttribute, MapAttribute, DynamicMapAttribute, BooleanAttribute, ListAttribute, UTCDateTimeAttribute
+from pynamodb.attributes import UnicodeAttribute, MapAttribute, BooleanAttribute, ListAttribute, UTCDateTimeAttribute
+from utils import past_date
 
 
 def query_by_api_key(api_key):
@@ -17,9 +17,6 @@ def get_api_key():
         query_results = query_by_api_key(api_key)
         key_already_exists = len(query_results)
     return api_key
-
-
-past_date = datetime(2020, 1, 1, tzinfo=timezone.utc)
 
 
 def get_default_access_queue():
