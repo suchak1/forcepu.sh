@@ -47,11 +47,11 @@ const SubscriptionPage = () => {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Unable to generate checkout page.');
+          throw new Error('Unable to fetch checkout page.');
         }
         return response.json();
       })
-      .then((data) => window.location.href = data.url)
+      .then((data) => window.location.href = data)
       .catch((err) => console.error(err))
       .finally(() => setCheckoutLoading(false));
   };
