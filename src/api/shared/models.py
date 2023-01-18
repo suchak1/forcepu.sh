@@ -19,8 +19,11 @@ def get_api_key():
     return api_key
 
 
+past_date = datetime(2020, 1, 1, tzinfo=timezone.utc)
+
+
 def get_default_access_queue():
-    return [datetime(2020, 1, 1, tzinfo=timezone.utc)] * 5
+    return [past_date] * 5
 
 
 class Permissions(MapAttribute):
@@ -29,11 +32,18 @@ class Permissions(MapAttribute):
     read_disclaimer = BooleanAttribute(default=False)
 
 
+class Checkout(MapAttribute):
+    id = UnicodeAttribute(default="")
+    expiration = UTCDateTimeAttribute(default=past_date)
+
+
+class Subscription(MapAttribute):
+    active = BooleanAttribute(default=False)
+
+
 class Stripe(MapAttribute):
-    customer_id = UnicodeAttribute(default="")
-    subscription_active = BooleanAttribute(default=False)
-    # subscription_end?
-    # trialing?
+    checkout = MapAttribute(default=Checkout)
+    subscription = MapAttribute(default=Subscription)
 
 
 class APIKeyIndex(GlobalSecondaryIndex):

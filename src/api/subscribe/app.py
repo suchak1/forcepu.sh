@@ -153,6 +153,17 @@ def post_subscribe(event, _):
         raise e
 
     event_type = event['type']
+
+    if event_type == 'customer.subscription.updated':
+        sub = event['data']['object']
+        customer_id = sub['customer']
+        user = list(UserModel.customer_id_index.query(customer_id))[0]
+        subsciption_active = sub['status'] == 'active'
+        stripe_lookup = user.stripe
+        if stripe_lookup.subscription_active != subsciption_active:
+            stripe_lookup.subscription_active = subsciption_active
+            user.update(actions=[UserModel.stripe.set(stripe_lookup)])
+
     print(event)
     body = json.dumps({'status': 'success'})
     return {
