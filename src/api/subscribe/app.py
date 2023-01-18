@@ -7,6 +7,10 @@ from shared.utils import verify_user, options, error, res_headers
 stripe.api_key = os.environ['STRIPE_SECRET_KEY']
 
 
+def get_plans(event, _):
+    pass
+
+
 def get_price(event, _):
     params = event["queryStringParameters"]
     price_id = params["id"]
@@ -63,7 +67,7 @@ def post_checkout(event):
     # Get customerId from user.stripe {} obj
     user = UserModel.get(email)
     stripe_lookup = user.stripe
-    customer_id = stripe_lookup.customer_id
+    customer_id = user.customer_id
 
     if customer_id:
         # check if user has active subscription to product
@@ -71,7 +75,7 @@ def post_checkout(event):
         # customer = stripe.Customer.retrieve(
         #     customer_id, expand=['subscriptions']
         # )
-        if stripe_lookup.subscription_active:
+        if stripe_lookup.subscription.active:
             return error(400, 'User is already subscribed.')
             # use product_id or name that is passed in
             # don't take price_id from req, use from backend (make get /subscribe endpoint w all prices, products)
@@ -95,8 +99,7 @@ def post_checkout(event):
         name = claims['name']
         customer = stripe.Customer.create(email=email, name=name)
         customer_id = customer['id']
-        stripe_lookup.customer_id = customer_id
-        user.update(actions=[UserModel.stripe.set(stripe_lookup)])
+        user.update(actions=[UserModel.customer_id.set(customer_id)])
 
     # use customerId in checkout session create call below
     session = stripe.checkout.Session.create(
@@ -153,15 +156,20 @@ def post_subscribe(event, _):
         raise e
 
     event_type = event['type']
-
-    if event_type == 'customer.subscription.updated':
+    subscription_events = set([
+        'customer.subscription.created',
+        'customer.subscription.updated',
+        'customer.subscription.deleted'
+    ])
+    if event_type in subscription_events:
         sub = event['data']['object']
         customer_id = sub['customer']
         user = list(UserModel.customer_id_index.query(customer_id))[0]
-        subsciption_active = sub['status'] == 'active'
+        sub_is_active = sub['status'] == 'active'
         stripe_lookup = user.stripe
-        if stripe_lookup.subscription_active != subsciption_active:
-            stripe_lookup.subscription_active = subsciption_active
+        sub_was_active = stripe_lookup.subscription.active
+        if sub_was_active != sub_is_active:
+            stripe_lookup.subscription.active = sub_is_active
             user.update(actions=[UserModel.stripe.set(stripe_lookup)])
 
     print(event)
