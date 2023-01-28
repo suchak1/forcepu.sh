@@ -67,7 +67,6 @@ def post_checkout(event):
     if not verified:
         return error(401, 'This account is not verified.')
 
-    req_body = json.loads(event['body'])
     price_id = os.environ['STRIPE_PRICE_ID']
     email = claims['email']
     req_headers = event['headers']
@@ -155,12 +154,46 @@ def post_checkout(event):
     }
 
 
-def post_billing(*_):
+def handle_billing(event, _):
+    if event['httpMethod'].upper() == 'OPTIONS':
+        response = options()
+    else:
+        response = post_billing(event)
+
+    return response
+
+
+def post_billing(event):
     # create customer portal session
     # (where customer can cancel, change payment method, see payment history, etc)
-    # find a way of embedding html directly into right side or modal
-    # vs just redirect to stripe hosted (?) customer portal page
-    pass
+
+    claims = event['requestContext']['authorizer']['claims']
+    verified = verify_user(claims)
+
+    if not verified:
+        return error(401, 'This account is not verified.')
+
+    email = claims['email']
+    req_headers = event['headers']
+    origin = req_headers['origin']
+
+    # Get customerId from user.stripe {} obj
+    user = UserModel.get(email)
+    stripe_lookup = user.stripe
+    customer_id = user.customer_id
+    session = stripe.billing_portal.Session.create(
+        customer=customer_id,
+        return_url=f'{origin}/subscription',
+    )
+
+    url = session.url
+    body = json.dumps(url)
+
+    return {
+        "statusCode": status_code,
+        "body": body,
+        "headers": res_headers
+    }
 
 
 def post_subscribe(event, _):
