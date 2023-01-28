@@ -12,14 +12,7 @@ from shared.utils import \
 stripe.api_key = os.environ['STRIPE_SECRET_KEY']
 
 
-def get_plans(event, _):
-    # serve priceId here
-    pass
-
-
-def get_price(event, _):
-    params = event["queryStringParameters"]
-    price_id = params["id"]
+def get_price(price_id):
     price = stripe.Price.retrieve(price_id)
     status_code = 200
     body = json.dumps(price)
@@ -28,6 +21,16 @@ def get_price(event, _):
         "body": body,
         "headers": res_headers
     }
+
+
+def get_plans(*_):
+    price_id = os.environ['STRIPE_PRICE_ID']
+    # ideally create price table with priceId, amount as float or str, intervalCount, and interval
+    # only make stripe call if priceId not in table, then update table
+    # else fetch price from table
+
+    # return { BTC: monthly: price: res from get_price }
+    return get_price(price_id)
 
 
 def get_product(event, _):
@@ -65,7 +68,7 @@ def post_checkout(event):
         return error(401, 'This account is not verified.')
 
     req_body = json.loads(event['body'])
-    price_id = req_body['price_id']
+    price_id = os.environ['STRIPE_PRICE_ID']
     email = claims['email']
     req_headers = event['headers']
     origin = req_headers['origin']

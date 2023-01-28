@@ -30,6 +30,9 @@ Parameters:
   StripeWebhookSecret:
     Type: "String"
     NoEcho: true
+  StripePriceId:
+    Type: "String"
+    NoEcho: true
 
 Globals:
   Function:
@@ -224,21 +227,22 @@ Resources:
       Dockerfile: signals/Dockerfile
       DockerContext: ./
       DockerTag: python3.8-v1
-  PriceFunction:
+  PlansFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       Environment:
         Variables:
           STRIPE_SECRET_KEY: !Ref StripeSecretKey
           TABLE_NAME: !Ref UsersTable
+          STRIPE_PRICE_ID: !Ref StripePriceId
       PackageType: Image
       ImageConfig:
-        Command: ["app.get_price"]
+        Command: ["app.get_plans"]
       Events:
-        GetPrice:
+        GetPlans:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /price
+            Path: /plans
             Method: get
             RestApiId: !Ref ApiGatewayApi
     Metadata:
@@ -277,6 +281,7 @@ Resources:
         Variables:
           STRIPE_SECRET_KEY: !Ref StripeSecretKey
           TABLE_NAME: !Ref UsersTable
+          STRIPE_PRICE_ID: !Ref StripePriceId
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref UsersTable

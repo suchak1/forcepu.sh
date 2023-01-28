@@ -74,7 +74,7 @@ const SubscriptionPage = () => {
   }
 
   useEffect(() => {
-    const url = `${getApiUrl({ localOverride: "dev" })}/price?id=${priceId}`;
+    const url = `${getApiUrl({ localOverride: "dev" })}/plans`;
     fetch(url, { method: "GET" })
       .then((response) => response.json())
       // .then((data) => {

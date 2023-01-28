@@ -47,6 +47,7 @@ jobs:
 
       - name: Create parameters.env [dev]
         env:
+          StripePriceId: ${{ secrets.DEV_STRIPE_PRICE_ID }}
           StripeSecretKey: ${{ secrets.DEV_STRIPE_SECRET_KEY }}
           # Webhook signing key secret for endpoint (not for CLI)
           StripeWebhookSecret: ${{ secrets.DEV_STRIPE_WEBHOOK_SECRET }}
@@ -58,6 +59,7 @@ jobs:
           UserPoolArn: ${{ secrets.DEV_USER_POOL_ARN }}
         run: |
           echo "
+          StripePriceId=${StripePriceId}
           StripeSecretKey=${StripeSecretKey}
           StripeWebhookSecret=${StripeWebhookSecret}
           S3Bucket=${S3Bucket}

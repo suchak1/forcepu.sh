@@ -59,7 +59,6 @@ jobs:
           VITE_APP_USER_POOL_ID: ${{ secrets.DEV_USER_POOL_ID }}
           VITE_APP_WEB_CLIENT_ID: ${{ secrets.DEV_WEB_CLIENT_ID }}
           VITE_APP_OAUTH_DOMAIN: ${{ secrets.DEV_OAUTH_DOMAIN }}
-          VITE_APP_STRIPE_PRICE: ${{ secrets.DEV_STRIPE_PRICE }}
           CF_DISTRO_ID: ${{ secrets.DEV_CF_DISTRO_ID }}
         if: ${{ github.ref != 'refs/heads/master' }}
 
@@ -72,7 +71,6 @@ jobs:
           VITE_APP_USER_POOL_ID: ${{ secrets.USER_POOL_ID }}
           VITE_APP_WEB_CLIENT_ID: ${{ secrets.WEB_CLIENT_ID }}
           VITE_APP_OAUTH_DOMAIN: ${{ secrets.OAUTH_DOMAIN }}
-          # add VITE_APP_STRIPE_PRICE
           CF_DISTRO_ID: ${{ secrets.CF_DISTRO_ID }}
         if: ${{ github.ref == 'refs/heads/master' }}
 
