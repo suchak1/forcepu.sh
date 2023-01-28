@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect, useMemo, useContext } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Typography, Segmented, Tooltip, Col, Card, Button, Spin, Alert } from "antd";
+import { Typography, Segmented, Tooltip, Badge, Card, Button, Spin, Alert } from "antd";
 import { getApiUrl, getDayDiff, get3DCircle, linspace } from "@/utils";
 import pageStyles from "@/pages/home/index.module.less";
 import layoutStyles from "@/layouts/index.module.less";
@@ -20,7 +20,6 @@ const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 const spinner = <Spin style={{ width: "100%" }} indicator={antIcon} />;
 
 const SubscriptionPage = () => {
-  const priceId = import.meta.env.VITE_APP_STRIPE_PRICE;
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const { account, accountLoading, loginLoading, setShowLogin } = useContext(
     AccountContext
@@ -34,7 +33,7 @@ const SubscriptionPage = () => {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [searchParams] = useSearchParams();
   const showSuccessAlert = searchParams.get('success')?.toLowerCase() === 'true'
-  const checkoutSessionId = searchParams.get('session_id')
+  // const checkoutSessionId = searchParams.get('session_id')
 
   const onCheckout = () => {
     setCheckoutLoading(true);
@@ -43,7 +42,6 @@ const SubscriptionPage = () => {
     fetch(url, {
       method: "POST",
       headers: { Authorization: idToken.jwtToken },
-      body: JSON.stringify({ price_id: priceId }),
     })
       .then((response) => {
         if (!response.ok) {
@@ -160,7 +158,16 @@ const SubscriptionPage = () => {
             <>
               {/* add badge to card "Current Plan" and replace sub button with Manage Subscription (cyan button )=> customer portal */}
               {/* additional cards say Downgrade or Upgrade (magenta btn) and backend uses stripe.Subscription.modify + prorating  */}
-              <Card style={{ maxWidth: '400px' }}>
+              {/* <Badge.Ribbon
+                color={'yellow'}
+                text={<b>{'Current Plan'}</b>}
+              > */}
+              <Card style={
+                {
+                  // minWidth: '400px',
+                  maxWidth: '500px'
+                }
+              }>
                 {/* entire card should be centered horizontally on page */}
                 {/* cube gif as icon on left, then title */}
                 {/* price on right in large font - per month in gray text */}
@@ -170,38 +177,36 @@ const SubscriptionPage = () => {
                 {/* - maximum of 5 requests / day */}
                 {/* each bullet point should be a green, cyan, or magent checkmark or bullet - whatever looks best */}
                 {/* subscribe button centered at bottom in magenta, manage subscription in cyan centered at bottom */}
-                <Title level={3}>Signals API</Title>
-                {/* should be level 3-5 */}
-                <span>{"Access to the "}</span>
-                <span style={{ fontFamily: '"Courier","Courier New",monospace', color: "#52e5ff" }}>
-                  /signals
-                </span>
-                <span>
-                  {
-                    " API which provides up to a week's worth of the latest BUY and SELL signals."
-                  }
-                </span>
-                {/* example of json datum? */}
-                <div>5 requests / day</div>
-                <div
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
-                  {/* replace this with card with price per month (finally from backend config endpoint) heading and 5 requests / day (constant from backend) subheading*/}
-                  <img height="200px" src={CUBE}></img>
-                </div>
                 {/* eventually $100/month, $85/month for 6 or 12 month subscription */}
-                {`$${Number(price?.unit_amount / 100).toFixed(2)} per ${price?.recurring?.interval_count > 1 ? `${price?.recurring?.interval_count} ` : ''}${price?.recurring?.interval}${price?.recurring?.interval_count > 1 ? 's' : ''}`}
-                {loggedIn ? subscribeButton : <Button
-                  className={layoutStyles.start}
-                  onClick={() => setShowLogin(true)}
-                >
-                  Sign in to subscribe
-                </Button>}
+                <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span style={{ display: 'flex', alignItems: 'center' }}>
+                    <img height="50px" src={CUBE}></img>
+                    <Title style={{ marginBottom: 0, marginLeft: '16px' }} level={3}>{'Signals API'}</Title>
+                  </span>
+                  <Title style={{ marginBottom: 0 }} level={3}>{`$${Number(price?.unit_amount / 100).toFixed(2)} / ${price?.recurring?.interval_count > 1 ? `${price?.recurring?.interval_count} ` : ''}${price?.recurring?.interval}${price?.recurring?.interval_count > 1 ? 's' : ''}`}</Title>
+                </span>
+                {/* should be level 3-5 */}
+                <ul style={
+                  {
+                    paddingInlineStart: '80px'
+                  }
+                }>
+                  <li>{"access to the "}<span style={{ fontFamily: '"Courier","Courier New",monospace', color: "#52e5ff" }}>
+                    /signals
+                  </span> API</li>
+                  <li>provides up to a week's worth of the latest BUY and SELL signals</li>
+                  <li>5 requests / day</li>
+                </ul>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  {loggedIn ? subscribeButton : <Button
+                    className={layoutStyles.start}
+                    onClick={() => setShowLogin(true)}
+                  >
+                    Sign in to subscribe
+                  </Button>}
+                </div>
               </Card>
+              {/* </Badge.Ribbon> */}
               <div>New signals are produced by 12:05 UTC.</div>
               {minInvestment && (
                 <div
