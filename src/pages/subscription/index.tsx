@@ -183,7 +183,12 @@ const SubscriptionPage = () => {
                     <img height="50px" src={CUBE}></img>
                     <Title style={{ marginBottom: 0, marginLeft: '16px' }} level={3}>{'Signals API'}</Title>
                   </span>
-                  <Title style={{ marginBottom: 0 }} level={3}>{`$${Number(price?.unit_amount / 100).toFixed(2)} / ${price?.recurring?.interval_count > 1 ? `${price?.recurring?.interval_count} ` : ''}${price?.recurring?.interval}${price?.recurring?.interval_count > 1 ? 's' : ''}`}</Title>
+                  <Title style={{ marginBottom: 0 }} level={3}>
+                    {/* <> */}
+                    <span>{`$${Number(price?.unit_amount / 100).toFixed(2)} `}</span>
+                    <span style={{ color: 'rgba(255, 255, 255, 0.45' }}>{`/ ${price?.recurring?.interval_count > 1 ? `${price?.recurring?.interval_count} ` : ''}${price?.recurring?.interval}${price?.recurring?.interval_count > 1 ? 's' : ''}`}</span>
+                    {/* </> */}
+                  </Title>
                 </span>
                 {/* should be level 3-5 */}
                 <ul style={
