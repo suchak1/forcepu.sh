@@ -56,6 +56,7 @@ const SubscriptionPage = () => {
 
   let subscribeButton =
     <Button
+      style={{ width: '100%' }}
       onClick={onCheckout}
       loading={checkoutLoading}
       disabled={!account}
@@ -165,7 +166,7 @@ const SubscriptionPage = () => {
               <Card style={
                 {
                   // minWidth: '400px',
-                  maxWidth: '500px'
+                  maxWidth: '400px'
                 }
               }>
                 {/* entire card should be centered horizontally on page */}
@@ -178,37 +179,46 @@ const SubscriptionPage = () => {
                 {/* each bullet point should be a green, cyan, or magent checkmark or bullet - whatever looks best */}
                 {/* subscribe button centered at bottom in magenta, manage subscription in cyan centered at bottom */}
                 {/* eventually $100/month, $85/month for 6 or 12 month subscription */}
-                <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span style={{ display: 'flex', alignItems: 'center' }}>
-                    <img height="50px" src={CUBE}></img>
-                    <Title style={{ marginBottom: 0, marginLeft: '16px' }} level={3}>{'Signals API'}</Title>
-                  </span>
-                  <Title style={{ marginBottom: 0 }} level={3}>
-                    {/* <> */}
-                    <span>{`$${Number(price?.unit_amount / 100).toFixed(2)} `}</span>
-                    <span style={{ color: 'rgba(255, 255, 255, 0.45' }}>{`/ ${price?.recurring?.interval_count > 1 ? `${price?.recurring?.interval_count} ` : ''}${price?.recurring?.interval}${price?.recurring?.interval_count > 1 ? 's' : ''}`}</span>
-                    {/* </> */}
-                  </Title>
-                </span>
-                {/* should be level 3-5 */}
-                <ul style={
+                <div style={
                   {
-                    paddingInlineStart: '80px'
-                  }
-                }>
-                  <li>{"access to the "}<span style={{ fontFamily: '"Courier","Courier New",monospace', color: "#52e5ff" }}>
-                    /signals
-                  </span> API</li>
-                  <li>provides up to a week's worth of the latest BUY and SELL signals</li>
-                  <li>5 requests / day</li>
-                </ul>
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                  {loggedIn ? subscribeButton : <Button
-                    className={layoutStyles.start}
-                    onClick={() => setShowLogin(true)}
-                  >
-                    Sign in to subscribe
-                  </Button>}
+                    display: 'flex',
+                    height: '300px',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between'
+                  }}>
+                  <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ display: 'flex', alignItems: 'center' }}>
+                      <img height="50px" src={CUBE}></img>
+                      <Title style={{ marginBottom: 0, marginLeft: '16px' }} level={3}>{'Signals API'}</Title>
+                    </span>
+                    <Title style={{ marginBottom: 0 }} level={3}>
+                      {/* <> */}
+                      <span>{`$${Number(price?.unit_amount / 100).toFixed(2)} `}</span>
+                      <span style={{ color: 'rgba(255, 255, 255, 0.45' }}>{`/ ${price?.recurring?.interval_count > 1 ? `${price?.recurring?.interval_count} ` : ''}${price?.recurring?.interval}${price?.recurring?.interval_count > 1 ? 's' : ''}`}</span>
+                      {/* </> */}
+                    </Title>
+                  </span>
+                  {/* should be level 3-5 */}
+                  <ul style={
+                    {
+                      paddingInlineStart: '80px'
+                    }
+                  }>
+                    <li>{"access to the "}<span style={{ fontFamily: '"Courier","Courier New",monospace', color: "#52e5ff" }}>
+                      /signals
+                    </span> API</li>
+                    <li>provides up to a week's worth of the latest BUY and SELL signals</li>
+                    <li>5 requests / day</li>
+                  </ul>
+                  <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    {loggedIn ? subscribeButton : <Button
+                      style={{ width: '100%' }}
+                      className={layoutStyles.start}
+                      onClick={() => setShowLogin(true)}
+                    >
+                      Sign in to subscribe
+                    </Button>}
+                  </div>
                 </div>
               </Card>
               {/* </Badge.Ribbon> */}
