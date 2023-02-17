@@ -193,15 +193,19 @@ const SubscriptionPage = () => {
                     </span>
                     <Title style={{ marginBottom: 0 }} level={3}>
                       {/* <> */}
-                      <span>{`$${Number(price?.unit_amount / 100).toFixed(2)} `}</span>
-                      <span style={{ color: 'rgba(255, 255, 255, 0.45' }}>{`/ ${price?.recurring?.interval_count > 1 ? `${price?.recurring?.interval_count} ` : ''}${price?.recurring?.interval}${price?.recurring?.interval_count > 1 ? 's' : ''}`}</span>
+                      <div>{`$${Number(price?.unit_amount / 100).toFixed(2)} `}</div>
+                      <div style={{ color: 'rgba(255, 255, 255, 0.45', fontSize: '16px' }}>{`/ ${price?.recurring?.interval_count > 1 ? `${price?.recurring?.interval_count} ` : ''}${price?.recurring?.interval}${price?.recurring?.interval_count > 1 ? 's' : ''}`}</div>
                       {/* </> */}
                     </Title>
                   </span>
                   {/* should be level 3-5 */}
                   <ul style={
                     {
-                      paddingInlineStart: '80px'
+                      // paddingInlineStart: '80px',
+                      height: '40%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between'
                     }
                   }>
                     <li>{"access to the "}<span style={{ fontFamily: '"Courier","Courier New",monospace', color: "#52e5ff" }}>
