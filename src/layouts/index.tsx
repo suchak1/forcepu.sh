@@ -213,7 +213,7 @@ const Layout = ({ children }: LayoutProps) => {
   Amplify.configure(config);
 
   return (
-    <AntLayout>
+    <AntLayout style={{ height: '100%' }}>
       <AntLayout.Header
         style={{
           // this is so that header stays above toggle in fixed scrolling
@@ -301,7 +301,6 @@ const Layout = ({ children }: LayoutProps) => {
         style={{
           padding: 24,
           marginTop: headerHeight,
-          height: `calc(100vh - ${headerHeight + footerHeight}px)`,
           overflow: "auto",
         }}
       >
@@ -372,10 +371,11 @@ const Layout = ({ children }: LayoutProps) => {
       </AntLayout.Content>
       <AntLayout.Footer
         style={{
-          height: footerHeight,
+          maxHeight: footerHeight,
+          height: '100%',
           display: "flex",
           justifyContent: "space-between",
-          backgroundColor: "#1f1f1f",
+          // backgroundColor: "#1f1f1f",
           alignItems: "center",
         }}
       >

@@ -148,7 +148,7 @@ const SubscriptionPage = () => {
         </Title>
       </span>
 
-      <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ height: 'calc(100% - 100px)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between' }}>
           {/* test if preview endpoint is done loading (for return estimate) */}
           {!minInvestment ? (
