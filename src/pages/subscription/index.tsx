@@ -33,6 +33,7 @@ const SubscriptionPage = () => {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [searchParams] = useSearchParams();
   const showSuccessAlert = searchParams.get('success')?.toLowerCase() === 'true'
+  const cardWidth = '400px';
   // const checkoutSessionId = searchParams.get('session_id')
 
   const onCheckout = () => {
@@ -149,7 +150,7 @@ const SubscriptionPage = () => {
       </span>
 
       <div style={{ height: 'calc(100% - 100px)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', width: cardWidth }}>
           {/* test if preview endpoint is done loading (for return estimate) */}
           {!minInvestment ? (
             spinner
@@ -163,8 +164,7 @@ const SubscriptionPage = () => {
               > */}
               <Card style={
                 {
-                  // minWidth: '400px',
-                  maxWidth: '400px'
+                  // maxWidth: '400px'
                 }
               }>
                 {/* entire card should be centered horizontally on page */}
@@ -224,7 +224,7 @@ const SubscriptionPage = () => {
                 </div>
               </Card>
               {/* </Badge.Ribbon> */}
-              <div>
+              <div style={{ width: '100%' }}>
                 <div>New signals are produced by 12:05 UTC.</div>
                 {minInvestment && (
                   <div
@@ -238,8 +238,6 @@ const SubscriptionPage = () => {
                 <div>
                   Note that the algorithm's signals <b>DO NOT</b> constitute
                   investment advice.
-                </div>
-                <div>
                   {" "}
                   Do your own research, make your own judgements, and invest
                   responsibly.
