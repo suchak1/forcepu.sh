@@ -238,12 +238,12 @@ const Layout = ({ children }: LayoutProps) => {
               style:
                 idx === 0
                   ? {
-                      backgroundColor: "transparent",
-                    }
+                    backgroundColor: "transparent",
+                  }
                   : {
-                      display: "flex",
-                      alignItems: "center",
-                    },
+                    display: "flex",
+                    alignItems: "center",
+                  },
               label: <NavLink to={route.to}>{route.text}</NavLink>
             }))}
           ></Menu>
@@ -301,7 +301,7 @@ const Layout = ({ children }: LayoutProps) => {
         style={{
           padding: 24,
           marginTop: headerHeight,
-          minHeight: `calc(100vh - ${headerHeight + footerHeight}px)`,
+          height: `calc(100vh - ${headerHeight + footerHeight}px)`,
           overflow: "auto",
         }}
       >
@@ -422,14 +422,13 @@ export default ({ route, children }: LayoutProps) => (
       // }
     },
   }}>
-  <Authenticator.Provider>
-    <BrowserRouter>
-    <Layout route={route}>{children}</Layout>
-    </BrowserRouter>
-  </Authenticator.Provider>
+    <Authenticator.Provider>
+      <BrowserRouter>
+        <Layout route={route}>{children}</Layout>
+      </BrowserRouter>
+    </Authenticator.Provider>
   </ConfigProvider>
 );
 
 
 
-          

@@ -39,13 +39,13 @@ const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 import { AccountContext } from "@/layouts";
 
-const toggleLabels = {BTC: "₿", USD: "$"};
+const toggleLabels = { BTC: "₿", USD: "$" };
 
 const toggleGray = 'rgba(255, 255, 255, 0.2)';
 const Toggle = styled(Segmented)`
   .ant-segmented-item-selected {
-    background-image: linear-gradient(to bottom right, ${(props: { val: boolean }) => 
-      (props.val ? "#F7931A" : toggleGray)}, ${(props: { val: boolean }) => (props.val ? "#F7931A" : toggleGray)} );
+    background-image: linear-gradient(to bottom right, ${(props: { val: boolean }) =>
+    (props.val ? "#F7931A" : toggleGray)}, ${(props: { val: boolean }) => (props.val ? "#F7931A" : toggleGray)} );
     
     color: rgba(255, 255, 255, 0.85);
   }
@@ -155,8 +155,8 @@ const LineChart: React.FC<any> = memo(
           const hyperdriveItem = originalItems[0].name === hyperdrive ? originalItems[0] : originalItems[1];
           const signal = hyperdriveItem.data.Full_Sig;
           const signalDatum = {
-            color: signal ? 'lime' : 'red', 
-            name: 'SIGNAL', 
+            color: signal ? 'lime' : 'red',
+            name: 'SIGNAL',
             value: signal ? '▲ BUY' : '▼ SELL'
           };
           originalItems.push(signalDatum);
@@ -182,14 +182,14 @@ const LineChart: React.FC<any> = memo(
         },
       },
       animation:
-        // Why is this necessary?
-        // !inBeta &&
-        {
-          appear: {
-            animation: "wave-in",
-            duration: 4000,
-          },
+      // Why is this necessary?
+      // !inBeta &&
+      {
+        appear: {
+          animation: "wave-in",
+          duration: 4000,
         },
+      },
       xAxis: {
         tickCount: 10,
         grid: {
@@ -524,9 +524,8 @@ const Page = () => {
                     <Button
                       disabled={quotaReached}
                       loading={signalLoading}
-                      className={`${layoutStyles.start} ${styles.signals} ${
-                        quotaReached && styles.disabled
-                      }`}
+                      className={`${layoutStyles.start} ${styles.signals} ${quotaReached && styles.disabled
+                        }`}
                       onClick={fetchSignals}
                     >
                       Fetch the latest signals
@@ -601,13 +600,12 @@ const Page = () => {
                   onCancel={() => setShowSignalCard(false)}
                   centered
                   footer={null}
+                ><Card
+                  headStyle={{
+                    background: cardHeaderColors[signalCardData.Day],
+                  }}
+                  title={signalCardData.Day.toUpperCase()}
                 >
-                  <Card
-                    headStyle={{
-                      background: cardHeaderColors[signalCardData.Day],
-                    }}
-                    title={signalCardData.Day.toUpperCase()}
-                  >
                     <div>
                       <span>
                         <b>{"Signal: "}</b>
@@ -619,8 +617,8 @@ const Page = () => {
                             signalCardData.Signal === "BUY"
                               ? "lime"
                               : signalCardData.Signal === "SELL"
-                              ? "red"
-                              : "inherit",
+                                ? "red"
+                                : "inherit",
                         }}
                       >
                         {signalCardData.Signal}
