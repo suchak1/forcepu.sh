@@ -149,8 +149,11 @@ const SubscriptionPage = () => {
         </Title>
       </span>
 
-      <div style={{ height: 'calc(100% - 100px)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', width: cardWidth }}>
+      <div style={{ height: 'calc(100% - 128px)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div style={{
+          height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center',
+          justifyContent: 'space-evenly', // could do 'space-around' too
+        }}>
           {/* test if preview endpoint is done loading (for return estimate) */}
           {!minInvestment ? (
             spinner
@@ -164,7 +167,7 @@ const SubscriptionPage = () => {
               > */}
               <Card style={
                 {
-                  // maxWidth: '400px'
+                  maxWidth: '400px'
                 }
               }>
                 {/* entire card should be centered horizontally on page */}
@@ -224,23 +227,28 @@ const SubscriptionPage = () => {
                 </div>
               </Card>
               {/* </Badge.Ribbon> */}
-              <div style={{ width: '100%' }}>
-                <div>New signals are produced by 12:05 UTC.</div>
-                {minInvestment && (
-                  <div
-                    style={{ marginBottom: "24px" }}
-                  >{`Minimum recommended investment: ${minInvestment} BTC`}</div>
-                )}
-              </div>
               <div>
-                <b>Disclaimer:</b>
-                {/* Maybe merge the following disclaimer divs */}
+                <div style={{
+                  width: '100%', display: 'flex',
+                  justifyContent: 'space-evenly' // can also be 'space-between'
+                }}>
+                  <div>New signals are produced by 12:05 UTC.</div>
+                  {minInvestment && (
+                    <div
+                      style={{ marginBottom: "24px" }}
+                    >{`Minimum recommended investment: ${minInvestment} BTC`}</div>
+                  )}
+                </div>
                 <div>
-                  Note that the algorithm's signals <b>DO NOT</b> constitute
-                  investment advice.
-                  {" "}
-                  Do your own research, make your own judgements, and invest
-                  responsibly.
+                  <b>Disclaimer:</b>
+                  {/* Maybe merge the following disclaimer divs */}
+                  <div>
+                    Note that the algorithm's signals <b>DO NOT</b> constitute
+                    investment advice.
+                    {" "}
+                    Do your own research, make your own judgements, and invest
+                    responsibly.
+                  </div>
                 </div>
               </div>
             </>
