@@ -147,111 +147,107 @@ const SubscriptionPage = () => {
           <span style={{ color: "magenta" }}>SELL</span> signals
         </Title>
       </span>
-      <div
-        className={pageStyles.parent}
-        style={{ alignItems: "center", minHeight: "450px" }}
-      >
-        <div className={pageStyles.child}>
-          {/* test if preview endpoint is done loading (for return estimate) */}
-          {!minInvestment ? (
-            spinner
-          ) : (
-            <>
-              {/* add badge to card "Current Plan" and replace sub button with Manage Subscription (cyan button )=> customer portal */}
-              {/* additional cards say Downgrade or Upgrade (magenta btn) and backend uses stripe.Subscription.modify + prorating  */}
-              {/* <Badge.Ribbon
+
+      <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        {/* test if preview endpoint is done loading (for return estimate) */}
+        {!minInvestment ? (
+          spinner
+        ) : (
+          <>
+            {/* add badge to card "Current Plan" and replace sub button with Manage Subscription (cyan button )=> customer portal */}
+            {/* additional cards say Downgrade or Upgrade (magenta btn) and backend uses stripe.Subscription.modify + prorating  */}
+            {/* <Badge.Ribbon
                 color={'yellow'}
                 text={<b>{'Current Plan'}</b>}
               > */}
-              <Card style={
+            <Card style={
+              {
+                // minWidth: '400px',
+                maxWidth: '400px'
+              }
+            }>
+              {/* entire card should be centered horizontally on page */}
+              {/* cube gif as icon on left, then title */}
+              {/* price on right in large font - per month in gray text */}
+              {/* then info split into 3 bullet points */}
+              {/* - Access to the /signals API  */}
+              {/* - up to a week's worth of the latest BUY and SELL signals */}
+              {/* - maximum of 5 requests / day */}
+              {/* each bullet point should be a green, cyan, or magent checkmark or bullet - whatever looks best */}
+              {/* subscribe button centered at bottom in magenta, manage subscription in cyan centered at bottom */}
+              {/* eventually $100/month, $85/month for 6 or 12 month subscription */}
+              <div style={
                 {
-                  // minWidth: '400px',
-                  maxWidth: '400px'
-                }
-              }>
-                {/* entire card should be centered horizontally on page */}
-                {/* cube gif as icon on left, then title */}
-                {/* price on right in large font - per month in gray text */}
-                {/* then info split into 3 bullet points */}
-                {/* - Access to the /signals API  */}
-                {/* - up to a week's worth of the latest BUY and SELL signals */}
-                {/* - maximum of 5 requests / day */}
-                {/* each bullet point should be a green, cyan, or magent checkmark or bullet - whatever looks best */}
-                {/* subscribe button centered at bottom in magenta, manage subscription in cyan centered at bottom */}
-                {/* eventually $100/month, $85/month for 6 or 12 month subscription */}
-                <div style={
+                  display: 'flex',
+                  height: '300px',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between'
+                }}>
+                <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span style={{ display: 'flex', alignItems: 'center' }}>
+                    <img height="50px" src={CUBE}></img>
+                    <Title style={{ marginBottom: 0, marginLeft: '16px' }} level={3}>{'Signals API'}</Title>
+                  </span>
+                  <Title style={{ marginBottom: 0 }} level={3}>
+                    {/* <> */}
+                    <div>{`$${Number(price?.unit_amount / 100).toFixed(2)} `}</div>
+                    <div style={{ color: 'rgba(255, 255, 255, 0.45', fontSize: '16px' }}>{`/ ${price?.recurring?.interval_count > 1 ? `${price?.recurring?.interval_count} ` : ''}${price?.recurring?.interval}${price?.recurring?.interval_count > 1 ? 's' : ''}`}</div>
+                    {/* </> */}
+                  </Title>
+                </span>
+                {/* should be level 3-5 */}
+                <ul style={
                   {
+                    // paddingInlineStart: '80px',
+                    height: '40%',
                     display: 'flex',
-                    height: '300px',
                     flexDirection: 'column',
                     justifyContent: 'space-between'
-                  }}>
-                  <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ display: 'flex', alignItems: 'center' }}>
-                      <img height="50px" src={CUBE}></img>
-                      <Title style={{ marginBottom: 0, marginLeft: '16px' }} level={3}>{'Signals API'}</Title>
-                    </span>
-                    <Title style={{ marginBottom: 0 }} level={3}>
-                      {/* <> */}
-                      <div>{`$${Number(price?.unit_amount / 100).toFixed(2)} `}</div>
-                      <div style={{ color: 'rgba(255, 255, 255, 0.45', fontSize: '16px' }}>{`/ ${price?.recurring?.interval_count > 1 ? `${price?.recurring?.interval_count} ` : ''}${price?.recurring?.interval}${price?.recurring?.interval_count > 1 ? 's' : ''}`}</div>
-                      {/* </> */}
-                    </Title>
-                  </span>
-                  {/* should be level 3-5 */}
-                  <ul style={
-                    {
-                      // paddingInlineStart: '80px',
-                      height: '40%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'space-between'
-                    }
-                  }>
-                    <li>{"access to the "}<span style={{ fontFamily: '"Courier","Courier New",monospace', color: "#52e5ff" }}>
-                      /signals
-                    </span> API</li>
-                    <li>provides up to a week's worth of the latest BUY and SELL signals</li>
-                    <li>5 requests / day</li>
-                  </ul>
-                  <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    {loggedIn ? subscribeButton : <Button
-                      style={{ width: '100%' }}
-                      className={layoutStyles.start}
-                      onClick={() => setShowLogin(true)}
-                    >
-                      Sign in to subscribe
-                    </Button>}
-                  </div>
+                  }
+                }>
+                  <li>{"access to the "}<span style={{ fontFamily: '"Courier","Courier New",monospace', color: "#52e5ff" }}>
+                    /signals
+                  </span> API</li>
+                  <li>provides up to a week's worth of the latest BUY and SELL signals</li>
+                  <li>5 requests / day</li>
+                </ul>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  {loggedIn ? subscribeButton : <Button
+                    style={{ width: '100%' }}
+                    className={layoutStyles.start}
+                    onClick={() => setShowLogin(true)}
+                  >
+                    Sign in to subscribe
+                  </Button>}
                 </div>
-              </Card>
-              {/* </Badge.Ribbon> */}
-              <div>New signals are produced by 12:05 UTC.</div>
-              {minInvestment && (
-                <div
-                  style={{ marginBottom: "24px" }}
-                >{`Minimum recommended investment: ${minInvestment} BTC`}</div>
-              )}
-              <b>Disclaimer:</b>
-              {/* Maybe merge the following disclaimer divs */}
-              <div>
-                Note that the algorithm's signals <b>DO NOT</b> constitute
-                investment advice.
               </div>
-              <div>
-                {" "}
-                Do your own research, make your own judgements, and invest
-                responsibly.
-              </div>
-            </>
-          )}
-        </div>
-        {/* test if has account | if not, then don't render and if signed in, show alert at top,
+            </Card>
+            {/* </Badge.Ribbon> */}
+            <div>New signals are produced by 12:05 UTC.</div>
+            {minInvestment && (
+              <div
+                style={{ marginBottom: "24px" }}
+              >{`Minimum recommended investment: ${minInvestment} BTC`}</div>
+            )}
+            <b>Disclaimer:</b>
+            {/* Maybe merge the following disclaimer divs */}
+            <div>
+              Note that the algorithm's signals <b>DO NOT</b> constitute
+              investment advice.
+            </div>
+            <div>
+              {" "}
+              Do your own research, make your own judgements, and invest
+              responsibly.
+            </div>
+          </>
+        )}
+      </div>
+      {/* test if has account | if not, then don't render and if signed in, show alert at top,
         if signed in, then test if in beta | if so, show beta view, 
         else test if active subscription | if so, show plan/sub amount, payment method, and option to cancel / manage - should have to open modal and click button or type in phrase to cancel
         else show stripe subscription page*/}
-        {/* https://stripe.com/docs/billing/subscriptions/build-subscriptions?ui=elements */}
-      </div>
+      {/* https://stripe.com/docs/billing/subscriptions/build-subscriptions?ui=elements */}
     </>
   );
 };
