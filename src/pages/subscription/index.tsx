@@ -152,7 +152,7 @@ const SubscriptionPage = () => {
       <div style={{ height: 'calc(100% - 128px)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div style={{
           height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center',
-          justifyContent: 'space-evenly', // could do 'space-around' too
+          justifyContent: 'space-around', // could do 'space-evenly' too
         }}>
           {/* test if preview endpoint is done loading (for return estimate) */}
           {!minInvestment ? (
@@ -202,7 +202,6 @@ const SubscriptionPage = () => {
                   {/* should be level 3-5 */}
                   <ul style={
                     {
-                      // paddingInlineStart: '80px',
                       height: '40%',
                       display: 'flex',
                       flexDirection: 'column',
@@ -230,7 +229,7 @@ const SubscriptionPage = () => {
               <div>
                 <div style={{
                   width: '100%', display: 'flex',
-                  justifyContent: 'space-evenly' // can also be 'space-between'
+                  justifyContent: 'space-between' // can also be 'space-evenly'
                 }}>
                   <div>New signals are produced by 12:05 UTC.</div>
                   {minInvestment && (
