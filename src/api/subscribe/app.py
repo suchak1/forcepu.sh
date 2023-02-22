@@ -179,7 +179,6 @@ def post_billing(event):
 
     # Get customerId from user.stripe {} obj
     user = UserModel.get(email)
-    stripe_lookup = user.stripe
     customer_id = user.customer_id
     session = stripe.billing_portal.Session.create(
         customer=customer_id,
@@ -187,6 +186,7 @@ def post_billing(event):
     )
 
     url = session.url
+    status_code = 200
     body = json.dumps(url)
 
     return {
