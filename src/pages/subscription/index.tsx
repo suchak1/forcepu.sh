@@ -31,6 +31,7 @@ const SubscriptionPage = () => {
   const [price, setPrice] = useState();
   const [priceLoading, setPriceLoading] = useState(true);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [billingLoading, setBillingLoading] = useState(false);
   const [searchParams] = useSearchParams();
   const showSuccessAlert = searchParams.get('success')?.toLowerCase() === 'true'
   const cardWidth = '400px';
@@ -55,13 +56,33 @@ const SubscriptionPage = () => {
       .finally(() => setCheckoutLoading(false));
   };
 
+  const onBilling = () => {
+    setBillingLoading(true);
+    const { idToken } = loggedIn.signInUserSession;
+    const url = `${getApiUrl()}/billing`;
+    fetch(url, {
+      method: "POST",
+      headers: { Authorization: idToken.jwtToken },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Unable to fetch billing page.');
+        }
+        return response.json();
+      })
+      .then((data) => window.location.href = data)
+      .catch((err) => console.error(err))
+      .finally(() => setBillingLoading(false));
+  };
+
   let subscribeButton =
     <Button
       style={{ width: '100%' }}
-      onClick={onCheckout}
-      loading={checkoutLoading}
+      onClick={account?.stripe?.subscription?.active ? onBilling : onCheckout}
+      loading={checkoutLoading || billingLoading}
       disabled={!account}
-      className={account && overrides.subscribe}>Subscribe
+      className={account && overrides.subscribe}>{account?.stripe?.subscription?.active ? "Manage subscription" : "Subscribe"}
+      {/* make Manage billing cyan like Get started and remove Sign in to subscribe and replace with magenta Subscribe but trigger showLogin as part of onCheckout if not loggedIn */}
     </Button>;
   if (!account) {
     subscribeButton = <Tooltip
