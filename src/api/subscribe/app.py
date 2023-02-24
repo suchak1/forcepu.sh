@@ -213,6 +213,12 @@ def post_subscribe(event, _):
         # Invalid signature
         raise e
 
+    body = json.dumps({'status': 'success'})
+    response = {
+        "statusCode": 200,
+        "body": body,
+        "headers": res_headers
+    }
     # ONLY events approved in Stripe Dashboard Settings > Webhooks
     # will come through
     event_type = event['type']
@@ -220,11 +226,18 @@ def post_subscribe(event, _):
         'customer.subscription.created',
         'customer.subscription.updated',
         'customer.subscription.deleted'
+        'customer.subscription.paused',
+        'customer.subscription.resumed',
     ])
     if event_type in subscription_events:
         sub = event['data']['object']
         customer_id = sub['customer']
         user = list(UserModel.customer_id_index.query(customer_id))[0]
+        # due to a race condition,
+        # incomplete subscription.created events can be sent by stripe AFTER active subscription.updated events
+        # in this case, we should not update the db
+        if event_type == 'customer.subscription.created' and sub['status'] == 'incomplete':
+            return response
         sub_is_active = sub['status'] == 'active'
         stripe_lookup = user.stripe
         sub_was_active = stripe_lookup.subscription['active']
@@ -235,12 +248,7 @@ def post_subscribe(event, _):
             stripe_lookup.subscription['active'] = sub_is_active
             user.update(actions=[UserModel.stripe.set(stripe_lookup)])
 
-    body = json.dumps({'status': 'success'})
-    return {
-        "statusCode": 200,
-        "body": body,
-        "headers": res_headers
-    }
+    return response
 
     # handle webhooks
 
