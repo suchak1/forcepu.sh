@@ -315,6 +315,9 @@ Resources:
         Variables:
           STRIPE_SECRET_KEY: !Ref StripeSecretKey
           TABLE_NAME: !Ref UsersTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UsersTable
       PackageType: Image
       ImageConfig:
         Command: ["app.handle_billing"]
