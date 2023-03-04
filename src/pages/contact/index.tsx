@@ -65,13 +65,18 @@ const ContactPage = () => {
               { value: 'General' },
               { value: 'Other' }
             ]}
+            status=''
           >
           </Select>
           <Input.TextArea
             disabled={!account}
-            style={{ height: '100%' }}
-            maxLength={500}
+            placeholder='Write your message here.'
+            style={{ height: '100%', width: '100%', resize: 'none' }}
+            showCount
+            maxLength={2500}
+            status=''
           />
+          <Button style={{ width: '100%' }}>Submit</Button>
           {/* add 500-2500 char limit for textarea - make request fail if message length === 0 or >maxLength with status='error'  */}
           {/* modify select status prop to be 'error' if submit button is pressed and !subject */}
           {/* add alert or notification on successful and unsuccessful contact message */}
