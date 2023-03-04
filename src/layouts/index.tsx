@@ -34,12 +34,6 @@ import Home from "@/pages/home";
 
 const { darkAlgorithm } = theme;
 
-// console.log(dotenv.config({ debug: true, path: "./../../config.env" }));
-// console.log(dotenv.config({ debug: true, path: "./../config.env" }));
-// console.log(dotenv.config({ debug: true, path: "./config.env" }));
-
-console.log(import.meta.env);
-
 let config;
 const isLocal = getEnvironment() === "local";
 const protocol = isLocal ? "http" : "https";
