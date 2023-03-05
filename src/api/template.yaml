@@ -33,6 +33,12 @@ Parameters:
   StripePriceId:
     Type: "String"
     NoEcho: true
+  EmailUser:
+    Type: "String"
+    NoEcho: true
+  EmailPass:
+    Type: "String"
+    NoEcho: true
 
 Globals:
   Function:
@@ -96,8 +102,10 @@ Resources:
   ContactFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      # Environment:
-      #   Variables:
+      Environment:
+        Variables:
+          EMAIL_USER: !Ref EmailUser
+          EMAIL_PASS: !Ref EmailPass
       #     TABLE_NAME: !Ref UsersTable
       # Policies:
       #   - DynamoDBCrudPolicy:

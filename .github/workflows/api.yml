@@ -26,6 +26,8 @@ jobs:
 
       - name: Create parameters.env [prod]
         env:
+          EmailUser: ${{ secrets.EMAIL_USER }}
+          EmailPass: ${{ secrets.EMAIL_PASS }}
           StripeSecretKey: ${{ secrets.STRIPE_SECRET_KEY }}
           S3Bucket: ${{ secrets.HYPERDRIVE_BUCKET }}
           Stage: prod
@@ -35,6 +37,8 @@ jobs:
           UserPoolArn: ${{ secrets.USER_POOL_ARN }}
         run: |
           echo "
+          EmailUser=${EmailUser}
+          EmailPass=${EmailPass}
           StripeSecretKey=${StripeSecretKey}
           S3Bucket=${S3Bucket}
           Stage=${Stage}
@@ -47,6 +51,8 @@ jobs:
 
       - name: Create parameters.env [dev]
         env:
+          EmailUser: ${{ secrets.EMAIL_USER }}
+          EmailPass: ${{ secrets.EMAIL_PASS }}
           StripePriceId: ${{ secrets.DEV_STRIPE_PRICE_ID }}
           StripeSecretKey: ${{ secrets.DEV_STRIPE_SECRET_KEY }}
           # Webhook signing key secret for endpoint (not for CLI)
@@ -59,6 +65,8 @@ jobs:
           UserPoolArn: ${{ secrets.DEV_USER_POOL_ARN }}
         run: |
           echo "
+          EmailUser=${EmailUser}
+          EmailPass=${EmailPass}
           StripePriceId=${StripePriceId}
           StripeSecretKey=${StripeSecretKey}
           StripeWebhookSecret=${StripeWebhookSecret}
