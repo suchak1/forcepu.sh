@@ -28,7 +28,8 @@ const ContactPage = () => {
   // const account = true;
   const inBeta = loggedIn && account?.permissions?.in_beta;
   const [minInvestment, setMinInvestment] = useState();
-  const [subject, setSubject] = useState();
+  const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('');
   const [priceLoading, setPriceLoading] = useState(true);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [billingLoading, setBillingLoading] = useState(false);
@@ -75,6 +76,7 @@ const ContactPage = () => {
             showCount
             maxLength={2500}
             status=''
+            onChange={(event) => setMessage(event.target.value)}
           />
           <Button style={{ width: '100%' }}>Submit</Button>
           {/* add 500-2500 char limit for textarea - make request fail if message length === 0 or >maxLength with status='error'  */}
