@@ -93,6 +93,36 @@ Resources:
       Dockerfile: account/Dockerfile
       DockerContext: ./
       DockerTag: python3.8-v1
+  ContactFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      # Environment:
+      #   Variables:
+      #     TABLE_NAME: !Ref UsersTable
+      # Policies:
+      #   - DynamoDBCrudPolicy:
+      #       TableName: !Ref UsersTable
+      PackageType: Image
+      Events:
+        PostContact:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /contact
+            Method: get
+            RestApiId: !Ref ApiGatewayApi
+            Auth:
+              Authorizer: CognitoAuth
+              # header Authorization: id_token from /token endpoint
+        Options:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /contact
+            Method: options
+            RestApiId: !Ref ApiGatewayApi
+    Metadata:
+      Dockerfile: contact/Dockerfile
+      DockerContext: ./
+      DockerTag: python3.8-v1
   ExerciseLogFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:

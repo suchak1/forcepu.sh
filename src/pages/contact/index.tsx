@@ -55,7 +55,10 @@ const ContactPage = () => {
         }}>
           <Select
             onChange={setSubject}
-            style={{ width: '100%' }}
+            style={{
+              width: '100%',
+              marginBottom: '16px'
+            }}
             placeholder='Select a subject'
             disabled={!account}
             options={[
@@ -72,14 +75,25 @@ const ContactPage = () => {
           <Input.TextArea
             disabled={!account}
             placeholder='Write your message here.'
-            style={{ height: '100%', width: '100%', resize: 'none' }}
+            style={{
+              height: '100%',
+              width: '100%',
+              resize: 'none',
+              marginBottom: '32px'
+            }}
             showCount
             maxLength={2500}
             status=''
             onChange={(event) => setMessage(event.target.value)}
           />
-          <Button style={{ width: '100%' }}>Submit</Button>
-          {/* add 500-2500 char limit for textarea - make request fail if message length === 0 or >maxLength with status='error'  */}
+          <Button
+            className={layoutStyles.start}
+            style={{ width: '100%' }}
+            disabled={!account}
+          >
+            Submit
+          </Button>
+          {/* add 500-2500 char limit for textarea - make request fail if message length === 0 or >maxLength with status prop ='error'  */}
           {/* modify select status prop to be 'error' if submit button is pressed and !subject */}
           {/* add alert or notification on successful and unsuccessful contact message */}
           {/* keep cache of sent messages and don't make new request if same message body */}
@@ -87,6 +101,7 @@ const ContactPage = () => {
           with message about how you need to have a verified email 
           submit button - should be grayed out / disabled if !account 
           with message about how you need to have a verified email */}
+          {/* make sure backend route is auth token protected and verify fx protected */}
         </div>
       </div>
     </>
