@@ -4,8 +4,7 @@ from smtplib import SMTP_SSL as SMTP
 from email.mime.text import MIMEText
 from shared.utils import \
     verify_user, options, \
-    error, enough_time_has_passed, \
-    past_date, res_headers
+    error, res_headers
 
 
 def handle_contact(event, _):
