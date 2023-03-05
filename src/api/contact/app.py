@@ -22,9 +22,11 @@ def post_contact(event):
     if not verified:
         return error(401, 'This account is not verified.')
 
-    # test if subject does not exists ('' or None or null, key doesn't exist) OR if subject length > 64
-    # if any of those are true, throw an error
-
+    req_body = json.loads(event['body'])
+    if not ('subject' in req_body and req_body['subject']):
+        # test if subject does not exists ('' or None or null, key doesn't exist) OR if subject length > 64
+        # if any of those are true, throw an error
+        pass
     # test if message does not exists ('' or None or null, key doesn't exist) OR if message length > 2500
     # if any of those aer true, throw an error
     email = claims['email']
