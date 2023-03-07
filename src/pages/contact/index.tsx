@@ -134,8 +134,8 @@ const ContactPage = () => {
   if (!(account && loggedIn)) {
     form =
       <Popover
-        title="🔒 Action Needed"
-        content={loggedIn ? "Sign in to send a message." : "Verify your email to send a message."}
+        title="Action Needed"
+        content={loggedIn ? "🔒 Sign in to send a message." : "🔒 Verify your email to send a message."}
         placement="bottom"
         align={{
           targetOffset: ["0%", "50%"],
