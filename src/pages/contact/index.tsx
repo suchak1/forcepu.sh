@@ -27,12 +27,41 @@ const ContactPage = () => {
   const loading = loginLoading || accountLoading;
   // const account = true;
   const inBeta = loggedIn && account?.permissions?.in_beta;
-  const [minInvestment, setMinInvestment] = useState();
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
-  const [priceLoading, setPriceLoading] = useState(true);
-  const [checkoutLoading, setCheckoutLoading] = useState(false);
-  const [billingLoading, setBillingLoading] = useState(false);
+  const [contactLoading, setContactLoading] = useState(false);
+  const [subjectStatus, setSubjectStatus] = useState('');
+  const [messageStatus, setMessageStatus] = useState('');
+
+  const onContact = () => {
+    if (!subject) {
+      setSubjectStatus('error')
+    }
+    if (!message) {
+      setMessageStatus('error')
+    }
+    if (!(subject && message)) {
+      return;
+    }
+    setSubjectStatus('')
+    setMessageStatus('')
+    setContactLoading(true);
+    const { idToken } = loggedIn.signInUserSession;
+    const url = `${getApiUrl()}/contact`;
+    fetch(url, {
+      method: "POST",
+      headers: { Authorization: idToken.jwtToken },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Unable to send message.');
+        }
+        return response.json();
+      })
+      .then((data) => window.location.href = data)
+      .catch((err) => console.error(err))
+      .finally(() => setContactLoading(false));
+  };
 
   return (
     <>
@@ -54,7 +83,12 @@ const ContactPage = () => {
           justifyContent: 'space-around', // could do 'space-evenly' too
         }}>
           <Select
-            onChange={setSubject}
+            onChange={(dropdown) => {
+              if (subjectStatus && dropdown) {
+                setSubjectStatus('')
+              }
+              setSubject(dropdown)
+            }}
             style={{
               width: '100%',
               marginBottom: '16px'
@@ -69,7 +103,7 @@ const ContactPage = () => {
               { value: 'General' },
               { value: 'Other' }
             ]}
-            status=''
+            status={subjectStatus}
           >
           </Select>
           <Input.TextArea
@@ -83,13 +117,20 @@ const ContactPage = () => {
             }}
             showCount
             maxLength={2500}
-            status=''
-            onChange={(event) => setMessage(event.target.value)}
+            status={messageStatus}
+            onChange={(event) => {
+              const newMessage = event.target.value;
+              if (messageStatus && newMessage) {
+                setMessageStatus('')
+              }
+              setMessage(event.target.value)
+            }}
           />
           <Button
             className={layoutStyles.start}
             style={{ width: '100%' }}
-            disabled={!account}
+            disabled={!(account && subject && message)}
+            onClick={onContact}
           >
             Submit
           </Button>
@@ -101,7 +142,8 @@ const ContactPage = () => {
           with message about how you need to have a verified email 
           submit button - should be grayed out / disabled if !account 
           with message about how you need to have a verified email */}
-          {/* make sure backend route is auth token protected and verify fx protected */}
+          {/* div around whole contact form with tooltip if !account */}
+          {/* handle 4xx and 5xx errors according, also handle response.ok green notification */}
         </div>
       </div>
     </>
