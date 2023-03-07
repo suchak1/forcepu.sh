@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect, useMemo, useContext } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Typography, Segmented, Tooltip, Badge, Card, Button, Spin, Alert, Select, Input } from "antd";
+import { Typography, Segmented, Tooltip, Badge, Card, Button, Spin, Alert, Select, Input, Popover } from "antd";
 import { getApiUrl, getDayDiff, get3DCircle, linspace } from "@/utils";
 import pageStyles from "@/pages/home/index.module.less";
 import layoutStyles from "@/layouts/index.module.less";
@@ -9,6 +9,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { AccountContext } from "../../layouts";
 import CUBE from "../../../assets/cube.gif";
+import { headerHeight } from "../../layouts";
 
 import overrides from "./index.module.less";
 
@@ -21,12 +22,9 @@ const spinner = <Spin style={{ width: "100%" }} indicator={antIcon} />;
 
 const ContactPage = () => {
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
-  const { account, accountLoading, loginLoading, setShowLogin } = useContext(
+  const { account } = useContext(
     AccountContext
   );
-  const loading = loginLoading || accountLoading;
-  // const account = true;
-  const inBeta = loggedIn && account?.permissions?.in_beta;
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [contactLoading, setContactLoading] = useState(false);
@@ -63,6 +61,89 @@ const ContactPage = () => {
       .finally(() => setContactLoading(false));
   };
 
+  let form = <div style={{
+    height: `calc(100% - ${headerHeight + 1}px)`,
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  }}>
+    <Select
+      onChange={(dropdown) => {
+        if (subjectStatus && dropdown) {
+          setSubjectStatus('')
+        }
+        setSubject(dropdown)
+      }}
+      style={{
+        width: '100%',
+        marginBottom: '16px'
+      }}
+      placeholder='Select a subject'
+      disabled={!account}
+      options={[
+        { value: 'Account' },
+        { value: 'API' },
+        { value: 'AI Model' },
+        { value: 'Subscription' },
+        { value: 'General' },
+        { value: 'Other' }
+      ]}
+      status={subjectStatus}
+    >
+    </Select>
+    <Input.TextArea
+      disabled={!account}
+      placeholder='Write your message here.'
+      style={{
+        height: '100%',
+        width: '100%',
+        resize: 'none',
+        marginBottom: '32px'
+      }}
+      showCount={account}
+      maxLength={2500}
+      status={messageStatus}
+      onChange={(event) => {
+        const newMessage = event.target.value;
+        if (messageStatus && newMessage) {
+          setMessageStatus('')
+        }
+        setMessage(event.target.value)
+      }}
+    />
+    <Button
+      className={layoutStyles.start}
+      style={{ width: '100%' }}
+      disabled={!(account && subject && message)}
+      onClick={onContact}
+      loading={contactLoading}
+    >
+      Submit
+    </Button>
+    {/* add alert or notification on successful and unsuccessful contact message */}
+    {/* keep cache of sent messages and don't make new request if same message body */}
+    {/* large text area with char count - should be grayed out / disabled if !account 
+      with message about how you need to have a verified email 
+      submit button - should be grayed out / disabled if !account 
+      with message about how you need to have a verified email */}
+    {/* div around whole contact form with tooltip/popover if !account */}
+    {/* tooltip/popover message should say to login if !loggedIn and to verify otherwise */}
+    {/* handle 4xx and 5xx errors according, also handle response.ok green notification */}
+    {/* use Result if successful */}
+  </div>;
+  if (!(account && loggedIn)) {
+    form =
+      <Popover
+        title="🔒 Action Needed"
+        content={loggedIn ? "Sign in to send a message." : "Verify your email to send a message."}
+        placement="bottom"
+        align={{
+          targetOffset: ["0%", "50%"],
+        }}
+      >
+        {form}
+      </Popover>
+  }
   return (
     <>
       {/* modify alert or notification to appear after successful or unsuccessful contact form send */}
@@ -77,75 +158,7 @@ const ContactPage = () => {
       )} */}
       <Title>Send us a message</Title>
 
-      <div style={{ height: 'calc(100% - 128px)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <div style={{
-          height: '100%', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center',
-          justifyContent: 'space-around', // could do 'space-evenly' too
-        }}>
-          <Select
-            onChange={(dropdown) => {
-              if (subjectStatus && dropdown) {
-                setSubjectStatus('')
-              }
-              setSubject(dropdown)
-            }}
-            style={{
-              width: '100%',
-              marginBottom: '16px'
-            }}
-            placeholder='Select a subject'
-            disabled={!account}
-            options={[
-              { value: 'Account' },
-              { value: 'API' },
-              { value: 'AI Model' },
-              { value: 'Subscription' },
-              { value: 'General' },
-              { value: 'Other' }
-            ]}
-            status={subjectStatus}
-          >
-          </Select>
-          <Input.TextArea
-            disabled={!account}
-            placeholder='Write your message here.'
-            style={{
-              height: '100%',
-              width: '100%',
-              resize: 'none',
-              marginBottom: '32px'
-            }}
-            showCount
-            maxLength={2500}
-            status={messageStatus}
-            onChange={(event) => {
-              const newMessage = event.target.value;
-              if (messageStatus && newMessage) {
-                setMessageStatus('')
-              }
-              setMessage(event.target.value)
-            }}
-          />
-          <Button
-            className={layoutStyles.start}
-            style={{ width: '100%' }}
-            disabled={!(account && subject && message)}
-            onClick={onContact}
-          >
-            Submit
-          </Button>
-          {/* add 500-2500 char limit for textarea - make request fail if message length === 0 or >maxLength with status prop ='error'  */}
-          {/* modify select status prop to be 'error' if submit button is pressed and !subject */}
-          {/* add alert or notification on successful and unsuccessful contact message */}
-          {/* keep cache of sent messages and don't make new request if same message body */}
-          {/* large text area with char count - should be grayed out / disabled if !account 
-          with message about how you need to have a verified email 
-          submit button - should be grayed out / disabled if !account 
-          with message about how you need to have a verified email */}
-          {/* div around whole contact form with tooltip if !account */}
-          {/* handle 4xx and 5xx errors according, also handle response.ok green notification */}
-        </div>
-      </div>
+      {form}
     </>
   );
 };

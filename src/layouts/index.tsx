@@ -143,7 +143,7 @@ const routes = [
   },
 ].concat(pages.map((page) => ({ text: capitalize(page), to: page })));
 
-const headerHeight = 64;
+export const headerHeight = 64;
 const footerHeight = headerHeight;
 // add move fast; break everything to right side of header
 // add logo to forcepush div
