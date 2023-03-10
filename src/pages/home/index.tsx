@@ -600,6 +600,7 @@ const Page = () => {
                   onCancel={() => setShowSignalCard(false)}
                   centered
                   footer={null}
+                  zIndex={2000}
                 ><Card
                   headStyle={{
                     background: cardHeaderColors[signalCardData.Day],

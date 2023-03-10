@@ -283,6 +283,7 @@ const Layout = ({ children }: LayoutProps) => {
                 centered
                 onCancel={() => setShowLogin(false)}
                 footer={null}
+                zIndex={2000}
               >
                 <AmplifyProvider theme={authTheme} colorMode="dark">
                   <Authenticator />
@@ -312,6 +313,7 @@ const Layout = ({ children }: LayoutProps) => {
           open={account && !account?.permissions?.read_disclaimer}
           closable={false}
           centered
+          zIndex={2000}
           footer={
             <div
               style={{
