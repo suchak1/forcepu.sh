@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect, useMemo, useContext } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Typography, Segmented, Tooltip, Badge, Card, Button, Spin, Alert, Select, Input, Popover } from "antd";
+import { Typography, notification, Tooltip, Badge, Card, Button, Spin, Alert, Select, Input, Popover, Result } from "antd";
 import { getApiUrl, getDayDiff, get3DCircle, linspace } from "@/utils";
 import pageStyles from "@/pages/home/index.module.less";
 import layoutStyles from "@/layouts/index.module.less";
@@ -31,7 +31,51 @@ const ContactPage = () => {
   const [contactLoading, setContactLoading] = useState(false);
   const [subjectStatus, setSubjectStatus] = useState('');
   const [messageStatus, setMessageStatus] = useState('');
+  const [resultProps, setResultProps] = useState({});
+  const [sentMessages, setSentMessages] = useState(new Set());
 
+  const contentStyle = {
+    height: `calc(100% - ${headerHeight + 1}px)`,
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center'
+  };
+
+  const onSuccess = () => {
+    setSubject('');
+    setMessage('');
+    setResultProps({
+      status: 'success',
+      title: 'Success!',
+      subTitle: 'Your message was sent.',
+      extra:
+        [
+          <Button
+            className={layoutStyles.start}
+            onClick={() => setResultProps({})}
+          >
+            Return to contact form
+          </Button>
+        ]
+    });
+  }
+  const onError = () => {
+    setResultProps({
+      status: 'error',
+      title: 'Failure',
+      subTitle: 'Your message was not sent.',
+      extra:
+        [
+          <Button
+            className={subStyles.subscribe}
+            onClick={() => setResultProps({})}
+          >
+            Return to contact form
+          </Button>
+        ]
+    });
+  }
   const onContact = () => {
     if (!subject) {
       setSubjectStatus('error')
@@ -47,29 +91,29 @@ const ContactPage = () => {
     setContactLoading(true);
     const { idToken } = loggedIn.signInUserSession;
     const url = `${getApiUrl()}/contact`;
-    fetch(url, {
-      method: "POST",
-      headers: { Authorization: idToken.jwtToken },
-      body: JSON.stringify({ subject, message }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Unable to send message.');
-        }
-        return response.json();
+    if (sentMessages.has(message)) {
+      onSuccess();
+      setContactLoading(false);
+    } else {
+      fetch(url, {
+        method: "POST",
+        headers: { Authorization: idToken.jwtToken },
+        body: JSON.stringify({ subject, message }),
       })
-      // remove this, add notifications
-      .then((data) => window.location.href = data)
-      .catch((err) => console.error(err))
-      .finally(() => setContactLoading(false));
+        .then((response) => {
+          if (response.ok) {
+            setSentMessages((prevSet) => new Set(prevSet).add(message))
+            onSuccess();
+          } else {
+            onError();
+          }
+        })
+        .catch(() => onError())
+        .finally(() => setContactLoading(false));
+    }
   };
 
-  let form = <div style={{
-    height: `calc(100% - ${headerHeight + 1}px)`,
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  }}>
+  let form = <div style={contentStyle}>
     <Select
       onChange={(dropdown) => {
         if (subjectStatus && dropdown) {
@@ -117,7 +161,6 @@ const ContactPage = () => {
     />
     <Button
       className={(account && subject && message) && subStyles.subscribe}
-      // className={layoutStyles.start}
       style={{ width: '100%' }}
       disabled={!(account && subject && message)}
       onClick={onContact}
@@ -125,16 +168,7 @@ const ContactPage = () => {
     >
       Submit
     </Button>
-    {/* add alert or notification on successful and unsuccessful contact message */}
-    {/* keep cache of sent messages and don't make new request if same message body */}
-    {/* large text area with char count - should be grayed out / disabled if !account 
-      with message about how you need to have a verified email 
-      submit button - should be grayed out / disabled if !account 
-      with message about how you need to have a verified email */}
-    {/* div around whole contact form with tooltip/popover if !account */}
-    {/* tooltip/popover message should say to login if !loggedIn and to verify otherwise */}
-    {/* handle 4xx and 5xx errors according, also handle response.ok green notification */}
-    {/* use Result if successful */}
+    {/* add link on subscription page */}
   </div>;
   if (!(account && loggedIn)) {
     form =
@@ -152,19 +186,14 @@ const ContactPage = () => {
   }
   return (
     <>
-      {/* modify alert or notification to appear after successful or unsuccessful contact form send */}
-      {/* {loggedIn && account && (
-        <Alert
-          message={"Your payment was successful. You have unlocked API access. 🔓"}
-          type={"success"}
-          showIcon
-          closable
-          style={{ marginBottom: "12px" }}
-        />
-      )} */}
       <Title>Send us a message</Title>
 
-      {form}
+      {
+        Object.keys(resultProps).length ?
+          <div style={contentStyle}>
+            <Result {...resultProps} />
+          </div> : form
+      }
     </>
   );
 };
