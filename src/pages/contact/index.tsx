@@ -82,7 +82,7 @@ const ContactPage = () => {
         marginBottom: '16px'
       }}
       placeholder='Select a subject'
-      // disabled={!account}
+      disabled={!account}
       options={[
         { value: 'Account' },
         { value: 'API' },
@@ -116,7 +116,7 @@ const ContactPage = () => {
       }}
     />
     <Button
-      className={subStyles.subscribe}
+      className={(account && subject && message) && subStyles.subscribe}
       // className={layoutStyles.start}
       style={{ width: '100%' }}
       disabled={!(account && subject && message)}
