@@ -50,6 +50,7 @@ const ContactPage = () => {
     fetch(url, {
       method: "POST",
       headers: { Authorization: idToken.jwtToken },
+      body: JSON.stringify({ subject, message }),
     })
       .then((response) => {
         if (!response.ok) {
