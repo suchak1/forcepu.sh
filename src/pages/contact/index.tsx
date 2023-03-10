@@ -100,7 +100,7 @@ const ContactPage = () => {
         resize: 'none',
         marginBottom: '32px'
       }}
-      showCount={account}
+      showCount={Boolean(account)}
       maxLength={2500}
       status={messageStatus}
       onChange={(event) => {
