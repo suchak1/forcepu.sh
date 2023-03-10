@@ -56,6 +56,7 @@ const ContactPage = () => {
         }
         return response.json();
       })
+      // remove this, add notifications
       .then((data) => window.location.href = data)
       .catch((err) => console.error(err))
       .finally(() => setContactLoading(false));
@@ -100,6 +101,7 @@ const ContactPage = () => {
         resize: 'none',
         marginBottom: '32px'
       }}
+      // showCount must be bool or fx
       showCount={Boolean(account)}
       maxLength={2500}
       status={messageStatus}
