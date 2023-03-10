@@ -10,8 +10,9 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 import { AccountContext } from "../../layouts";
 import CUBE from "../../../assets/cube.gif";
 import { headerHeight } from "../../layouts";
+import subStyles from "@/pages/subscription/index.module.less";
 
-import overrides from "./index.module.less";
+import "./index.module.less";
 
 import styled from "styled-components";
 
@@ -80,7 +81,7 @@ const ContactPage = () => {
         marginBottom: '16px'
       }}
       placeholder='Select a subject'
-      disabled={!account}
+      // disabled={!account}
       options={[
         { value: 'Account' },
         { value: 'API' },
@@ -114,7 +115,8 @@ const ContactPage = () => {
       }}
     />
     <Button
-      className={layoutStyles.start}
+      className={subStyles.subscribe}
+      // className={layoutStyles.start}
       style={{ width: '100%' }}
       disabled={!(account && subject && message)}
       onClick={onContact}

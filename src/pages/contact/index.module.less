@@ -1,13 +1,12 @@
-.subscribe,
-.subscribe:focus {
+// contact form subject input border
+:global(.ant-select:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer):hover .ant-select-selector),
+:global(.ant-select-focused.ant-select:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer) .ant-select-selector) {
     border-color: magenta;
+    // or magenta?
 }
 
-.subscribe:hover {
-    border-color: magenta !important;
-    box-shadow: 0 0 5px magenta;
-}
-
-.subscribe:active {
-    border-color: magenta !important;
+// contact form message input border
+:global(.ant-input:focus),
+:global(.ant-input:hover) {
+    border-color: #52e5ff;
 }
