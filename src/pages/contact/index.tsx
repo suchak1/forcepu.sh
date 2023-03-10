@@ -22,7 +22,7 @@ const spinner = <Spin style={{ width: "100%" }} indicator={antIcon} />;
 
 const ContactPage = () => {
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
-  const { account } = useContext(
+  const { account, setShowLogin } = useContext(
     AccountContext
   );
   const [subject, setSubject] = useState('');
@@ -134,8 +134,9 @@ const ContactPage = () => {
   if (!(account && loggedIn)) {
     form =
       <Popover
-        title="Action Needed"
-        content={loggedIn ? "🔒 Sign in to send a message." : "🔒 Verify your email to send a message."}
+        onClick={() => !loggedIn && setShowLogin(true)}
+        title="🔒 Action Needed"
+        content={loggedIn ? "Verify your email to send a message." : <Button onClick={() => setShowLogin(true)} className={layoutStyles.start}>Sign in to send a message.</Button>}
         placement="bottom"
         align={{
           targetOffset: ["0%", "50%"],
