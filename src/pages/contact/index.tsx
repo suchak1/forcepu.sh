@@ -168,9 +168,9 @@ const ContactPage = () => {
     >
       Submit
     </Button>
-    {/* add link on subscription page */}
-    {/* add navlink to privacy page */}
+    {/* add current plan badge and comment about using badges to show discount percentage for yearly plans or combos */}
     {/* edit privacy page and tos pages to be accurate - subscription, etc */}
+    {/* other issues from keep */}
   </div>;
   if (!(account && loggedIn)) {
     form =

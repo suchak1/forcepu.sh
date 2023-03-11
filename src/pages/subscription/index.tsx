@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect, useMemo, useContext } from "react";
-import { useSearchParams } from "react-router-dom";
+import { NavLink, useSearchParams } from "react-router-dom";
 import { Typography, Segmented, Tooltip, Badge, Card, Button, Spin, Alert } from "antd";
 import { getApiUrl, getDayDiff, get3DCircle, linspace } from "@/utils";
 import pageStyles from "@/pages/home/index.module.less";
@@ -247,6 +247,7 @@ const SubscriptionPage = () => {
                 </div>
               </Card>
               {/* </Badge.Ribbon> */}
+              <div style={{ display: 'flex', justifyContent: 'center' }}>Having issues? &nbsp;<NavLink to={'/contact'}>{'Contact us!'}</NavLink></div>
               <div>
                 <div style={{
                   width: '100%', display: 'flex',
@@ -256,7 +257,7 @@ const SubscriptionPage = () => {
                   {minInvestment && (
                     <div
                       style={{ marginBottom: "24px" }}
-                    >{`Minimum recommended investment: ${minInvestment} BTC`}</div>
+                    >{`Est. min profitable initial balance: ${minInvestment} BTC`}</div>
                   )}
                 </div>
                 <div>
