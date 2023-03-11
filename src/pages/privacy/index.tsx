@@ -493,7 +493,7 @@ const PrivacyPage = () => {
         If you have any questions about this Privacy Policy, You can contact us:
       </p>
       <ul>
-        <li>By email: support[at]forcepu[dot]sh</li>
+        <li>By message: {`${window.location.host}/contact`}</li>
       </ul>
     </div>
   );

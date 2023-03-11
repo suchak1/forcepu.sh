@@ -1,4 +1,5 @@
 import { Typography } from "antd";
+import { NavLink } from "react-router-dom";
 const { Title } = Typography;
 
 export const TOSTitleText = (modal = false) => (
@@ -321,9 +322,7 @@ const TOSPage = ({ modal } = { modal: false }) => {
           make unauthorized alterations to the Site or Content. If you become
           aware of any unauthorized third party alteration to the Site or
           Content, contact us at
-          {/* <a href="mailto:support@placeholder.com" target="_blank" rel="noopener"> */}
-          support[at]forcepu[dot]sh
-          {/* </a> */}
+          <NavLink to={'/contact'}>{` ${window.location.host}/contact `}</NavLink>
           with a description of the material(s) at issue and the URL.
         </p>
       </section>
