@@ -169,6 +169,8 @@ const ContactPage = () => {
       Submit
     </Button>
     {/* add link on subscription page */}
+    {/* add navlink to privacy page */}
+    {/* edit privacy page and tos pages to be accurate - subscription, etc */}
   </div>;
   if (!(account && loggedIn)) {
     form =

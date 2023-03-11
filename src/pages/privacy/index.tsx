@@ -1,4 +1,5 @@
 import { Typography } from "antd";
+import { NavLink } from "react-router-dom";
 const { Title } = Typography;
 
 const PrivacyPage = () => {
@@ -493,7 +494,7 @@ const PrivacyPage = () => {
         If you have any questions about this Privacy Policy, You can contact us:
       </p>
       <ul>
-        <li>By message: {`${window.location.host}/contact`}</li>
+        <li>By message: <NavLink to={'/contact'}>{`${window.location.host}/contact`}</NavLink></li>
       </ul>
     </div>
   );
