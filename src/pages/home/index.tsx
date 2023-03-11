@@ -25,6 +25,7 @@ import {
 } from "@ant-design/icons";
 import styles from "./index.module.less";
 import layoutStyles from "@/layouts/index.module.less";
+import subStyles from "@/pages/subscription/index.module.less";
 import "./index.module.less";
 import {
   getApiUrl,
@@ -66,6 +67,11 @@ const Toggle = styled(Segmented)`
   }
 `;
 
+const RibbonCol = styled(Col)`
+  .ant-ribbon-wrapper, .ant-card {
+    height: 100%;
+  }
+`;
 const HODL = "HODL";
 const hyperdrive = "hyperdrive";
 const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
@@ -524,7 +530,7 @@ const Page = () => {
                     <Button
                       disabled={quotaReached}
                       loading={signalLoading}
-                      className={`${layoutStyles.start} ${styles.signals} ${quotaReached && styles.disabled
+                      className={`${subStyles.subscribe} ${styles.signals} ${quotaReached && styles.disabled
                         }`}
                       onClick={fetchSignals}
                     >
@@ -657,7 +663,7 @@ const Page = () => {
                 >
                   <Row style={{ width: "100%" }}>
                     {signalData.map((datum, idx) => (
-                      <Col key={idx} flex={1}>
+                      <RibbonCol key={idx} flex={1}>
                         <Badge.Ribbon
                           color={ribbonColors[datum.Day]}
                           text={<b>{datum.Day.toUpperCase()}</b>}
@@ -709,7 +715,7 @@ const Page = () => {
                               ))}
                           </Card>
                         </Badge.Ribbon>
-                      </Col>
+                      </RibbonCol>
                     ))}
                   </Row>
                 </div>
