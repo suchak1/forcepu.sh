@@ -1,8 +1,8 @@
 import React from "react";
-import { useState, useEffect, useMemo, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { NavLink, useSearchParams } from "react-router-dom";
-import { Typography, Segmented, Tooltip, Badge, Card, Button, Spin, Alert } from "antd";
-import { getApiUrl, getDayDiff, get3DCircle, linspace } from "@/utils";
+import { Typography, Tooltip, Badge, Card, Button, Spin, Alert } from "antd";
+import { getApiUrl, getDayDiff } from "@/utils";
 import pageStyles from "@/pages/home/index.module.less";
 import layoutStyles from "@/layouts/index.module.less";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -11,8 +11,6 @@ import { AccountContext } from "../../layouts";
 import CUBE from "../../../assets/cube.gif";
 
 import overrides from "./index.module.less";
-
-import styled from "styled-components";
 
 const { Title } = Typography;
 
@@ -147,7 +145,6 @@ const SubscriptionPage = () => {
       maxWidth: '400px'
     }
   }>
-    {/* each bullet point should be a green, cyan, or magent checkmark or bullet - whatever looks best */}
     {/* eventually $100/month, $85/month for 6 or 12 month subscription */}
     <div style={
       {
