@@ -37,10 +37,13 @@ const SubscriptionPage = () => {
   const subStatus = account?.stripe?.subscription?.active;
   const subIsActive = subStatus || showSuccessAlert;
 
-  const cardWidth = '400px';
   // const checkoutSessionId = searchParams.get('session_id')
 
   const onCheckout = () => {
+    if (!loggedIn) {
+      setShowLogin(true);
+      return;
+    }
     setCheckoutLoading(true);
     const { idToken } = loggedIn.signInUserSession;
     const url = `${getApiUrl()}/checkout`;
@@ -84,8 +87,7 @@ const SubscriptionPage = () => {
       onClick={subIsActive ? onBilling : onCheckout}
       loading={checkoutLoading || billingLoading}
       disabled={!account}
-      className={account && overrides.subscribe}>{subIsActive ? "Manage subscription" : "Subscribe"}
-      {/* make Manage billing cyan like Get started and remove Sign in to subscribe and replace with magenta Subscribe but trigger showLogin as part of onCheckout if not loggedIn */}
+      className={account && (subIsActive ? layoutStyles.start : overrides.subscribe)}>{subIsActive ? "Manage subscription" : "Subscribe"}
     </Button>;
   if (!account) {
     subscribeButton = <Tooltip
@@ -101,14 +103,6 @@ const SubscriptionPage = () => {
     const url = `${getApiUrl({ localOverride: "dev" })}/plans`;
     fetch(url, { method: "GET" })
       .then((response) => response.json())
-      // .then((data) => {
-      //   const {
-      //     unit_amount,
-      //     recurring,
-      //   } = data;
-      //   const { interval, interval_count } = recurring;
-      //   return data;
-      // })
       .then((data) => setPrice(data))
       .catch((err) => console.error(err))
       .finally(() => setPriceLoading(false));
@@ -153,15 +147,7 @@ const SubscriptionPage = () => {
       maxWidth: '400px'
     }
   }>
-    {/* entire card should be centered horizontally on page */}
-    {/* cube gif as icon on left, then title */}
-    {/* price on right in large font - per month in gray text */}
-    {/* then info split into 3 bullet points */}
-    {/* - Access to the /signals API  */}
-    {/* - up to a week's worth of the latest BUY and SELL signals */}
-    {/* - maximum of 5 requests / day */}
     {/* each bullet point should be a green, cyan, or magent checkmark or bullet - whatever looks best */}
-    {/* subscribe button centered at bottom in magenta, manage subscription in cyan centered at bottom */}
     {/* eventually $100/month, $85/month for 6 or 12 month subscription */}
     <div style={
       {
@@ -195,16 +181,10 @@ const SubscriptionPage = () => {
           /signals
         </span> API</li>
         <li>provides up to a week's worth of the latest BUY and SELL signals</li>
-        <li>5 requests / day</li>
+        <li>maximum of 5 requests / day</li>
       </ul>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        {loggedIn ? subscribeButton : <Button
-          style={{ width: '100%' }}
-          className={layoutStyles.start}
-          onClick={() => setShowLogin(true)}
-        >
-          Sign in to subscribe
-        </Button>}
+        {subscribeButton}
       </div>
     </div>
   </Card>;
