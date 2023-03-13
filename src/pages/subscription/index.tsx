@@ -33,7 +33,10 @@ const SubscriptionPage = () => {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [billingLoading, setBillingLoading] = useState(false);
   const [searchParams] = useSearchParams();
-  const showSuccessAlert = searchParams.get('success')?.toLowerCase() === 'true'
+  const showSuccessAlert = searchParams.get('success')?.toLowerCase() === 'true';
+  const subStatus = account?.stripe?.subscription?.active;
+  const subIsActive = subStatus || showSuccessAlert;
+
   const cardWidth = '400px';
   // const checkoutSessionId = searchParams.get('session_id')
 
@@ -78,10 +81,10 @@ const SubscriptionPage = () => {
   let subscribeButton =
     <Button
       style={{ width: '100%' }}
-      onClick={account?.stripe?.subscription?.active ? onBilling : onCheckout}
+      onClick={subIsActive ? onBilling : onCheckout}
       loading={checkoutLoading || billingLoading}
       disabled={!account}
-      className={account && overrides.subscribe}>{account?.stripe?.subscription?.active ? "Manage subscription" : "Subscribe"}
+      className={account && overrides.subscribe}>{subIsActive ? "Manage subscription" : "Subscribe"}
       {/* make Manage billing cyan like Get started and remove Sign in to subscribe and replace with magenta Subscribe but trigger showLogin as part of onCheckout if not loggedIn */}
     </Button>;
   if (!account) {
@@ -205,7 +208,7 @@ const SubscriptionPage = () => {
       </div>
     </div>
   </Card>;
-  if (account?.stripe?.subscription?.active) {
+  if (subIsActive) {
     subscriptionCard = <Badge.Ribbon
       color='#ff00ff' //'#52e5ff'
       text={<b style={{ color: 'black' }}>{'Current Plan'}</b>}
