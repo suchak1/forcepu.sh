@@ -250,7 +250,7 @@ const SubscriptionPage = () => {
             spinner
           ) : (
             <>
-              {/* add badge to card "Current Plan" and replace sub button with Manage Subscription (cyan button )=> customer portal */}
+              {/* use badges to show discount percentage for yearly plans or combos */}
               {/* additional cards say Downgrade or Upgrade (magenta btn) and backend uses stripe.Subscription.modify + prorating  */}
               {subscriptionCard}
               <div style={{ display: 'flex', justifyContent: 'center' }}>Having issues? &nbsp;<NavLink to={'/contact'}>{'Contact us!'}</NavLink></div>
@@ -282,11 +282,7 @@ const SubscriptionPage = () => {
             </>
           )}
         </div>
-        {/* test if has account | if not, then don't render and if signed in, show alert at top,
-        if signed in, then test if in beta | if so, show beta view, 
-        else test if active subscription | if so, show plan/sub amount, payment method, and option to cancel / manage - should have to open modal and click button or type in phrase to cancel
-        else show stripe subscription page*/}
-        {/* https://stripe.com/docs/billing/subscriptions/build-subscriptions?ui=elements */}
+        {/* add tos / disclaimer / refund policy https://stripe.com/docs/payments/checkout/customization */}
       </div>
     </>
   );
