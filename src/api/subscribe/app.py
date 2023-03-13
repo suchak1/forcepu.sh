@@ -231,12 +231,14 @@ def post_subscribe(event, _):
     ])
     print('event_type', event_type)
     if event_type in subscription_events:
+        print('event_type is in subscription events')
         sub = event['data']['object']
         customer_id = sub['customer']
         user = list(UserModel.customer_id_index.query(customer_id))[0]
         # due to a race condition,
         # incomplete subscription.created events can be sent by stripe AFTER active subscription.updated events
         # in this case, we should not update the db
+        print('we got this far')
         if event_type == 'customer.subscription.created' and sub['status'] == 'incomplete':
             return response
         sub_is_active = sub['status'] == 'active'
