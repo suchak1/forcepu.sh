@@ -86,10 +86,10 @@ const SubscriptionPage = () => {
       style={{ width: '100%' }}
       onClick={subIsActive ? onBilling : onCheckout}
       loading={checkoutLoading || billingLoading}
-      disabled={!account}
-      className={account && (subIsActive ? layoutStyles.start : overrides.subscribe)}>{subIsActive ? "Manage subscription" : "Subscribe"}
+      disabled={loggedIn && !account}
+      className={subIsActive ? layoutStyles.start : overrides.subscribe}>{subIsActive ? "Manage subscription" : "Subscribe"}
     </Button>;
-  if (!account) {
+  if (loggedIn && !account) {
     subscribeButton = <Tooltip
       trigger={["hover", "focus"]}
       title="Verify your email address."
