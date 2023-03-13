@@ -229,6 +229,7 @@ def post_subscribe(event, _):
         'customer.subscription.paused',
         'customer.subscription.resumed',
     ])
+    print('event_type', event_type)
     if event_type in subscription_events:
         sub = event['data']['object']
         customer_id = sub['customer']
