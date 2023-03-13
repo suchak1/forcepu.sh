@@ -241,6 +241,8 @@ def post_subscribe(event, _):
         sub_is_active = sub['status'] == 'active'
         stripe_lookup = user.stripe
         sub_was_active = stripe_lookup.subscription['active']
+        print('sub_is_active', sub_is_active)
+        print('sub_was_active', sub_was_active)
         if sub_was_active != sub_is_active:
             if not sub_is_active:
                 stripe_lookup.checkout['created'] = UTCDateTimeAttribute(
