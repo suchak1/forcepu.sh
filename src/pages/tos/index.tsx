@@ -514,7 +514,7 @@ const TOSPage = ({ modal } = { modal: false }) => {
 
       <section id="billing-cancellation-and-refunds">
         <Title level={sublevel}>
-          FORCEPU.SH Premier &amp; Ad-Free Billing, Cancellation, and Refund
+          FORCEPU.SH Subscription/Billing, Cancellation, and Refund
           Policy
         </Title>
         <p>
@@ -522,11 +522,7 @@ const TOSPage = ({ modal } = { modal: false }) => {
         </p>
         <p>
           To cancel your FORCEPU.SH subscription, please log in to forcepu.sh
-          and click the “Manage Subscriptions” link on the Account page, or send
-          our Support Desk a request to cancel through our email address. Upon
-          receipt and processing of the cancellation request, FORCEPU.SH will
-          email you a cancellation confirmation. Please retain a copy of the
-          cancellation email for your records.
+          and click the “Manage Subscription” link on the Subscription page.
         </p>
         <p>
           FORCEPU.SH does not offer partial cancellations. Upon cancellation
@@ -551,13 +547,6 @@ const TOSPage = ({ modal } = { modal: false }) => {
             Choosing this option will cancel the subscriber's existing
             subscription for the remainder of the subscription period.
           </li>
-          <li>
-            a switch to an alternative subscriber-approved FORCEPU.SH algorithm
-            for the rest of the subscriber's subscription period — plus the
-            length of the interruption — at no cost. After that, the subscriber
-            may remain subscribed to the alternative algorithm at that
-            algorithm's indicated fee.
-          </li>
         </ul>
       </section>
 
@@ -581,12 +570,6 @@ const TOSPage = ({ modal } = { modal: false }) => {
             a refund pro-rated for the remainder of the subscription period.
             Choosing this option will cancel the subscriber's existing
             subscription for the remainder of the subscription period.
-          </li>
-          <li>
-            a switch to an alternative subscriber-approved FORCEPU.SH algorithm
-            for the rest of the subscriber's subscription period at no cost.
-            After that, the subscriber may remain subscribed to the alternative
-            algorithm at that algorithm's indicated fee.
           </li>
         </ul>
       </section>

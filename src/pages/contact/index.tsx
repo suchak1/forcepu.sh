@@ -168,8 +168,8 @@ const ContactPage = () => {
     >
       Submit
     </Button>
-    {/* add current plan badge and comment about using badges to show discount percentage for yearly plans or combos */}
-    {/* edit privacy page and tos pages to be accurate - subscription, etc */}
+    {/* make issue for primay buttons - cyan and magenta backgrounds with black or rgba(0, 0, 0, 0.85) colors and 600 font weight */}
+    {/* comment about using badges to show discount percentage for yearly plans or combos */}
     {/* other issues from keep */}
   </div>;
   if (!(account && loggedIn)) {
