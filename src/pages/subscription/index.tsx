@@ -23,8 +23,6 @@ const SubscriptionPage = () => {
     AccountContext
   );
   const loading = loginLoading || accountLoading;
-  // const account = true;
-  const inBeta = loggedIn && account?.permissions?.in_beta;
   const [minInvestment, setMinInvestment] = useState();
   const [price, setPrice] = useState();
   const [priceLoading, setPriceLoading] = useState(true);
