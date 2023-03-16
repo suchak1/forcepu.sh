@@ -28,7 +28,10 @@ jobs:
         env:
           EmailUser: ${{ secrets.EMAIL_USER }}
           EmailPass: ${{ secrets.EMAIL_PASS }}
+          StripePriceId: ${{ secrets.STRIPE_PRICE_ID }}
           StripeSecretKey: ${{ secrets.STRIPE_SECRET_KEY }}
+          # Webhook signing key secret for endpoint (not for CLI)
+          StripeWebhookSecret: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
           S3Bucket: ${{ secrets.HYPERDRIVE_BUCKET }}
           Stage: prod
           ApiUrl: api.forcepu.sh
@@ -39,7 +42,9 @@ jobs:
           echo "
           EmailUser=${EmailUser}
           EmailPass=${EmailPass}
+          StripePriceId=${StripePriceId}
           StripeSecretKey=${StripeSecretKey}
+          StripeWebhookSecret=${StripeWebhookSecret}
           S3Bucket=${S3Bucket}
           Stage=${Stage}
           ApiUrl=${ApiUrl}
