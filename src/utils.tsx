@@ -159,7 +159,7 @@ const dist = (pt1: number[], pt2: number[]) =>
 const norm = (v1: number[]) => dist(v1, Array(v1.length).fill(0));
 
 // linspace
-const linspace = (
+export const linspace = (
   start: number,
   end: number,
   numPoints: number,

@@ -1,38 +1,20 @@
 import json
 from shared.models import UserModel
-from shared.utils import handle_options
+from shared.utils import options, verify_user
 
 
-def get_account(event, _):
+def handle_account(event, _):
     if event['httpMethod'].upper() == 'OPTIONS':
-        response = handle_options()
+        response = options()
     elif event['httpMethod'].upper() == 'POST':
-        response = handle_post(event)
+        response = post_account(event)
     else:
-        response = handle_get(event)
+        response = get_account(event)
 
     return response
 
 
-def verify_user(claims):
-    email_verified = claims['email_verified']
-    # ['email']
-    # ['email_verified']
-    # ['name']
-    providers = ['Google']
-    actually_verified = email_verified == 'true'
-    if email_verified == 'false':
-        if 'identities' in claims:
-            identities = json.loads(claims['identities'])
-            # => ['providerName'] == 'Google'
-            # => ['providerType'] == 'Google'
-            if 'providerName' in identities:
-                if identities['providerName'] in providers:
-                    actually_verified = True
-    return actually_verified
-
-
-def handle_get(event):
+def get_account(event):
     claims = event['requestContext']['authorizer']['claims']
     verified = verify_user(claims)
 
@@ -56,7 +38,7 @@ def handle_get(event):
     }
 
 
-def handle_post(event):
+def post_account(event):
     claims = event['requestContext']['authorizer']['claims']
     verified = verify_user(claims)
 

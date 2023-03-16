@@ -1,9 +1,9 @@
 import os
 import secrets
-from datetime import datetime, timezone
 from pynamodb.models import Model
 from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
 from pynamodb.attributes import UnicodeAttribute, MapAttribute, BooleanAttribute, ListAttribute, UTCDateTimeAttribute
+from .utils import past_date
 
 
 def query_by_api_key(api_key):
@@ -20,13 +20,27 @@ def get_api_key():
 
 
 def get_default_access_queue():
-    return [datetime(2020, 1, 1, tzinfo=timezone.utc)] * 5
+    return [past_date] * 5
 
 
 class Permissions(MapAttribute):
     is_admin = BooleanAttribute(default=False)
     in_beta = BooleanAttribute(default=False)
     read_disclaimer = BooleanAttribute(default=False)
+
+
+class Checkout(MapAttribute):
+    url = UnicodeAttribute(default="")
+    created = UTCDateTimeAttribute(default=past_date)
+
+
+class Subscription(MapAttribute):
+    active = BooleanAttribute(default=False)
+
+
+class Stripe(MapAttribute):
+    checkout = MapAttribute(default=Checkout)
+    subscription = MapAttribute(default=Subscription)
 
 
 class APIKeyIndex(GlobalSecondaryIndex):
@@ -44,6 +58,21 @@ class APIKeyIndex(GlobalSecondaryIndex):
     api_key = UnicodeAttribute(hash_key=True)
 
 
+class CustomerIdIndex(GlobalSecondaryIndex):
+    """
+    This class represents a global secondary index
+    """
+    class Meta:
+        # index_name is optional, but can be provided to override the default name
+        index_name = 'customer_id_index'
+        # All attributes are projected
+        projection = AllProjection()
+
+    # This attribute is the hash key for the index
+    # Note that this attribute must also exist in the model
+    customer_id = UnicodeAttribute(hash_key=True)
+
+
 class UserModel(Model):
     """
     A DynamoDB User
@@ -53,8 +82,11 @@ class UserModel(Model):
     email = UnicodeAttribute(hash_key=True)
     api_key = UnicodeAttribute(default=get_api_key)
     permissions = MapAttribute(default=Permissions)
+    stripe = MapAttribute(default=Stripe)
     access_queue = ListAttribute(
         of=UTCDateTimeAttribute,
         default=get_default_access_queue
     )
+    customer_id = UnicodeAttribute(default="")
     api_key_index = APIKeyIndex()
+    customer_id_index = CustomerIdIndex()

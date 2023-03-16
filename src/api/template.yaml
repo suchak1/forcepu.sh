@@ -24,6 +24,21 @@ Parameters:
   UserPoolArn:
     Type: "String"
     NoEcho: true
+  StripeSecretKey:
+    Type: "String"
+    NoEcho: true
+  StripeWebhookSecret:
+    Type: "String"
+    NoEcho: true
+  StripePriceId:
+    Type: "String"
+    NoEcho: true
+  EmailUser:
+    Type: "String"
+    NoEcho: true
+  EmailPass:
+    Type: "String"
+    NoEcho: true
 
 Globals:
   Function:
@@ -82,6 +97,38 @@ Resources:
             RestApiId: !Ref ApiGatewayApi
     Metadata:
       Dockerfile: account/Dockerfile
+      DockerContext: ./
+      DockerTag: python3.8-v1
+  ContactFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Environment:
+        Variables:
+          EMAIL_USER: !Ref EmailUser
+          EMAIL_PASS: !Ref EmailPass
+      #     TABLE_NAME: !Ref UsersTable
+      # Policies:
+      #   - DynamoDBCrudPolicy:
+      #       TableName: !Ref UsersTable
+      PackageType: Image
+      Events:
+        PostContact:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /contact
+            Method: post
+            RestApiId: !Ref ApiGatewayApi
+            Auth:
+              Authorizer: CognitoAuth
+              # header Authorization: id_token from /token endpoint
+        Options:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /contact
+            Method: options
+            RestApiId: !Ref ApiGatewayApi
+    Metadata:
+      Dockerfile: contact/Dockerfile
       DockerContext: ./
       DockerTag: python3.8-v1
   ExerciseLogFunction:
@@ -165,10 +212,11 @@ Resources:
               Effect: Allow
               Action:
                 - s3:GetObject
-              Resource: [
-                !Sub "arn:aws:s3:::${S3Bucket}/models/latest/2D/*",
-                !Sub "arn:aws:s3:::${S3Bucket}/models/latest/3D/*"
-              ]
+              Resource:
+                [
+                  !Sub "arn:aws:s3:::${S3Bucket}/models/latest/2D/*",
+                  !Sub "arn:aws:s3:::${S3Bucket}/models/latest/3D/*",
+                ]
       PackageType: Image
       ImageConfig:
         Command: ["app.get_visualization"]
@@ -217,6 +265,120 @@ Resources:
       Dockerfile: signals/Dockerfile
       DockerContext: ./
       DockerTag: python3.8-v1
+  PlansFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Environment:
+        Variables:
+          STRIPE_SECRET_KEY: !Ref StripeSecretKey
+          TABLE_NAME: !Ref UsersTable
+          STRIPE_PRICE_ID: !Ref StripePriceId
+      PackageType: Image
+      ImageConfig:
+        Command: ["app.get_plans"]
+      Events:
+        GetPlans:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /plans
+            Method: get
+            RestApiId: !Ref ApiGatewayApi
+    Metadata:
+      Dockerfile: subscribe/Dockerfile
+      DockerContext: ./
+      DockerTag: python3.8-v1
+  SubscribeFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Environment:
+        Variables:
+          STRIPE_SECRET_KEY: !Ref StripeSecretKey
+          STRIPE_WEBHOOK_SECRET: !Ref StripeWebhookSecret
+          TABLE_NAME: !Ref UsersTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UsersTable
+      PackageType: Image
+      ImageConfig:
+        Command: ["app.post_subscribe"]
+      Events:
+        PostSubscribe:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /subscribe
+            Method: post
+            RestApiId: !Ref ApiGatewayApi
+    Metadata:
+      Dockerfile: subscribe/Dockerfile
+      DockerContext: ./
+      DockerTag: python3.8-v1
+  CheckoutFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Environment:
+        Variables:
+          STRIPE_SECRET_KEY: !Ref StripeSecretKey
+          TABLE_NAME: !Ref UsersTable
+          STRIPE_PRICE_ID: !Ref StripePriceId
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UsersTable
+      PackageType: Image
+      ImageConfig:
+        Command: ["app.handle_checkout"]
+      Events:
+        PostCheckout:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /checkout
+            Method: post
+            RestApiId: !Ref ApiGatewayApi
+            Auth:
+              Authorizer: CognitoAuth
+              # header Authorization: id_token from /token endpoint
+        Options:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /checkout
+            Method: options
+            RestApiId: !Ref ApiGatewayApi
+    Metadata:
+      Dockerfile: subscribe/Dockerfile
+      DockerContext: ./
+      DockerTag: python3.8-v1
+  BillingFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Environment:
+        Variables:
+          STRIPE_SECRET_KEY: !Ref StripeSecretKey
+          TABLE_NAME: !Ref UsersTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UsersTable
+      PackageType: Image
+      ImageConfig:
+        Command: ["app.handle_billing"]
+      Events:
+        PostBilling:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /billing
+            Method: post
+            RestApiId: !Ref ApiGatewayApi
+            Auth:
+              Authorizer: CognitoAuth
+              # header Authorization: id_token from /token endpoint
+        Options:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /billing
+            Method: options
+            RestApiId: !Ref ApiGatewayApi
+    Metadata:
+      Dockerfile: subscribe/Dockerfile
+      DockerContext: ./
+      DockerTag: python3.8-v1
   UsersTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -227,6 +389,8 @@ Resources:
           AttributeType: S
         - AttributeName: api_key
           AttributeType: S
+        - AttributeName: customer_id
+          AttributeType: S
       KeySchema:
         - AttributeName: email
           KeyType: HASH
@@ -234,6 +398,12 @@ Resources:
         - IndexName: api_key_index
           KeySchema:
             - AttributeName: api_key
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: customer_id_index
+          KeySchema:
+            - AttributeName: customer_id
               KeyType: HASH
           Projection:
             ProjectionType: ALL

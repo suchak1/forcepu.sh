@@ -25,6 +25,7 @@ import {
 } from "@ant-design/icons";
 import styles from "./index.module.less";
 import layoutStyles from "@/layouts/index.module.less";
+import subStyles from "@/pages/subscription/index.module.less";
 import "./index.module.less";
 import {
   getApiUrl,
@@ -39,13 +40,13 @@ const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 import { AccountContext } from "@/layouts";
 
-const toggleLabels = {BTC: "₿", USD: "$"};
+const toggleLabels = { BTC: "₿", USD: "$" };
 
 const toggleGray = 'rgba(255, 255, 255, 0.2)';
 const Toggle = styled(Segmented)`
   .ant-segmented-item-selected {
-    background-image: linear-gradient(to bottom right, ${(props: { val: boolean }) => 
-      (props.val ? "#F7931A" : toggleGray)}, ${(props: { val: boolean }) => (props.val ? "#F7931A" : toggleGray)} );
+    background-image: linear-gradient(to bottom right, ${(props: { val: boolean }) =>
+    (props.val ? "#F7931A" : toggleGray)}, ${(props: { val: boolean }) => (props.val ? "#F7931A" : toggleGray)} );
     
     color: rgba(255, 255, 255, 0.85);
   }
@@ -66,6 +67,11 @@ const Toggle = styled(Segmented)`
   }
 `;
 
+const RibbonCol = styled(Col)`
+  .ant-ribbon-wrapper, .ant-card {
+    height: 100%;
+  }
+`;
 const HODL = "HODL";
 const hyperdrive = "hyperdrive";
 const formatBTC = (v: number) => `${Math.round(v * 10) / 10} ₿`;
@@ -155,8 +161,8 @@ const LineChart: React.FC<any> = memo(
           const hyperdriveItem = originalItems[0].name === hyperdrive ? originalItems[0] : originalItems[1];
           const signal = hyperdriveItem.data.Full_Sig;
           const signalDatum = {
-            color: signal ? 'lime' : 'red', 
-            name: 'SIGNAL', 
+            color: signal ? 'lime' : 'red',
+            name: 'SIGNAL',
             value: signal ? '▲ BUY' : '▼ SELL'
           };
           originalItems.push(signalDatum);
@@ -182,14 +188,14 @@ const LineChart: React.FC<any> = memo(
         },
       },
       animation:
-        // Why is this necessary?
-        // !inBeta &&
-        {
-          appear: {
-            animation: "wave-in",
-            duration: 4000,
-          },
+      // Why is this necessary?
+      // !inBeta &&
+      {
+        appear: {
+          animation: "wave-in",
+          duration: 4000,
         },
+      },
       xAxis: {
         tickCount: 10,
         grid: {
@@ -271,7 +277,7 @@ const Page = () => {
   const [haveNewSignal, setHaveNewSignal] = useState(false);
   const [quotaReached, setQuotaReached] = useState(false);
   const loading = previewLoading || accountLoading || loginLoading;
-  const inBeta = loggedIn && account?.permissions?.in_beta;
+  const inBeta = loggedIn && (account?.permissions?.in_beta || account?.stripe?.subscription?.active);
   const chartRef = useRef();
 
   useEffect(() => {
@@ -524,9 +530,8 @@ const Page = () => {
                     <Button
                       disabled={quotaReached}
                       loading={signalLoading}
-                      className={`${layoutStyles.start} ${styles.signals} ${
-                        quotaReached && styles.disabled
-                      }`}
+                      className={`${subStyles.subscribe} ${styles.signals} ${quotaReached && styles.disabled
+                        }`}
                       onClick={fetchSignals}
                     >
                       Fetch the latest signals
@@ -596,18 +601,18 @@ const Page = () => {
             {inBeta ? (
               <>
                 <Modal
-                  visible={showSignalCard}
+                  open={showSignalCard}
                   closable={false}
                   onCancel={() => setShowSignalCard(false)}
                   centered
                   footer={null}
+                  zIndex={2000}
+                ><Card
+                  headStyle={{
+                    background: cardHeaderColors[signalCardData.Day],
+                  }}
+                  title={signalCardData.Day.toUpperCase()}
                 >
-                  <Card
-                    headStyle={{
-                      background: cardHeaderColors[signalCardData.Day],
-                    }}
-                    title={signalCardData.Day.toUpperCase()}
-                  >
                     <div>
                       <span>
                         <b>{"Signal: "}</b>
@@ -619,8 +624,8 @@ const Page = () => {
                             signalCardData.Signal === "BUY"
                               ? "lime"
                               : signalCardData.Signal === "SELL"
-                              ? "red"
-                              : "inherit",
+                                ? "red"
+                                : "inherit",
                         }}
                       >
                         {signalCardData.Signal}
@@ -658,7 +663,7 @@ const Page = () => {
                 >
                   <Row style={{ width: "100%" }}>
                     {signalData.map((datum, idx) => (
-                      <Col key={idx} flex={1}>
+                      <RibbonCol key={idx} flex={1}>
                         <Badge.Ribbon
                           color={ribbonColors[datum.Day]}
                           text={<b>{datum.Day.toUpperCase()}</b>}
@@ -710,7 +715,7 @@ const Page = () => {
                               ))}
                           </Card>
                         </Badge.Ribbon>
-                      </Col>
+                      </RibbonCol>
                     ))}
                   </Row>
                 </div>

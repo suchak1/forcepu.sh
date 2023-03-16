@@ -3,37 +3,21 @@ import json
 import boto3
 from datetime import datetime, timedelta, timezone
 from shared.models import query_by_api_key, UserModel
-from shared.utils import handle_options
+from shared.utils import options, error, enough_time_has_passed, res_headers
 
 s3 = boto3.client('s3')
 
-res_headers = {"Access-Control-Allow-Origin": "*"}
 
-
-def get_signals(event, _):
+def handle_signals(event, _):
     if event['httpMethod'].upper() == 'OPTIONS':
-        response = handle_options()
+        response = options()
     else:
-        response = handle_get(event)
+        response = get_signals(event)
 
     return response
 
 
-def error(status, message):
-    return {
-        "statusCode": status,
-        "body": json.dumps(
-            {'message': message}
-        ),
-        "headers": res_headers
-    }
-
-
-def enough_time_has_passed(start, end, delta):
-    return end - start >= delta
-
-
-def handle_get(event):
+def get_signals(event):
     # first get user by api key
     req_headers = event['headers']
     if 'x-api-key' not in req_headers:
@@ -44,25 +28,8 @@ def handle_get(event):
         return error(401, 'Provide a valid API key.')
     user = query_results[0]
 
-    # if in beta:
-    if user.permissions.in_beta:
-        #   hit verify_api_key endpoint
-        #   if not verified (error response):
-        #       add key to usage plan
-        pass
-    # if not in_beta:
-    else:
-        #   hit verify_api_key endpoint (dummy endpoint connected to usage plan, pass headers on from this fx)
-        #   AND hit stripe subscription endpoint
-        #       if verified (simple ok response) but not active sub:
-        #           remove key from usage plan
-        #           error out as 402, inactive subscription / renew sub
-        #       elif not verified (error response) but active sub:
-        #           add key to usage plan
-        #       elif not verified and not active:
-        #           error out as 402, This endpoint is for subscribers only.
-        return error(402, 'This endpoint is for beta subscribers only.')
-    # proceed
+    if not (user.permissions.in_beta or user.stripe.subscription['active']):
+        return error(402, 'This endpoint is for subscribers only.')
 
     # Notes: Instead of using usage plan,
     # store list of last 5 access times

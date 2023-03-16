@@ -24,6 +24,8 @@ import {
 } from "@/utils";
 import Docs from "@/pages/docs";
 import Algorithm from "@/pages/algorithm";
+import Subscription from "@/pages/subscription";
+import Contact from "@/pages/contact";
 import Art from "@/pages/art";
 import Gym from "@/pages/gym";
 import TOS, { TOSTitleText } from "@/pages/tos";
@@ -112,6 +114,8 @@ const pages: string[] = [
   // "art",
   "docs",
   "algorithm", // alternative name: research
+  "subscription",
+  "contact"
 ];
 
 // "docs" should be example of how to use library or service
@@ -128,6 +132,8 @@ const routes = [
     text: (
       <>
         <div className={overrides.home}>
+          {/* consider making capital FORCEPU.SH */}
+          {/* use "force" to find and replace accordingly */}
           <span className={overrides.white}>force</span>
           <span>pu.sh</span>
         </div>
@@ -137,7 +143,7 @@ const routes = [
   },
 ].concat(pages.map((page) => ({ text: capitalize(page), to: page })));
 
-const headerHeight = 64;
+export const headerHeight = 64;
 const footerHeight = headerHeight;
 // add move fast; break everything to right side of header
 // add logo to forcepush div
@@ -203,7 +209,7 @@ const Layout = ({ children }: LayoutProps) => {
   Amplify.configure(config);
 
   return (
-    <AntLayout>
+    <AntLayout style={{ height: '100%' }}>
       <AntLayout.Header
         style={{
           // this is so that header stays above toggle in fixed scrolling
@@ -228,12 +234,12 @@ const Layout = ({ children }: LayoutProps) => {
               style:
                 idx === 0
                   ? {
-                      backgroundColor: "transparent",
-                    }
+                    backgroundColor: "transparent",
+                  }
                   : {
-                      display: "flex",
-                      alignItems: "center",
-                    },
+                    display: "flex",
+                    alignItems: "center",
+                  },
               label: <NavLink to={route.to}>{route.text}</NavLink>
             }))}
           ></Menu>
@@ -277,6 +283,7 @@ const Layout = ({ children }: LayoutProps) => {
                 centered
                 onCancel={() => setShowLogin(false)}
                 footer={null}
+                zIndex={2000}
               >
                 <AmplifyProvider theme={authTheme} colorMode="dark">
                   <Authenticator />
@@ -291,13 +298,11 @@ const Layout = ({ children }: LayoutProps) => {
         style={{
           padding: 24,
           marginTop: headerHeight,
-          minHeight: `calc(100vh - ${headerHeight + footerHeight}px)`,
           overflow: "auto",
         }}
       >
         <Modal
           width={600}
-          // visible
           title={TOSTitleText(true)}
           bodyStyle={{
             height: "200px",
@@ -308,6 +313,7 @@ const Layout = ({ children }: LayoutProps) => {
           open={account && !account?.permissions?.read_disclaimer}
           closable={false}
           centered
+          zIndex={2000}
           footer={
             <div
               style={{
@@ -351,6 +357,8 @@ const Layout = ({ children }: LayoutProps) => {
             <Route path="/" element={<Home />} />
             <Route path="/docs" element={<Docs />} />
             <Route path="/algorithm" element={<Algorithm />} />
+            <Route path="/subscription" element={<Subscription />} />
+            <Route path="/contact" element={<Contact />} />
             <Route path="/art" element={<Art />} />
             <Route path="/gym" element={<Gym />} />
             <Route path="/tos" element={<TOS />} />
@@ -362,10 +370,11 @@ const Layout = ({ children }: LayoutProps) => {
       </AntLayout.Content>
       <AntLayout.Footer
         style={{
-          height: footerHeight,
+          maxHeight: footerHeight,
+          height: '100%',
           display: "flex",
           justifyContent: "space-between",
-          backgroundColor: "#1f1f1f",
+          // backgroundColor: "#1f1f1f",
           alignItems: "center",
         }}
       >
@@ -412,14 +421,13 @@ export default ({ route, children }: LayoutProps) => (
       // }
     },
   }}>
-  <Authenticator.Provider>
-    <BrowserRouter>
-    <Layout route={route}>{children}</Layout>
-    </BrowserRouter>
-  </Authenticator.Provider>
+    <Authenticator.Provider>
+      <BrowserRouter>
+        <Layout route={route}>{children}</Layout>
+      </BrowserRouter>
+    </Authenticator.Provider>
   </ConfigProvider>
 );
 
 
 
-          

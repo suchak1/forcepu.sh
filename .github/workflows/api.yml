@@ -25,29 +25,63 @@ jobs:
           node-version: 18
 
       - name: Create parameters.env [prod]
-        uses: SpicyPizza/create-envfile@v1.3
-        with:
-          envkey_S3Bucket: ${{ secrets.HYPERDRIVE_BUCKET }}
-          envkey_Stage: prod
-          envkey_ApiUrl: api.forcepu.sh
-          envkey_CertArn: ${{ secrets.CERT_ARN }}
-          envkey_HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
-          envkey_UserPoolArn: ${{ secrets.USER_POOL_ARN }}
-          directory: src/api
-          file_name: parameters.env
+        env:
+          EmailUser: ${{ secrets.EMAIL_USER }}
+          EmailPass: ${{ secrets.EMAIL_PASS }}
+          StripePriceId: ${{ secrets.STRIPE_PRICE_ID }}
+          StripeSecretKey: ${{ secrets.STRIPE_SECRET_KEY }}
+          # Webhook signing key secret for endpoint (not for CLI)
+          StripeWebhookSecret: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+          S3Bucket: ${{ secrets.HYPERDRIVE_BUCKET }}
+          Stage: prod
+          ApiUrl: api.forcepu.sh
+          CertArn: ${{ secrets.CERT_ARN }}
+          HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
+          UserPoolArn: ${{ secrets.USER_POOL_ARN }}
+        run: |
+          echo "
+          EmailUser=${EmailUser}
+          EmailPass=${EmailPass}
+          StripePriceId=${StripePriceId}
+          StripeSecretKey=${StripeSecretKey}
+          StripeWebhookSecret=${StripeWebhookSecret}
+          S3Bucket=${S3Bucket}
+          Stage=${Stage}
+          ApiUrl=${ApiUrl}
+          CertArn=${CertArn}
+          HostedZoneId=${HostedZoneId}
+          UserPoolArn=${UserPoolArn}
+          " >> src/api/parameters.env
         if: ${{ github.ref == 'refs/heads/master' }}
 
       - name: Create parameters.env [dev]
-        uses: SpicyPizza/create-envfile@v1.2
-        with:
-          envkey_S3Bucket: ${{ secrets.HYPERDRIVE_DEV_BUCKET }}
-          envkey_Stage: dev
-          envkey_ApiUrl: api.dev.forcepu.sh
-          envkey_CertArn: ${{ secrets.DEV_CERT_ARN }}
-          envkey_HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
-          envkey_UserPoolArn: ${{ secrets.DEV_USER_POOL_ARN }}
-          directory: src/api
-          file_name: dev-parameters.env
+        env:
+          EmailUser: ${{ secrets.EMAIL_USER }}
+          EmailPass: ${{ secrets.EMAIL_PASS }}
+          StripePriceId: ${{ secrets.DEV_STRIPE_PRICE_ID }}
+          StripeSecretKey: ${{ secrets.DEV_STRIPE_SECRET_KEY }}
+          # Webhook signing key secret for endpoint (not for CLI)
+          StripeWebhookSecret: ${{ secrets.DEV_STRIPE_WEBHOOK_SECRET }}
+          S3Bucket: ${{ secrets.HYPERDRIVE_DEV_BUCKET }}
+          Stage: dev
+          ApiUrl: api.dev.forcepu.sh
+          CertArn: ${{ secrets.DEV_CERT_ARN }}
+          HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
+          UserPoolArn: ${{ secrets.DEV_USER_POOL_ARN }}
+        run: |
+          echo "
+          EmailUser=${EmailUser}
+          EmailPass=${EmailPass}
+          StripePriceId=${StripePriceId}
+          StripeSecretKey=${StripeSecretKey}
+          StripeWebhookSecret=${StripeWebhookSecret}
+          S3Bucket=${S3Bucket}
+          Stage=${Stage}
+          ApiUrl=${ApiUrl}
+          CertArn=${CertArn}
+          HostedZoneId=${HostedZoneId}
+          UserPoolArn=${UserPoolArn}
+          " >> src/api/dev-parameters.env
         if: ${{ github.ref != 'refs/heads/master' }}
 
       - name: Build API
