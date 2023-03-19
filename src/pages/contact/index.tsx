@@ -89,7 +89,7 @@ const ContactPage = () => {
     setSubjectStatus('')
     setMessageStatus('')
     setContactLoading(true);
-    const { idToken } = loggedIn.signInUserSession;
+    const jwtToken = loggedIn?.signInUserSession?.idToken?.jwtToken;
     const url = `${getApiUrl()}/contact`;
     if (sentMessages.has(message)) {
       onSuccess();
@@ -97,7 +97,7 @@ const ContactPage = () => {
     } else {
       fetch(url, {
         method: "POST",
-        headers: { Authorization: idToken.jwtToken },
+        headers: { Authorization: jwtToken },
         body: JSON.stringify({ subject, message }),
       })
         .then((response) => {

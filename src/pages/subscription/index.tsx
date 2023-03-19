@@ -41,11 +41,11 @@ const SubscriptionPage = () => {
       return;
     }
     setCheckoutLoading(true);
-    const { idToken } = loggedIn.signInUserSession;
+    const jwtToken = loggedIn?.signInUserSession?.idToken?.jwtToken;
     const url = `${getApiUrl()}/checkout`;
     fetch(url, {
       method: "POST",
-      headers: { Authorization: idToken.jwtToken },
+      headers: { Authorization: jwtToken },
     })
       .then((response) => {
         if (!response.ok) {
@@ -60,11 +60,11 @@ const SubscriptionPage = () => {
 
   const onBilling = () => {
     setBillingLoading(true);
-    const { idToken } = loggedIn.signInUserSession;
+    const jwtToken = loggedIn?.signInUserSession?.idToken?.jwtToken;
     const url = `${getApiUrl()}/billing`;
     fetch(url, {
       method: "POST",
-      headers: { Authorization: idToken.jwtToken },
+      headers: { Authorization: jwtToken },
     })
       .then((response) => {
         if (!response.ok) {

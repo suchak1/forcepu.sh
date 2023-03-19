@@ -185,11 +185,11 @@ const Layout = ({ children }: LayoutProps) => {
 
   const onAcknowledge = () => {
     setAcknowledgeLoading(true);
-    const { idToken } = loggedIn.signInUserSession;
+    const jwtToken = loggedIn?.signInUserSession?.idToken?.jwtToken;
     const url = `${getApiUrl()}/account`;
     fetch(url, {
       method: "POST",
-      headers: { Authorization: idToken.jwtToken },
+      headers: { Authorization: jwtToken },
       body: JSON.stringify({ permissions: { read_disclaimer: true } }),
     })
       .then((response) => response.json())

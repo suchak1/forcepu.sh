@@ -98,11 +98,11 @@ export const getAccount = (
 ) => () => {
   if (loggedIn) {
     setAccountLoading(true);
-    const { idToken } = loggedIn.signInUserSession;
+    const jwtToken = loggedIn?.signInUserSession?.idToken?.jwtToken;
     const url = `${getApiUrl()}/account`;
     fetch(url, {
       method: "GET",
-      headers: { Authorization: idToken.jwtToken },
+      headers: { Authorization: jwtToken },
     })
       .then((response) => response.json())
       .then((data) => setAccount(data))
@@ -171,8 +171,8 @@ export const linspace = (
       (_, idx) =>
         start +
         idx *
-          ((end - (includeEndpoint ? 0 : end / numPoints) - start) /
-            (numPoints - 1))
+        ((end - (includeEndpoint ? 0 : end / numPoints) - start) /
+          (numPoints - 1))
     );
 
 // https://math.stackexchange.com/a/73242
