@@ -77,7 +77,7 @@ def post_checkout(event):
     stripe_lookup = user.stripe
     customer_id = user.customer_id
 
-    if customer_id:
+    if customer_id and customer_id != '_':
         # check if user has active subscription to product
         # if so, throw error saying already subscribed
         # customer = stripe.Customer.retrieve(
@@ -97,9 +97,6 @@ def post_checkout(event):
             # create checkout session table
             # That way, api can return existing session instead of creating new one.
             # Unexpire session? - but would have to manage prices make sure current priceid
-
-            # Batch queue for Stripe calls of same type?
-            # batch all get price calls from last second into same Stripe call?
     else:
         name = claims['name']
         customer = stripe.Customer.create(email=email, name=name)
