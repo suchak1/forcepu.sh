@@ -312,6 +312,29 @@ Resources:
       Dockerfile: subscribe/Dockerfile
       DockerContext: ./
       DockerTag: python3.8-v1
+  NotifyFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref UsersTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UsersTable
+      PackageType: Image
+      ImageConfig:
+        Command: ["app.post_notify"]
+      Events:
+        PostNotify:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /notify
+            Method: post
+            RestApiId: !Ref ApiGatewayApi
+    Metadata:
+      Dockerfile: notify/Dockerfile
+      DockerContext: ./
+      DockerTag: python3.8-v1
   CheckoutFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:

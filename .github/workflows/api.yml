@@ -56,7 +56,7 @@ jobs:
 
       - name: Create parameters.env [dev]
         env:
-          EmailUser: ${{ secrets.EMAIL_USER }}
+          EmailUser: ${{ secrets.DEV_EMAIL_USER }}
           EmailPass: ${{ secrets.EMAIL_PASS }}
           StripePriceId: ${{ secrets.DEV_STRIPE_PRICE_ID }}
           StripeSecretKey: ${{ secrets.DEV_STRIPE_SECRET_KEY }}
