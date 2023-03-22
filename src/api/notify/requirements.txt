@@ -1,1 +1,2 @@
 pynamodb == 5.2.3
+cryptography == 39.0.0

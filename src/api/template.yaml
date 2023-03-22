@@ -39,6 +39,9 @@ Parameters:
   EmailPass:
     Type: "String"
     NoEcho: true
+  Salt:
+    Type: "String"
+    NoEcho: true
 
 Globals:
   Function:
@@ -317,6 +320,7 @@ Resources:
     Properties:
       Environment:
         Variables:
+          SALT: !Ref Salt
           TABLE_NAME: !Ref UsersTable
       Policies:
         - DynamoDBCrudPolicy:

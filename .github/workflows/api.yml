@@ -38,6 +38,7 @@ jobs:
           CertArn: ${{ secrets.CERT_ARN }}
           HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
           UserPoolArn: ${{ secrets.USER_POOL_ARN }}
+          Salt: ${{ secrets.SALT }}
         run: |
           echo "
           EmailUser=${EmailUser}
@@ -51,6 +52,7 @@ jobs:
           CertArn=${CertArn}
           HostedZoneId=${HostedZoneId}
           UserPoolArn=${UserPoolArn}
+          Salt=${Salt}
           " >> src/api/parameters.env
         if: ${{ github.ref == 'refs/heads/master' }}
 
@@ -68,6 +70,7 @@ jobs:
           CertArn: ${{ secrets.DEV_CERT_ARN }}
           HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
           UserPoolArn: ${{ secrets.DEV_USER_POOL_ARN }}
+          Salt: ${{ secrets.SALT }}
         run: |
           echo "
           EmailUser=${EmailUser}
@@ -81,6 +84,7 @@ jobs:
           CertArn=${CertArn}
           HostedZoneId=${HostedZoneId}
           UserPoolArn=${UserPoolArn}
+          Salt=${Salt}
           " >> src/api/dev-parameters.env
         if: ${{ github.ref != 'refs/heads/master' }}
 
