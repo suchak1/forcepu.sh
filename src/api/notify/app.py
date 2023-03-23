@@ -60,6 +60,12 @@ def post_notify(event):
     req_body = json.loads(event['body'])
     signal = transform_signal(req_body)
     # create batches of 100 or 1000 users
+    # don't use page iter! too much work and can mess up deserialization
+    # just use result iter and for loop if need batching
+    # use multiprocessing
+    # use pool imap for iterator
+    # use max timeout for lambda to avoid timing out
+    # use 10gb (10,240 MB) for max cpu
     # try:
     #     notify_email
     # except:
@@ -81,6 +87,7 @@ def post_notify(event):
 
 
 def notify_email():
+    # use multiprocessing
     # verify signals email [dev] and [prod] on SES and use SES! - free for first 64k emails per month
     # store last notified for each notification type in db
     # user.notifications.email.last_time
