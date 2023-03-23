@@ -62,8 +62,15 @@ def post_notify(event):
     # create batches of 100 or 1000 users
     # don't use page iter! too much work and can mess up deserialization
     # just use result iter and for loop if need batching
-    # use multiprocessing
+    # use multiprocessing for aws lambda
+    # https://pypi.org/project/lambda-multiprocessing/
+    # https://blog.ruanbekker.com/blog/2019/02/19/parallel-processing-on-aws-lambda-with-python-using-multiprocessing/
+    # https://aws.amazon.com/blogs/compute/parallel-processing-in-python-with-aws-lambda/
+    # https://medium.com/tech-carnot/understanding-multiprocessing-in-aws-lambda-with-python-6f50c11d57e4
+    # https://stackoverflow.com/questions/56329799/how-to-emulate-multiprocessing-pool-map-in-aws-lambda
+    # https://stackoverflow.com/questions/63628262/python-3-asyncio-with-aioboto3-seems-sequential/63633248#63633248
     # use pool imap for iterator
+    # https://stackoverflow.com/a/44502827
     # use max timeout for lambda to avoid timing out
     # use 10gb (10,240 MB) for max cpu
     # try:
@@ -89,12 +96,30 @@ def post_notify(event):
 def notify_email():
     # use multiprocessing
     # verify signals email [dev] and [prod] on SES and use SES! - free for first 64k emails per month
+    # https://repost.aws/knowledge-center/lambda-send-email-ses
+    # https://iamkanikamodi.medium.com/write-a-sample-lambda-to-send-emails-using-ses-in-aws-a2e903d9129e
     # store last notified for each notification type in db
-    # user.notifications.email.last_time
+    # user.notifications.email.last_sent
     # don't send if already notified for that signal date
     # or already notified in the last 12 hours if storing full time
     # BCC multiple users / batch?
-    # make sure emails have unsubscribe link - link to forcepu.sh/alerts?
+    # for template, use image of bull or bear based on signal, add green or red arrow?, add btc coin
+    # Pictures/bear_bull/bull-and-bear-facing-each-other.jpg
+    # Pictures/btc/bitcoin.jpeg
+    # use photoshop or gimp to create png w transparent bg
+    # don't use emojis in subject line - bad for click/open rate, looks like spam
+    # summarize data from signal (date, day, signal, asset) in sentence or json obj
+    # make sure emails have unsubscribe link - link to {dev.}forcepu.sh/alerts?
+
+    # templates
+    # https://stripo.email/templates/ > Type > Alerts & Notifications
+    # https://beefree.io/templates/notification/
+    # https://unlayer.com/templates/something-new
+    # https://litmus.com/community/templates/topic/33-e-commerce-templates
+    # https://litmus.com/community/templates/topic/34-account-management-templates
+    # https://beefree.io/templates/notification/
+    # https://unlayer.com/templates > Usage > Notification
+
     pass
 
 
