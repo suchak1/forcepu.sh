@@ -42,6 +42,12 @@ Parameters:
   Salt:
     Type: "String"
     NoEcho: true
+  CryptPass:
+    Type: "String"
+    NoEcho: true
+  EmitSecret:
+    Type: "String"
+    NoEcho: true
 
 Globals:
   Function:
@@ -321,6 +327,8 @@ Resources:
       Environment:
         Variables:
           SALT: !Ref Salt
+          CRYPT_PASS: !Ref CryptPass
+          EMIT_SECRET: !Ref EmitSecret
           TABLE_NAME: !Ref UsersTable
       Policies:
         - DynamoDBCrudPolicy:

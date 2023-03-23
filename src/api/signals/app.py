@@ -3,7 +3,7 @@ import json
 import boto3
 from datetime import datetime, timedelta, timezone
 from shared.models import query_by_api_key, UserModel
-from shared.utils import options, error, enough_time_has_passed, res_headers
+from shared.utils import options, error, enough_time_has_passed, res_headers, transform_signal
 
 s3 = boto3.client('s3')
 
@@ -83,16 +83,9 @@ def get_signals(event):
         item = {}
         for idx, col in enumerate(cols):
             key = keys[idx]
-            if key == 'Time':
-                key = 'Date'
-            elif key == 'Sig':
-                key = 'Signal'
             item[key] = col
-        item['Day'] = datetime.strptime(
-            item['Date'], '%Y-%m-%d').strftime('%A')[:3]
-        item['Signal'] = 'BUY' if item['Signal'] == 'True' else 'SELL'
-        item['Asset'] = 'BTC'
-        response['data'].append(item)
+        signal = transform_signal(item)
+        response['data'].append(signal)
     # Time -> Date
     # Sig -> Signal
 

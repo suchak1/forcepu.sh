@@ -8,7 +8,7 @@ from shared.models import query_by_api_key, UserModel
 from datetime import datetime, timedelta, timezone
 from pynamodb.attributes import UTCDateTimeAttribute
 from shared.utils import \
-    verify_user, options, \
+    verify_user, options, transform_signal, \
     error, enough_time_has_passed, \
     past_date, res_headers
 
@@ -42,52 +42,36 @@ def handle_notify(event, _):
 
 
 def post_notify(event):
-    salt = os.environ['SALT']
-    # first get user by api key
+    salt = os.environ['SALT'].encode('UTF-8')
+    password = os.environ['CRYPT_PASS'].encode('UTF-8')
+    emit_secret = os.environ['EMIT_SECRET']
+
     req_headers = event['headers']
-    if 'emit_secret' not in req_headers:
-        sleep(10)
-        return error(401, 'Provide a valid emit secret.')
-    encrypted = req_headers['emit_secret']
+    header = 'emit_secret'
+    encrypted = req_headers[header] if header in req_headers else ''
     cryptographer = Cryptographer(password, salt)
-    if not cryptographer.decrypt(encrypted) == emit_secret:
+    try:
+        decrypted = cryptographer.decrypt(encrypted).decode('UTF-8')
+        if not decrypted == emit_secret:
+            raise Exception()
+    except:
         sleep(10)
         return error(401, 'Provide a valid emit secret.')
+    req_body = json.loads(event['body'])
+    signal = transform_signal(req_body)
+    # create batches of 100 or 1000 users
+    # try:
+    #     notify_email
+    # except:
+    #     log
 
-    obj = s3.get_object(
-        Bucket=os.environ['S3_BUCKET'], Key='models/latest/signals.csv')
+    # try:
+    #     notify_webhook
+    # except:
+    #     log
 
-    days_in_a_week = 7
-    lines = [line.decode('utf-8') for line in list(obj['Body'].iter_lines())]
-    header = lines[0]
-    rows = lines[-days_in_a_week:]
-    keys = header.split(',')
-
-    response = {'message': None, 'data': []}
-    for row in rows:
-        cols = row.split(',')
-        item = {}
-        for idx, col in enumerate(cols):
-            key = keys[idx]
-            if key == 'Time':
-                key = 'Date'
-            elif key == 'Sig':
-                key = 'Signal'
-            item[key] = col
-        item['Day'] = datetime.strptime(
-            item['Date'], '%Y-%m-%d').strftime('%A')[:3]
-        item['Signal'] = 'BUY' if item['Signal'] == 'True' else 'SELL'
-        item['Asset'] = 'BTC'
-        response['data'].append(item)
-    # Time -> Date
-    # Sig -> Signal
-
-    # schema is list from oldest to newest
-    # 1 week - 7 items
-    # each item {Date: 2022-06-23, Day: Mon, Tue, (3 letter slice) Signal: BUY or SELL}
-    # obj['Body'].read()
     status_code = 200
-    response['message'] = f'You have {remaining} requests left / {duration_days} day(s).'
+    response = {['message']: f'Notifications delivered.'}
     body = json.dumps(response)
     return {
         "statusCode": status_code,
@@ -97,10 +81,19 @@ def post_notify(event):
 
 
 def notify_email():
+    # verify signals email [dev] and [prod] on SES and use SES! - free for first 64k emails per month
+    # store last notified for each notification type in db
+    # user.notifications.email.last_time
+    # don't send if already notified for that signal date
+    # or already notified in the last 12 hours if storing full time
+    # BCC multiple users / batch?
+    # make sure emails have unsubscribe link - link to forcepu.sh/alerts?
     pass
 
 
 def notify_webhook():
+    # RETURN LIST to account for future assets
+    # will only be one-item list for now (just BTC)
     pass
 
 
