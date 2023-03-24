@@ -428,6 +428,8 @@ Resources:
           AttributeType: S
         - AttributeName: in_beta
           AttributeType: N
+        - AttributeName: subscribed
+          AttributeType: N
       KeySchema:
         - AttributeName: email
           KeyType: HASH
@@ -447,6 +449,12 @@ Resources:
         - IndexName: in_beta_index
           KeySchema:
             - AttributeName: in_beta
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: subscribed_index
+          KeySchema:
+            - AttributeName: subscribed
               KeyType: HASH
           Projection:
             ProjectionType: ALL

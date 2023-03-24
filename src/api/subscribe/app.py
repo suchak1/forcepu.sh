@@ -83,7 +83,7 @@ def post_checkout(event):
         # customer = stripe.Customer.retrieve(
         #     customer_id, expand=['subscriptions']
         # )
-        if stripe_lookup.subscription['active']:
+        if user.subscribed:
             return error(400, 'User is already subscribed.')
             # use product_id or name that is passed in
             # don't take price_id from req, use from backend (make get /subscribe endpoint w all prices, products)
@@ -238,14 +238,13 @@ def post_subscribe(event, _):
             return response
         sub_is_active = sub['status'] == 'active'
         stripe_lookup = user.stripe
-        sub_was_active = stripe_lookup.subscription['active']
+        sub_was_active = bool(user.subscribed)
 
         if sub_was_active != sub_is_active:
             if not sub_is_active:
                 stripe_lookup.checkout['created'] = UTCDateTimeAttribute(
                 ).serialize(past_date)
-            stripe_lookup.subscription['active'] = sub_is_active
-            user.update(actions=[UserModel.stripe.set(stripe_lookup)])
+            user.update(actions=[UserModel.subscribed.set(int(sub_is_active))])
 
     return response
 

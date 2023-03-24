@@ -33,13 +33,8 @@ class Checkout(MapAttribute):
     created = UTCDateTimeAttribute(default=past_date)
 
 
-class Subscription(MapAttribute):
-    active = BooleanAttribute(default=False)
-
-
 class Stripe(MapAttribute):
     checkout = MapAttribute(default=Checkout)
-    subscription = MapAttribute(default=Subscription)
 
 
 class APIKeyIndex(GlobalSecondaryIndex):
@@ -87,6 +82,21 @@ class CustomerIdIndex(GlobalSecondaryIndex):
     customer_id = UnicodeAttribute(hash_key=True)
 
 
+class SubscribedIndex(GlobalSecondaryIndex):
+    """
+    This class represents a global secondary index
+    """
+    class Meta:
+        # index_name is optional, but can be provided to override the default name
+        index_name = 'subscribed_index'
+        # All attributes are projected
+        projection = AllProjection()
+
+    # This attribute is the hash key for the index
+    # Note that this attribute must also exist in the model
+    subscribed = NumberAttribute(hash_key=True)
+
+
 class UserModel(Model):
     """
     A DynamoDB User
@@ -97,6 +107,7 @@ class UserModel(Model):
     api_key = UnicodeAttribute(default=get_api_key)
     permissions = MapAttribute(default=Permissions)
     in_beta = NumberAttribute(default=0)
+    subscribed = NumberAttribute(default=0)
     stripe = MapAttribute(default=Stripe)
     access_queue = ListAttribute(
         of=UTCDateTimeAttribute,
@@ -106,3 +117,4 @@ class UserModel(Model):
     api_key_index = APIKeyIndex()
     customer_id_index = CustomerIdIndex()
     in_beta_index = InBetaIndex()
+    subscribed_index = SubscribedIndex()
