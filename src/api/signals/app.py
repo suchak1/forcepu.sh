@@ -28,7 +28,7 @@ def get_signals(event):
         return error(401, 'Provide a valid API key.')
     user = query_results[0]
 
-    if not (user.permissions.in_beta or user.stripe.subscription['active']):
+    if not (user.in_beta or user.stripe.subscription['active']):
         return error(402, 'This endpoint is for subscribers only.')
 
     # Notes: Instead of using usage plan,

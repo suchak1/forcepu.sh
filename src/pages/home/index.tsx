@@ -277,7 +277,7 @@ const Page = () => {
   const [haveNewSignal, setHaveNewSignal] = useState(false);
   const [quotaReached, setQuotaReached] = useState(false);
   const loading = previewLoading || accountLoading || loginLoading;
-  const inBeta = loggedIn && (account?.permissions?.in_beta || account?.stripe?.subscription?.active);
+  const inBeta = loggedIn && (account?.in_beta || account?.stripe?.subscription?.active);
   const chartRef = useRef();
 
   useEffect(() => {
