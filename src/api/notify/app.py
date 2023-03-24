@@ -71,9 +71,9 @@ def post_notify(event):
     # https://stackoverflow.com/questions/63628262/python-3-asyncio-with-aioboto3-seems-sequential/63633248#63633248
     # use pool imap for iterator
     # https://stackoverflow.com/a/44502827
-    # use max timeout for lambda to avoid timing out
-    # use 10gb (10,240 MB) for max cpu
-    # try Notifications mapattribute e.g. user.notifications.email.enabled, user.notifications.email.last_sent
+    # check that memory and timeout are being respected
+    # Notifications mapattribute e.g. user.notifications.email.enabled, user.notifications.email.last_sent
+    # or Alerts e.g. user.alerts.email.enabled, user.alerts.email.last_sent
     # time for index without
     # query in beta and/or sub index - time is 10s for 100k users (1s/10k users)
     # can decrease query time by using 4-6 indices instead of 2
