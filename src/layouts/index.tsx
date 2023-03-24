@@ -31,6 +31,7 @@ import Gym from "@/pages/gym";
 import TOS, { TOSTitleText } from "@/pages/tos";
 import Privacy from "@/pages/privacy";
 import Home from "@/pages/home";
+import Alerts from "@/pages/alerts";
 
 const { darkAlgorithm } = theme;
 
@@ -115,6 +116,7 @@ const pages: string[] = [
   "docs",
   "algorithm", // alternative name: research
   "subscription",
+  "alerts",
   "contact"
 ];
 
@@ -363,6 +365,7 @@ const Layout = ({ children }: LayoutProps) => {
             <Route path="/gym" element={<Gym />} />
             <Route path="/tos" element={<TOS />} />
             <Route path="/privacy" element={<Privacy />} />
+            <Route path="/alerts" element={<Alerts />} />
             {/* This is 404 redirect to home page for unknown routes */}
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>

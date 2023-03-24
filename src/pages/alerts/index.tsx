@@ -186,7 +186,9 @@ const ContactPage = () => {
   return (
     <>
       <Title>Notifications</Title>
-
+      {/* Use Toggle or Segmented! to turn on or off notifications */}
+      {/* red alert if not loggedIn- exact message in keep */}
+      {/* yellow alert if subscription not active or not in beta - exact message in keep */}
       {
         Object.keys(resultProps).length ?
           <div style={contentStyle}>

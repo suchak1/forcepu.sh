@@ -96,6 +96,7 @@ def post_notify(event):
 def notify_email():
     # use multiprocessing
     # verify signals email [dev] and [prod] on SES and use SES! - free for first 64k emails per month
+    # disable receiving emails at signals address
     # https://repost.aws/knowledge-center/lambda-send-email-ses
     # https://iamkanikamodi.medium.com/write-a-sample-lambda-to-send-emails-using-ses-in-aws-a2e903d9129e
     # store last notified for each notification type in db
@@ -107,6 +108,7 @@ def notify_email():
     # Pictures/bear_bull/bull-and-bear-facing-each-other.jpg
     # Pictures/btc/bitcoin.jpeg
     # use photoshop or gimp to create png w transparent bg
+    # template will have dark background (black or #1d1d1d/#1f1f1f) to match site
     # don't use emojis in subject line - bad for click/open rate, looks like spam
     # summarize data from signal (date, day, signal, asset) in sentence or json obj
     # make sure emails have unsubscribe link - link to {dev.}forcepu.sh/alerts?
