@@ -84,7 +84,7 @@ class CustomerIdIndex(GlobalSecondaryIndex):
 
     # This attribute is the hash key for the index
     # Note that this attribute must also exist in the model
-    customer_id = UnicodeAttribute(default="", hash_key=True)
+    customer_id = UnicodeAttribute(hash_key=True)
 
 
 class UserModel(Model):
@@ -102,7 +102,7 @@ class UserModel(Model):
         of=UTCDateTimeAttribute,
         default=get_default_access_queue
     )
-    customer_id = UnicodeAttribute(default="")
+    customer_id = UnicodeAttribute(default="_")
     api_key_index = APIKeyIndex()
     customer_id_index = CustomerIdIndex()
     in_beta_index = InBetaIndex()
