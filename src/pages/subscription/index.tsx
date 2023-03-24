@@ -30,7 +30,7 @@ const SubscriptionPage = () => {
   const [billingLoading, setBillingLoading] = useState(false);
   const [searchParams] = useSearchParams();
   const showSuccessAlert = searchParams.get('success')?.toLowerCase() === 'true';
-  const subStatus = account?.stripe?.subscription?.active;
+  const subStatus = account?.subscribed;
   const subIsActive = subStatus || showSuccessAlert;
 
   // const checkoutSessionId = searchParams.get('session_id')
