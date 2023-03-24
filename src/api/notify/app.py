@@ -73,6 +73,18 @@ def post_notify(event):
     # https://stackoverflow.com/a/44502827
     # use max timeout for lambda to avoid timing out
     # use 10gb (10,240 MB) for max cpu
+    # try Notifications mapattribute e.g. user.notifications.email.enabled, user.notifications.email.last_sent
+    # time for index without
+    # query in beta and/or sub index - time is 10s for 100k users (1s/10k users)
+    # can decrease query time by using 4-6 indices instead of 2
+    # 1. in_beta partition, notify_email range
+    # 2. in_beta partition, notify_webhook range
+    # 3. subscribed partition, notify_email range
+    # 4. subscribed partition, notify_webhook range
+    # etc for notify_sms
+    # make sure not to double dip when using both indices
+    # (DON'T NOTIFY SAME USER TWICE IF THEY SHOW UP IN BOTH SEARCHES)
+
     # try:
     #     notify_email
     # except:
