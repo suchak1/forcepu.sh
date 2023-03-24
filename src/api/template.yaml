@@ -427,7 +427,7 @@ Resources:
         - AttributeName: customer_id
           AttributeType: S
         - AttributeName: in_beta
-          AttributeType: BOOL
+          AttributeType: N
       KeySchema:
         - AttributeName: email
           KeyType: HASH

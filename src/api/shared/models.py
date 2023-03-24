@@ -2,7 +2,7 @@ import os
 import secrets
 from pynamodb.models import Model
 from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
-from pynamodb.attributes import UnicodeAttribute, MapAttribute, BooleanAttribute, ListAttribute, UTCDateTimeAttribute
+from pynamodb.attributes import UnicodeAttribute, MapAttribute, BooleanAttribute, ListAttribute, UTCDateTimeAttribute, NumberAttribute
 from .utils import past_date
 
 
@@ -69,7 +69,7 @@ class InBetaIndex(GlobalSecondaryIndex):
 
     # This attribute is the hash key for the index
     # Note that this attribute must also exist in the model
-    in_beta = BooleanAttribute(hash_key=True)
+    in_beta = NumberAttribute(hash_key=True)
 
 
 class CustomerIdIndex(GlobalSecondaryIndex):
@@ -96,7 +96,7 @@ class UserModel(Model):
     email = UnicodeAttribute(hash_key=True)
     api_key = UnicodeAttribute(default=get_api_key)
     permissions = MapAttribute(default=Permissions)
-    in_beta = BooleanAttribute(default=False)
+    in_beta = NumberAttribute(default=0)
     stripe = MapAttribute(default=Stripe)
     access_queue = ListAttribute(
         of=UTCDateTimeAttribute,
