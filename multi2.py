@@ -3,7 +3,7 @@ from multiprocessing import Process, Pipe
 
 
 def gen(num):
-    for i in range(num):
+    for i in range(1, num+1):
         yield i
 
 
@@ -18,7 +18,6 @@ def process_user(conn):
 
 
 def process():
-    # gen_res = gen(4)
     # create a pipe for communication
     parent_conn, child_conn = Pipe(duplex=True)
 
@@ -29,7 +28,7 @@ def process():
     process.start()
 
     # Don't send 0 otherwise child while loop will end
-    for i in range(1, 7):
+    for i in gen(4):
         parent_conn.send(i)
         print(parent_conn.recv())
     parent_conn.send(None)
