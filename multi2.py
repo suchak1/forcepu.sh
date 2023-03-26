@@ -13,26 +13,31 @@ def process_user(conn):
     to an EC2 instance
     """
     while (val := conn.recv()):
-        print(val)
-        conn.send(val)
+        conn.send(val*2)
 
 
 def process():
-    # create a pipe for communication
-    parent_conn, child_conn = Pipe(duplex=True)
+    cpus = os.cpu_count()
+    processes = []
+    for _ in range(cpus):
+        # create a pipe for communication
+        parent_conn, child_conn = Pipe(duplex=True)
 
-    # create the process, pass instance and connection
-    process = Process(target=process_user,
-                      args=(child_conn,))
-
-    process.start()
+        # create the process, pass instance and connection
+        process = Process(target=process_user,
+                          args=(child_conn,))
+        processes.append({'process': process, 'conn': parent_conn})
+        process.start()
 
     # Don't send 0 otherwise child while loop will end
-    for i in gen(4):
-        parent_conn.send(i)
-        print(parent_conn.recv())
-    parent_conn.send(None)
-    process.join()
+    for i in gen(20):
+        cpu = i % cpus
+        processes[cpu]['conn'].send(i)
+        print(processes[cpu]['conn'].recv())
+
+    for process in processes:
+        process['conn'].send(None)
+        process['process'].join()
     return
 
 
