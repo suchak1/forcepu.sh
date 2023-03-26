@@ -50,10 +50,9 @@ def create_process():
 def process():
     cpus = os.cpu_count()
     processes = [create_process() for _ in range(cpus)]
-
     # Don't send 0 otherwise child while loop will end
-    [process_item(processes[idx % cpus], item)
-     for idx, item in enumerate(gen(100000))]
+    items = enumerate(gen(100000))
+    [process_item(processes[idx % cpus], item) for idx, item in items]
     [end_process(process) for process in processes]
     return
 
