@@ -2,6 +2,7 @@ import os
 import json
 import base64
 from time import sleep
+from multiprocessing import Process, Pipe
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 from shared.models import query_by_api_key, UserModel
@@ -41,6 +42,48 @@ def handle_notify(event, _):
     return response
 
 
+class Processor:
+    # def __init__(self, iterable):
+    #     self.items = enumerate(iterable)
+
+    def run_process(self, conn):
+        while (val := conn.recv()):
+            conn.send(val*2)
+
+    def await_process(self, process):
+        if process['awaiting']:
+            process['conn'].recv()
+            process['awaiting'] = False
+
+    def end_process(self, process):
+        self.await_process(process)
+        process['conn'].send(None)
+        process['process'].join()
+
+    def process_item(self, process, item):
+        self.await_process(process)
+        process['conn'].send(item)
+        process['awaiting'] = True
+
+    def create_process(self):
+        # create a pipe for communication
+        parent_conn, child_conn = Pipe(duplex=True)
+        # create the process, pass instance and connection
+        process = Process(target=self.run_process, args=(child_conn,))
+        enhanced = {'process': process, 'conn': parent_conn, 'awaiting': False}
+        process.start()
+        return enhanced
+
+    def process(self, items):
+        cpus = os.cpu_count()
+        processes = [self.create_process() for _ in range(cpus)]
+        # Don't send 0 otherwise child while loop will end
+        [self.process_item(processes[idx % cpus], item)
+         for idx, item in items]
+        [self.end_process(process) for process in processes]
+        return set()
+
+
 def post_notify(event):
     salt = os.environ['SALT'].encode('UTF-8')
     password = os.environ['CRYPT_PASS'].encode('UTF-8')
@@ -60,16 +103,16 @@ def post_notify(event):
     req_body = json.loads(event['body'])
     signal = transform_signal(req_body)
     cond = (
-        UserModel.alerts['email']['enabled'] == True
+        UserModel.alerts['email'] == True
     ) | (
-        UserModel.alerts['sms']['enabled'] == True
+        UserModel.alerts['sms'] == True
     ) | (
-        UserModel.alerts['webhook']['enabled'] == True
+        UserModel.alerts['webhook'] == True
     )
     notified = set()
     users_in_beta = UserModel.in_beta_index.query(1, filter_condition=cond)
-    for user in users_in_beta:
-        res = notify_user(user)
+    # processor = Processor(users_in_beta)
+    notified = Processor().process(users_in_beta)
     users_subscribed = UserModel.subscribed_index.query(
         1, filter_condition=cond)
 

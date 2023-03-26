@@ -23,15 +23,11 @@ def get_default_access_queue():
     return [past_date] * 5
 
 
-class Alert(MapAttribute):
-    last_sent: UTCDateTimeAttribute(default=past_date)
-    enabled: BooleanAttribute(default=False)
-
-
 class Alerts(MapAttribute):
-    email = MapAttribute(default=Alert)
-    webhook = MapAttribute(default=Alert)
-    sms = MapAttribute(default=Alert)
+    email = BooleanAttribute(default=False)
+    webhook = BooleanAttribute(default=False)
+    sms = BooleanAttribute(default=False)
+    last_sent: UTCDateTimeAttribute(default=past_date)
 
 
 class Permissions(MapAttribute):
