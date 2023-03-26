@@ -8,7 +8,7 @@ def gen(num):
         yield i
 
 
-def process_event(conn):
+def run_process(conn):
     """
     Finds total size of the EBS volumes attached
     to an EC2 instance
@@ -30,12 +30,18 @@ def end_process(process):
     process['process'].join()
 
 
+def process_item(process, item):
+    await_process(process)
+    # print('process: ', cpu, 'awaiting: ', process['awaiting'])
+    process['conn'].send(item)
+    process['awaiting'] = True
+
+
 def create_process():
     # create a pipe for communication
     parent_conn, child_conn = Pipe(duplex=True)
-
     # create the process, pass instance and connection
-    process = Process(target=process_event, args=(child_conn,))
+    process = Process(target=run_process, args=(child_conn,))
     enhanced = {'process': process, 'conn': parent_conn, 'awaiting': False}
     process.start()
     return enhanced
@@ -46,15 +52,8 @@ def process():
     processes = [create_process() for _ in range(cpus)]
 
     # Don't send 0 otherwise child while loop will end
-    for idx, item in enumerate(gen(100000)):
-        cpu = idx % cpus
-        process = processes[cpu]
-        # print('process: ', cpu, 'awaiting: ', process['awaiting'])
-        await_process(process)
-        # print('process: ', cpu, 'awaiting: ', process['awaiting'])
-        process['conn'].send(item)
-        process['awaiting'] = True
-
+    [process_item(processes[idx % cpus], item)
+     for idx, item in enumerate(gen(100000))]
     [end_process(process) for process in processes]
     return
 
