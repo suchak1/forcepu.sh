@@ -66,7 +66,10 @@ def post_notify(event):
     ) | (
         UserModel.alerts['webhook']['enabled'] == True
     )
+    notified = set()
     users_in_beta = UserModel.in_beta_index.query(1, filter_condition=cond)
+    for user in users_in_beta:
+        res = notify_user(user)
     users_subscribed = UserModel.subscribed_index.query(
         1, filter_condition=cond)
 
