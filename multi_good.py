@@ -33,14 +33,18 @@ def process():
 
     def await_process(process):
         if process['awaiting']:
+            # print(process['conn'].recv())
             process['conn'].recv()
             process['awaiting'] = False
     # Don't send 0 otherwise child while loop will end
     for i in gen(100000):
         cpu = i % cpus
-        await_process(processes[cpu])
-        processes[cpu]['conn'].send(i)
-        processes[cpu]['awaiting'] = True
+        process = processes[cpu]
+        # print('process: ', cpu, 'awaiting: ', process['awaiting'])
+        await_process(process)
+        # print('process: ', cpu, 'awaiting: ', process['awaiting'])
+        process['conn'].send(i)
+        process['awaiting'] = True
 
     for process in processes:
         await_process(process)
