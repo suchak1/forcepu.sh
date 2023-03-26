@@ -28,22 +28,22 @@ def process():
         process = Process(target=process_user,
                           args=(child_conn,))
         processes.append(
-            {'process': process, 'conn': parent_conn, 'in_progress': False})
+            {'process': process, 'conn': parent_conn, 'awaiting': False})
         process.start()
 
+    def await_process(process):
+        if process['awaiting']:
+            process['conn'].recv()
+            process['awaiting'] = False
     # Don't send 0 otherwise child while loop will end
     for i in gen(100000):
         cpu = i % cpus
-        if processes[cpu]['in_progress']:
-            processes[cpu]['conn'].recv()
-            processes[cpu]['in_progress'] = False
+        await_process(processes[cpu])
         processes[cpu]['conn'].send(i)
-        processes[cpu]['in_progress'] = True
+        processes[cpu]['awaiting'] = True
 
     for process in processes:
-        if process['in_progress']:
-            process['conn'].recv()
-            process['in_progress'] = False
+        await_process(process)
         process['conn'].send(None)
         process['process'].join()
     return
