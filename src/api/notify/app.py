@@ -59,21 +59,21 @@ def post_notify(event):
         return error(401, 'Provide a valid emit secret.')
     req_body = json.loads(event['body'])
     signal = transform_signal(req_body)
+    cond = (
+        UserModel.alerts['email']['enabled'] == True
+    ) | (
+        UserModel.alerts['sms']['enabled'] == True
+    ) | (
+        UserModel.alerts['webhook']['enabled'] == True
+    )
+    users_in_beta = UserModel.in_beta_index.query(1, filter_condition=cond)
+    users_subscribed = UserModel.subscribed_index.query(
+        1, filter_condition=cond)
+
     # create batches of 100 or 1000 users
     # don't use page iter! too much work and can mess up deserialization
     # just use result iter and for loop if need batching
-    # use multiprocessing for aws lambda
-    # can't use lambda-multiprocessing lib bc no imap implementatino
-    # use pipe duplex messages
-    # use async? possible to give process another message non-blocking?
-    # https://pypi.org/project/lambda-multiprocessing/
-    # https://blog.ruanbekker.com/blog/2019/02/19/parallel-processing-on-aws-lambda-with-python-using-multiprocessing/
-    # https://aws.amazon.com/blogs/compute/parallel-processing-in-python-with-aws-lambda/
-    # https://medium.com/tech-carnot/understanding-multiprocessing-in-aws-lambda-with-python-6f50c11d57e4
-    # https://stackoverflow.com/questions/56329799/how-to-emulate-multiprocessing-pool-map-in-aws-lambda
-    # https://stackoverflow.com/questions/63628262/python-3-asyncio-with-aioboto3-seems-sequential/63633248#63633248
-    # use pool imap for iterator
-    # https://stackoverflow.com/a/44502827
+
     # check that memory and timeout are being respected - print os.cpu_count()
     # query in beta and/or sub index - time is 10s for 100k users (1s/10k users)
     # can decrease query time by using 4-6 indices instead of 2
