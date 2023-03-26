@@ -63,6 +63,9 @@ def post_notify(event):
     # don't use page iter! too much work and can mess up deserialization
     # just use result iter and for loop if need batching
     # use multiprocessing for aws lambda
+    # can't use lambda-multiprocessing lib bc no imap implementatino
+    # use pipe duplex messages
+    # use async? possible to give process another message non-blocking?
     # https://pypi.org/project/lambda-multiprocessing/
     # https://blog.ruanbekker.com/blog/2019/02/19/parallel-processing-on-aws-lambda-with-python-using-multiprocessing/
     # https://aws.amazon.com/blogs/compute/parallel-processing-in-python-with-aws-lambda/
@@ -71,10 +74,7 @@ def post_notify(event):
     # https://stackoverflow.com/questions/63628262/python-3-asyncio-with-aioboto3-seems-sequential/63633248#63633248
     # use pool imap for iterator
     # https://stackoverflow.com/a/44502827
-    # check that memory and timeout are being respected
-    # Notifications mapattribute e.g. user.notifications.email.enabled, user.notifications.email.last_sent
-    # or Alerts e.g. user.alerts.email.enabled, user.alerts.email.last_sent
-    # time for index without
+    # check that memory and timeout are being respected - print os.cpu_count()
     # query in beta and/or sub index - time is 10s for 100k users (1s/10k users)
     # can decrease query time by using 4-6 indices instead of 2
     # 1. in_beta partition, notify_email range
@@ -112,7 +112,7 @@ def notify_email():
     # https://repost.aws/knowledge-center/lambda-send-email-ses
     # https://iamkanikamodi.medium.com/write-a-sample-lambda-to-send-emails-using-ses-in-aws-a2e903d9129e
     # store last notified for each notification type in db
-    # user.notifications.email.last_sent
+    # user.alerts.email.last_sent
     # don't send if already notified for that signal date
     # or already notified in the last 12 hours if storing full time
     # BCC multiple users / batch?
