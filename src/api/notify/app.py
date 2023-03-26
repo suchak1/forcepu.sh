@@ -53,7 +53,8 @@ class Processor:
 
     def await_process(self, process):
         if process['awaiting']:
-            process['conn'].recv()
+            result = process['conn'].recv()
+            self.results.append(result)
             process['awaiting'] = False
 
     def end_process(self, process):
@@ -61,7 +62,7 @@ class Processor:
         process['conn'].send(None)
         process['process'].join()
 
-    def send_item(self, process, item):
+    def process_item(self, process, item):
         self.await_process(process)
         process['conn'].send(item)
         process['awaiting'] = True
@@ -76,13 +77,38 @@ class Processor:
         return enhanced
 
     def run(self, items):
+        self.results = []
         cpus = os.cpu_count()
         processes = [self.create_process() for _ in range(cpus)]
         # Don't send 0 otherwise child while loop will end
-        [self.send_item(processes[idx % cpus], item)
+        [self.process_item(processes[idx % cpus], item)
          for idx, item in enumerate(items)]
         [self.end_process(process) for process in processes]
-        return set()
+        return self.results
+
+
+def notify_user(user):
+    alerts = [
+        {'fx': notify_email, 'type': 'Email'},
+        {'fx': notify_webhook, 'type': 'Webhook'},
+        {'fx': notify_sms, 'type': 'SMS'},
+    ]
+    for alert in alerts:
+        try:
+            now = datetime.now(timezone.utc)
+            reset_duration = timedelta(hours=12)
+            last_notified = user.alerts['last_sent']
+            if enough_time_has_passed(last_notified, now, reset_duration):
+                alert['fx'](user)
+        except:
+            print(f"{alert['type']} alert failed to send for {user.email}")
+    return user.email
+
+
+def skip_users(users, to_skip):
+    for user in users:
+        if user.email not in to_skip:
+            yield user
 
 
 def post_notify(event):
@@ -110,15 +136,14 @@ def post_notify(event):
     ) | (
         UserModel.alerts['webhook'] == True
     )
-    notified = set()
     users_in_beta = UserModel.in_beta_index.query(1, filter_condition=cond)
-    notified = Processor().run(users_in_beta)
+    processor = Processor(notify_user)
+    notified = set(processor.run(users_in_beta))
     users_subscribed = UserModel.subscribed_index.query(
         1, filter_condition=cond)
-
-    # create batches of 100 or 1000 users
-    # don't use page iter! too much work and can mess up deserialization
-    # just use result iter and for loop if need batching
+    # skip beta users who were already notified
+    users_to_notify = skip_users(users_subscribed, notified)
+    notified = notified.union(processor.run(users_to_notify))
 
     # check that memory and timeout are being respected - print os.cpu_count()
     # query in beta and/or sub index - time is 10s for 100k users (1s/10k users)
@@ -131,16 +156,6 @@ def post_notify(event):
     # make sure not to double dip when using both indices
     # (DON'T NOTIFY SAME USER TWICE IF THEY SHOW UP IN BOTH SEARCHES)
 
-    # try:
-    #     notify_email
-    # except:
-    #     log
-
-    # try:
-    #     notify_webhook
-    # except:
-    #     log
-
     status_code = 200
     response = {['message']: f'Notifications delivered.'}
     body = json.dumps(response)
@@ -152,7 +167,6 @@ def post_notify(event):
 
 
 def notify_email():
-    # use multiprocessing
     # verify signals email [dev] and [prod] on SES and use SES! - free for first 64k emails per month
     # disable receiving emails at signals address
     # https://repost.aws/knowledge-center/lambda-send-email-ses
