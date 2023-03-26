@@ -32,17 +32,17 @@ def process():
         process.start()
 
     # Don't send 0 otherwise child while loop will end
-    for i in gen(1000):
+    for i in gen(100000):
         cpu = i % cpus
         if processes[cpu]['in_progress']:
-            print(processes[cpu]['conn'].recv())
+            processes[cpu]['conn'].recv()
             processes[cpu]['in_progress'] = False
         processes[cpu]['conn'].send(i)
         processes[cpu]['in_progress'] = True
 
     for process in processes:
         if process['in_progress']:
-            print(process['conn'].recv())
+            process['conn'].recv()
             process['in_progress'] = False
         process['conn'].send(None)
         process['process'].join()

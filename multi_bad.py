@@ -31,10 +31,10 @@ def process():
         process.start()
 
     # Don't send 0 otherwise child while loop will end
-    for i in gen(1000):
+    for i in gen(100000):
         cpu = i % cpus
         processes[cpu]['conn'].send(i)
-        print(processes[cpu]['conn'].recv())
+        processes[cpu]['conn'].recv()
 
     for process in processes:
         process['conn'].send(None)
