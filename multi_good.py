@@ -31,22 +31,19 @@ def end_process(process):
 
 
 def create_process():
-    pass
+    # create a pipe for communication
+    parent_conn, child_conn = Pipe(duplex=True)
+
+    # create the process, pass instance and connection
+    process = Process(target=process_event, args=(child_conn,))
+    enhanced = {'process': process, 'conn': parent_conn, 'awaiting': False}
+    process.start()
+    return enhanced
 
 
 def process():
     cpus = os.cpu_count()
-    processes = []
-    for _ in range(cpus):
-        # create a pipe for communication
-        parent_conn, child_conn = Pipe(duplex=True)
-
-        # create the process, pass instance and connection
-        process = Process(target=process_event,
-                          args=(child_conn,))
-        processes.append(
-            {'process': process, 'conn': parent_conn, 'awaiting': False})
-        process.start()
+    processes = [create_process() for _ in range(cpus)]
 
     # Don't send 0 otherwise child while loop will end
     for idx, item in enumerate(gen(100000)):
@@ -58,8 +55,7 @@ def process():
         process['conn'].send(item)
         process['awaiting'] = True
 
-    for process in processes:
-        end_process(process)
+    [end_process(process) for process in processes]
     return
 
 
