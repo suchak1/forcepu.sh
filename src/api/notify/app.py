@@ -43,12 +43,13 @@ def handle_notify(event, _):
 
 
 class Processor:
-    # def __init__(self, iterable):
-    #     self.items = enumerate(iterable)
+    def __init__(self, fx):
+        self.fx = fx
 
     def run_process(self, conn):
         while (val := conn.recv()):
-            conn.send(val*2)
+            res = self.fx(val)
+            conn.send(res)
 
     def await_process(self, process):
         if process['awaiting']:
@@ -60,7 +61,7 @@ class Processor:
         process['conn'].send(None)
         process['process'].join()
 
-    def process_item(self, process, item):
+    def send_item(self, process, item):
         self.await_process(process)
         process['conn'].send(item)
         process['awaiting'] = True
@@ -74,12 +75,12 @@ class Processor:
         process.start()
         return enhanced
 
-    def process(self, items):
+    def run(self, items):
         cpus = os.cpu_count()
         processes = [self.create_process() for _ in range(cpus)]
         # Don't send 0 otherwise child while loop will end
-        [self.process_item(processes[idx % cpus], item)
-         for idx, item in items]
+        [self.send_item(processes[idx % cpus], item)
+         for idx, item in enumerate(items)]
         [self.end_process(process) for process in processes]
         return set()
 
@@ -111,8 +112,7 @@ def post_notify(event):
     )
     notified = set()
     users_in_beta = UserModel.in_beta_index.query(1, filter_condition=cond)
-    # processor = Processor(users_in_beta)
-    notified = Processor().process(users_in_beta)
+    notified = Processor().run(users_in_beta)
     users_subscribed = UserModel.subscribed_index.query(
         1, filter_condition=cond)
 
