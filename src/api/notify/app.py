@@ -1,13 +1,15 @@
 import os
 import json
+import boto3
 import base64
 from time import sleep
-from multiprocessing import Process, Pipe
 from cryptography.fernet import Fernet
-from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
-from shared.models import query_by_api_key, UserModel
+from multiprocessing import Process, Pipe
+from botocore.exceptions import ClientError
 from datetime import datetime, timedelta, timezone
 from pynamodb.attributes import UTCDateTimeAttribute
+from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
+from shared.models import query_by_api_key, UserModel
 from shared.utils import \
     verify_user, options, transform_signal, \
     error, enough_time_has_passed, \
@@ -106,6 +108,11 @@ def notify_user(user):
             except Exception as e:
                 print(f"{alert['type']} alert failed to send for {user.email}")
                 print(e)
+        alerts = user.alerts
+        now = datetime.now(timezone.utc)
+        alerts['last_sent'] = UTCDateTimeAttribute(now)
+        # UTCDateTimeAttribute().serialize(now)
+        user.update(actions=[UserModel.alerts.set(alerts)])
         return user.email
 
 
@@ -142,12 +149,12 @@ def post_notify(event):
     )
     users_in_beta = UserModel.in_beta_index.query(1, filter_condition=cond)
     processor = Processor(notify_user)
-    notified = processor.run(users_in_beta)
+    notified = set(processor.run(users_in_beta))
     users_subscribed = UserModel.subscribed_index.query(
         1, filter_condition=cond)
     # skip beta users who were already notified
     users_to_notify = skip_users(users_subscribed, notified)
-    notified = notified.union(processor.run(users_to_notify))
+    notified = notified.union(set(processor.run(users_to_notify)))
     num_notified = len(notified)
     total_users = processor.total
     success_ratio = num_notified / total_users if total_users else 1
@@ -173,15 +180,46 @@ def post_notify(event):
     }
 
 
-def notify_email():
+def notify_email(user):
+    sender = os.environ['SIGNAL_EMAIL']
+    recipient = user.email
+    region = 'us-east-1'
+    charset = 'UTF-8'
+    client = boto3.client('sesv2', region_name=region)
+    try:
+        client.send_email(
+            Destination={
+                'ToAddresses': [
+                    recipient,
+                ],
+            },
+            Content={
+                'Simple': {
+                    'Body': {
+                        'Html': {
+                            'Charset': charset,
+                            'Data': BODY_HTML,
+                        },
+                        'Text': {
+                            'Charset': charset,
+                            'Data': BODY_TEXT,
+                        },
+                    },
+                    'Subject': {
+                        'Charset': charset,
+                        'Data': SUBJECT,
+                    },
+                }
+            },
+            FromEmailAddress=sender,
+            # If you are not using a configuration set, comment or delete the
+            # following line
+        )
     # verify signals email [dev] and [prod] on SES and use SES! - free for first 64k emails per month
     # disable receiving emails at signals address
     # https://repost.aws/knowledge-center/lambda-send-email-ses
     # https://iamkanikamodi.medium.com/write-a-sample-lambda-to-send-emails-using-ses-in-aws-a2e903d9129e
-    # store last notified for each notification type in db
-    # user.alerts.email.last_sent
-    # don't send if already notified for that signal date
-    # or already notified in the last 12 hours if storing full time
+
     # BCC multiple users / batch?
     # for template, use image of bull or bear based on signal, add green or red arrow?, add btc coin
     # Pictures/bear_bull/bull-and-bear-facing-each-other.jpg
@@ -201,7 +239,12 @@ def notify_email():
     # https://beefree.io/templates/notification/
     # https://unlayer.com/templates > Usage > Notification
 
-    pass
+    # Must submit request to move out of sandbox
+    # https://docs.aws.amazon.com/ses/latest/dg/request-production-access.html
+
+    except ClientError as e:
+        print(e.response['Error']['Message'])
+        raise e
 
 
 def notify_webhook():
