@@ -45,6 +45,7 @@ def handle_notify(event, _):
 class Processor:
     def __init__(self, fx):
         self.fx = fx
+        self.total = 0
 
     def run_process(self, conn):
         while (val := conn.recv()):
@@ -63,6 +64,7 @@ class Processor:
         process['process'].join()
 
     def process_item(self, process, item):
+        self.total += 1
         self.await_process(process)
         process['conn'].send(item)
         process['awaiting'] = True
@@ -77,8 +79,9 @@ class Processor:
         return enhanced
 
     def run(self, items):
-        self.results = []
+        self.results = {}
         cpus = os.cpu_count()
+        print(cpus)
         processes = [self.create_process() for _ in range(cpus)]
         # Don't send 0 otherwise child while loop will end
         [self.process_item(processes[idx % cpus], item)
@@ -93,16 +96,17 @@ def notify_user(user):
         {'fx': notify_webhook, 'type': 'Webhook'},
         {'fx': notify_sms, 'type': 'SMS'},
     ]
-    for alert in alerts:
-        try:
-            now = datetime.now(timezone.utc)
-            reset_duration = timedelta(hours=12)
-            last_notified = user.alerts['last_sent']
-            if enough_time_has_passed(last_notified, now, reset_duration):
+    now = datetime.now(timezone.utc)
+    reset_duration = timedelta(hours=12)
+    last_notified = user.alerts['last_sent']
+    if enough_time_has_passed(last_notified, now, reset_duration):
+        for alert in alerts:
+            try:
                 alert['fx'](user)
-        except:
-            print(f"{alert['type']} alert failed to send for {user.email}")
-    return user.email
+            except Exception as e:
+                print(f"{alert['type']} alert failed to send for {user.email}")
+                print(e)
+        return user.email
 
 
 def skip_users(users, to_skip):
@@ -138,12 +142,17 @@ def post_notify(event):
     )
     users_in_beta = UserModel.in_beta_index.query(1, filter_condition=cond)
     processor = Processor(notify_user)
-    notified = set(processor.run(users_in_beta))
+    notified = processor.run(users_in_beta)
     users_subscribed = UserModel.subscribed_index.query(
         1, filter_condition=cond)
     # skip beta users who were already notified
     users_to_notify = skip_users(users_subscribed, notified)
     notified = notified.union(processor.run(users_to_notify))
+    num_notified = len(notified)
+    total_users = processor.total
+    success_ratio = num_notified / total_users if total_users else 1
+    if success_ratio < 0.95:
+        return error(500, 'Notifications failed to send.')
 
     # check that memory and timeout are being respected - print os.cpu_count()
     # query in beta and/or sub index - time is 10s for 100k users (1s/10k users)
@@ -153,8 +162,6 @@ def post_notify(event):
     # 3. subscribed partition, notify_email range
     # 4. subscribed partition, notify_webhook range
     # etc for notify_sms
-    # make sure not to double dip when using both indices
-    # (DON'T NOTIFY SAME USER TWICE IF THEY SHOW UP IN BOTH SEARCHES)
 
     status_code = 200
     response = {['message']: f'Notifications delivered.'}
