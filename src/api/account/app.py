@@ -53,7 +53,13 @@ def post_account(event):
         if 'permissions' in req_body and 'read_disclaimer' in req_body['permissions'] and req_body['permissions']['read_disclaimer']:
             user.permissions.read_disclaimer = True
             user.update(
-                actions=[UserModel.permissions.set(user.permissions)])
+                actions=[UserModel.permissions.set(user.permissions)]
+            )
+        if 'alerts' in req_body:
+            user.alerts = req_body['alerts']
+            user.update(
+                actions=[UserModel.alerts.set(user.alerts)]
+            )
         body = user.to_json()
 
     return {
