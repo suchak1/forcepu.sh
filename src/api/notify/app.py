@@ -2,6 +2,7 @@ import os
 import json
 import boto3
 import base64
+import requests
 from time import sleep
 from cryptography.fernet import Fernet
 from multiprocessing import Process, Pipe
@@ -81,7 +82,7 @@ class Processor:
         return enhanced
 
     def run(self, items):
-        self.results = {}
+        self.results = []
         cpus = os.cpu_count()
         print(cpus)
         processes = [self.create_process() for _ in range(cpus)]
@@ -93,6 +94,7 @@ class Processor:
 
 
 def notify_user(user):
+    signal = self.signal
     alerts = [
         {'fx': notify_email, 'type': 'Email'},
         {'fx': notify_webhook, 'type': 'Webhook'},
@@ -101,19 +103,22 @@ def notify_user(user):
     now = datetime.now(timezone.utc)
     reset_duration = timedelta(hours=12)
     last_notified = user.alerts['last_sent']
+    success = True
     if enough_time_has_passed(last_notified, now, reset_duration):
         for alert in alerts:
             try:
-                alert['fx'](user)
+                alert['fx'](user, signal)
             except Exception as e:
                 print(f"{alert['type']} alert failed to send for {user.email}")
                 print(e)
+                success = False
         alerts = user.alerts
         now = datetime.now(timezone.utc)
         alerts['last_sent'] = UTCDateTimeAttribute(now)
         # UTCDateTimeAttribute().serialize(now)
         user.update(actions=[UserModel.alerts.set(alerts)])
-        return user.email
+        if success:
+            return user.email
 
 
 def skip_users(users, to_skip):
@@ -145,10 +150,11 @@ def post_notify(event):
     ) | (
         UserModel.alerts['sms'] == True
     ) | (
-        UserModel.alerts['webhook'] == True
+        UserModel.alerts['webhook'] != ""
     )
     users_in_beta = UserModel.in_beta_index.query(1, filter_condition=cond)
     processor = Processor(notify_user)
+    processor.signal = signal
     notified = set(processor.run(users_in_beta))
     users_subscribed = UserModel.subscribed_index.query(
         1, filter_condition=cond)
@@ -180,7 +186,7 @@ def post_notify(event):
     }
 
 
-def notify_email(user):
+def notify_email(user, signal):
     sender = os.environ['SIGNAL_EMAIL']
     recipient = user.email
     region = 'us-east-1'
@@ -225,19 +231,25 @@ def notify_email(user):
     # Pictures/bear_bull/bull-and-bear-facing-each-other.jpg
     # Pictures/btc/bitcoin.jpeg
     # use photoshop or gimp to create png w transparent bg
+    # use dall-e 2 for images or for inspo
+    # prompts - a bull/bear biting/chewing/holding a bitcoin in the style of vaporwave/anime
     # template will have dark background (black or #1d1d1d/#1f1f1f) to match site
     # don't use emojis in subject line - bad for click/open rate, looks like spam
     # summarize data from signal (date, day, signal, asset) in sentence or json obj
     # make sure emails have unsubscribe link - link to {dev.}forcepu.sh/alerts?
+    # use free wysiwyg html editor - online version that allows collaboration
+    # send halie a google doc with all the email design reqs - or we collaborate in figma
 
     # templates
-    # https://stripo.email/templates/ > Type > Alerts & Notifications
+    # https://stripo.email/templates/type/notice/
     # https://beefree.io/templates/notification/
     # https://unlayer.com/templates/something-new
     # https://litmus.com/community/templates/topic/33-e-commerce-templates
     # https://litmus.com/community/templates/topic/34-account-management-templates
     # https://beefree.io/templates/notification/
     # https://unlayer.com/templates > Usage > Notification
+
+    # Use canva (maybe not since no native html), unlayer, or postmarkapp to design, then export as HTML
 
     # Must submit request to move out of sandbox
     # https://docs.aws.amazon.com/ses/latest/dg/request-production-access.html
@@ -247,10 +259,15 @@ def notify_email(user):
         raise e
 
 
-def notify_webhook():
+def notify_webhook(user, signal):
     # RETURN LIST to account for future assets
     # will only be one-item list for now (just BTC)
-    pass
+    url = user.alerts['webhook']
+    if not url:
+        return
+    response = requests.post(url, json=signal)
+    if not response.ok:
+        raise Exception('Webhook did not return 2xx response.')
 
 
 def notify_sms():

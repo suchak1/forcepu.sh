@@ -25,7 +25,7 @@ def get_default_access_queue():
 
 class Alerts(MapAttribute):
     email = BooleanAttribute(default=False)
-    webhook = BooleanAttribute(default=False)
+    webhook = UnicodeAttribute(default="")
     sms = BooleanAttribute(default=False)
     last_sent: UTCDateTimeAttribute(default=past_date)
 
