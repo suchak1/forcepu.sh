@@ -46,13 +46,14 @@ def handle_notify(event, _):
 
 
 class Processor:
-    def __init__(self, fx):
+    def __init__(self, fx, data):
         self.fx = fx
+        self.data = data
         self.total = 0
 
     def run_process(self, conn):
         while (val := conn.recv()):
-            res = self.fx(val)
+            res = self.fx(val, self.data)
             conn.send(res)
 
     def await_process(self, process):
@@ -93,8 +94,7 @@ class Processor:
         return self.results
 
 
-def notify_user(user):
-    signal = self.signal
+def notify_user(user, signal):
     alerts = [
         {'fx': notify_email, 'type': 'Email'},
         {'fx': notify_webhook, 'type': 'Webhook'},
@@ -153,7 +153,7 @@ def post_notify(event):
         UserModel.alerts['webhook'] != ""
     )
     users_in_beta = UserModel.in_beta_index.query(1, filter_condition=cond)
-    processor = Processor(notify_user)
+    processor = Processor(notify_user, signal)
     processor.signal = signal
     notified = set(processor.run(users_in_beta))
     users_subscribed = UserModel.subscribed_index.query(
