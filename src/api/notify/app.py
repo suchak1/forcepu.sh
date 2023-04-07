@@ -260,13 +260,16 @@ def notify_email(user, signal):
 
 
 def notify_webhook(user, signal):
-    # RETURN LIST to account for future assets
-    # will only be one-item list for now (just BTC)
+
     url = user.alerts['webhook']
     if not url:
         return
     # Use user's API Key in header to authenticate
-    response = requests.post(url, json=signal)
+    headers = {"X-API-Key": user.api_key}
+    # RETURN LIST to account for future assets
+    # will only be one-item list for now (just BTC)
+    data = [signal]
+    response = requests.post(url, json=data, headers=headers)
     if not response.ok:
         raise Exception('Webhook did not return 2xx response.')
 
