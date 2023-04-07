@@ -10,7 +10,7 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 import { AccountContext } from "../../layouts";
 import CUBE from "../../../assets/cube.gif";
 import { headerHeight } from "../../layouts";
-import subStyles from "@/pages/subscription/index.module.less";
+import overrides from "@/pages/alerts/index.module.less";
 
 import "./index.module.less";
 
@@ -189,22 +189,47 @@ const AlertsPage = () => {
       {/* Use Toggle or Segmented! to turn on or off notifications */}
       {/* red alert if not loggedIn- exact message in keep */}
       {/* yellow alert if subscription not active or not in beta - exact message in keep */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <div style={{ minWidth: '600px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Title level={2} style={{ margin: 0 }}>Email</Title>
-            <Switch />
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: contentStyle.height
+        // alignItems: 'center'
+      }}>
+        <div
+          style={{
+            display: 'flex',
+            height: '100%'
+            // flexDirection: 'column'
+            // maxWidth: '600px' 
+          }}
+          className={overrides.alerts}
+        >
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', minWidth: '300px' }}>
+              <Title level={2} style={{ margin: 0 }}>Email</Title>
+              <Switch />
+            </div>
+            Receive an email when a new signal is detected.
           </div>
-          Receive an email
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Title level={2} style={{ margin: 0 }}>Webhook</Title>
-            <Switch />
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', minWidth: '300px' }}>
+              <Title level={2} style={{ margin: 0 }}>Webhook</Title>
+              <Switch />
+            </div>
+            description
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Title level={2} style={{ margin: 0 }}>SMS (coming soon)</Title>
-            <Switch disabled />
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', minWidth: '300px' }}>
+              <Title level={2} style={{ margin: 0 }}>SMS</Title>
+              <Switch disabled />
+            </div>
+            Coming soon...
           </div>
         </div>
+        bull image on left, bear image on right
+        show toasts when alert is saved
+        show warning alert on top for those not in beta or not subscribed
+        disable input/toggles if not signed in + tooltips + redirect to sign in model
       </div>
     </>
   );
