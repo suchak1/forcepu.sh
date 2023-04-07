@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect, useMemo, useContext } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Typography, notification, Tooltip, Badge, Card, Button, Spin, Alert, Select, Input, Popover, Result } from "antd";
+import { Typography, notification, Tooltip, Badge, Card, Button, Spin, Alert, Select, Input, Popover, Result, Switch } from "antd";
 import { getApiUrl, getDayDiff, get3DCircle, linspace } from "@/utils";
 import pageStyles from "@/pages/home/index.module.less";
 import layoutStyles from "@/layouts/index.module.less";
@@ -21,7 +21,7 @@ const { Title } = Typography;
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 const spinner = <Spin style={{ width: "100%" }} indicator={antIcon} />;
 
-const ContactPage = () => {
+const AlertsPage = () => {
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const { account, setShowLogin } = useContext(
     AccountContext
@@ -189,16 +189,15 @@ const ContactPage = () => {
       {/* Use Toggle or Segmented! to turn on or off notifications */}
       {/* red alert if not loggedIn- exact message in keep */}
       {/* yellow alert if subscription not active or not in beta - exact message in keep */}
-      {
-        Object.keys(resultProps).length ?
-          <div style={contentStyle}>
-            <Result {...resultProps} />
-          </div> : form
-      }
+      <Title level={2}>Email</Title>
+      Receive an email
+      <Switch disabled></Switch>
+      <Title level={2}>Webhook</Title>
+      <Title level={2}>SMS (coming soon)</Title>
     </>
   );
 };
 
-ContactPage.displayName = "Contact";
+AlertsPage.displayName = "Alerts";
 
-export default ContactPage;
+export default AlertsPage;

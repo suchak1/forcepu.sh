@@ -265,6 +265,7 @@ def notify_webhook(user, signal):
     url = user.alerts['webhook']
     if not url:
         return
+    # Use user's API Key in header to authenticate
     response = requests.post(url, json=signal)
     if not response.ok:
         raise Exception('Webhook did not return 2xx response.')
