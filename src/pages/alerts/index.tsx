@@ -189,11 +189,14 @@ const AlertsPage = () => {
       {/* Use Toggle or Segmented! to turn on or off notifications */}
       {/* red alert if not loggedIn- exact message in keep */}
       {/* yellow alert if subscription not active or not in beta - exact message in keep */}
-      <Title level={2}>Email</Title>
+      <div style={{ display: 'flex' }}>
+        <Title level={2}>Email</Title>
+        <Switch />
+      </div>
       Receive an email
-      <Switch disabled></Switch>
       <Title level={2}>Webhook</Title>
       <Title level={2}>SMS (coming soon)</Title>
+      <Switch disabled></Switch>
     </>
   );
 };

@@ -1,5 +1,5 @@
 import json
-from shared.models import UserModel
+from shared.models import UserModel, Alerts, attributes_lookup, alerts_lookup
 from shared.utils import options, verify_user
 from pynamodb.attributes import UnicodeAttribute, BooleanAttribute
 
@@ -57,14 +57,15 @@ def post_account(event):
                 actions=[UserModel.permissions.set(user.permissions)]
             )
 
-        alerts_lookup = {'email': bool, 'sms': bool, 'webhook': str}
-
         if 'alerts' in req_body:
-            alerts = user.to_json()['alerts']
+            alerts = json.loads(user.to_json())['alerts']
             updated_alerts = req_body['alerts']
             for key, val in updated_alerts.items():
-                if key in alerts or key in alerts_lookup:
-                    if type(val) == alerts_lookup[key]:
+                if key in alerts_lookup:
+                    # type(getattr(Alerts, 'sms')) == BooleanAttribute
+                    expected_attr = alerts_lookup[key]['attr']
+                    expected_type = attributes_lookup[expected_attr]
+                    if type(val) == expected_type:
                         alerts[key] = val
             user.alerts = alerts
             user.update(
