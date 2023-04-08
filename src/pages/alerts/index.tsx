@@ -33,6 +33,10 @@ const AlertsPage = () => {
   const [messageStatus, setMessageStatus] = useState('');
   const [resultProps, setResultProps] = useState({});
   const [sentMessages, setSentMessages] = useState(new Set());
+  const [loading, setLoading] = useState(false);
+  // may need useEffect to set webhook url
+  const [url, setUrl] = useState(account?.alerts?.webhook || "")
+  const [saved, setSaved] = useState(false);
 
   const contentStyle = {
     height: `calc(100% - ${headerHeight + 1}px)`,
@@ -42,24 +46,25 @@ const AlertsPage = () => {
     justifyContent: 'center'
   };
 
-  const onSuccess = () => {
-    setSubject('');
-    setMessage('');
-    setResultProps({
-      status: 'success',
-      title: 'Success!',
-      subTitle: 'Your message was sent.',
-      extra:
-        [
-          <Button
-            className={layoutStyles.start}
-            onClick={() => setResultProps({})}
-          >
-            Return to contact form
-          </Button>
-        ]
-    });
-  }
+  useEffect(() => {
+    if (account) {
+      const webhookUrl = account?.alerts?.webhook;
+      if (webhookUrl) {
+        setUrl(webhookUrl);
+        setSaved(true);
+      }
+    }
+
+  }, [account])
+
+
+
+  const saveBtn = <Button onClick={() => setSaved(!saved)}>Save</Button>;
+  const editAndClear =
+    // <>
+    // <Button onClick={() => setSaved(!saved)}>Edit</Button>
+    <Button onClick={() => setSaved(!saved)}>Clear</Button>
+  // </>;
   const onError = () => {
     setResultProps({
       status: 'error',
@@ -207,7 +212,7 @@ const AlertsPage = () => {
           <div className={overrides.column}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', minWidth: '300px' }}>
               <Title level={2} style={{ margin: 0 }}>Email</Title>
-              <Switch />
+              <Switch disabled={loading || !account} />
             </div>
             Receive an email when a new signal is detected.
             <br />
@@ -216,19 +221,35 @@ const AlertsPage = () => {
           <div className={overrides.column}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', minWidth: '300px' }}>
               <Title level={2} style={{ margin: 0 }}>Webhook</Title>
-              <Switch checked disabled />
+              <Switch disabled={loading || !account} />
             </div>
             Receive a webhook event when a new signal is detected.
             <br />
             (For automated trading, this is the preferred notification type.)
-            <div style={{ display: 'flex' }}><Input placeholder="https://api.domain.com/route" /><Button>Save</Button></div>
+            <b>Listen for events</b>
+            <div style={{ display: 'flex' }}>
+              <Input
+                disabled={saved}
+                placeholder="https://api.domain.com/route"
+                onChange={(event) => {
+                  const newMessage = event.target.value;
+                  if (messageStatus && newMessage) {
+                    setMessageStatus('')
+                  }
+                  setMessage(event.target.value)
+                }}
+              />
+              {saved ? editAndClear : saveBtn}
+            </div>
             <br />
             Sample code:
+            AWS Lambda
+            Flask
           </div>
           <div className={overrides.column} style={{ color: 'rgba(255, 255, 255, 0.45)' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', minWidth: '300px' }}>
               <Title level={2} style={{ margin: 0, color: 'rgba(255, 255, 255, 0.45)' }}>SMS</Title>
-              <Switch disabled />
+              <Switch disabled={true || loading || !account} />
             </div>
             <Input disabled placeholder="+1 (555) 555-5555" />
             Coming soon...
@@ -236,6 +257,7 @@ const AlertsPage = () => {
         </div>
         bull image on left, bear image on right
         or bull left middle, bear left bottom (both under email in the left col), and webhook stuff in the middle col
+        use monochrome / B&W images when email is disabled and colored images when email is enabled
         show toasts when alert is saved
         show warning alert on top for those not in beta or not subscribed
         disable input/toggles if not signed in + tooltips + redirect to sign in model
