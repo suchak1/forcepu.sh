@@ -204,32 +204,44 @@ const AlertsPage = () => {
           }}
           className={overrides.alerts}
         >
-          <div>
+          <div className={overrides.column}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', minWidth: '300px' }}>
               <Title level={2} style={{ margin: 0 }}>Email</Title>
               <Switch />
             </div>
             Receive an email when a new signal is detected.
+            <br />
+            (For manual trading, this is the preferred notification type.)
           </div>
-          <div>
+          <div className={overrides.column}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', minWidth: '300px' }}>
               <Title level={2} style={{ margin: 0 }}>Webhook</Title>
-              <Switch />
+              <Switch checked disabled />
             </div>
-            description
+            Receive a webhook event when a new signal is detected.
+            <br />
+            (For automated trading, this is the preferred notification type.)
+            <div style={{ display: 'flex' }}><Input placeholder="https://api.domain.com/route" /><Button>Save</Button></div>
+            <br />
+            Sample code:
           </div>
-          <div>
+          <div className={overrides.column} style={{ color: 'rgba(255, 255, 255, 0.45)' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', minWidth: '300px' }}>
-              <Title level={2} style={{ margin: 0 }}>SMS</Title>
+              <Title level={2} style={{ margin: 0, color: 'rgba(255, 255, 255, 0.45)' }}>SMS</Title>
               <Switch disabled />
             </div>
+            <Input disabled placeholder="+1 (555) 555-5555" />
             Coming soon...
           </div>
         </div>
         bull image on left, bear image on right
+        or bull left middle, bear left bottom (both under email in the left col), and webhook stuff in the middle col
         show toasts when alert is saved
         show warning alert on top for those not in beta or not subscribed
         disable input/toggles if not signed in + tooltips + redirect to sign in model
+        write sentence about how signals come in between 12:00-12:10 UTC
+        Write sentence or question mark hover tooltip about how email is preferred notification for manual traders
+        and webhook is preferred notification for automated trading systems
       </div>
     </>
   );
