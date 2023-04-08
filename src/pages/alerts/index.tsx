@@ -60,6 +60,7 @@ const AlertsPage = () => {
 
   const postAccount = (alerts) => {
     setLoading(true);
+    const jwtToken = loggedIn?.signInUserSession?.idToken?.jwtToken;
     const url = `${getApiUrl()}/account`;
     fetch(url, {
       method: "POST",
