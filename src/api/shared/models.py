@@ -27,7 +27,7 @@ def get_default_access_queue():
 attributes_lookup = {UnicodeAttribute: str, BooleanAttribute: bool}
 alerts_lookup = {
     'email': {'attr': BooleanAttribute, 'default': False},
-    'sms': {'attr': BooleanAttribute, 'default': False},
+    # 'sms': {'attr': BooleanAttribute, 'default': False},
     'webhook': {'attr': UnicodeAttribute, 'default': ""}
 }
 

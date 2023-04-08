@@ -10,6 +10,7 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 import { AccountContext } from "../../layouts";
 import CUBE from "../../../assets/cube.gif";
 import { headerHeight } from "../../layouts";
+import subStyles from "@/pages/subscription/index.module.less";
 import overrides from "@/pages/alerts/index.module.less";
 
 import "./index.module.less";
@@ -23,7 +24,7 @@ const spinner = <Spin style={{ width: "100%" }} indicator={antIcon} />;
 
 const AlertsPage = () => {
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
-  const { account, setShowLogin } = useContext(
+  const { account, setShowLogin, setAccount } = useContext(
     AccountContext
   );
   const [subject, setSubject] = useState('');
@@ -57,13 +58,21 @@ const AlertsPage = () => {
 
   }, [account])
 
+  const onClear = () => {
 
+    setSaved(false);
+  }
 
-  const saveBtn = <Button onClick={() => setSaved(!saved)}>Save</Button>;
+  const saveBtn =
+    <Button
+      // className={layoutStyles.start}
+      onClick={() => setSaved(!saved)}>
+      Save
+    </Button>;
   const editAndClear =
     // <>
     // <Button onClick={() => setSaved(!saved)}>Edit</Button>
-    <Button onClick={() => setSaved(!saved)}>Clear</Button>
+    <Button className={subStyles.subscribe} onClick={() => setSaved(!saved)}>Clear</Button>;
   // </>;
   const onError = () => {
     setResultProps({
@@ -212,7 +221,10 @@ const AlertsPage = () => {
           <div className={overrides.column}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', minWidth: '300px' }}>
               <Title level={2} style={{ margin: 0 }}>Email</Title>
-              <Switch disabled={loading || !account} />
+              <Switch
+                checked={account?.alerts?.email}
+                disabled={loading || !account}
+              />
             </div>
             Receive an email when a new signal is detected.
             <br />
@@ -221,7 +233,10 @@ const AlertsPage = () => {
           <div className={overrides.column}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', minWidth: '300px' }}>
               <Title level={2} style={{ margin: 0 }}>Webhook</Title>
-              <Switch disabled={loading || !account} />
+              <Switch
+                checked={account?.alerts?.webhook}
+                disabled={loading || !account}
+              />
             </div>
             Receive a webhook event when a new signal is detected.
             <br />
@@ -249,7 +264,10 @@ const AlertsPage = () => {
           <div className={overrides.column} style={{ color: 'rgba(255, 255, 255, 0.45)' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', minWidth: '300px' }}>
               <Title level={2} style={{ margin: 0, color: 'rgba(255, 255, 255, 0.45)' }}>SMS</Title>
-              <Switch disabled={true || loading || !account} />
+              <Switch
+                checked={account?.alerts?.sms}
+                disabled={true || loading || !account}
+              />
             </div>
             <Input disabled placeholder="+1 (555) 555-5555" />
             Coming soon...

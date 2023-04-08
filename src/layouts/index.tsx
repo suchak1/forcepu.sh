@@ -353,7 +353,7 @@ const Layout = ({ children }: LayoutProps) => {
           <TOS modal />
         </Modal>
         <AccountContext.Provider
-          value={{ account, accountLoading, loginLoading, setShowLogin }}
+          value={{ account, accountLoading, loginLoading, setShowLogin, setAccount }}
         >
           <Routes>
             <Route path="/" element={<Home />} />
