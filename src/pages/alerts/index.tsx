@@ -24,7 +24,7 @@ const spinner = <Spin style={{ width: "100%" }} indicator={antIcon} />;
 
 const AlertsPage = () => {
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
-  const { account, setShowLogin, setAccount } = useContext(
+  const { account, setShowLogin, setAccount, accountLoading } = useContext(
     AccountContext
   );
   const [subject, setSubject] = useState('');
@@ -34,10 +34,11 @@ const AlertsPage = () => {
   const [messageStatus, setMessageStatus] = useState('');
   const [resultProps, setResultProps] = useState({});
   const [sentMessages, setSentMessages] = useState(new Set());
-  const [loading, setLoading] = useState(false);
+  const [alertsLoading, setLoading] = useState(false);
   // may need useEffect to set webhook url
   const [url, setUrl] = useState(account?.alerts?.webhook || "")
   const [saved, setSaved] = useState(false);
+  const loading = alertsLoading || accountLoading;
 
   const contentStyle = {
     height: `calc(100% - ${headerHeight + 1}px)`,
@@ -251,7 +252,8 @@ const AlertsPage = () => {
               <Title level={2} style={{ margin: 0 }}>Webhook</Title>
               <Switch
                 checked={account?.alerts?.webhook}
-                disabled={loading || !account}
+                disabled={loading || !account || !account?.alerts?.webhook}
+                onChange={(e) => !e && postAccount({ alerts: { webhook: "" } })}
               />
             </div>
             Receive a webhook event when a new signal is detected.
