@@ -37,7 +37,6 @@ const AlertsPage = () => {
   const [alertsLoading, setLoading] = useState(false);
   // may need useEffect to set webhook url
   const [url, setUrl] = useState(account?.alerts?.webhook || "")
-  const [saved, setSaved] = useState(false);
   const loading = alertsLoading || accountLoading;
 
   const contentStyle = {
@@ -48,16 +47,16 @@ const AlertsPage = () => {
     justifyContent: 'center'
   };
 
-  useEffect(() => {
-    if (account) {
-      const webhookUrl = account?.alerts?.webhook;
-      if (webhookUrl) {
-        setUrl(webhookUrl);
-        setSaved(true);
-      }
-    }
+  // useEffect(() => {
+  //   if (account) {
+  //     const webhookUrl = account?.alerts?.webhook;
+  //     if (webhookUrl) {
+  //       setUrl(webhookUrl);
+  //       setSaved(true);
+  //     }
+  //   }
 
-  }, [account])
+  // }, [account])
 
   const postAccount = (alerts) => {
     setLoading(true);
@@ -74,21 +73,20 @@ const AlertsPage = () => {
       .finally(() => setLoading(false));
   }
 
-  const onClear = () => {
-
-    setSaved(false);
-  }
+  const onClear = () => postAccount({ alerts: { webhook: "" } });
+  const onSave = () => postAccount({ alerts: { webhook: url } });
 
   const saveBtn =
     <Button
       // className={layoutStyles.start}
-      onClick={() => setSaved(!saved)}>
+      disabled={loading}
+      onClick={onSave}>
       Save
     </Button>;
-  const editAndClear =
+  const clearBtn =
     // <>
     // <Button onClick={() => setSaved(!saved)}>Edit</Button>
-    <Button className={subStyles.subscribe} onClick={() => setSaved(!saved)}>Clear</Button>;
+    <Button disabled={loading} className={subStyles.subscribe} onClick={onClear}>Clear</Button>;
   // </>;
   const onError = () => {
     setResultProps({
@@ -253,7 +251,7 @@ const AlertsPage = () => {
               <Switch
                 checked={account?.alerts?.webhook}
                 disabled={loading || !account || !account?.alerts?.webhook}
-                onChange={(e) => !e && postAccount({ alerts: { webhook: "" } })}
+                onChange={(e) => !e && onClear()}
               />
             </div>
             Receive a webhook event when a new signal is detected.
@@ -262,17 +260,11 @@ const AlertsPage = () => {
             <b>Listen for events</b>
             <div style={{ display: 'flex' }}>
               <Input
-                disabled={saved}
+                disabled={loading || account?.alerts?.webhook}
                 placeholder="https://api.domain.com/route"
-                onChange={(event) => {
-                  const newMessage = event.target.value;
-                  if (messageStatus && newMessage) {
-                    setMessageStatus('')
-                  }
-                  setMessage(event.target.value)
-                }}
+                onChange={(event) => setUrl(event.target.value)}
               />
-              {saved ? editAndClear : saveBtn}
+              {account?.alerts?.webhook ? clearBtn : saveBtn}
             </div>
             <br />
             Sample code:
