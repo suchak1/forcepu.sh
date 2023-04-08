@@ -58,6 +58,20 @@ const AlertsPage = () => {
 
   }, [account])
 
+  const postAccount = (alerts) => {
+    setLoading(true);
+    const url = `${getApiUrl()}/account`;
+    fetch(url, {
+      method: "POST",
+      headers: { Authorization: jwtToken },
+      body: JSON.stringify(alerts),
+    })
+      .then((response) => response.json())
+      .then((data) => setAccount(data))
+      .catch((err) => console.error(err))
+      .finally(() => setLoading(false));
+  }
+
   const onClear = () => {
 
     setSaved(false);
@@ -224,6 +238,7 @@ const AlertsPage = () => {
               <Switch
                 checked={account?.alerts?.email}
                 disabled={loading || !account}
+                onChange={(e) => postAccount({ alerts: { email: e } })}
               />
             </div>
             Receive an email when a new signal is detected.
