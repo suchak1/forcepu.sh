@@ -12,6 +12,10 @@ import CUBE from "../../../assets/cube.gif";
 import { headerHeight } from "../../layouts";
 import subStyles from "@/pages/subscription/index.module.less";
 import overrides from "@/pages/alerts/index.module.less";
+import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { dark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import py from 'react-syntax-highlighter/dist/esm/languages/hljs/python';
+SyntaxHighlighter.registerLanguage('python', py);
 
 import "./index.module.less";
 
@@ -19,21 +23,13 @@ import styled from "styled-components";
 
 const { Title } = Typography;
 
-const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
-const spinner = <Spin style={{ width: "100%" }} indicator={antIcon} />;
+const codeString = 'hello = "world"';
 
 const AlertsPage = () => {
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const { account, setShowLogin, setAccount, accountLoading } = useContext(
     AccountContext
   );
-  const [subject, setSubject] = useState('');
-  const [message, setMessage] = useState('');
-  const [contactLoading, setContactLoading] = useState(false);
-  const [subjectStatus, setSubjectStatus] = useState('');
-  const [messageStatus, setMessageStatus] = useState('');
-  const [resultProps, setResultProps] = useState({});
-  const [sentMessages, setSentMessages] = useState(new Set());
   const [alertsLoading, setLoading] = useState(false);
   // may need useEffect to set webhook url
   const [url, setUrl] = useState(account?.alerts?.webhook || "")
@@ -41,10 +37,10 @@ const AlertsPage = () => {
 
   const contentStyle = {
     height: `calc(100% - ${headerHeight + 1}px)`,
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center'
+    // width: '100%',
+    // display: 'flex',
+    // flexDirection: 'column',
+    // justifyContent: 'center'
   };
 
   // useEffect(() => {
@@ -88,129 +84,8 @@ const AlertsPage = () => {
     // <Button onClick={() => setSaved(!saved)}>Edit</Button>
     <Button disabled={loading} className={subStyles.subscribe} onClick={onClear}>Clear</Button>;
   // </>;
-  const onError = () => {
-    setResultProps({
-      status: 'error',
-      title: 'Failure',
-      subTitle: 'Your message was not sent.',
-      extra:
-        [
-          <Button
-            className={subStyles.subscribe}
-            onClick={() => setResultProps({})}
-          >
-            Return to contact form
-          </Button>
-        ]
-    });
-  }
-  const onContact = () => {
-    if (!subject) {
-      setSubjectStatus('error')
-    }
-    if (!message) {
-      setMessageStatus('error')
-    }
-    if (!(subject && message)) {
-      return;
-    }
-    setSubjectStatus('')
-    setMessageStatus('')
-    setContactLoading(true);
-    const jwtToken = loggedIn?.signInUserSession?.idToken?.jwtToken;
-    const url = `${getApiUrl()}/contact`;
-    if (sentMessages.has(message)) {
-      onSuccess();
-      setContactLoading(false);
-    } else {
-      fetch(url, {
-        method: "POST",
-        headers: { Authorization: jwtToken },
-        body: JSON.stringify({ subject, message }),
-      })
-        .then((response) => {
-          if (response.ok) {
-            setSentMessages((prevSet) => new Set(prevSet).add(message))
-            onSuccess();
-          } else {
-            onError();
-          }
-        })
-        .catch(() => onError())
-        .finally(() => setContactLoading(false));
-    }
-  };
 
-  let form = <div style={contentStyle}>
-    <Select
-      onChange={(dropdown) => {
-        if (subjectStatus && dropdown) {
-          setSubjectStatus('')
-        }
-        setSubject(dropdown)
-      }}
-      style={{
-        width: '100%',
-        marginBottom: '16px'
-      }}
-      placeholder='Select a subject'
-      disabled={!account}
-      options={[
-        { value: 'Account' },
-        { value: 'API' },
-        { value: 'AI Model' },
-        { value: 'Subscription' },
-        { value: 'General' },
-        { value: 'Other' }
-      ]}
-      status={subjectStatus}
-    >
-    </Select>
-    <Input.TextArea
-      disabled={!account}
-      placeholder='Write your message here.'
-      style={{
-        height: '100%',
-        width: '100%',
-        resize: 'none',
-        marginBottom: '32px'
-      }}
-      // showCount must be bool or fx
-      showCount={Boolean(account)}
-      maxLength={2500}
-      status={messageStatus}
-      onChange={(event) => {
-        const newMessage = event.target.value;
-        if (messageStatus && newMessage) {
-          setMessageStatus('')
-        }
-        setMessage(event.target.value)
-      }}
-    />
-    <Button
-      className={(account && subject && message) && subStyles.subscribe}
-      style={{ width: '100%' }}
-      disabled={!(account && subject && message)}
-      onClick={onContact}
-      loading={contactLoading}
-    >
-      Submit
-    </Button>
-  </div>;
-  if (!(account && loggedIn)) {
-    form =
-      <Popover
-        onClick={() => !loggedIn && setShowLogin(true)}
-        title="🔒 Action Needed"
-        content={loggedIn ? "Verify your email to send a message." : <Button onClick={() => setShowLogin(true)} className={layoutStyles.start}>Sign in to send a message.</Button>}
-        placement="bottom"
-        align={{
-          targetOffset: ["0%", "50%"],
-        }}
-      >
-        {form}
-      </Popover>
-  }
+
   return (
     <>
       <Title>Notifications</Title>
@@ -270,6 +145,9 @@ const AlertsPage = () => {
             Sample code:
             AWS Lambda
             Flask
+            <SyntaxHighlighter language="python" style={dark}>
+              {codeString}
+            </SyntaxHighlighter>
           </div>
           <div className={overrides.column} style={{ color: 'rgba(255, 255, 255, 0.45)' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', minWidth: '300px' }}>

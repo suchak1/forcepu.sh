@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Typography, Segmented, Row, Col, Card, Statistic, Spin } from "antd";
-import Plot from "react-plotly.js";
+import Plotly from "plotly.js-dist-min";
+import createPlotlyComponent from "react-plotly.js/factory";
 import { getApiUrl, getDayDiff, get3DCircle } from "@/utils";
 import pageStyles from "../home/index.module.less";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -8,6 +9,7 @@ import "./index.less";
 
 import styled from "styled-components";
 
+const Plot = createPlotlyComponent(Plotly);
 const { Title } = Typography;
 
 const numPoints = 360;
@@ -35,7 +37,7 @@ const Toggle = styled(Segmented)`
 
   .ant-segmented-thumb {
     background-color: ${(props: { val: boolean }) =>
-      props.val ? "magenta" : "#52e5ff"};
+    props.val ? "magenta" : "#52e5ff"};
   }
 `;
 
