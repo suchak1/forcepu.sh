@@ -71,9 +71,11 @@ const AlertsPage = () => {
   // may need useEffect to set webhook url
   const [url, setUrl] = useState(account?.alerts?.webhook || "")
   const loading = alertsLoading || accountLoading;
-
+  const notInBeta = loggedIn && !(account?.subscribed || account?.in_beta);
+  const alertHeight = !loggedIn || notInBeta ? 28 : 0;
+  // const alertHeight = 28;
   const contentStyle = {
-    height: `calc(100% - ${headerHeight + 1}px)`,
+    height: `calc(100% - ${headerHeight + 1 + alertHeight}px)`,
     // width: '100%',
     // display: 'flex',
     // flexDirection: 'column',
@@ -124,10 +126,26 @@ const AlertsPage = () => {
 
 
   return (
-    <>
+    <div style={{ height: '100%' }}>
+      {!loggedIn && (
+        <Alert
+          message="You must be signed in to change your notification preferences. 🔔"
+          type="error"
+          showIcon
+          closable
+          style={{ marginBottom: "12px" }}
+        />
+      )}
+      {notInBeta && (
+        <Alert
+          message="You will not receive notifications until you activate your subscription or join the closed beta. 🔔"
+          type="warning"
+          showIcon
+          closable
+          style={{ marginBottom: "12px" }}
+        />
+      )}
       <Title>Notifications</Title>
-      {/* red alert if not loggedIn- exact message in keep */}
-      {/* yellow alert if subscription not active or not in beta - exact message in keep */}
       <div style={{
         display: 'flex',
         flexDirection: 'column',
@@ -179,21 +197,24 @@ const AlertsPage = () => {
             </div>
             {/* <br /> */}
             {/* <div> */}
-            <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span><b>Sample Code</b> [Python] (AWS Lambda):</span> <Button
-              onClick={() => copyToClipboard(codeString, "code")}
-              icon={<CopyOutlined />}
-            /></span>
+            <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span><b>Sample Code</b> [Python] (AWS Lambda):</span>
+              <Button
+                onClick={() => copyToClipboard(codeString, "code")}
+                icon={<CopyOutlined />}
+              />
+            </span>
             {/* add Flask code block?*/}
             {/* <div> */}
             <SyntaxHighlighter
               language="python"
               style={xt256}
-              showLineNumbers
+            // showLineNumbers
             >
               {codeString}
             </SyntaxHighlighter>
-            {/* </div>
-            </div> */}
+            {/* </div> */}
+            {/* </div> */}
           </div>
           <div className={overrides.column} style={{ color: 'rgba(255, 255, 255, 0.45)' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', minWidth: '300px' }}>
@@ -210,13 +231,13 @@ const AlertsPage = () => {
         {/* bull image on left, bear image on right
         or bull left middle, bear left bottom (both under email in the left col), and webhook stuff in the middle col
         use monochrome / B&W images when email is disabled and colored images when email is enabled
+        write custom style for code block- magenta, cyan, etc
         show toasts when alert is saved or fails
-        show warning alert on top for those not in beta or not subscribed
         disable input/toggles if not signed in + tooltips + redirect to sign in model
         write sentence about how signals come in between 12:00-12:10 UTC
          */}
       </div>
-    </>
+    </div>
   );
 };
 
