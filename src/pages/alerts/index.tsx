@@ -27,7 +27,7 @@ import styled from "styled-components";
 const { Title } = Typography;
 
 const codeString =
-  `def lambda_handler(event, context):
+  `def lambda_handler(event, _):
     signals = json.loads(event['body'])
     headers = event['headers']
     is_legit = False
@@ -72,6 +72,7 @@ const AlertsPage = () => {
   const [url, setUrl] = useState(account?.alerts?.webhook || "")
   const loading = alertsLoading || accountLoading;
   const notInBeta = loggedIn && !(account?.subscribed || account?.in_beta);
+  const disabled = !loggedIn || notInBeta || loading || !account;
   const alertHeight = !loggedIn || notInBeta ? 28 : 0;
   // const alertHeight = 28;
   const contentStyle = {
@@ -114,14 +115,14 @@ const AlertsPage = () => {
   const saveBtn =
     <Button
       // className={layoutStyles.start}
-      disabled={loading}
+      disabled={disabled}
       onClick={onSave}>
       Save
     </Button>;
   const clearBtn =
     // <>
     // <Button onClick={() => setSaved(!saved)}>Edit</Button>
-    <Button disabled={loading} className={subStyles.subscribe} onClick={onClear}>Clear</Button>;
+    <Button disabled={disabled} className={subStyles.subscribe} onClick={onClear}>Clear</Button>;
   // </>;
 
 
@@ -166,7 +167,7 @@ const AlertsPage = () => {
               <Title level={2} style={{ margin: 0 }}>Email</Title>
               <Switch
                 checked={account?.alerts?.email}
-                disabled={loading || !account}
+                disabled={disabled}
                 onChange={(e) => postAccount({ alerts: { email: e } })}
               />
             </div>
@@ -179,7 +180,7 @@ const AlertsPage = () => {
               <Title level={2} style={{ margin: 0 }}>Webhook</Title>
               <Switch
                 checked={account?.alerts?.webhook}
-                disabled={loading || !account || !account?.alerts?.webhook}
+                disabled={disabled || !account?.alerts?.webhook}
                 onChange={(e) => !e && onClear()}
               />
             </div>
@@ -189,7 +190,7 @@ const AlertsPage = () => {
             <b>Listen for events</b>
             <div style={{ display: 'flex' }}>
               <Input
-                disabled={loading || account?.alerts?.webhook}
+                disabled={disabled || account?.alerts?.webhook}
                 placeholder="https://api.domain.com/route"
                 onChange={(event) => setUrl(event.target.value)}
               />
@@ -221,15 +222,14 @@ const AlertsPage = () => {
               <Title level={2} style={{ margin: 0, color: 'rgba(255, 255, 255, 0.45)' }}>SMS</Title>
               <Switch
                 checked={account?.alerts?.sms}
-                disabled={true || loading || !account}
+                disabled={true || disabled}
               />
             </div>
             <Input disabled placeholder="+1 (555) 555-5555" />
             Coming soon...
           </div>
         </div>
-        {/* bull image on left, bear image on right
-        or bull left middle, bear left bottom (both under email in the left col), and webhook stuff in the middle col
+        {/* bull left middle, bear left bottom (both under email in the left col), and webhook stuff in the middle col
         use monochrome / B&W images when email is disabled and colored images when email is enabled
         write custom style for code block- magenta, cyan, etc
         show toasts when alert is saved or fails
