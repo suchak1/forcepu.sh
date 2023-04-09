@@ -5,15 +5,18 @@ import { Typography, notification, Tooltip, Badge, Card, Button, Spin, Alert, Se
 import { getApiUrl, getDayDiff, get3DCircle, linspace } from "@/utils";
 import pageStyles from "@/pages/home/index.module.less";
 import layoutStyles from "@/layouts/index.module.less";
-import { LoadingOutlined } from "@ant-design/icons";
+import { CopyOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { AccountContext } from "../../layouts";
 import CUBE from "../../../assets/cube.gif";
 import { headerHeight } from "../../layouts";
 import subStyles from "@/pages/subscription/index.module.less";
 import overrides from "@/pages/alerts/index.module.less";
+import { copyToClipboard } from "@/pages/docs";
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { dark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+// Async version has slightly higher bundle size but faster load
+// import { LightAsync as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { xt256 } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import py from 'react-syntax-highlighter/dist/esm/languages/hljs/python';
 SyntaxHighlighter.registerLanguage('python', py);
 
@@ -23,7 +26,41 @@ import styled from "styled-components";
 
 const { Title } = Typography;
 
-const codeString = 'hello = "world"';
+const codeString =
+  `def lambda_handler(event, context):
+    signals = json.loads(event['body'])
+    headers = event['headers']
+    is_legit = False
+    
+    # grab this from forcepu.sh/docs
+    my_api_key = 'this_is_a_secret'
+    if headers['X-API-Key'] == my_api_key:
+        is_legit = True
+    
+    signal = signals[0]
+    
+    if is_legit:
+        if signal['Signal'] == 'BUY':
+            # implement buying logic
+            pass
+        else:
+            # implement selling logic
+            pass
+
+    print(json.dumps(signals, indent=4))
+    # [
+    #     {
+    #         "Asset": "BTC",
+    #         "Date": "2020-01-01",
+    #         "Day": "Wed",
+    #         "Signal": "BUY"
+    #     }
+    # ]
+
+    return {
+        'statusCode': 200,
+        'body': 'OK'
+    }`;
 
 const AlertsPage = () => {
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
@@ -89,7 +126,6 @@ const AlertsPage = () => {
   return (
     <>
       <Title>Notifications</Title>
-      {/* Use Toggle or Segmented! to turn on or off notifications */}
       {/* red alert if not loggedIn- exact message in keep */}
       {/* yellow alert if subscription not active or not in beta - exact message in keep */}
       <div style={{
@@ -141,13 +177,23 @@ const AlertsPage = () => {
               />
               {account?.alerts?.webhook ? clearBtn : saveBtn}
             </div>
-            <br />
-            Sample code:
-            AWS Lambda
-            Flask
-            <SyntaxHighlighter language="python" style={dark}>
+            {/* <br /> */}
+            {/* <div> */}
+            <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span><b>Sample Code</b> [Python] (AWS Lambda):</span> <Button
+              onClick={() => copyToClipboard(codeString, "code")}
+              icon={<CopyOutlined />}
+            /></span>
+            {/* add Flask code block?*/}
+            {/* <div> */}
+            <SyntaxHighlighter
+              language="python"
+              style={xt256}
+              showLineNumbers
+            >
               {codeString}
             </SyntaxHighlighter>
+            {/* </div>
+            </div> */}
           </div>
           <div className={overrides.column} style={{ color: 'rgba(255, 255, 255, 0.45)' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', minWidth: '300px' }}>
@@ -161,15 +207,14 @@ const AlertsPage = () => {
             Coming soon...
           </div>
         </div>
-        bull image on left, bear image on right
+        {/* bull image on left, bear image on right
         or bull left middle, bear left bottom (both under email in the left col), and webhook stuff in the middle col
         use monochrome / B&W images when email is disabled and colored images when email is enabled
-        show toasts when alert is saved
+        show toasts when alert is saved or fails
         show warning alert on top for those not in beta or not subscribed
         disable input/toggles if not signed in + tooltips + redirect to sign in model
         write sentence about how signals come in between 12:00-12:10 UTC
-        Write sentence or question mark hover tooltip about how email is preferred notification for manual traders
-        and webhook is preferred notification for automated trading systems
+         */}
       </div>
     </>
   );

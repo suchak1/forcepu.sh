@@ -13,6 +13,8 @@ def transform_signal(raw_signal):
         date = date[0]
 
     sig = raw_signal['Sig']
+    if type(sig) == list:
+        sig = sig[0]
     if type(sig) == str:
         sig = sig.lower() == 'true'
     sig = 'BUY' if signal else 'SELL'

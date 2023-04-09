@@ -10,7 +10,7 @@ from botocore.exceptions import ClientError
 from datetime import datetime, timedelta, timezone
 from pynamodb.attributes import UTCDateTimeAttribute
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
-from shared.models import query_by_api_key, UserModel
+from shared.models import UserModel
 from shared.utils import \
     verify_user, options, transform_signal, \
     error, enough_time_has_passed, \
@@ -165,6 +165,12 @@ def post_notify(event):
     total_users = processor.total
     success_ratio = num_notified / total_users if total_users else 1
     if success_ratio < 0.95:
+        # threshold is dependent on successful email AND webhook notifications
+        # it's possible that users misconfigure webhook / don't send 2xx response
+        # change user alerts schema so user.alerts.webhook.url and user.alerts.webhook.queue
+        # disable webhook after 5-10 misconfigured requests
+        # but also make test route and btn, so users can try out
+        # in POST /account, test if url is being set to "", if so, then also reset queue
         return error(500, 'Notifications failed to send.')
 
     # check that memory and timeout are being respected - print os.cpu_count()
@@ -271,7 +277,10 @@ def notify_webhook(user, signal):
     data = [signal]
     response = requests.post(url, json=data, headers=headers)
     if not response.ok:
+        # send error log for webhook res
         raise Exception('Webhook did not return 2xx response.')
+    # else:
+    # send log for webhook res success
 
 
 def notify_sms():
