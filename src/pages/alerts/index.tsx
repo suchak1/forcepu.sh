@@ -233,7 +233,7 @@ const AlertsPage = () => {
         use monochrome / B&W images when email is disabled and colored images when email is enabled
         write custom style for code block- magenta, cyan, etc
         show toasts when alert is saved or fails
-        disable input/toggles if not signed in + tooltips + redirect to sign in model
+        tooltips for !loggedIn (redirect to sign in modal) and notInBeta (redirect to Subscription page)?
         write sentence about how signals come in between 12:00-12:10 UTC
          */}
       </div>
