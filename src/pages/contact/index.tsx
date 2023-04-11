@@ -8,7 +8,6 @@ import layoutStyles from "@/layouts/index.module.less";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { AccountContext } from "../../layouts";
-import CUBE from "../../../assets/cube.gif";
 import { headerHeight } from "../../layouts";
 import subStyles from "@/pages/subscription/index.module.less";
 

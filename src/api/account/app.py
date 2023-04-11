@@ -1,7 +1,6 @@
 import json
-from shared.models import UserModel, Alerts, attributes_lookup, alerts_lookup
+from shared.models import UserModel, attributes_lookup, alerts_lookup
 from shared.utils import options, verify_user
-from pynamodb.attributes import UnicodeAttribute, BooleanAttribute
 
 
 def handle_account(event, _):

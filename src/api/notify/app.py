@@ -12,9 +12,9 @@ from pynamodb.attributes import UTCDateTimeAttribute
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 from shared.models import UserModel
 from shared.utils import \
-    verify_user, options, transform_signal, \
+    options, transform_signal, \
     error, enough_time_has_passed, \
-    past_date, res_headers
+    res_headers
 
 
 class Cryptographer:

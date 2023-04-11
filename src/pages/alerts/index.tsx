@@ -8,10 +8,15 @@ import layoutStyles from "@/layouts/index.module.less";
 import { CopyOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { AccountContext } from "../../layouts";
-import CUBE from "../../../assets/cube.gif";
 import { headerHeight } from "../../layouts";
 import subStyles from "@/pages/subscription/index.module.less";
 import overrides from "@/pages/alerts/index.module.less";
+import BULL from "@/assets/bull.png";
+import BEAR from "@/assets/bear.png";
+// import BULL_INVERT from "@/assets/bull_invert.png";
+// import BEAR_INVERT from "@/assets/bear_invert.png";
+import BULL_GRAY from "@/assets/bull_gs1.png";
+import BEAR_GRAY from "@/assets/bear_gs1.png";
 import { copyToClipboard } from "@/pages/docs";
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 // Async version has slightly higher bundle size but faster load
@@ -23,6 +28,7 @@ SyntaxHighlighter.registerLanguage('python', py);
 import "./index.module.less";
 
 import styled from "styled-components";
+import { OmitProps } from "antd/es/transfer/ListBody";
 
 const { Title } = Typography;
 
@@ -174,6 +180,13 @@ const AlertsPage = () => {
             Receive an email when a new signal is detected.
             <br />
             (For manual trading, this is the preferred notification type.)
+            {/* <img className="logo" src={BULL} height={'20%'}></img> */}
+            {/* <img className="logo" src={BEAR} height={'20%'}></img> */}
+            <div className={overrides.img}>
+              <img className="logo" src={account?.alerts?.email ? BULL : BULL_GRAY}></img>
+              {/* use _invert, _gs1, or _gs2 for deactivated state */}
+              <img className="logo" src={account?.alerts?.email ? BEAR : BEAR_GRAY}></img>
+            </div>
           </div>
           <div className={overrides.column}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', minWidth: '300px' }}>
@@ -229,9 +242,7 @@ const AlertsPage = () => {
             Coming soon...
           </div>
         </div>
-        {/* bull left middle, bear left bottom (both under email in the left col), and webhook stuff in the middle col
-        use monochrome / B&W images when email is disabled and colored images when email is enabled
-        write custom style for code block- magenta, cyan, etc
+        {/* write custom style for code block- magenta, cyan, etc
         show toasts when alert is saved or fails
         tooltips for !loggedIn (redirect to sign in modal) and notInBeta (redirect to Subscription page)?
         write sentence about how signals come in between 12:00-12:10 UTC

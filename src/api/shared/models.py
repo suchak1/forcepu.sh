@@ -1,5 +1,4 @@
 import os
-from copy import deepcopy
 import secrets
 from pynamodb.models import Model
 from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
