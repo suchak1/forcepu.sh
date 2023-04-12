@@ -275,12 +275,16 @@ const AlertsPage = () => {
             Coming soon...
           </div>
         </div>
-        {/* merge in hyperdrive changes
+        {/* 
+        // use buy and sell email templates
+        // 1 prod release
+        // merge in hyperdrive changes
         // update each subscription: active to subscribed
         // and each permissions.in_beta to in_beta in prod db
-        // create signals email and use that
-        // set up SES in prod after inital deploy
-        // increase sub price */}
+        // 2nd prod release
+        // set up SES in prod after inital deploy (move out of sandbox)
+        // increase sub price 
+        */}
       </div>
     </div >
   );
