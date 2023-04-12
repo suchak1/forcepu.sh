@@ -273,7 +273,6 @@ const AlertsPage = () => {
           </div>
         </div>
         {/* write custom style for code block- magenta, cyan, etc
-        tooltips for !loggedIn (redirect to sign in modal) and notInBeta (redirect to Subscription page)?
         write sentence about how signals come in between 12:00-12:10 UTC
         // update each subscription: active to subscribed
         // and each permissions.in_beta to in_beta in prod db
