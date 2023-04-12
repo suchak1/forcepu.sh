@@ -156,10 +156,11 @@ const AlertsPage = () => {
       {!loggedIn && (
         <Alert
           message={<span>You must be&nbsp;
-            <NavLink
+            <a
               style={{ color: '#52e5ff' }}
-              to={'/subscription'}>{'signed in'}
-            </NavLink>
+              onClick={() => setShowLogin(true)}>
+              {'signed in'}
+            </a>
             &nbsp;to change your notification preferences. 🔔</span>}
           type="error"
           showIcon
@@ -167,21 +168,23 @@ const AlertsPage = () => {
           style={{ marginBottom: "12px" }}
         />
       )}
-      {notInBeta && (
-        <Alert
-          message={<span>You will not receive notifications until you&nbsp;
-            <NavLink
-              // className={subStyles.contact}
-              style={{ color: 'magenta' }}
-              to={'/subscription'}>{'activate your subscription'}
-            </NavLink>
-            &nbsp;or join the closed beta. 🔔</span>}
-          type="warning"
-          showIcon
-          closable
-          style={{ marginBottom: "12px" }}
-        />
-      )}
+      {
+        notInBeta && (
+          <Alert
+            message={<span>You will not receive notifications until you&nbsp;
+              <NavLink
+                // className={subStyles.contact}
+                style={{ color: 'magenta' }}
+                to={'/subscription'}>{'activate your subscription'}
+              </NavLink>
+              &nbsp;or join the closed beta. 🔔</span>}
+            type="warning"
+            showIcon
+            closable
+            style={{ marginBottom: "12px" }}
+          />
+        )
+      }
       <Title>Notifications</Title>
       <div style={{
         display: 'flex',
@@ -227,7 +230,7 @@ const AlertsPage = () => {
                 onChange={(e) => !e && onClear()}
               />
             </div>
-            Receive a webhook event when a new signal is detected.
+            Receive a webhook event when a new signal is detected (00:00 - 00:10 UTC).
             <br />
             (For automated trading, this is the preferred notification type.)
             <b>Listen for events</b>
@@ -272,15 +275,18 @@ const AlertsPage = () => {
             Coming soon...
           </div>
         </div>
-        {/* write custom style for code block- magenta, cyan, etc
-        write sentence about how signals come in between 12:00-12:10 UTC
+        {/* 
+        // add /alerts page to auth login/logout in amplify all envs
+        write custom style for code block- magenta, cyan, etc
+        // merge in hyperdrive changes
         // update each subscription: active to subscribed
         // and each permissions.in_beta to in_beta in prod db
         // create signals email and use that
-        // set up SES in prod
+        // set up SES in prod after inital deploy
+        // increase sub price
          */}
       </div>
-    </div>
+    </div >
   );
 };
 

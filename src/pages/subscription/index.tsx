@@ -237,7 +237,7 @@ const SubscriptionPage = () => {
                   width: '100%', display: 'flex',
                   justifyContent: 'space-between' // can also be 'space-evenly'
                 }}>
-                  <div>New signals are produced by 12:05 UTC.</div>
+                  <div>New signals are produced between 00:00 - 00:10 UTC.</div>
                   {minInvestment && (
                     <div
                       style={{ marginBottom: "24px" }}
