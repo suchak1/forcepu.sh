@@ -231,7 +231,7 @@ const SubscriptionPage = () => {
               {/* use badges to show discount percentage for yearly plans or combos */}
               {/* additional cards say Downgrade or Upgrade (magenta btn) and backend uses stripe.Subscription.modify + prorating  */}
               {subscriptionCard}
-              <div style={{ display: 'flex', justifyContent: 'center' }}>Having issues? &nbsp;<NavLink to={'/contact'}>{'Contact us!'}</NavLink></div>
+              <div style={{ display: 'flex', justifyContent: 'center' }}>Having issues? &nbsp;<NavLink className={overrides.contact} to={'/contact'}>{'Contact us!'}</NavLink></div>
               <div>
                 <div style={{
                   width: '100%', display: 'flex',
