@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect, useMemo, useContext } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Typography, notification, Tooltip, Badge, Card, Button, Spin, Alert, Select, Input, Popover, Result, Switch } from "antd";
+import { Typography, notification, Tooltip, Badge, Card, Button, Spin, Alert, Select, Input, Popover, Result, Switch, message } from "antd";
 import { getApiUrl, getDayDiff, get3DCircle, linspace } from "@/utils";
 import pageStyles from "@/pages/home/index.module.less";
 import layoutStyles from "@/layouts/index.module.less";
@@ -109,9 +109,45 @@ const AlertsPage = () => {
       headers: { Authorization: jwtToken },
       body: JSON.stringify(alerts),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        const data = response.json();
+        if (response.ok) {
+          notification.success({
+            duration: 10,
+            message: "Missing API Key",
+            description: (
+              <>
+                <span>{"Paste your API key in the "}</span>
+                <b>
+                  <span style={{ color: "#49cc90" }}>Authorize</span>
+                </b>
+                <span>{" modal."}</span>
+              </>
+            ),
+          });
+          return data;
+        }
+
+        throw new Error(data['message']);
+      }
+      )
       .then((data) => setAccount(data))
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        notification.error({
+          duration: 10,
+          message: "Missing API Key",
+          description: (
+            <>
+              <span>{"Paste your API key in the "}</span>
+              <b>
+                <span style={{ color: "#49cc90" }}>Authorize</span>
+              </b>
+              <span>{" modal."}</span>
+            </>
+          ),
+        });
+        console.error(err);
+      })
       .finally(() => setLoading(false));
   }
 
@@ -214,7 +250,26 @@ const AlertsPage = () => {
             <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span><b>Sample Code</b> [Python] (AWS Lambda):</span>
               <Button
-                onClick={() => copyToClipboard(codeString, "code")}
+                onClick={() => {
+                  // notification.success({
+                  //   duration: 10,
+                  //   message: "Notifications Settings",
+                  //   description: "Saved successfully.",
+                  // });
+                  // message.success('Preferences saved successfully.')
+                  // message.error('Could not save settings.')
+                  // notification.error({
+                  //   duration: 5,
+                  //   message: "Settings not saved",
+                  //   description: "Try refreshing the page.",
+                  // });
+                  notification.success({
+                    duration: 5,
+                    message: "Settings saved!",
+                    // description: "saved success.",
+                  });
+                  // copyToClipboard(codeString, "code");
+                }}
                 icon={<CopyOutlined />}
               />
             </span>
