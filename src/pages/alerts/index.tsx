@@ -112,19 +112,10 @@ const AlertsPage = () => {
       .then((response) => {
         const data = response.json();
         if (response.ok) {
-          notification.success({
-            duration: 10,
-            message: "Missing API Key",
-            description: (
-              <>
-                <span>{"Paste your API key in the "}</span>
-                <b>
-                  <span style={{ color: "#49cc90" }}>Authorize</span>
-                </b>
-                <span>{" modal."}</span>
-              </>
-            ),
-          });
+          // notification.success({
+          //   duration: 5,
+          //   message: "Settings saved!",
+          // });
           return data;
         }
 
@@ -134,17 +125,9 @@ const AlertsPage = () => {
       .then((data) => setAccount(data))
       .catch((err) => {
         notification.error({
-          duration: 10,
-          message: "Missing API Key",
-          description: (
-            <>
-              <span>{"Paste your API key in the "}</span>
-              <b>
-                <span style={{ color: "#49cc90" }}>Authorize</span>
-              </b>
-              <span>{" modal."}</span>
-            </>
-          ),
+          duration: 5,
+          message: "Settings not saved",
+          description: "Try refreshing the page.",
         });
         console.error(err);
       })
@@ -250,26 +233,7 @@ const AlertsPage = () => {
             <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span><b>Sample Code</b> [Python] (AWS Lambda):</span>
               <Button
-                onClick={() => {
-                  // notification.success({
-                  //   duration: 10,
-                  //   message: "Notifications Settings",
-                  //   description: "Saved successfully.",
-                  // });
-                  // message.success('Preferences saved successfully.')
-                  // message.error('Could not save settings.')
-                  // notification.error({
-                  //   duration: 5,
-                  //   message: "Settings not saved",
-                  //   description: "Try refreshing the page.",
-                  // });
-                  notification.success({
-                    duration: 5,
-                    message: "Settings saved!",
-                    // description: "saved success.",
-                  });
-                  // copyToClipboard(codeString, "code");
-                }}
+                onClick={() => copyToClipboard(codeString, "code")}
                 icon={<CopyOutlined />}
               />
             </span>
@@ -301,6 +265,10 @@ const AlertsPage = () => {
         show toasts when alert is saved or fails
         tooltips for !loggedIn (redirect to sign in modal) and notInBeta (redirect to Subscription page)?
         write sentence about how signals come in between 12:00-12:10 UTC
+        // update each subscription: active to subscribed
+        // and each permissions.in_beta to in_beta in prod db
+        // create signals email and use that
+        // set up SES in prod
          */}
       </div>
     </div>
