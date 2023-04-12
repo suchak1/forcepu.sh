@@ -275,16 +275,18 @@ const AlertsPage = () => {
             Coming soon...
           </div>
         </div>
-        {/* 
-        // add /alerts page to auth login/logout in amplify all envs
-        write custom style for code block- magenta, cyan, etc
+        {/* write custom style for code block- magenta, cyan, etc
+        // yellow for reserved words like (if, else, class)
+        // magenta for variables
+        // cyan for function
+        // red for class name
+        // green for named function params/keywords
         // merge in hyperdrive changes
         // update each subscription: active to subscribed
         // and each permissions.in_beta to in_beta in prod db
         // create signals email and use that
         // set up SES in prod after inital deploy
-        // increase sub price
-         */}
+        // increase sub price */}
       </div>
     </div >
   );
