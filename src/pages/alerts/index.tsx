@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect, useMemo, useContext } from "react";
-import { useSearchParams } from "react-router-dom";
+import { NavLink, useSearchParams } from "react-router-dom";
 import { Typography, notification, Tooltip, Badge, Card, Button, Spin, Alert, Select, Input, Popover, Result, Switch, message } from "antd";
 import { getApiUrl, getDayDiff, get3DCircle, linspace } from "@/utils";
 import pageStyles from "@/pages/home/index.module.less";
@@ -164,7 +164,13 @@ const AlertsPage = () => {
       )}
       {notInBeta && (
         <Alert
-          message="You will not receive notifications until you activate your subscription or join the closed beta. 🔔"
+          message={<span>You will not receive notifications until you&nbsp;
+            <NavLink
+              className={subStyles.contact}
+              // style={{ color: 'magenta' }}
+              to={'/subscription'}>{'activate your subscription'}
+            </NavLink>
+            &nbsp;or join the closed beta. 🔔</span>}
           type="warning"
           showIcon
           closable
