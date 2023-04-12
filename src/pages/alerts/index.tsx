@@ -275,13 +275,7 @@ const AlertsPage = () => {
             Coming soon...
           </div>
         </div>
-        {/* write custom style for code block- magenta, cyan, etc
-        // yellow for reserved words like (if, else, class)
-        // magenta for variables
-        // cyan for function
-        // red for class name
-        // green for named function params/keywords
-        // merge in hyperdrive changes
+        {/* merge in hyperdrive changes
         // update each subscription: active to subscribed
         // and each permissions.in_beta to in_beta in prod db
         // create signals email and use that
