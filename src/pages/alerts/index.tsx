@@ -155,7 +155,12 @@ const AlertsPage = () => {
     <div style={{ height: '100%' }}>
       {!loggedIn && (
         <Alert
-          message="You must be signed in to change your notification preferences. 🔔"
+          message={<span>You must be&nbsp;
+            <NavLink
+              style={{ color: '#52e5ff' }}
+              to={'/subscription'}>{'signed in'}
+            </NavLink>
+            &nbsp;to change your notification preferences. 🔔</span>}
           type="error"
           showIcon
           closable
@@ -166,8 +171,8 @@ const AlertsPage = () => {
         <Alert
           message={<span>You will not receive notifications until you&nbsp;
             <NavLink
-              className={subStyles.contact}
-              // style={{ color: 'magenta' }}
+              // className={subStyles.contact}
+              style={{ color: 'magenta' }}
               to={'/subscription'}>{'activate your subscription'}
             </NavLink>
             &nbsp;or join the closed beta. 🔔</span>}
