@@ -587,7 +587,7 @@ const Page = () => {
           <Spin indicator={antIcon} />
         </div>
       ) : (
-        <div className={styles.parent}>
+        <div className={`${styles.parent} ${styles.fullHeight}`}>
           {!inBeta && !loading && (
             <div className={`${styles.child} ${styles.chartMobile}`}>
               <LineChart
@@ -597,7 +597,7 @@ const Page = () => {
               />
             </div>
           )}
-          <div style={{ height: "400px" }} className={styles.child}>
+          <div style={{ display: 'flex', alignItems: 'center' }} className={styles.child}>
             {inBeta ? (
               <>
                 <Modal
@@ -723,6 +723,7 @@ const Page = () => {
             ) : (
               !loading && (
                 <Table
+                  style={{ width: '100%' }}
                   dataSource={
                     toggle ? previewData.BTC.stats : previewData.USD.stats
                   }
