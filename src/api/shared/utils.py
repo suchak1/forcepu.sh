@@ -57,8 +57,7 @@ def verify_user(claims):
     # ['email']
     # ['email_verified']
     # ['name']
-    # Need to add 'LoginWithAmazon' provider
-    providers = ['Google', 'Facebook']
+    providers = ['Google', 'Facebook', 'LoginWithAmazon']
     actually_verified = email_verified == 'true'
     if email_verified == 'false':
         if 'identities' in claims:
