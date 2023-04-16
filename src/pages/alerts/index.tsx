@@ -89,16 +89,15 @@ const AlertsPage = () => {
     // justifyContent: 'center'
   };
 
-  // useEffect(() => {
-  //   if (account) {
-  //     const webhookUrl = account?.alerts?.webhook;
-  //     if (webhookUrl) {
-  //       setUrl(webhookUrl);
-  //       setSaved(true);
-  //     }
-  //   }
+  useEffect(() => {
+    if (account) {
+      const webhookUrl = account?.alerts?.webhook;
+      if (webhookUrl) {
+        setUrl(webhookUrl);
+      }
+    }
 
-  // }, [account])
+  }, [account])
 
   const postAccount = (alerts) => {
     setLoading(true);
