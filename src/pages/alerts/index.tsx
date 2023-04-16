@@ -149,7 +149,6 @@ const AlertsPage = () => {
     <Button disabled={disabled} className={subStyles.subscribe} onClick={onClear}>Clear</Button>;
   // </>;
 
-  console.log(url);
   return (
     <div style={{ height: '100%' }}>
       {!loggedIn && (
@@ -239,7 +238,6 @@ const AlertsPage = () => {
                 placeholder="https://api.domain.com/route"
                 onChange={(event) => setUrl(event.target.value)}
                 value={account?.alerts?.webhook || url}
-              // defaultValue={url}
               />
               {account?.alerts?.webhook ? clearBtn : saveBtn}
             </div>

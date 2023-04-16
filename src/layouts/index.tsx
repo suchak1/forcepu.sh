@@ -32,6 +32,7 @@ import TOS, { TOSTitleText } from "@/pages/tos";
 import Privacy from "@/pages/privacy";
 import Home from "@/pages/home";
 import Alerts from "@/pages/alerts";
+import Template from "@/pages/template";
 
 const { darkAlgorithm } = theme;
 
@@ -366,6 +367,7 @@ const Layout = ({ children }: LayoutProps) => {
             <Route path="/tos" element={<TOS />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/alerts" element={<Alerts />} />
+            <Route path="/template" element={<Template />} />
             {/* This is 404 redirect to home page for unknown routes */}
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
