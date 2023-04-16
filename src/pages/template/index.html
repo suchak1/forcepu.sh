@@ -6,6 +6,7 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
     <title>FORCEPU.SH Buy Signal</title>
+    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter"> -->
     <style type="text/css">
         /* What it does: Remove spaces around the email design added by some email clients. */
         /* Beware: It can remove the padding / margin and add a background color to the compose a reply window. */
@@ -16,6 +17,7 @@
             height: 100% !important;
             width: 100% !important;
             color: rgba(255, 255, 255, 0.85) !important;
+            background: #1f1f1f !important;
             font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji" !important;
         }
 
@@ -35,9 +37,20 @@
         </span>
     </div>
     <!-- body -->
-    <div style="background: black">
-        <div>HYPERDRIVE AI has detected a new signal: <b style="color:#52e5ff">BUY</b></div>
-        <div></div>
+    <div style="display:flex;justify-content:center;height:calc(100% - 119px)">
+        <div
+            style="background: black;width:600px;display:flex;justify-content: space-between;padding:24px;flex-direction: column;">
+            <div style="text-align:center">HYPERDRIVE AI has detected a new signal: <b style="color:#52e5ff">BUY</b>
+            </div>
+            <!-- make body a black card centered in a gray 1f1f1f background with max width -->
+            <!-- but border/outline around bull and grayscale bear underneath on mobile and side by side on desktop -->
+            <div style="display:flex;justify-content:center"><img src="../../assets/bull.png" width="250px"></div>
+            <!-- USE VARIABLES HERE for DATE, SIGNAL, ASSET, etc -->
+            <span>On the close of Tuesday April 4, 2022, our AI model detected a <span
+                    style="color:#52e5ff"><b>BUY</b></span>
+                signal for asset <span style="color:#F7931A"><b>BTC</b></span>.</span>
+            <!-- View Signals button under sentence that links to home page / eventually signals page -->
+        </div>
     </div>
     <!-- footer -->
     <div style="background:#1f1f1f;color:#a6a6a6;text-align:center;padding:21px 0">
