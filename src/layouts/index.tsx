@@ -137,8 +137,8 @@ const routes = [
         <div className={overrides.home}>
           {/* consider making capital FORCEPU.SH */}
           {/* use "force" to find and replace accordingly */}
-          <span className={overrides.white}>force</span>
-          <span>pu.sh</span>
+          <span className={overrides.white}>FORCE</span>
+          <span>PU.SH</span>
         </div>
       </>
     ),
@@ -406,9 +406,10 @@ export default ({ route, children }: LayoutProps) => (
       // card box shadow
       boxShadowCard: "0 1px 2px -2px rgb(0 0 0 / 64%), 0 3px 6px 0 rgb(0 0 0 / 48%), 0 5px 12px 4px rgb(0 0 0 / 36%)",
       // button box shadow
-      controlTmpOutline: '0 2px 0 rgb(0 0 0 / 2%)'
+      controlTmpOutline: '0 2px 0 rgb(0 0 0 / 2%)',
       // borderRadiusLG: 2,
       // borderRadiusSM: 2,
+      fontFamily: 'Syne Mono, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
     },
     components: {
       Input: {
