@@ -149,7 +149,7 @@ const AlertsPage = () => {
     <Button disabled={disabled} className={subStyles.subscribe} onClick={onClear}>Clear</Button>;
   // </>;
 
-
+  console.log(url);
   return (
     <div style={{ height: '100%' }}>
       {!loggedIn && (
@@ -215,9 +215,9 @@ const AlertsPage = () => {
             {/* <img className="logo" src={BULL} height={'20%'}></img> */}
             {/* <img className="logo" src={BEAR} height={'20%'}></img> */}
             <div className={overrides.img}>
-              <img className="logo" src={account?.alerts?.email ? BULL : BULL_GRAY}></img>
+              <img src={account?.alerts?.email ? BULL : BULL_GRAY}></img>
               {/* use _invert, _gs1, or _gs2 for deactivated state */}
-              <img className="logo" src={account?.alerts?.email ? BEAR : BEAR_GRAY}></img>
+              <img src={account?.alerts?.email ? BEAR : BEAR_GRAY}></img>
             </div>
           </div>
           <div className={overrides.column}>
@@ -238,8 +238,8 @@ const AlertsPage = () => {
                 disabled={disabled || account?.alerts?.webhook}
                 placeholder="https://api.domain.com/route"
                 onChange={(event) => setUrl(event.target.value)}
-                // value={account?.alerts?.webhook}
-                defaultValue={url}
+                value={account?.alerts?.webhook}
+              // defaultValue={url}
               />
               {account?.alerts?.webhook ? clearBtn : saveBtn}
             </div>
@@ -278,6 +278,9 @@ const AlertsPage = () => {
         </div>
         {/* 
         // use buy and sell email templates
+        // need vector images from halie
+        // make sure vite files DO NOT have cache busting hash
+        // at least images paths should be consistent
         // 1 prod release
         // merge in hyperdrive changes
         // update each subscription: active to subscribed
