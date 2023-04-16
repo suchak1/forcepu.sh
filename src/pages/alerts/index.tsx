@@ -239,7 +239,8 @@ const AlertsPage = () => {
                 disabled={disabled || account?.alerts?.webhook}
                 placeholder="https://api.domain.com/route"
                 onChange={(event) => setUrl(event.target.value)}
-                defaultValue={account?.alerts?.webhook}
+                // value={account?.alerts?.webhook}
+                defaultValue={url}
               />
               {account?.alerts?.webhook ? clearBtn : saveBtn}
             </div>
