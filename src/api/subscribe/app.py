@@ -241,10 +241,12 @@ def post_subscribe(event, _):
         sub_was_active = bool(user.subscribed)
 
         if sub_was_active != sub_is_active:
+            actions = [UserModel.subscribed.set(int(sub_is_active))]
             if not sub_is_active:
                 stripe_lookup.checkout['created'] = UTCDateTimeAttribute(
                 ).serialize(past_date)
-            user.update(actions=[UserModel.subscribed.set(int(sub_is_active))])
+                actions.append(UserModel.stripe.set(stripe_lookup))
+            user.update(actions=actions)
 
     return response
 
