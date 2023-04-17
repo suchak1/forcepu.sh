@@ -46,7 +46,7 @@
     <!-- body -->
     <div style="display:flex;justify-content:center;height:calc(100% - 119px)">
         <div
-            style="background: black;width:400px;display:flex;justify-content: space-between;padding:24px;flex-direction: column;">
+            style="background: black;width:400px;display:flex;justify-content: space-around;padding:24px;flex-direction: column;">
             <div style="text-align:center">
                 <div style="font-size: 38px;padding-bottom:12px">Signal Alert</div>
                 <div style="font-size:16px;font-weight:600">HYPERDRIVE AI has detected a new <b
@@ -60,19 +60,21 @@
                     <img src="../../assets/bull.png" width="250px">
                 </div>
             </div>
-            <!-- USE VARIABLES HERE for DATE, SIGNAL, ASSET, etc -->
-            <div style="display:flex;flex-direction:column;row-gap:16px;text-align:justify">
-                <div>On the close of Tuesday April 4, 2022, our AI model detected a <span
-                        style="color:#52e5ff"><b>BUY</b></span>
-                    signal for asset <span style="color:#F7931A"><b>BTC</b></span>.</div>
-                <!-- View Signals button under sentence that links to home page / eventually signals page -->
-                <!-- link to /signals page since that redirects to home page anyway -->
-                <div>Our model is now <span style="color:lime"><b>up 47%</b></span> (relative to <span
-                        style="color:#F7931A"><b>BTC</b></span>) since its inception.</div>
-            </div>
-            <div style="padding:30px 0;width:100%;display:flex;justify-content:center;align-items:center">
-                <a href="https://forcepu.sh/signals" target="_blank" rel="noopener noreferrer"
-                    style="width:fit-content"><button class="text">View Signals</button></a>
+            <div style="display:flex;flex-direction:column;justify-content:space-around">
+                <!-- USE VARIABLES HERE for DATE, SIGNAL, ASSET, etc -->
+                <div style="display:flex;flex-direction:column;row-gap:16px;text-align:justify">
+                    <div>On the close of Tuesday April 4, 2022, our AI model detected a <span
+                            style="color:#52e5ff"><b>BUY</b></span>
+                        signal for asset <span style="color:#F7931A"><b>BTC</b></span>.</div>
+                    <!-- View Signals button under sentence that links to home page / eventually signals page -->
+                    <!-- link to /signals page since that redirects to home page anyway -->
+                    <div>Our model is now <span style="color:lime"><b>up 47%</b></span> (relative to <span
+                            style="color:#F7931A"><b>BTC</b></span>) since its inception.</div>
+                </div>
+                <div style="padding:30px 0;width:100%;display:flex;justify-content:center;align-items:center">
+                    <a href="https://forcepu.sh/signals" target="_blank" rel="noopener noreferrer"
+                        style="width:fit-content"><button class="text">View Signals</button></a>
+                </div>
             </div>
         </div>
     </div>
