@@ -276,9 +276,7 @@ const AlertsPage = () => {
         </div>
         {/* 
         // use buy and sell email templates
-        // need vector images from halie
-        // make sure vite files DO NOT have cache busting hash
-        // at least images paths should be consistent
+        // pass in percentage
         // 1 prod release
         // merge in hyperdrive changes
         // update each subscription: active to subscribed
