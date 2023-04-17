@@ -15,12 +15,17 @@
         body {
             margin: 0 !important;
             padding: 0 !important;
+            /* 700 min, 900 max? */
             height: 100% !important;
             width: 100% !important;
             color: rgba(255, 255, 255, 0.85) !important;
             background: #1f1f1f !important;
             font-family: Syne Mono, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji" !important;
             font-size: 14px !important;
+        }
+
+        .text {
+            font-family: Syne Mono, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji" !important;
         }
 
         /* * {
@@ -56,7 +61,7 @@
                 </div>
             </div>
             <!-- USE VARIABLES HERE for DATE, SIGNAL, ASSET, etc -->
-            <div style="display:flex;flex-direction:column;row-gap:16px">
+            <div style="display:flex;flex-direction:column;row-gap:16px;text-align:justify">
                 <div>On the close of Tuesday April 4, 2022, our AI model detected a <span
                         style="color:#52e5ff"><b>BUY</b></span>
                     signal for asset <span style="color:#F7931A"><b>BTC</b></span>.</div>
@@ -65,12 +70,16 @@
                 <div>Our model is now <span style="color:lime"><b>up 47%</b></span> (relative to <span
                         style="color:#F7931A"><b>BTC</b></span>) since its inception.</div>
             </div>
-            <a href="https://forcepu.sh/signals"><button>View Signals</button></a>
+            <div style="width:100%;display:flex;justify-content:center;align-items:center">
+                <a href="https://forcepu.sh/signals" target="_blank" rel="noopener noreferrer"
+                    style="width:fit-content"><button class="text">View Signals</button></a>
+            </div>
         </div>
     </div>
     <!-- footer -->
     <div style="background:#1f1f1f;color:#a6a6a6;text-align:center;padding:21px 0">
-        <a style="color:#a6a6a6" href="https://forcepu.sh/alerts">unsubscribe</a>
+        <a style="color:#a6a6a6" href="https://forcepu.sh/alerts" target="_blank"
+            rel="noopener noreferrer">unsubscribe</a>
     </div>
 </body>
 
