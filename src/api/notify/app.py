@@ -243,8 +243,6 @@ def notify_email(user, signal):
     # don't use emojis in subject line - bad for click/open rate, looks like spam
     # summarize data from signal (date, day, signal, asset) in sentence or json obj
     # make sure emails have unsubscribe link - link to {dev.}forcepu.sh/alerts?
-    # use free wysiwyg html editor - online version that allows collaboration
-    # send halie a google doc with all the email design reqs - or we collaborate in figma
 
     # templates
     # https://stripo.email/templates/type/notice/
