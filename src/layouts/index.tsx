@@ -409,7 +409,7 @@ export default ({ route, children }: LayoutProps) => (
       controlTmpOutline: '0 2px 0 rgb(0 0 0 / 2%)',
       // borderRadiusLG: 2,
       // borderRadiusSM: 2,
-      fontFamily: 'Syne Mono, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+      fontFamily: '"Helvetica Neue", Syne Mono, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
     },
     components: {
       Input: {
