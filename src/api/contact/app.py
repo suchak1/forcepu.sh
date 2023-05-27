@@ -5,7 +5,7 @@ from smtplib import SMTP_SSL as SMTP
 from email.mime.text import MIMEText
 from utils import \
     verify_user, options, \
-    error, res_headers
+    error, res_headers, get_email
 
 
 def handle_contact(event, _):
@@ -52,7 +52,7 @@ def post_contact(event):
 
 
 def send_email(user, subject, message):
-    sender = os.environ['EMAIL_USER']
+    sender = get_email(os.environ['EMAIL_USER'], os.environ['STAGE'])
     msg = MIMEText(message, 'plain')
     msg['To'] = sender
     # From header doesn't seem to do anything

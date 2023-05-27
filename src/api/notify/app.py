@@ -16,9 +16,7 @@ from models import UserModel
 from utils import \
     options, transform_signal, \
     error, enough_time_has_passed, \
-    res_headers
-
-STAGE = os.environ['STAGE']
+    res_headers, get_email
 
 
 class Cryptographer:
@@ -202,7 +200,7 @@ def post_notify(event):
 
 
 def notify_email(user, signal):
-    sender = os.environ['SIGNAL_EMAIL']
+    sender = get_email(os.environ['SIGNAL_EMAIL'], os.environ['STAGE'])
     recipient = user.email
     region = 'us-east-1'
     charset = 'UTF-8'

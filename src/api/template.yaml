@@ -43,8 +43,9 @@ Parameters:
   EmitSecret:
     Type: "String"
     NoEcho: true
-  SignalEmail:
-    Type
+  SignalsEmail:
+    Type: "String"
+    NoEcho: true
 
 Globals:
   Function:
@@ -124,6 +125,7 @@ Resources:
         Variables:
           EMAIL_USER: !Ref EmailUser
           EMAIL_PASS: !Ref EmailPass
+          STAGE: !Ref Stage
       #     TABLE_NAME: !Ref UsersTable
       # Policies:
       #   - DynamoDBCrudPolicy:

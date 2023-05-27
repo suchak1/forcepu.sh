@@ -6,6 +6,10 @@ res_headers = {"Access-Control-Allow-Origin": "*"}
 past_date = datetime(2020, 1, 1, tzinfo=timezone.utc)
 
 
+def get_email(user, env):
+    return f"{user}@{'dev.' if env == 'dev' else ''}forcepu.sh"
+
+
 def transform_signal(raw_signal):
     signal = {}
     date = raw_signal['Time']
