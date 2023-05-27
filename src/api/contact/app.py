@@ -1,5 +1,6 @@
 import os
 import json
+import logging
 from smtplib import SMTP_SSL as SMTP
 from email.mime.text import MIMEText
 from utils import \
@@ -67,7 +68,7 @@ def send_email(user, subject, message):
         server.sendmail(sender, sender, msg.as_string())
         return True
     except Exception as e:
-        print(e)
+        logging.exception(e)
         print("SMTP server connection error")
         return False
     finally:

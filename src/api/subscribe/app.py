@@ -1,6 +1,7 @@
 import os
 import json
 import stripe
+import logging
 from models import UserModel
 from datetime import datetime, timedelta, timezone
 from pynamodb.attributes import UTCDateTimeAttribute
@@ -205,9 +206,11 @@ def post_subscribe(event, _):
             req_body, signature, webhook_secret)
     except ValueError as e:
         # Invalid payload
+        logging.exception(e)
         raise e
     except stripe.error.SignatureVerificationError as e:
         # Invalid signature
+        logging.exception(e)
         raise e
 
     body = json.dumps({'status': 'success'})

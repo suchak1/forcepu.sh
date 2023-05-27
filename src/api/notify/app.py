@@ -2,6 +2,7 @@ import os
 import json
 import boto3
 import base64
+import logging
 import requests
 from time import sleep
 from jinja2 import Template
@@ -113,7 +114,7 @@ def notify_user(user, signal):
                 alert['fx'](user, signal)
             except Exception as e:
                 print(f"{alert['type']} alert failed to send for {user.email}")
-                print(e)
+                logging.exception(e)
                 success = False
         alerts = user.alerts
         now = datetime.now(timezone.utc)
@@ -139,12 +140,10 @@ def post_notify(event):
     header = 'emit_secret'
     encrypted = req_headers[header] if header in req_headers else ''
     cryptographer = Cryptographer(password, salt)
-    try:
-        decrypted = cryptographer.decrypt(encrypted).decode('UTF-8')
-        if not decrypted == emit_secret:
-            raise Exception()
-    except:
+    decrypted = cryptographer.decrypt(encrypted).decode('UTF-8')
+    if not decrypted == emit_secret:
         sleep(10)
+        print('Incorrect emit secret provided.')
         return error(401, 'Provide a valid emit secret.')
     req_body = json.loads(event['body'])
     signal = transform_signal(req_body)
