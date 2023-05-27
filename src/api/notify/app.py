@@ -208,7 +208,7 @@ def notify_email(user, signal):
     region = 'us-east-1'
     charset = 'UTF-8'
     client = boto3.client('sesv2', region_name=region)
-    subject = "FORCEPU.SH: BTC (₿) Signal Alert"
+    subject = f"FORCEPU.SH: {signal['Asset']} (₿) Signal Alert"
     body_text = ("Visit FORCEPU.SH to view the new signal.")
     with open('template.html.jinja', 'r') as file:
         content = file.read()

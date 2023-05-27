@@ -76,342 +76,342 @@ Resources:
       Description: shared api code layer for forcepu.sh
       ContentUri: shared
       RetentionPolicy: Delete
-  AccountFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      Environment:
-        Variables:
-          TABLE_NAME: !Ref UsersTable
-      Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref UsersTable
-      PackageType: Zip
-      CodeUri: account
-      Runtime: python3.8 
-      Handler: app.handle_account
-      Layers:
-      - !Ref SharedLayer
-      Events:
-        GetAccount:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /account
-            Method: get
-            RestApiId: !Ref ApiGatewayApi
-            Auth:
-              Authorizer: CognitoAuth
-              # header Authorization: id_token from /token endpoint
-        PostAccount:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /account
-            Method: post
-            RestApiId: !Ref ApiGatewayApi
-            Auth:
-              Authorizer: CognitoAuth
-              # header Authorization: id_token from /token endpoint
-        Options:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /account
-            Method: options
-            RestApiId: !Ref ApiGatewayApi
-  ContactFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      Environment:
-        Variables:
-          EMAIL_USER: !Ref EmailUser
-          EMAIL_PASS: !Ref EmailPass
-      #     TABLE_NAME: !Ref UsersTable
-      # Policies:
-      #   - DynamoDBCrudPolicy:
-      #       TableName: !Ref UsersTable
-      PackageType: Zip
-      CodeUri: contact
-      Runtime: python3.8 
-      Handler: app.handle_contact
-      Layers:
-      - !Ref SharedLayer
-      Events:
-        PostContact:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /contact
-            Method: post
-            RestApiId: !Ref ApiGatewayApi
-            Auth:
-              Authorizer: CognitoAuth
-              # header Authorization: id_token from /token endpoint
-        Options:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /contact
-            Method: options
-            RestApiId: !Ref ApiGatewayApi
-  ExerciseLogFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      PackageType: Zip
-      CodeUri: gym
-      Runtime: python3.8 
-      Handler: app.get_exercise_log
-      Events:
-        ExerciseLog:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /exercise_log
-            Method: get
-            RestApiId: !Ref ApiGatewayApi
-  PreviewFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      Environment:
-        Variables:
-          S3_BUCKET: !Ref S3Bucket
-      Policies:
-        - Statement:
-            - Sid: S3ReadPolicy
-              Effect: Allow
-              Action:
-                - s3:GetObject
-              Resource: !Sub "arn:aws:s3:::${S3Bucket}/data/api/*"
-      PackageType: Zip
-      CodeUri: preview
-      Runtime: python3.8 
-      Handler: app.get_preview
-      Events:
-        Preview:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /preview
-            Method: get
-            RestApiId: !Ref ApiGatewayApi
-  ModelFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      Environment:
-        Variables:
-          S3_BUCKET: !Ref S3Bucket
-      Policies:
-        - Statement:
-            - Sid: S3ReadPolicy
-              Effect: Allow
-              Action:
-                - s3:GetObject
-              Resource: !Sub "arn:aws:s3:::${S3Bucket}/models/latest/metadata.json"
-      PackageType: Zip
-      CodeUri: model
-      Runtime: python3.8 
-      Handler: app.get_model
-      Events:
-        Model:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /model
-            Method: get
-            RestApiId: !Ref ApiGatewayApi
-  VisualizationFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      Environment:
-        Variables:
-          S3_BUCKET: !Ref S3Bucket
-      Policies:
-        - Statement:
-            - Sid: S3ReadPolicy
-              Effect: Allow
-              Action:
-                - s3:GetObject
-              Resource:
-                [
-                  !Sub "arn:aws:s3:::${S3Bucket}/models/latest/2D/*",
-                  !Sub "arn:aws:s3:::${S3Bucket}/models/latest/3D/*",
-                ]
-      PackageType: Zip
-      CodeUri: model
-      Runtime: python3.8 
-      Handler: app.get_visualization
-      Events:
-        Model:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /visualization
-            Method: get
-            RestApiId: !Ref ApiGatewayApi
-  SignalsFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      Environment:
-        Variables:
-          S3_BUCKET: !Ref S3Bucket
-          TABLE_NAME: !Ref UsersTable
-      Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref UsersTable
-        - Statement:
-            - Sid: S3ReadPolicy
-              Effect: Allow
-              Action:
-                - s3:GetObject
-              Resource: !Sub "arn:aws:s3:::${S3Bucket}/models/latest/signals.csv"
-      PackageType: Zip
-      CodeUri: signals
-      Runtime: python3.8 
-      Handler: app.handle_signals
-      Layers:
-      - !Ref SharedLayer
-      Events:
-        Signals:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /signals
-            Method: get
-            RestApiId: !Ref ApiGatewayApi
-        Options:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /signals
-            Method: options
-            RestApiId: !Ref ApiGatewayApi
-  PlansFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      Environment:
-        Variables:
-          STRIPE_SECRET_KEY: !Ref StripeSecretKey
-          TABLE_NAME: !Ref UsersTable
-          STRIPE_PRICE_ID: !Ref StripePriceId
-      PackageType: Zip
-      CodeUri: subscribe
-      Runtime: python3.8 
-      Handler: app.get_plans
-      Layers:
-      - !Ref SharedLayer
-      Events:
-        GetPlans:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /plans
-            Method: get
-            RestApiId: !Ref ApiGatewayApi
-  SubscribeFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      Environment:
-        Variables:
-          STRIPE_SECRET_KEY: !Ref StripeSecretKey
-          STRIPE_WEBHOOK_SECRET: !Ref StripeWebhookSecret
-          TABLE_NAME: !Ref UsersTable
-      Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref UsersTable
-      PackageType: Zip
-      CodeUri: subscribe
-      Runtime: python3.8 
-      Handler: app.post_subscribe
-      Layers:
-      - !Ref SharedLayer
-      Events:
-        PostSubscribe:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /subscribe
-            Method: post
-            RestApiId: !Ref ApiGatewayApi
-  NotifyFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      MemorySize: 10240 # 10GB
-      Timeout: 900 # 15 min
-      Environment:
-        Variables:
-          SALT: !Ref Salt
-          CRYPT_PASS: !Ref CryptPass
-          EMIT_SECRET: !Ref EmitSecret
-          TABLE_NAME: !Ref UsersTable
-          STAGE: !Ref Stage
-      Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref UsersTable
-      PackageType: Zip
-      CodeUri: notify
-      Runtime: python3.8 
-      Handler: app.post_notify
-      Layers:
-      - !Ref SharedLayer
-      Events:
-        PostNotify:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /notify
-            Method: post
-            RestApiId: !Ref ApiGatewayApi
-  CheckoutFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      Environment:
-        Variables:
-          STRIPE_SECRET_KEY: !Ref StripeSecretKey
-          TABLE_NAME: !Ref UsersTable
-          STRIPE_PRICE_ID: !Ref StripePriceId
-      Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref UsersTable
-      PackageType: Zip
-      CodeUri: subscribe
-      Runtime: python3.8 
-      Handler: app.handle_checkout
-      Layers:
-      - !Ref SharedLayer
-      Events:
-        PostCheckout:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /checkout
-            Method: post
-            RestApiId: !Ref ApiGatewayApi
-            Auth:
-              Authorizer: CognitoAuth
-              # header Authorization: id_token from /token endpoint
-        Options:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /checkout
-            Method: options
-            RestApiId: !Ref ApiGatewayApi
-  BillingFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      Environment:
-        Variables:
-          STRIPE_SECRET_KEY: !Ref StripeSecretKey
-          TABLE_NAME: !Ref UsersTable
-      Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref UsersTable
-      PackageType: Zip
-      CodeUri: subscribe
-      Runtime: python3.8 
-      Handler: app.handle_billing
-      Layers:
-      - !Ref SharedLayer
-      Events:
-        PostBilling:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /billing
-            Method: post
-            RestApiId: !Ref ApiGatewayApi
-            Auth:
-              Authorizer: CognitoAuth
-              # header Authorization: id_token from /token endpoint
-        Options:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /billing
-            Method: options
-            RestApiId: !Ref ApiGatewayApi
+  # AccountFunction:
+  #   Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  #   Properties:
+  #     Environment:
+  #       Variables:
+  #         TABLE_NAME: !Ref UsersTable
+  #     Policies:
+  #       - DynamoDBCrudPolicy:
+  #           TableName: !Ref UsersTable
+  #     PackageType: Zip
+  #     CodeUri: account
+  #     Runtime: python3.8 
+  #     Handler: app.handle_account
+  #     Layers:
+  #     - !Ref SharedLayer
+  #     Events:
+  #       GetAccount:
+  #         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  #         Properties:
+  #           Path: /account
+  #           Method: get
+  #           RestApiId: !Ref ApiGatewayApi
+  #           Auth:
+  #             Authorizer: CognitoAuth
+  #             # header Authorization: id_token from /token endpoint
+  #       PostAccount:
+  #         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  #         Properties:
+  #           Path: /account
+  #           Method: post
+  #           RestApiId: !Ref ApiGatewayApi
+  #           Auth:
+  #             Authorizer: CognitoAuth
+  #             # header Authorization: id_token from /token endpoint
+  #       Options:
+  #         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  #         Properties:
+  #           Path: /account
+  #           Method: options
+  #           RestApiId: !Ref ApiGatewayApi
+  # ContactFunction:
+  #   Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  #   Properties:
+  #     Environment:
+  #       Variables:
+  #         EMAIL_USER: !Ref EmailUser
+  #         EMAIL_PASS: !Ref EmailPass
+  #     #     TABLE_NAME: !Ref UsersTable
+  #     # Policies:
+  #     #   - DynamoDBCrudPolicy:
+  #     #       TableName: !Ref UsersTable
+  #     PackageType: Zip
+  #     CodeUri: contact
+  #     Runtime: python3.8 
+  #     Handler: app.handle_contact
+  #     Layers:
+  #     - !Ref SharedLayer
+  #     Events:
+  #       PostContact:
+  #         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  #         Properties:
+  #           Path: /contact
+  #           Method: post
+  #           RestApiId: !Ref ApiGatewayApi
+  #           Auth:
+  #             Authorizer: CognitoAuth
+  #             # header Authorization: id_token from /token endpoint
+  #       Options:
+  #         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  #         Properties:
+  #           Path: /contact
+  #           Method: options
+  #           RestApiId: !Ref ApiGatewayApi
+  # ExerciseLogFunction:
+  #   Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  #   Properties:
+  #     PackageType: Zip
+  #     CodeUri: gym
+  #     Runtime: python3.8 
+  #     Handler: app.get_exercise_log
+  #     Events:
+  #       ExerciseLog:
+  #         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  #         Properties:
+  #           Path: /exercise_log
+  #           Method: get
+  #           RestApiId: !Ref ApiGatewayApi
+  # PreviewFunction:
+  #   Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  #   Properties:
+  #     Environment:
+  #       Variables:
+  #         S3_BUCKET: !Ref S3Bucket
+  #     Policies:
+  #       - Statement:
+  #           - Sid: S3ReadPolicy
+  #             Effect: Allow
+  #             Action:
+  #               - s3:GetObject
+  #             Resource: !Sub "arn:aws:s3:::${S3Bucket}/data/api/*"
+  #     PackageType: Zip
+  #     CodeUri: preview
+  #     Runtime: python3.8 
+  #     Handler: app.get_preview
+  #     Events:
+  #       Preview:
+  #         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  #         Properties:
+  #           Path: /preview
+  #           Method: get
+  #           RestApiId: !Ref ApiGatewayApi
+  # ModelFunction:
+  #   Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  #   Properties:
+  #     Environment:
+  #       Variables:
+  #         S3_BUCKET: !Ref S3Bucket
+  #     Policies:
+  #       - Statement:
+  #           - Sid: S3ReadPolicy
+  #             Effect: Allow
+  #             Action:
+  #               - s3:GetObject
+  #             Resource: !Sub "arn:aws:s3:::${S3Bucket}/models/latest/metadata.json"
+  #     PackageType: Zip
+  #     CodeUri: model
+  #     Runtime: python3.8 
+  #     Handler: app.get_model
+  #     Events:
+  #       Model:
+  #         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  #         Properties:
+  #           Path: /model
+  #           Method: get
+  #           RestApiId: !Ref ApiGatewayApi
+  # VisualizationFunction:
+  #   Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  #   Properties:
+  #     Environment:
+  #       Variables:
+  #         S3_BUCKET: !Ref S3Bucket
+  #     Policies:
+  #       - Statement:
+  #           - Sid: S3ReadPolicy
+  #             Effect: Allow
+  #             Action:
+  #               - s3:GetObject
+  #             Resource:
+  #               [
+  #                 !Sub "arn:aws:s3:::${S3Bucket}/models/latest/2D/*",
+  #                 !Sub "arn:aws:s3:::${S3Bucket}/models/latest/3D/*",
+  #               ]
+  #     PackageType: Zip
+  #     CodeUri: model
+  #     Runtime: python3.8 
+  #     Handler: app.get_visualization
+  #     Events:
+  #       Model:
+  #         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  #         Properties:
+  #           Path: /visualization
+  #           Method: get
+  #           RestApiId: !Ref ApiGatewayApi
+  # SignalsFunction:
+  #   Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  #   Properties:
+  #     Environment:
+  #       Variables:
+  #         S3_BUCKET: !Ref S3Bucket
+  #         TABLE_NAME: !Ref UsersTable
+  #     Policies:
+  #       - DynamoDBCrudPolicy:
+  #           TableName: !Ref UsersTable
+  #       - Statement:
+  #           - Sid: S3ReadPolicy
+  #             Effect: Allow
+  #             Action:
+  #               - s3:GetObject
+  #             Resource: !Sub "arn:aws:s3:::${S3Bucket}/models/latest/signals.csv"
+  #     PackageType: Zip
+  #     CodeUri: signals
+  #     Runtime: python3.8 
+  #     Handler: app.handle_signals
+  #     Layers:
+  #     - !Ref SharedLayer
+  #     Events:
+  #       Signals:
+  #         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  #         Properties:
+  #           Path: /signals
+  #           Method: get
+  #           RestApiId: !Ref ApiGatewayApi
+  #       Options:
+  #         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  #         Properties:
+  #           Path: /signals
+  #           Method: options
+  #           RestApiId: !Ref ApiGatewayApi
+  # PlansFunction:
+  #   Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  #   Properties:
+  #     Environment:
+  #       Variables:
+  #         STRIPE_SECRET_KEY: !Ref StripeSecretKey
+  #         TABLE_NAME: !Ref UsersTable
+  #         STRIPE_PRICE_ID: !Ref StripePriceId
+  #     PackageType: Zip
+  #     CodeUri: subscribe
+  #     Runtime: python3.8 
+  #     Handler: app.get_plans
+  #     Layers:
+  #     - !Ref SharedLayer
+  #     Events:
+  #       GetPlans:
+  #         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  #         Properties:
+  #           Path: /plans
+  #           Method: get
+  #           RestApiId: !Ref ApiGatewayApi
+  # SubscribeFunction:
+  #   Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  #   Properties:
+  #     Environment:
+  #       Variables:
+  #         STRIPE_SECRET_KEY: !Ref StripeSecretKey
+  #         STRIPE_WEBHOOK_SECRET: !Ref StripeWebhookSecret
+  #         TABLE_NAME: !Ref UsersTable
+  #     Policies:
+  #       - DynamoDBCrudPolicy:
+  #           TableName: !Ref UsersTable
+  #     PackageType: Zip
+  #     CodeUri: subscribe
+  #     Runtime: python3.8 
+  #     Handler: app.post_subscribe
+  #     Layers:
+  #     - !Ref SharedLayer
+  #     Events:
+  #       PostSubscribe:
+  #         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  #         Properties:
+  #           Path: /subscribe
+  #           Method: post
+  #           RestApiId: !Ref ApiGatewayApi
+  # NotifyFunction:
+  #   Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  #   Properties:
+  #     MemorySize: 10240 # 10GB
+  #     Timeout: 900 # 15 min
+  #     Environment:
+  #       Variables:
+  #         SALT: !Ref Salt
+  #         CRYPT_PASS: !Ref CryptPass
+  #         EMIT_SECRET: !Ref EmitSecret
+  #         TABLE_NAME: !Ref UsersTable
+  #         STAGE: !Ref Stage
+  #     Policies:
+  #       - DynamoDBCrudPolicy:
+  #           TableName: !Ref UsersTable
+  #     PackageType: Zip
+  #     CodeUri: notify
+  #     Runtime: python3.8 
+  #     Handler: app.post_notify
+  #     Layers:
+  #     - !Ref SharedLayer
+  #     Events:
+  #       PostNotify:
+  #         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  #         Properties:
+  #           Path: /notify
+  #           Method: post
+  #           RestApiId: !Ref ApiGatewayApi
+  # CheckoutFunction:
+  #   Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  #   Properties:
+  #     Environment:
+  #       Variables:
+  #         STRIPE_SECRET_KEY: !Ref StripeSecretKey
+  #         TABLE_NAME: !Ref UsersTable
+  #         STRIPE_PRICE_ID: !Ref StripePriceId
+  #     Policies:
+  #       - DynamoDBCrudPolicy:
+  #           TableName: !Ref UsersTable
+  #     PackageType: Zip
+  #     CodeUri: subscribe
+  #     Runtime: python3.8 
+  #     Handler: app.handle_checkout
+  #     Layers:
+  #     - !Ref SharedLayer
+  #     Events:
+  #       PostCheckout:
+  #         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  #         Properties:
+  #           Path: /checkout
+  #           Method: post
+  #           RestApiId: !Ref ApiGatewayApi
+  #           Auth:
+  #             Authorizer: CognitoAuth
+  #             # header Authorization: id_token from /token endpoint
+  #       Options:
+  #         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  #         Properties:
+  #           Path: /checkout
+  #           Method: options
+  #           RestApiId: !Ref ApiGatewayApi
+  # BillingFunction:
+  #   Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  #   Properties:
+  #     Environment:
+  #       Variables:
+  #         STRIPE_SECRET_KEY: !Ref StripeSecretKey
+  #         TABLE_NAME: !Ref UsersTable
+  #     Policies:
+  #       - DynamoDBCrudPolicy:
+  #           TableName: !Ref UsersTable
+  #     PackageType: Zip
+  #     CodeUri: subscribe
+  #     Runtime: python3.8 
+  #     Handler: app.handle_billing
+  #     Layers:
+  #     - !Ref SharedLayer
+  #     Events:
+  #       PostBilling:
+  #         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  #         Properties:
+  #           Path: /billing
+  #           Method: post
+  #           RestApiId: !Ref ApiGatewayApi
+  #           Auth:
+  #             Authorizer: CognitoAuth
+  #             # header Authorization: id_token from /token endpoint
+  #       Options:
+  #         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  #         Properties:
+  #           Path: /billing
+  #           Method: options
+  #           RestApiId: !Ref ApiGatewayApi
   UsersTable:
     Type: AWS::DynamoDB::Table
     Properties:
