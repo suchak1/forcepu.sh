@@ -200,7 +200,8 @@ def post_notify(event):
 
 
 def notify_email(user, signal):
-    sender = get_email(os.environ['SIGNAL_EMAIL'], os.environ['STAGE'])
+    STAGE = os.environ['STAGE']
+    sender = get_email(os.environ['SIGNAL_EMAIL'], STAGE)
     recipient = user.email
     region = 'us-east-1'
     charset = 'UTF-8'
