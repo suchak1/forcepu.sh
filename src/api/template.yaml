@@ -57,20 +57,20 @@ Conditions:
     !Equals [!Ref Stage, prod]
 
 Resources:
-  # ApiGatewayApi:
-  #   Type: AWS::Serverless::Api
-  #   Properties:
-  #     StageName: !Ref Stage
-  #     Domain:
-  #       DomainName: !Join [ "", ["api.", !If [IsProd, "", "dev."], forcepu.sh ] ]
-  #       CertificateArn: !Ref CertArn
-  #       EndpointConfiguration: EDGE
-  #       Route53:
-  #         HostedZoneId: !Ref HostedZoneId
-  #     Auth:
-  #       Authorizers:
-  #         CognitoAuth:
-  #           UserPoolArn: !Ref UserPoolArn
+  ApiGatewayApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: !Ref Stage
+      Domain:
+        DomainName: !Join [ "", ["api.", !If [IsProd, "", "dev."], forcepu.sh ] ]
+        CertificateArn: !Ref CertArn
+        EndpointConfiguration: EDGE
+        Route53:
+          HostedZoneId: !Ref HostedZoneId
+      Auth:
+        Authorizers:
+          CognitoAuth:
+            UserPoolArn: !Ref UserPoolArn
   SharedLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
@@ -99,25 +99,25 @@ Resources:
           Properties:
             Path: /account
             Method: get
-            # RestApiId: !Ref ApiGatewayApi
-            # Auth:
-              # Authorizer: CognitoAuth
+            RestApiId: !Ref ApiGatewayApi
+            Auth:
+              Authorizer: CognitoAuth
               # header Authorization: id_token from /token endpoint
         PostAccount:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /account
             Method: post
-            # RestApiId: !Ref ApiGatewayApi
-            # Auth:
-              # Authorizer: CognitoAuth
+            RestApiId: !Ref ApiGatewayApi
+            Auth:
+              Authorizer: CognitoAuth
               # header Authorization: id_token from /token endpoint
         Options:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /account
             Method: options
-            # RestApiId: !Ref ApiGatewayApi
+            RestApiId: !Ref ApiGatewayApi
   ContactFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -142,16 +142,16 @@ Resources:
           Properties:
             Path: /contact
             Method: post
-            # RestApiId: !Ref ApiGatewayApi
-            # Auth:
-              # Authorizer: CognitoAuth
+            RestApiId: !Ref ApiGatewayApi
+            Auth:
+              Authorizer: CognitoAuth
               # header Authorization: id_token from /token endpoint
         Options:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /contact
             Method: options
-            # RestApiId: !Ref ApiGatewayApi
+            RestApiId: !Ref ApiGatewayApi
   ExerciseLogFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -165,7 +165,7 @@ Resources:
           Properties:
             Path: /exercise_log
             Method: get
-            # RestApiId: !Ref ApiGatewayApi
+            RestApiId: !Ref ApiGatewayApi
   PreviewFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -189,7 +189,7 @@ Resources:
           Properties:
             Path: /preview
             Method: get
-            # RestApiId: !Ref ApiGatewayApi
+            RestApiId: !Ref ApiGatewayApi
   ModelFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -213,7 +213,7 @@ Resources:
           Properties:
             Path: /model
             Method: get
-            # RestApiId: !Ref ApiGatewayApi
+            RestApiId: !Ref ApiGatewayApi
   VisualizationFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -241,7 +241,7 @@ Resources:
           Properties:
             Path: /visualization
             Method: get
-            # RestApiId: !Ref ApiGatewayApi
+            RestApiId: !Ref ApiGatewayApi
   SignalsFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -270,13 +270,13 @@ Resources:
           Properties:
             Path: /signals
             Method: get
-            # RestApiId: !Ref ApiGatewayApi
+            RestApiId: !Ref ApiGatewayApi
         Options:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /signals
             Method: options
-            # RestApiId: !Ref ApiGatewayApi
+            RestApiId: !Ref ApiGatewayApi
   PlansFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -297,7 +297,7 @@ Resources:
           Properties:
             Path: /plans
             Method: get
-            # RestApiId: !Ref ApiGatewayApi
+            RestApiId: !Ref ApiGatewayApi
   SubscribeFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -321,7 +321,7 @@ Resources:
           Properties:
             Path: /subscribe
             Method: post
-            # RestApiId: !Ref ApiGatewayApi
+            RestApiId: !Ref ApiGatewayApi
   NotifyFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -350,7 +350,7 @@ Resources:
           Properties:
             Path: /notify
             Method: post
-            # RestApiId: !Ref ApiGatewayApi
+            RestApiId: !Ref ApiGatewayApi
   CheckoutFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -374,16 +374,16 @@ Resources:
           Properties:
             Path: /checkout
             Method: post
-            # RestApiId: !Ref ApiGatewayApi
-            # Auth:
-              # Authorizer: CognitoAuth
+            RestApiId: !Ref ApiGatewayApi
+            Auth:
+              Authorizer: CognitoAuth
               # header Authorization: id_token from /token endpoint
         Options:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /checkout
             Method: options
-            # RestApiId: !Ref ApiGatewayApi
+            RestApiId: !Ref ApiGatewayApi
   BillingFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -406,16 +406,16 @@ Resources:
           Properties:
             Path: /billing
             Method: post
-            # RestApiId: !Ref ApiGatewayApi
-            # Auth:
-              # Authorizer: CognitoAuth
+            RestApiId: !Ref ApiGatewayApi
+            Auth:
+              Authorizer: CognitoAuth
               # header Authorization: id_token from /token endpoint
         Options:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /billing
             Method: options
-            # RestApiId: !Ref ApiGatewayApi
+            RestApiId: !Ref ApiGatewayApi
   UsersTable:
     Type: AWS::DynamoDB::Table
     Properties:
