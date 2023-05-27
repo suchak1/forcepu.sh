@@ -38,15 +38,6 @@ class Cryptographer:
         return self.f.decrypt(ciphertext)
 
 
-def handle_notify(event, _):
-    if event['httpMethod'].upper() == 'OPTIONS':
-        response = options()
-    else:
-        response = post_notify(event)
-
-    return response
-
-
 class Processor:
     def __init__(self, fx, data):
         self.fx = fx
@@ -129,7 +120,7 @@ def skip_users(users, to_skip):
             yield user
 
 
-def post_notify(event):
+def post_notify(event, _):
     salt = os.environ['SALT'].encode('UTF-8')
     password = os.environ['CRYPT_PASS'].encode('UTF-8')
     emit_secret = os.environ['EMIT_SECRET']
