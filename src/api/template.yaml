@@ -57,20 +57,20 @@ Conditions:
     !Equals [!Ref Stage, prod]
 
 Resources:
-  ApiGatewayApi:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: !Ref Stage
-      Domain:
-        DomainName: !Join [ "", ["api.", !If [IsProd, "", "dev."], forcepu.sh ] ]
-        CertificateArn: !Ref CertArn
-        EndpointConfiguration: EDGE
-        Route53:
-          HostedZoneId: !Ref HostedZoneId
-      Auth:
-        Authorizers:
-          CognitoAuth:
-            UserPoolArn: !Ref UserPoolArn
+  # ApiGatewayApi:
+  #   Type: AWS::Serverless::Api
+  #   Properties:
+  #     StageName: !Ref Stage
+  #     Domain:
+  #       DomainName: !Join [ "", ["api.", !If [IsProd, "", "dev."], forcepu.sh ] ]
+  #       CertificateArn: !Ref CertArn
+  #       EndpointConfiguration: EDGE
+  #       Route53:
+  #         HostedZoneId: !Ref HostedZoneId
+  #     Auth:
+  #       Authorizers:
+  #         CognitoAuth:
+  #           UserPoolArn: !Ref UserPoolArn
   SharedLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
@@ -100,8 +100,8 @@ Resources:
             Path: /account
             Method: get
             # RestApiId: !Ref ApiGatewayApi
-            Auth:
-              Authorizer: CognitoAuth
+            # Auth:
+              # Authorizer: CognitoAuth
               # header Authorization: id_token from /token endpoint
         PostAccount:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -109,8 +109,8 @@ Resources:
             Path: /account
             Method: post
             # RestApiId: !Ref ApiGatewayApi
-            Auth:
-              Authorizer: CognitoAuth
+            # Auth:
+              # Authorizer: CognitoAuth
               # header Authorization: id_token from /token endpoint
         Options:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -143,8 +143,8 @@ Resources:
             Path: /contact
             Method: post
             # RestApiId: !Ref ApiGatewayApi
-            Auth:
-              Authorizer: CognitoAuth
+            # Auth:
+              # Authorizer: CognitoAuth
               # header Authorization: id_token from /token endpoint
         Options:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -375,8 +375,8 @@ Resources:
             Path: /checkout
             Method: post
             # RestApiId: !Ref ApiGatewayApi
-            Auth:
-              Authorizer: CognitoAuth
+            # Auth:
+              # Authorizer: CognitoAuth
               # header Authorization: id_token from /token endpoint
         Options:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -407,8 +407,8 @@ Resources:
             Path: /billing
             Method: post
             # RestApiId: !Ref ApiGatewayApi
-            Auth:
-              Authorizer: CognitoAuth
+            # Auth:
+              # Authorizer: CognitoAuth
               # header Authorization: id_token from /token endpoint
         Options:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
