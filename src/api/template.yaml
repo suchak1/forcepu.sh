@@ -43,7 +43,7 @@ Parameters:
   EmitSecret:
     Type: "String"
     NoEcho: true
-  SignalsEmail:
+  SignalEmail:
     Type: "String"
     NoEcho: true
 
@@ -334,7 +334,7 @@ Resources:
           EMIT_SECRET: !Ref EmitSecret
           TABLE_NAME: !Ref UsersTable
           STAGE: !Ref Stage
-          SIGNAL_
+          SIGNAL_EMAIL: !Ref SignalEmail
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref UsersTable
