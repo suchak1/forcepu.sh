@@ -50,7 +50,7 @@ Parameters:
 Globals:
   Function:
     Timeout: 30
-    MemorySize: 4096
+    MemorySize: 10240
 
 Conditions:
   IsProd:
