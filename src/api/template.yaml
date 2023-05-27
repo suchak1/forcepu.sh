@@ -69,6 +69,13 @@ Resources:
         Authorizers:
           CognitoAuth:
             UserPoolArn: !Ref UserPoolArn
+  SharedLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: !Sub "${Stage}_shared_layer"
+      Description: shared api code layer for forcepu.sh
+      ContentUri: shared
+      RetentionPolicy: Delete
   AccountFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -78,7 +85,12 @@ Resources:
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref UsersTable
-      PackageType: Image
+      PackageType: Zip
+      CodeUri: account
+      Runtime: python3.8 
+      Handler: app.handle_account
+      Layers:
+      - !Ref SharedLayer
       Events:
         GetAccount:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -104,10 +116,6 @@ Resources:
             Path: /account
             Method: options
             RestApiId: !Ref ApiGatewayApi
-    Metadata:
-      Dockerfile: account/Dockerfile
-      DockerContext: ./
-      DockerTag: python3.8-v1
   ContactFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -119,7 +127,12 @@ Resources:
       # Policies:
       #   - DynamoDBCrudPolicy:
       #       TableName: !Ref UsersTable
-      PackageType: Image
+      PackageType: Zip
+      CodeUri: contact
+      Runtime: python3.8 
+      Handler: app.handle_contact
+      Layers:
+      - !Ref SharedLayer
       Events:
         PostContact:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -136,14 +149,13 @@ Resources:
             Path: /contact
             Method: options
             RestApiId: !Ref ApiGatewayApi
-    Metadata:
-      Dockerfile: contact/Dockerfile
-      DockerContext: ./
-      DockerTag: python3.8-v1
   ExerciseLogFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      PackageType: Image
+      PackageType: Zip
+      CodeUri: gym
+      Runtime: python3.8 
+      Handler: app.get_exercise_log
       Events:
         ExerciseLog:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -151,10 +163,6 @@ Resources:
             Path: /exercise_log
             Method: get
             RestApiId: !Ref ApiGatewayApi
-    Metadata:
-      Dockerfile: Dockerfile
-      DockerContext: ./gym
-      DockerTag: python3.8-v1
   PreviewFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -168,9 +176,10 @@ Resources:
               Action:
                 - s3:GetObject
               Resource: !Sub "arn:aws:s3:::${S3Bucket}/data/api/*"
-      PackageType: Image
-      ImageConfig:
-        Command: ["app.get_preview"]
+      PackageType: Zip
+      CodeUri: preview
+      Runtime: python3.8 
+      Handler: app.get_preview
       Events:
         Preview:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -178,10 +187,6 @@ Resources:
             Path: /preview
             Method: get
             RestApiId: !Ref ApiGatewayApi
-    Metadata:
-      Dockerfile: Dockerfile
-      DockerContext: ./preview
-      DockerTag: python3.8-v1
   ModelFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -195,9 +200,10 @@ Resources:
               Action:
                 - s3:GetObject
               Resource: !Sub "arn:aws:s3:::${S3Bucket}/models/latest/metadata.json"
-      PackageType: Image
-      ImageConfig:
-        Command: ["app.get_model"]
+      PackageType: Zip
+      CodeUri: model
+      Runtime: python3.8 
+      Handler: app.get_model
       Events:
         Model:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -205,10 +211,6 @@ Resources:
             Path: /model
             Method: get
             RestApiId: !Ref ApiGatewayApi
-    Metadata:
-      Dockerfile: Dockerfile
-      DockerContext: ./model
-      DockerTag: python3.8-v1
   VisualizationFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -226,9 +228,10 @@ Resources:
                   !Sub "arn:aws:s3:::${S3Bucket}/models/latest/2D/*",
                   !Sub "arn:aws:s3:::${S3Bucket}/models/latest/3D/*",
                 ]
-      PackageType: Image
-      ImageConfig:
-        Command: ["app.get_visualization"]
+      PackageType: Zip
+      CodeUri: model
+      Runtime: python3.8 
+      Handler: app.get_visualization
       Events:
         Model:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -236,10 +239,6 @@ Resources:
             Path: /visualization
             Method: get
             RestApiId: !Ref ApiGatewayApi
-    Metadata:
-      Dockerfile: Dockerfile
-      DockerContext: ./model
-      DockerTag: python3.8-v1
   SignalsFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -256,7 +255,12 @@ Resources:
               Action:
                 - s3:GetObject
               Resource: !Sub "arn:aws:s3:::${S3Bucket}/models/latest/signals.csv"
-      PackageType: Image
+      PackageType: Zip
+      CodeUri: signals
+      Runtime: python3.8 
+      Handler: app.handle_signals
+      Layers:
+      - !Ref SharedLayer
       Events:
         Signals:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -270,10 +274,6 @@ Resources:
             Path: /signals
             Method: options
             RestApiId: !Ref ApiGatewayApi
-    Metadata:
-      Dockerfile: signals/Dockerfile
-      DockerContext: ./
-      DockerTag: python3.8-v1
   PlansFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -282,9 +282,12 @@ Resources:
           STRIPE_SECRET_KEY: !Ref StripeSecretKey
           TABLE_NAME: !Ref UsersTable
           STRIPE_PRICE_ID: !Ref StripePriceId
-      PackageType: Image
-      ImageConfig:
-        Command: ["app.get_plans"]
+      PackageType: Zip
+      CodeUri: subscribe
+      Runtime: python3.8 
+      Handler: app.get_plans
+      Layers:
+      - !Ref SharedLayer
       Events:
         GetPlans:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -292,10 +295,6 @@ Resources:
             Path: /plans
             Method: get
             RestApiId: !Ref ApiGatewayApi
-    Metadata:
-      Dockerfile: subscribe/Dockerfile
-      DockerContext: ./
-      DockerTag: python3.8-v1
   SubscribeFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -307,9 +306,12 @@ Resources:
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref UsersTable
-      PackageType: Image
-      ImageConfig:
-        Command: ["app.post_subscribe"]
+      PackageType: Zip
+      CodeUri: subscribe
+      Runtime: python3.8 
+      Handler: app.post_subscribe
+      Layers:
+      - !Ref SharedLayer
       Events:
         PostSubscribe:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -317,10 +319,6 @@ Resources:
             Path: /subscribe
             Method: post
             RestApiId: !Ref ApiGatewayApi
-    Metadata:
-      Dockerfile: subscribe/Dockerfile
-      DockerContext: ./
-      DockerTag: python3.8-v1
   NotifyFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -336,9 +334,12 @@ Resources:
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref UsersTable
-      PackageType: Image
-      ImageConfig:
-        Command: ["app.post_notify"]
+      PackageType: Zip
+      CodeUri: notify
+      Runtime: python3.8 
+      Handler: app.post_notify
+      Layers:
+      - !Ref SharedLayer
       Events:
         PostNotify:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -346,10 +347,6 @@ Resources:
             Path: /notify
             Method: post
             RestApiId: !Ref ApiGatewayApi
-    Metadata:
-      Dockerfile: notify/Dockerfile
-      DockerContext: ./
-      DockerTag: python3.8-v1
   CheckoutFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -361,9 +358,12 @@ Resources:
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref UsersTable
-      PackageType: Image
-      ImageConfig:
-        Command: ["app.handle_checkout"]
+      PackageType: Zip
+      CodeUri: subscribe
+      Runtime: python3.8 
+      Handler: app.handle_checkout
+      Layers:
+      - !Ref SharedLayer
       Events:
         PostCheckout:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -380,10 +380,6 @@ Resources:
             Path: /checkout
             Method: options
             RestApiId: !Ref ApiGatewayApi
-    Metadata:
-      Dockerfile: subscribe/Dockerfile
-      DockerContext: ./
-      DockerTag: python3.8-v1
   BillingFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -394,9 +390,12 @@ Resources:
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref UsersTable
-      PackageType: Image
-      ImageConfig:
-        Command: ["app.handle_billing"]
+      PackageType: Zip
+      CodeUri: subscribe
+      Runtime: python3.8 
+      Handler: app.handle_billing
+      Layers:
+      - !Ref SharedLayer
       Events:
         PostBilling:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -413,10 +412,6 @@ Resources:
             Path: /billing
             Method: options
             RestApiId: !Ref ApiGatewayApi
-    Metadata:
-      Dockerfile: subscribe/Dockerfile
-      DockerContext: ./
-      DockerTag: python3.8-v1
   UsersTable:
     Type: AWS::DynamoDB::Table
     Properties:

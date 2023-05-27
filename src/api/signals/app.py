@@ -1,9 +1,10 @@
 import os
 import json
 import boto3
+from glob import glob
 from datetime import datetime, timedelta, timezone
-from shared.models import query_by_api_key, UserModel
-from shared.utils import options, error, enough_time_has_passed, res_headers, transform_signal
+from models import query_by_api_key, UserModel
+from utils import options, error, enough_time_has_passed, res_headers, transform_signal
 
 s3 = boto3.client('s3')
 

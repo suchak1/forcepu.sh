@@ -1,10 +1,10 @@
 import os
 import json
 import stripe
-from shared.models import UserModel
+from models import UserModel
 from datetime import datetime, timedelta, timezone
 from pynamodb.attributes import UTCDateTimeAttribute
-from shared.utils import \
+from utils import \
     verify_user, options, \
     error, enough_time_has_passed, \
     past_date, res_headers

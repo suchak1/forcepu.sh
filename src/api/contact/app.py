@@ -2,7 +2,7 @@ import os
 import json
 from smtplib import SMTP_SSL as SMTP
 from email.mime.text import MIMEText
-from shared.utils import \
+from utils import \
     verify_user, options, \
     error, res_headers
 

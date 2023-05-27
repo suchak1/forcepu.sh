@@ -11,8 +11,8 @@ from botocore.exceptions import ClientError
 from datetime import datetime, timedelta, timezone
 from pynamodb.attributes import UTCDateTimeAttribute
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
-from shared.models import UserModel
-from shared.utils import \
+from models import UserModel
+from utils import \
     options, transform_signal, \
     error, enough_time_has_passed, \
     res_headers

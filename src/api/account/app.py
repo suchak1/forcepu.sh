@@ -1,6 +1,6 @@
 import json
-from shared.models import UserModel, attributes_lookup, alerts_lookup
-from shared.utils import options, verify_user
+from models import UserModel, attributes_lookup, alerts_lookup
+from utils import options, verify_user
 
 
 def handle_account(event, _):
