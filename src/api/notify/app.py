@@ -4,6 +4,7 @@ import boto3
 import base64
 import requests
 from time import sleep
+from jinja2 import Template
 from cryptography.fernet import Fernet
 from multiprocessing import Process, Pipe
 from botocore.exceptions import ClientError
@@ -15,6 +16,8 @@ from shared.utils import \
     options, transform_signal, \
     error, enough_time_has_passed, \
     res_headers
+
+STAGE = os.environ['STAGE']
 
 
 class Cryptographer:
@@ -153,8 +156,15 @@ def post_notify(event):
         UserModel.alerts['webhook'] != ""
     )
     users_in_beta = UserModel.in_beta_index.query(1, filter_condition=cond)
+    s3 = boto3.client('s3')
+    obj = s3.get_object(
+        Bucket=os.environ['S3_BUCKET'], Key='data/api/preview.json')
+    preview = json.loads(obj['Body'].read())
+    hyperdrive = [data for data in preview['BTC']
+                  ['data'][-2:] if data['Name'] == 'hyperdrive'][0]
+    signal['Perf'] = hyperdrive['Bal'] - 1
     processor = Processor(notify_user, signal)
-    processor.signal = signal
+    # processor.signal = signal
     notified = set(processor.run(users_in_beta))
     users_subscribed = UserModel.subscribed_index.query(
         1, filter_condition=cond)
@@ -198,6 +208,13 @@ def notify_email(user, signal):
     region = 'us-east-1'
     charset = 'UTF-8'
     client = boto3.client('sesv2', region_name=region)
+    subject = "FORCEPU.SH: BTC (₿) Signal Alert"
+    body_text = ("Visit FORCEPU.SH to view the new signal.")
+    with open('template.html.jinja', 'r') as file:
+        content = file.read()
+    template = Template(content)
+    signal['Prefix'] = 'dev.' if STAGE == 'dev' else ''
+    html = template.render(signal)
     try:
         client.send_email(
             Destination={
@@ -210,50 +227,25 @@ def notify_email(user, signal):
                     'Body': {
                         'Html': {
                             'Charset': charset,
-                            'Data': BODY_HTML,
+                            'Data': html,
                         },
                         'Text': {
                             'Charset': charset,
-                            'Data': BODY_TEXT,
+                            'Data': body_text,
                         },
                     },
                     'Subject': {
                         'Charset': charset,
-                        'Data': SUBJECT,
+                        'Data': subject,
                     },
                 }
             },
             FromEmailAddress=sender,
-            # If you are not using a configuration set, comment or delete the
-            # following line
         )
     # verify signals email [dev] and [prod] on SES and use SES! - free for first 64k emails per month
     # disable receiving emails at signals address
     # https://repost.aws/knowledge-center/lambda-send-email-ses
     # https://iamkanikamodi.medium.com/write-a-sample-lambda-to-send-emails-using-ses-in-aws-a2e903d9129e
-
-    # BCC multiple users / batch?
-    # for template, use image of bull or bear based on signal, add green or red arrow?, add btc coin
-    # Pictures/bear_bull/bull-and-bear-facing-each-other.jpg
-    # Pictures/btc/bitcoin.jpeg
-    # use photoshop or gimp to create png w transparent bg
-    # use dall-e 2 for images or for inspo
-    # prompts - a bull/bear biting/chewing/holding a bitcoin in the style of vaporwave/anime
-    # template will have dark background (black or #1d1d1d/#1f1f1f) to match site
-    # don't use emojis in subject line - bad for click/open rate, looks like spam
-    # summarize data from signal (date, day, signal, asset) in sentence or json obj
-    # make sure emails have unsubscribe link - link to {dev.}forcepu.sh/alerts?
-
-    # templates
-    # https://stripo.email/templates/type/notice/
-    # https://beefree.io/templates/notification/
-    # https://unlayer.com/templates/something-new
-    # https://litmus.com/community/templates/topic/33-e-commerce-templates
-    # https://litmus.com/community/templates/topic/34-account-management-templates
-    # https://beefree.io/templates/notification/
-    # https://unlayer.com/templates > Usage > Notification
-
-    # Use canva (maybe not since no native html), unlayer, or postmarkapp to design, then export as HTML
 
     # Must submit request to move out of sandbox
     # https://docs.aws.amazon.com/ses/latest/dg/request-production-access.html
@@ -276,7 +268,8 @@ def notify_webhook(user, signal):
     response = requests.post(url, json=data, headers=headers)
     if not response.ok:
         # send error log for webhook res
-        raise Exception('Webhook did not return 2xx response.')
+        raise Exception(
+            f'Webhook did not return 2xx response. User: {user.email}')
     # else:
     # send log for webhook res success
 

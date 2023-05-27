@@ -11,7 +11,7 @@ import {
 } from "@aws-amplify/ui-react";
 import { Amplify } from "aws-amplify";
 import "@aws-amplify/ui-react/styles.css";
-import BTC_ICE from "@/assets/logo4.png";
+import BTC_ICE from "@/assets/logo.png";
 import overrides from "./index.module.less";
 import "./index.module.less";
 

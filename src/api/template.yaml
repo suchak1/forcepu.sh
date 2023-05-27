@@ -332,6 +332,7 @@ Resources:
           CRYPT_PASS: !Ref CryptPass
           EMIT_SECRET: !Ref EmitSecret
           TABLE_NAME: !Ref UsersTable
+          STAGE: !Ref Stage
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref UsersTable
