@@ -10,11 +10,6 @@ Parameters:
     AllowedValues:
       - dev
       - prod
-  ApiUrl:
-    Type: "String"
-    AllowedValues:
-      - api.dev.forcepu.sh
-      - api.forcepu.sh
   CertArn:
     Type: "String"
     NoEcho: true
@@ -48,11 +43,17 @@ Parameters:
   EmitSecret:
     Type: "String"
     NoEcho: true
+  SignalEmail:
+    Type
 
 Globals:
   Function:
     Timeout: 30
     MemorySize: 4096
+
+Conditions:
+  IsProd:
+    !Equals [!Ref Stage, prod]
 
 Resources:
   ApiGatewayApi:
@@ -60,7 +61,7 @@ Resources:
     Properties:
       StageName: !Ref Stage
       Domain:
-        DomainName: !Ref ApiUrl
+        DomainName: !Join [ "", ["api.", !If [IsProd, "", "dev."], forcepu.sh ] ]
         CertificateArn: !Ref CertArn
         EndpointConfiguration: EDGE
         Route53:
@@ -331,6 +332,7 @@ Resources:
           EMIT_SECRET: !Ref EmitSecret
           TABLE_NAME: !Ref UsersTable
           STAGE: !Ref Stage
+          SIGNAL_
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref UsersTable
