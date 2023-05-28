@@ -8,7 +8,7 @@ import layoutStyles from "@/layouts/index.module.less";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { AccountContext } from "../../layouts";
-import CUBE from "../../../assets/cube.gif";
+import CUBE from "@/assets/cube.gif";
 
 import overrides from "./index.module.less";
 
@@ -30,7 +30,7 @@ const SubscriptionPage = () => {
   const [billingLoading, setBillingLoading] = useState(false);
   const [searchParams] = useSearchParams();
   const showSuccessAlert = searchParams.get('success')?.toLowerCase() === 'true';
-  const subStatus = account?.stripe?.subscription?.active;
+  const subStatus = account?.subscribed;
   const subIsActive = subStatus || showSuccessAlert;
 
   // const checkoutSessionId = searchParams.get('session_id')
@@ -231,13 +231,13 @@ const SubscriptionPage = () => {
               {/* use badges to show discount percentage for yearly plans or combos */}
               {/* additional cards say Downgrade or Upgrade (magenta btn) and backend uses stripe.Subscription.modify + prorating  */}
               {subscriptionCard}
-              <div style={{ display: 'flex', justifyContent: 'center' }}>Having issues? &nbsp;<NavLink to={'/contact'}>{'Contact us!'}</NavLink></div>
+              <div style={{ display: 'flex', justifyContent: 'center' }}>Having issues? &nbsp;<NavLink className={overrides.contact} to={'/contact'}>{'Contact us!'}</NavLink></div>
               <div>
                 <div style={{
                   width: '100%', display: 'flex',
                   justifyContent: 'space-between' // can also be 'space-evenly'
                 }}>
-                  <div>New signals are produced by 12:05 UTC.</div>
+                  <div>New signals are produced between 00:00 - 00:10 UTC.</div>
                   {minInvestment && (
                     <div
                       style={{ marginBottom: "24px" }}

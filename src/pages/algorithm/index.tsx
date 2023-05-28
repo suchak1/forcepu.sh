@@ -1,13 +1,16 @@
 import { useState, useEffect, useMemo } from "react";
 import { Typography, Segmented, Row, Col, Card, Statistic, Spin } from "antd";
-import Plot from "react-plotly.js";
+import Plotly from "plotly.js-dist-min";
+import createPlotlyComponent from "react-plotly.js/factory";
 import { getApiUrl, getDayDiff, get3DCircle } from "@/utils";
 import pageStyles from "../home/index.module.less";
 import { LoadingOutlined } from "@ant-design/icons";
-import "./index.less";
+import overrides from "./index.module.less";
+import "./index.module.less";
 
 import styled from "styled-components";
 
+const Plot = createPlotlyComponent(Plotly);
 const { Title } = Typography;
 
 const numPoints = 360;
@@ -35,7 +38,7 @@ const Toggle = styled(Segmented)`
 
   .ant-segmented-thumb {
     background-color: ${(props: { val: boolean }) =>
-      props.val ? "magenta" : "#52e5ff"};
+    props.val ? "magenta" : "#52e5ff"};
   }
 `;
 
@@ -408,45 +411,47 @@ const AlgorithmPage = () => {
         />
       </span>
       <div
-        className={pageStyles.parent}
+        className={`${pageStyles.parent} ${overrides.fullHeight}`}
         style={{ alignItems: "center", minHeight: "450px" }}
       >
         <div className={pageStyles.child}>
           {!(viz2D && viz3D) ? (
             spinner
           ) : (
-            <>
+            <div style={{ height: '100%' }}>
               {toggle2D && plot2D}
-              <div style={toggle2D ? { display: "none" } : {}}>{plot3D}</div>
-            </>
+              <div style={toggle2D ? { display: "none" } : { height: '100%' }}>{plot3D}</div>
+            </div>
           )}
         </div>
         {metadata.length ? (
           <div className={pageStyles.child}>
-            <Row gutter={[24, 24]}>
-              <Col span={24} style={{ textAlign: "justify" }}>
-                The points on the plot represent historical market data reduced
-                from {metadata[2]?.stat} dimensions to {toggle2D ? "2D" : "3D"}.
-                The filled regions represent the model's predictions. Based on
-                which region today's data point occupies, we may be able to
-                predict whether now is a good time to{" "}
-                <b>
-                  <span style={{ color: "#52e5ff" }}>BUY</span>
-                </b>{" "}
-                or{" "}
-                <b>
-                  <span style={{ color: "magenta" }}>SELL</span>
-                </b>
-                .
-              </Col>
-              {metadata?.map((datum) => (
-                <Col span={12}>
-                  <Card>
-                    <Statistic title={datum.metadata} value={datum.stat} />
-                  </Card>
+            <div style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <Row gutter={[24, 24]} style={{ height: 'unset' }}>
+                <Col span={24} style={{ textAlign: "justify" }}>
+                  The points on the plot represent historical market data reduced
+                  from {metadata[2]?.stat} dimensions to {toggle2D ? "2D" : "3D"}.
+                  The filled regions represent the model's predictions. Based on
+                  which region today's data point occupies, we may be able to
+                  predict whether now is a good time to{" "}
+                  <b>
+                    <span style={{ color: "#52e5ff" }}>BUY</span>
+                  </b>{" "}
+                  or{" "}
+                  <b>
+                    <span style={{ color: "magenta" }}>SELL</span>
+                  </b>
+                  .
                 </Col>
-              ))}
-            </Row>
+                {metadata?.map((datum) => (
+                  <Col span={12}>
+                    <Card>
+                      <Statistic title={datum.metadata} value={datum.stat} />
+                    </Card>
+                  </Col>
+                ))}
+              </Row>
+            </div>
           </div>
         ) : null}
       </div>

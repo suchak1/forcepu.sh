@@ -22,7 +22,8 @@
     "ci": "rm -rf node_modules && pnpm install --frozen-lockfile",
     "amp": "APP_ID=\"${APP_ID}\" ENV=\"${ENV}\" amplify/pull.sh",
     "clean": "rm -rf node_modules && rm -rf src/.umi",
-    "swagger": "swagger-cli bundle -o src/api/spec/swagger.json src/api/spec/swagger.yaml"
+    "swagger": "swagger-cli bundle -o src/api/spec/swagger.json src/api/spec/swagger.yaml",
+    "visualize": "vite-bundle-visualizer -t treemap --open -o ${PWD}/stats.html"
   },
   "author": "Krish Suchak <suchak.krish@gmail.com>",
   "license": "MIT",
@@ -33,12 +34,13 @@
     "@nfte/react": "^1.0.4",
     "antd": "^5.1.0",
     "aws-amplify": "^5.0.7",
-    "plotly.js": "^2.17.0",
+    "plotly.js-dist-min": "^2.20.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hover-video-player": "^9.7.1",
     "react-plotly.js": "^2.6.0",
     "react-router-dom": "^6.6.1",
+    "react-syntax-highlighter": "^15.5.0",
     "styled-components": "^5.3.6",
     "swagger-ui-react": "^4.12.0"
   },

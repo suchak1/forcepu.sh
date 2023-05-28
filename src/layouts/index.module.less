@@ -19,7 +19,7 @@ body {
   // consider background: #1F1F1F;
   color: hsla(0, 0%, 100%, .85);
   font-size: 14px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: Syne Mono, "Helvetica Neue", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-variant: tabular-nums;
   // display: flex;
   // place-items: center;
@@ -313,6 +313,7 @@ input {
 
 :global(.ant-layout-footer) {
   padding: 0 24px !important;
+  border-top: rgba(255, 255, 255, 0.25) 1px solid;
 }
 
 .footerLink {
@@ -324,7 +325,8 @@ input {
 }
 
 :global(.ant-layout-header) {
-  background: #1f1f1f !important;
+  background: black !important;
+  border-bottom: rgba(255, 255, 255, 0.25) 1px solid;
   padding: 0 24px 0 20px !important;
   // change right align (2nd param) to 20px or left align (4th param) to 24px?
 }

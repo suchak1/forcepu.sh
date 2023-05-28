@@ -60,7 +60,7 @@ jobs:
           VITE_APP_WEB_CLIENT_ID: ${{ secrets.DEV_WEB_CLIENT_ID }}
           VITE_APP_OAUTH_DOMAIN: ${{ secrets.DEV_OAUTH_DOMAIN }}
           CF_DISTRO_ID: ${{ secrets.DEV_CF_DISTRO_ID }}
-        if: ${{ github.ref != 'refs/heads/master' }}
+        if: ${{ github.ref_name != 'master' }}
 
       - name: Build app [prod]
         run: pnpm run build:ui && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV && echo "CF_DISTRO_ID=${CF_DISTRO_ID}" >> $GITHUB_ENV
@@ -72,7 +72,7 @@ jobs:
           VITE_APP_WEB_CLIENT_ID: ${{ secrets.WEB_CLIENT_ID }}
           VITE_APP_OAUTH_DOMAIN: ${{ secrets.OAUTH_DOMAIN }}
           CF_DISTRO_ID: ${{ secrets.CF_DISTRO_ID }}
-        if: ${{ github.ref == 'refs/heads/master' }}
+        if: ${{ github.ref_name == 'master' }}
 
       - name: Deploy ui
         uses: jakejarvis/s3-sync-action@master

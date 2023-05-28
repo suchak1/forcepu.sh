@@ -1,6 +1,6 @@
 import json
-from shared.models import UserModel
-from shared.utils import options, verify_user
+from models import UserModel, attributes_lookup, alerts_lookup
+from utils import options, verify_user
 
 
 def handle_account(event, _):
@@ -53,7 +53,23 @@ def post_account(event):
         if 'permissions' in req_body and 'read_disclaimer' in req_body['permissions'] and req_body['permissions']['read_disclaimer']:
             user.permissions.read_disclaimer = True
             user.update(
-                actions=[UserModel.permissions.set(user.permissions)])
+                actions=[UserModel.permissions.set(user.permissions)]
+            )
+
+        if 'alerts' in req_body:
+            alerts = json.loads(user.to_json())['alerts']
+            updated_alerts = req_body['alerts']
+            for key, val in updated_alerts.items():
+                if key in alerts_lookup:
+                    # type(getattr(Alerts, 'sms')) == BooleanAttribute
+                    expected_attr = alerts_lookup[key]['attr']
+                    expected_type = attributes_lookup[expected_attr]
+                    if type(val) == expected_type:
+                        alerts[key] = val
+            user.alerts = alerts
+            user.update(
+                actions=[UserModel.alerts.set(user.alerts)]
+            )
         body = user.to_json()
 
     return {

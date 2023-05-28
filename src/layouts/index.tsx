@@ -11,7 +11,7 @@ import {
 } from "@aws-amplify/ui-react";
 import { Amplify } from "aws-amplify";
 import "@aws-amplify/ui-react/styles.css";
-import BTC_ICE from "@/assets/btc_ice.png";
+import BTC_ICE from "@/assets/logo.png";
 import overrides from "./index.module.less";
 import "./index.module.less";
 
@@ -31,6 +31,8 @@ import Gym from "@/pages/gym";
 import TOS, { TOSTitleText } from "@/pages/tos";
 import Privacy from "@/pages/privacy";
 import Home from "@/pages/home";
+import Alerts from "@/pages/alerts";
+import Template from "@/pages/template";
 
 const { darkAlgorithm } = theme;
 
@@ -65,7 +67,7 @@ if (isLocal) {
     },
     federationTarget: "COGNITO_USER_POOLS",
     aws_cognito_username_attributes: ["EMAIL"],
-    aws_cognito_social_providers: ["GOOGLE"],
+    aws_cognito_social_providers: ["GOOGLE", "FACEBOOK", "AMAZON"],
     aws_cognito_signup_attributes: ["EMAIL", "NAME", "PICTURE"],
     aws_cognito_mfa_configuration: "OPTIONAL",
     aws_cognito_mfa_types: ["TOTP"],
@@ -115,6 +117,7 @@ const pages: string[] = [
   "docs",
   "algorithm", // alternative name: research
   "subscription",
+  "alerts",
   "contact"
 ];
 
@@ -134,8 +137,8 @@ const routes = [
         <div className={overrides.home}>
           {/* consider making capital FORCEPU.SH */}
           {/* use "force" to find and replace accordingly */}
-          <span className={overrides.white}>force</span>
-          <span>pu.sh</span>
+          <span className={overrides.white}>FORCE</span>
+          <span>PU.SH</span>
         </div>
       </>
     ),
@@ -351,7 +354,7 @@ const Layout = ({ children }: LayoutProps) => {
           <TOS modal />
         </Modal>
         <AccountContext.Provider
-          value={{ account, accountLoading, loginLoading, setShowLogin }}
+          value={{ account, accountLoading, loginLoading, setShowLogin, setAccount }}
         >
           <Routes>
             <Route path="/" element={<Home />} />
@@ -363,6 +366,8 @@ const Layout = ({ children }: LayoutProps) => {
             <Route path="/gym" element={<Gym />} />
             <Route path="/tos" element={<TOS />} />
             <Route path="/privacy" element={<Privacy />} />
+            <Route path="/alerts" element={<Alerts />} />
+            <Route path="/template" element={<Template />} />
             {/* This is 404 redirect to home page for unknown routes */}
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
@@ -401,9 +406,10 @@ export default ({ route, children }: LayoutProps) => (
       // card box shadow
       boxShadowCard: "0 1px 2px -2px rgb(0 0 0 / 64%), 0 3px 6px 0 rgb(0 0 0 / 48%), 0 5px 12px 4px rgb(0 0 0 / 36%)",
       // button box shadow
-      controlTmpOutline: '0 2px 0 rgb(0 0 0 / 2%)'
+      controlTmpOutline: '0 2px 0 rgb(0 0 0 / 2%)',
       // borderRadiusLG: 2,
       // borderRadiusSM: 2,
+      fontFamily: 'Syne Mono, "Helvetica Neue", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
     },
     components: {
       Input: {

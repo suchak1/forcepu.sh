@@ -277,7 +277,7 @@ const Page = () => {
   const [haveNewSignal, setHaveNewSignal] = useState(false);
   const [quotaReached, setQuotaReached] = useState(false);
   const loading = previewLoading || accountLoading || loginLoading;
-  const inBeta = loggedIn && (account?.permissions?.in_beta || account?.stripe?.subscription?.active);
+  const inBeta = loggedIn && (account?.in_beta || account?.subscribed);
   const chartRef = useRef();
 
   useEffect(() => {
@@ -587,7 +587,7 @@ const Page = () => {
           <Spin indicator={antIcon} />
         </div>
       ) : (
-        <div className={styles.parent}>
+        <div className={`${styles.parent} ${styles.fullHeight}`}>
           {!inBeta && !loading && (
             <div className={`${styles.child} ${styles.chartMobile}`}>
               <LineChart
@@ -597,7 +597,7 @@ const Page = () => {
               />
             </div>
           )}
-          <div style={{ height: "400px" }} className={styles.child}>
+          <div style={{ display: 'flex', alignItems: 'center' }} className={styles.child}>
             {inBeta ? (
               <>
                 <Modal
@@ -723,6 +723,7 @@ const Page = () => {
             ) : (
               !loading && (
                 <Table
+                  style={{ width: '100%' }}
                   dataSource={
                     toggle ? previewData.BTC.stats : previewData.USD.stats
                   }

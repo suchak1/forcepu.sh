@@ -27,6 +27,7 @@ jobs:
       - name: Create parameters.env [prod]
         env:
           EmailUser: ${{ secrets.EMAIL_USER }}
+          SignalEmail: ${{ secrets.SIGNAL_EMAIL }}
           EmailPass: ${{ secrets.EMAIL_PASS }}
           StripePriceId: ${{ secrets.STRIPE_PRICE_ID }}
           StripeSecretKey: ${{ secrets.STRIPE_SECRET_KEY }}
@@ -34,29 +35,35 @@ jobs:
           StripeWebhookSecret: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
           S3Bucket: ${{ secrets.HYPERDRIVE_BUCKET }}
           Stage: prod
-          ApiUrl: api.forcepu.sh
           CertArn: ${{ secrets.CERT_ARN }}
           HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
           UserPoolArn: ${{ secrets.USER_POOL_ARN }}
+          Salt: ${{ secrets.SALT }}
+          CryptPass: ${{ secrets.CRYPT_PASS }}
+          EmitSecret: ${{ secrets.EMIT_SECRET }}
         run: |
           echo "
           EmailUser=${EmailUser}
+          SignalEmail=${SignalEmail}
           EmailPass=${EmailPass}
           StripePriceId=${StripePriceId}
           StripeSecretKey=${StripeSecretKey}
           StripeWebhookSecret=${StripeWebhookSecret}
           S3Bucket=${S3Bucket}
           Stage=${Stage}
-          ApiUrl=${ApiUrl}
           CertArn=${CertArn}
           HostedZoneId=${HostedZoneId}
           UserPoolArn=${UserPoolArn}
+          Salt=${Salt}
+          CryptPass=${CryptPass}
+          EmitSecret=${EmitSecret}
           " >> src/api/parameters.env
-        if: ${{ github.ref == 'refs/heads/master' }}
+        if: ${{ github.ref_name == 'master' }}
 
       - name: Create parameters.env [dev]
         env:
           EmailUser: ${{ secrets.EMAIL_USER }}
+          SignalEmail: ${{ secrets.SIGNAL_EMAIL }}
           EmailPass: ${{ secrets.EMAIL_PASS }}
           StripePriceId: ${{ secrets.DEV_STRIPE_PRICE_ID }}
           StripeSecretKey: ${{ secrets.DEV_STRIPE_SECRET_KEY }}
@@ -64,25 +71,30 @@ jobs:
           StripeWebhookSecret: ${{ secrets.DEV_STRIPE_WEBHOOK_SECRET }}
           S3Bucket: ${{ secrets.HYPERDRIVE_DEV_BUCKET }}
           Stage: dev
-          ApiUrl: api.dev.forcepu.sh
           CertArn: ${{ secrets.DEV_CERT_ARN }}
           HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
           UserPoolArn: ${{ secrets.DEV_USER_POOL_ARN }}
+          Salt: ${{ secrets.SALT }}
+          CryptPass: ${{ secrets.CRYPT_PASS }}
+          EmitSecret: ${{ secrets.DEV_EMIT_SECRET }}
         run: |
           echo "
           EmailUser=${EmailUser}
+          SignalEmail=${SignalEmail}
           EmailPass=${EmailPass}
           StripePriceId=${StripePriceId}
           StripeSecretKey=${StripeSecretKey}
           StripeWebhookSecret=${StripeWebhookSecret}
           S3Bucket=${S3Bucket}
           Stage=${Stage}
-          ApiUrl=${ApiUrl}
           CertArn=${CertArn}
           HostedZoneId=${HostedZoneId}
           UserPoolArn=${UserPoolArn}
+          Salt=${Salt}
+          CryptPass=${CryptPass}
+          EmitSecret=${EmitSecret}
           " >> src/api/dev-parameters.env
-        if: ${{ github.ref != 'refs/heads/master' }}
+        if: ${{ github.ref_name != 'master' }}
 
       - name: Build API
         run: npm run build:api
@@ -92,11 +104,11 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        if: ${{ github.ref == 'refs/heads/master' }}
+        if: ${{ github.ref_name == 'master' }}
 
       - name: Deploy API [dev]
         run: npm run deploy-dev:api
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        if: ${{ github.ref != 'refs/heads/master' }}
+        if: ${{ github.ref_name != 'master' }}

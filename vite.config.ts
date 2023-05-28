@@ -9,14 +9,20 @@ export default defineConfig({
     port: 8000
   },
   build: {
-    target: 'esnext'
+    target: 'esnext',
+    rollupOptions: {
+      output: {
+        assetFileNames: `assets/[name].[ext]`
+        // "assets/[name]-[hash][extname]"
+      }
+    }
   },
   // define: {
-    // ['global.']: 'window.',
-    // global: 'globalThis',
+  // ['global.']: 'window.',
+  // global: 'globalThis',
 
-    // globalThis may be better
-    // https://blog.logrocket.com/what-is-globalthis-why-use-it/
+  // globalThis may be better
+  // https://blog.logrocket.com/what-is-globalthis-why-use-it/
   // },
   plugins: [react()],
   resolve: {
@@ -40,10 +46,10 @@ export default defineConfig({
   // },
   optimizeDeps: {
     esbuildOptions: {
-        // Node.js global to browser globalThis
-        define: {
-            global: 'globalThis',
-        },
+      // Node.js global to browser globalThis
+      define: {
+        global: 'globalThis',
+      },
     },
   },
 })

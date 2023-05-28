@@ -1,9 +1,10 @@
 import os
 import json
 import boto3
+from glob import glob
 from datetime import datetime, timedelta, timezone
-from shared.models import query_by_api_key, UserModel
-from shared.utils import options, error, enough_time_has_passed, res_headers
+from models import query_by_api_key, UserModel
+from utils import options, error, enough_time_has_passed, res_headers, transform_signal
 
 s3 = boto3.client('s3')
 
@@ -28,7 +29,7 @@ def get_signals(event):
         return error(401, 'Provide a valid API key.')
     user = query_results[0]
 
-    if not (user.permissions.in_beta or user.stripe.subscription['active']):
+    if not (user.in_beta or user.subscribed):
         return error(402, 'This endpoint is for subscribers only.')
 
     # Notes: Instead of using usage plan,
@@ -83,16 +84,9 @@ def get_signals(event):
         item = {}
         for idx, col in enumerate(cols):
             key = keys[idx]
-            if key == 'Time':
-                key = 'Date'
-            elif key == 'Sig':
-                key = 'Signal'
             item[key] = col
-        item['Day'] = datetime.strptime(
-            item['Date'], '%Y-%m-%d').strftime('%A')[:3]
-        item['Signal'] = 'BUY' if item['Signal'] == 'True' else 'SELL'
-        item['Asset'] = 'BTC'
-        response['data'].append(item)
+        signal = transform_signal(item)
+        response['data'].append(signal)
     # Time -> Date
     # Sig -> Signal
 

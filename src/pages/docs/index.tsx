@@ -41,18 +41,18 @@ const APIKey = styled(Input.Password)`
   }
 `;
 
+export const copyToClipboard = (val: string, name: string) =>
+  navigator.clipboard.writeText(val).then(
+    () => message.success(`Copied ${name} to clipboard.`),
+    () => message.error(`Did not copy ${name} to clipboard`)
+  );
+
 const DocsPage = () => {
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const { account, accountLoading, loginLoading, setShowLogin } = useContext(
     AccountContext
   );
   const loading = loginLoading || accountLoading;
-
-  const copyToClipboard = (val: string, name: string) =>
-    navigator.clipboard.writeText(val).then(
-      () => message.success(`Copied ${name} to clipboard.`),
-      () => message.error(`Did not copy ${name} to clipboard`)
-    );
 
   // TODO:
   // 3. Move Docs tab to the right? and remove signed in as User text?

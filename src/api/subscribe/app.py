@@ -1,10 +1,11 @@
 import os
 import json
 import stripe
-from shared.models import UserModel
+import logging
+from models import UserModel
 from datetime import datetime, timedelta, timezone
 from pynamodb.attributes import UTCDateTimeAttribute
-from shared.utils import \
+from utils import \
     verify_user, options, \
     error, enough_time_has_passed, \
     past_date, res_headers
@@ -83,7 +84,7 @@ def post_checkout(event):
         # customer = stripe.Customer.retrieve(
         #     customer_id, expand=['subscriptions']
         # )
-        if stripe_lookup.subscription['active']:
+        if user.subscribed:
             return error(400, 'User is already subscribed.')
             # use product_id or name that is passed in
             # don't take price_id from req, use from backend (make get /subscribe endpoint w all prices, products)
@@ -205,9 +206,11 @@ def post_subscribe(event, _):
             req_body, signature, webhook_secret)
     except ValueError as e:
         # Invalid payload
+        logging.exception(e)
         raise e
     except stripe.error.SignatureVerificationError as e:
         # Invalid signature
+        logging.exception(e)
         raise e
 
     body = json.dumps({'status': 'success'})
@@ -238,14 +241,15 @@ def post_subscribe(event, _):
             return response
         sub_is_active = sub['status'] == 'active'
         stripe_lookup = user.stripe
-        sub_was_active = stripe_lookup.subscription['active']
+        sub_was_active = bool(user.subscribed)
 
         if sub_was_active != sub_is_active:
+            actions = [UserModel.subscribed.set(int(sub_is_active))]
             if not sub_is_active:
                 stripe_lookup.checkout['created'] = UTCDateTimeAttribute(
                 ).serialize(past_date)
-            stripe_lookup.subscription['active'] = sub_is_active
-            user.update(actions=[UserModel.stripe.set(stripe_lookup)])
+                actions.append(UserModel.stripe.set(stripe_lookup))
+            user.update(actions=actions)
 
     return response
 

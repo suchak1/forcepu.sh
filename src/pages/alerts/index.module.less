@@ -1,0 +1,53 @@
+:global(.ant-switch.ant-switch-checked),
+:global(.ant-switch.ant-switch-checked:hover:not(.ant-switch-disabled)) {
+    // background: #52e5ff;
+    background: magenta;
+}
+
+
+.alerts {
+    flex-direction: row;
+    justify-content: space-between;
+    // justify-content: space-around;
+    // justify-content: space-evenly;
+}
+
+@media (max-width: 1000px) {
+    .alerts {
+        flex-direction: column;
+        gap: 48px;
+    }
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    row-gap: 16px;
+}
+
+@media (min-width: 1000px) {
+    .column {
+        max-width: 33.33%;
+    }
+}
+
+
+
+.img {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    overflow: hidden;
+    height: 100%;
+}
+
+.img img {
+    flex-shrink: 1;
+    // min-width: 100%;
+    // min-height: 100%; // 
+    // object-fit: fill;
+    object-fit: cover;
+    max-width: 50%;
+    max-height: 50%;
+}
