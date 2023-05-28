@@ -182,7 +182,7 @@ def post_notify(event, _):
     # etc for notify_sms
 
     status_code = 200
-    response = {['message']: f'Notifications delivered.'}
+    response = {'message': f'Notifications delivered.'}
     body = json.dumps(response)
     return {
         "statusCode": status_code,
