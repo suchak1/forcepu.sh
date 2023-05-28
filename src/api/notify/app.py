@@ -262,5 +262,5 @@ def notify_webhook(user, signal):
     # send log for webhook res success
 
 
-def notify_sms():
+def notify_sms(user, signal):
     pass
