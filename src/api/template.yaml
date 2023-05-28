@@ -339,6 +339,12 @@ Resources:
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref UsersTable
+        - Statement:
+            - Sid: S3ReadPolicy
+              Effect: Allow
+              Action:
+                - s3:GetObject
+              Resource: !Sub "arn:aws:s3:::${S3Bucket}/data/api/*"
       PackageType: Zip
       CodeUri: notify
       Runtime: python3.8 
