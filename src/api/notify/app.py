@@ -159,10 +159,8 @@ def post_notify(event, _):
     # skip beta users who were already notified
     users_to_notify = skip_users(users_subscribed, notified)
     notified = notified.union(set(processor.run(users_to_notify)))
-    print(notified)
     num_notified = len(notified)
     total_users = processor.total
-    print(total_users)
     success_ratio = num_notified / total_users if total_users else 1
     if success_ratio < 0.95:
         # threshold is dependent on successful email AND webhook notifications
