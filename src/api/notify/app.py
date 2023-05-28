@@ -95,9 +95,8 @@ def notify_user(user, signal):
     ]
     now = datetime.now(timezone.utc)
     reset_duration = timedelta(hours=12)
-    last_notified = user.alerts['last_sent']
     success = True
-    if enough_time_has_passed(last_notified, now, reset_duration):
+    if 'last_sent' not in user.alerts or enough_time_has_passed(user.alerts['last_sent'], now, reset_duration):
         for alert in alerts:
             try:
                 alert['fx'](user, signal)

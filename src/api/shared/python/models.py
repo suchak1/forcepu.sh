@@ -3,7 +3,7 @@ import secrets
 from pynamodb.models import Model
 from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
 from pynamodb.attributes import UnicodeAttribute, MapAttribute, BooleanAttribute, ListAttribute, UTCDateTimeAttribute, NumberAttribute
-from utils import past_date
+from .utils import past_date
 
 
 def query_by_api_key(api_key):
@@ -26,18 +26,15 @@ def get_default_access_queue():
 attributes_lookup = {UnicodeAttribute: str, BooleanAttribute: bool}
 alerts_lookup = {
     'email': {'attr': BooleanAttribute, 'default': False},
-    # 'sms': {'attr': BooleanAttribute, 'default': False},
+    'sms': {'attr': BooleanAttribute, 'default': False},
     'webhook': {'attr': UnicodeAttribute, 'default': ""}
 }
 
 
 class Alerts(MapAttribute):
-    # email = BooleanAttribute(default=False)
-    # webhook = UnicodeAttribute(default="")
-    # sms = BooleanAttribute(default=False)
     for key, val in alerts_lookup.items():
         vars()[key] = val['attr'](default=val['default'])
-    last_sent: UTCDateTimeAttribute(default=past_date)
+    last_sent = UTCDateTimeAttribute(default=past_date)
 
 
 class Permissions(MapAttribute):
