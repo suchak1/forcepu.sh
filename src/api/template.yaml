@@ -345,6 +345,12 @@ Resources:
               Action:
                 - s3:GetObject
               Resource: !Sub "arn:aws:s3:::${S3Bucket}/data/api/*"
+        - Statement:
+            - Sid: SESSendEmail
+              Effect: Allow
+              Action:
+                - ses:SendEmail
+              Resource: "*"
       PackageType: Zip
       CodeUri: notify
       Runtime: python3.8 
