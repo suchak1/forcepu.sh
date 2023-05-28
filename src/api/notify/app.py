@@ -14,7 +14,7 @@ from pynamodb.attributes import UTCDateTimeAttribute
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 from models import UserModel
 from utils import \
-    options, transform_signal, \
+    transform_signal, \
     error, enough_time_has_passed, \
     res_headers, get_email
 
@@ -129,9 +129,6 @@ def post_notify(event, _):
     header = 'emit_secret'
     encrypted = req_headers[header] if header in req_headers else ''
     cryptographer = Cryptographer(password, salt)
-    print('password', password)
-    print('salt', salt)
-    print('encrypted', encrypted)
     decrypted = cryptographer.decrypt(encrypted).decode('UTF-8')
     if not decrypted == emit_secret:
         sleep(10)

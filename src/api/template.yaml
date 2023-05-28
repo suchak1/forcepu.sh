@@ -335,6 +335,7 @@ Resources:
           TABLE_NAME: !Ref UsersTable
           STAGE: !Ref Stage
           SIGNAL_EMAIL: !Ref SignalEmail
+          S3_BUCKET: !Ref S3Bucket
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref UsersTable
