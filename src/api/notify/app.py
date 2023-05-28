@@ -129,6 +129,9 @@ def post_notify(event, _):
     header = 'emit_secret'
     encrypted = req_headers[header] if header in req_headers else ''
     cryptographer = Cryptographer(password, salt)
+    print('password', password)
+    print('salt', salt)
+    print('encrypted', encrypted)
     decrypted = cryptographer.decrypt(encrypted).decode('UTF-8')
     if not decrypted == emit_secret:
         sleep(10)
