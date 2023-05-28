@@ -96,7 +96,10 @@ def notify_user(user, signal):
     now = datetime.now(timezone.utc)
     reset_duration = timedelta(hours=12)
     success = True
-    if 'last_sent' not in user.alerts or enough_time_has_passed(user.alerts['last_sent'], now, reset_duration):
+    last_sent = user.alerts['last_sent'] if 'last_sent' in user.alerts else None
+    if type(last_sent) == str:
+        last_sent = UTCDateTimeAttribute().deserialize(last_sent)
+    if not last_sent or enough_time_has_passed(last_sent, now, reset_duration):
         for alert in alerts:
             try:
                 alert['fx'](user, signal)
@@ -106,8 +109,7 @@ def notify_user(user, signal):
                 success = False
         alerts = user.alerts
         now = datetime.now(timezone.utc)
-        alerts['last_sent'] = UTCDateTimeAttribute(now)
-        # UTCDateTimeAttribute().serialize(now)
+        alerts['last_sent'] = UTCDateTimeAttribute().serialize(now)
         user.update(actions=[UserModel.alerts.set(alerts)])
         if success:
             return user.email
