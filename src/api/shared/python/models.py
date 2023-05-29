@@ -34,7 +34,8 @@ alerts_lookup = {
 class Alerts(MapAttribute):
     for key, val in alerts_lookup.items():
         vars()[key] = val['attr'](default=val['default'])
-    last_sent = UTCDateTimeAttribute(default=past_date)
+    last_sent = UTCDateTimeAttribute(
+        default=UTCDateTimeAttribute().serialize(past_date))
 
 
 class Permissions(MapAttribute):
@@ -44,7 +45,8 @@ class Permissions(MapAttribute):
 
 class Checkout(MapAttribute):
     url = UnicodeAttribute(default="")
-    created = UTCDateTimeAttribute(default=past_date)
+    created = UTCDateTimeAttribute(
+        default=UTCDateTimeAttribute().serialize(past_date))
 
 
 class Stripe(MapAttribute):
