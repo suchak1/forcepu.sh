@@ -1,4 +1,4 @@
-# forcepu.sh
+# FORCEPU.SH
 
 ## Development
 
