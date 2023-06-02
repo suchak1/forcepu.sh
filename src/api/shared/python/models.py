@@ -46,7 +46,7 @@ class Permissions(MapAttribute):
 class Checkout(MapAttribute):
     url = UnicodeAttribute(default="")
     created = UTCDateTimeAttribute(
-        default=UTCDateTimeAttribute().serialize(past_date))
+        default=past_date)
 
 
 class Stripe(MapAttribute):
