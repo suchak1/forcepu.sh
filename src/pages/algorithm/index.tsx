@@ -72,9 +72,8 @@ const AlgorithmPage = () => {
           num_features: numFeatures,
           accuracy,
         } = data;
-        const lastUpdated = `${Math.floor(
-          getDayDiff(created, new Date()) / 30
-        )} months ago`;
+        const monthsAgo = Math.floor(getDayDiff(created, new Date()) / 30);
+        const lastUpdated = `${monthsAgo} month${monthsAgo == 1 ? '' : 's'} ago`;
         const dataRange = `${Math.floor(getDayDiff(start, end) / 365)} years`;
         const labels = [
           "Last Updated",

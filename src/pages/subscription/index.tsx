@@ -7,12 +7,22 @@ import pageStyles from "@/pages/home/index.module.less";
 import layoutStyles from "@/layouts/index.module.less";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useAuthenticator } from "@aws-amplify/ui-react";
+import styled from "styled-components";
 import { AccountContext } from "../../layouts";
 import CUBE from "@/assets/cube.gif";
 
 import overrides from "./index.module.less";
 
 const { Title } = Typography;
+
+
+
+const List = styled.ul`
+  li::marker {
+    content: '✓ ';
+    color: lime;
+  }
+`;
 
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 const spinner = <Spin style={{ width: "100%" }} indicator={antIcon} />;
@@ -164,7 +174,7 @@ const SubscriptionPage = () => {
         </Title>
       </span>
       {/* should be level 3-5 */}
-      <ul style={
+      <List style={
         {
           height: '40%',
           display: 'flex',
@@ -175,9 +185,10 @@ const SubscriptionPage = () => {
         <li>{"access to the "}<span style={{ fontFamily: '"Courier","Courier New",monospace', color: "#52e5ff" }}>
           /signals
         </span> API</li>
+
         <li>provides up to a week's worth of the latest BUY and SELL signals</li>
         <li>maximum of 5 requests / day</li>
-      </ul>
+      </List>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         {subscribeButton}
       </div>

@@ -27,9 +27,6 @@ SyntaxHighlighter.registerLanguage('python', py);
 
 import "./index.module.less";
 
-import styled from "styled-components";
-import { OmitProps } from "antd/es/transfer/ListBody";
-
 const { Title } = Typography;
 
 const codeString =
