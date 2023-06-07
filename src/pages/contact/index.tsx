@@ -13,12 +13,7 @@ import subStyles from "@/pages/subscription/index.module.less";
 
 import "./index.module.less";
 
-import styled from "styled-components";
-
 const { Title } = Typography;
-
-const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
-const spinner = <Spin style={{ width: "100%" }} indicator={antIcon} />;
 
 const ContactPage = () => {
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
