@@ -60,9 +60,11 @@ jobs:
 
       - name: Create react app and serve
         run: |
+          rm cypress.config.ts
           npx create-react-app my-app
           cd my-app
           npm start &
+          
         # const { defineConfig } = require('cypress')
 
         # module.exports = defineConfig({
