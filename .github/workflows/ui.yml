@@ -91,14 +91,11 @@ jobs:
           CF_DISTRO_ID: ${{ secrets.CF_DISTRO_ID }}
         if: ${{ github.ref_name == 'master' }}
 
-      - name: Deploy ui
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks --delete
+      - name: Deploy UI
+        run: aws s3 sync ./dist s3://${{ env.AWS_S3_BUCKET }}/ --acl public-read --follow-symlinks --delete
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          SOURCE_DIR: "dist"
 
       - name: Invalidate cache
         run: aws cloudfront create-invalidation --distribution-id "${CF_DISTRO_ID}" --paths "/*"
