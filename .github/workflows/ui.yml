@@ -11,7 +11,8 @@ on:
     branches: [master]
 
   workflow_dispatch:
-
+env:
+  NODE_OPTIONS: --max-old-space-size=6144
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -101,7 +102,7 @@ jobs:
           wait-on: 'http://localhost:8000'
           config-file: cypress.config.ts
           command-prefix: "--"
-          config: baseUrl=http://${{ env.HOSTNAME }}:8000
+          # config: baseUrl=http://${{ env.HOSTNAME }}:8000
         env:
           ELECTRON_ENABLE_LOGGING: 1
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
