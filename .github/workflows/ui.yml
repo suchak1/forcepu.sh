@@ -60,7 +60,7 @@ jobs:
 
       - name: Create react app and serve
         run: |
-          npx vite --host &
+          npx vite --host 0.0.0.0 &
 # npm create vite@latest my-app -- --template react-ts
 # cd my-app
 # npm i
