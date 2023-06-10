@@ -56,10 +56,7 @@ jobs:
       
       - name: Start dev server
         run: |
-          npm start & 
-          echo hello
-          
-      # wait-on http://localhost:8000/
+          npm start & wait-on tcp:8000
 
       - name: Run UI tests
         uses: cypress-io/github-action@v5
