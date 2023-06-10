@@ -46,17 +46,23 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-      - name: Install dependencies
-        run: |
-          pnpm run ci
-          pnpm add -g @apidevtools/swagger-cli@4.0.4
+      # - name: Install dependencies
+      #   run: |
+      #     pnpm run ci
+      #     pnpm add -g @apidevtools/swagger-cli@4.0.4
 
-      - name: Create aws-exports.js file
-        run: touch src/aws-exports.js
+      # - name: Create aws-exports.js file
+      #   run: touch src/aws-exports.js
       
-      - name: Start dev server
+      # - name: Start dev server
+      #   run: |
+      #     npx vite --host &
+
+      - name: Create react app and serve
         run: |
-          npx vite --host &
+          npx create-react-app my-app
+          cd my-app
+          npm start
 
       - name: Run UI tests
         uses: cypress-io/github-action@v5
@@ -65,7 +71,7 @@ jobs:
         with:
           record: true
           install: false
-          wait-on: 'http://localhost:8000'
+          wait-on: 'http://localhost:3000'
           config-file: cypress.config.ts
           command-prefix: "--"
         env:
