@@ -6,26 +6,18 @@ describe('Navigation', () => {
     cy.visit('http://localhost:8000')
   })
   it('Header', () => {
+    const pages = ['Docs', 'Algorithm', 'Subscription', 'Alerts', 'Contact'];
+    // Test that links exist
     cy.get('.ant-layout-header').should(el => {
       const element = el[0];
-      // Test that links exist
       expect(element.innerText).to.include('FORCEPU.SH');
-      expect(element.innerText).to.include('Docs');
-      expect(element.innerText).to.include('Algorithm');
-      expect(element.innerText).to.include('Subscription');
-      expect(element.innerText).to.include('Alerts');
-      expect(element.innerText).to.include('Contact');
-
-
+      pages.forEach(page => expect(element.innerText).to.include(page));
     })
-    cy.get('.ant-layout-header').find('a').contains('Docs').first().click();
-    cy.location().should((location) => {
-      expect(location.pathname).to.eq('/docs')
+    // Navigate to each page
+    pages.forEach(page => {
+      cy.get('.ant-layout-header').find('a').contains(page).first().click();
+      cy.location().should(location => expect(location.pathname).to.eq(`/${page.toLowerCase()}`))
     })
-    // cy.get('a').contains('Docs').first().click();
-    // console.log(cy.url())
-    // cy.get('a:contains("Docs")').first().click()
-    // console.log(cy.url())
   })
   it('Footer', () => {
     cy.get('.ant-layout-footer').should(el => {
