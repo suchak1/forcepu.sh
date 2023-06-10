@@ -49,10 +49,13 @@ jobs:
       - name: Install dependencies
         run: |
           pnpm run ci
-          pnpm add -g @apidevtools/swagger-cli@4.0.4 
+          pnpm add -g @apidevtools/swagger-cli@4.0.4 wait-on@7.0.1
 
       - name: Create aws-exports.js file
         run: touch src/aws-exports.js
+      
+      - name: Start dev server
+        run: pnpm run dev & wait-on http://localhost:8000
 
       - name: Run UI tests
         uses: cypress-io/github-action@v5
