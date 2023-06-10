@@ -64,6 +64,7 @@ jobs:
           cd my-app
           npm i
           cat package.json
+          mv ../vite.config.ts ./
           npx vite --host &
           cat << EOF > ../cypress.config.js
           import { defineConfig } from 'cypress'
