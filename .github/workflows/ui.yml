@@ -56,7 +56,7 @@ jobs:
 
       - name: Run UI tests
         uses: cypress-io/github-action@v5
-        with:
+        # with:
         #   config-file: cypress.config.ts
 
       - name: Build app [dev]
