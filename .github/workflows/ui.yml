@@ -62,13 +62,13 @@ jobs:
         run: |
           npx vite --host &
 
-      - name: IP
+      # - name: IP
+      #   run: |
+      #     hostname -i
+      - name: Add hosts to /etc/hosts
         run: |
-          hostname -i
-          echo break
-          hostname -I
-          echo break
-          ip -br addr show
+            HOSTNAME=$(hostname -i)
+            sudo echo "${HOSTNAME} localhost" | sudo tee -a /etc/hosts
 # npm create vite@latest my-app -- --template react-ts
 # cd my-app
 # npm i
