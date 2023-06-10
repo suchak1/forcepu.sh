@@ -58,7 +58,7 @@ jobs:
         uses: cypress-io/github-action@v5
         with:
           install: false
-          # config-file: cypress.config.ts
+          config-file: cypress.config.ts
 
       - name: Build app [dev]
         run: pnpm run build:ui && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV && echo "CF_DISTRO_ID=${CF_DISTRO_ID}" >> $GITHUB_ENV
