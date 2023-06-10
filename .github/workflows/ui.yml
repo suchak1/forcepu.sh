@@ -49,7 +49,7 @@ jobs:
       - name: Install dependencies
         run: |
           pnpm run ci
-          pnpm add -g @apidevtools/swagger-cli@4.0.4 cypress@12.14.0
+          pnpm add -g @apidevtools/swagger-cli@4.0.4 
 
       - name: Create aws-exports.js file
         run: touch src/aws-exports.js
@@ -57,7 +57,7 @@ jobs:
       - name: Run UI tests
         uses: cypress-io/github-action@v5
         with:
-          install: false
+          install-command: npm i -g cypress@12.14.0
           config-file: cypress.config.ts
 
       - name: Build app [dev]
