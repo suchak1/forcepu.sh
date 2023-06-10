@@ -57,6 +57,7 @@ jobs:
       - name: Start dev server
         run: |
           npm start & 
+          echo hello
           wait-on http://localhost:8000/
 
       - name: Run UI tests
