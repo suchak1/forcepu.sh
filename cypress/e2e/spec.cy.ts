@@ -3,7 +3,7 @@
 
 describe('Navigation', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:8000')
+    cy.visit('https://google.com')
   })
   it('Header', () => {
     const selector = '.ant-layout-header';
