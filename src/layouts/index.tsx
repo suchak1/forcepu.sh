@@ -42,7 +42,7 @@ const protocol = isLocal ? "http" : "https";
 const hostname = getHostname(false);
 const port = isLocal ? ":8000" : "";
 let redirectUrl = `${protocol}://${hostname}${port}`;
-
+console.log('isLocal', isLocal);
 if (isLocal) {
   config = (await import("@/aws-exports")).default;
 } else {
