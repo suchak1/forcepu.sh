@@ -49,21 +49,33 @@ jobs:
       - name: Install dependencies
         run: |
           pnpm run ci
-          pnpm add -g @apidevtools/swagger-cli@4.0.4 wait-on@7.0.1
+          pnpm add -g @apidevtools/swagger-cli@4.0.4
 
       - name: Create aws-exports.js file
         run: touch src/aws-exports.js
       
       - name: Start dev server
         run: |
-          npx vite --host & wait-on tcp:8000
+          npx vite --host &
 
       - name: Run UI tests
         uses: cypress-io/github-action@v5
+        id: cypress
+        continue-on-error: true
         with:
-          install-command: pnpm add -D cypress@12.14.0
+          record: true
+          install: false
+          wait-on: 'tcp:8000'
           config-file: cypress.config.ts
           command-prefix: "--"
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
+      
+      - name: Print Cypress Cloud URL
+        run: |
+          echo Cypress finished with: ${{ steps.cypress.outcome }}
+          echo See results at ${{ steps.cypress.outputs.resultsUrl }}
 
       - name: Build app [dev]
         run: pnpm run build:ui && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV && echo "CF_DISTRO_ID=${CF_DISTRO_ID}" >> $GITHUB_ENV
