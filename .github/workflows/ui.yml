@@ -67,8 +67,9 @@ jobs:
           install: false
           wait-on: 'http://localhost:8000'
           config-file: cypress.config.ts
-          command-prefix: "ELECTRON_ENABLE_LOGGING=1"
+          command-prefix: "--"
         env:
+          ELECTRON_ENABLE_LOGGING: 1
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
       
