@@ -8,9 +8,8 @@ describe('Navigation', () => {
   it('Header', () => {
     const selector = '.ant-layout-header';
     const pages = ['Docs', 'Algorithm', 'Subscription', 'Alerts', 'Contact'];
-    const header = cy.get(selector);
     // Test that links exist
-    header.should(el => {
+    cy.get(selector).should(el => {
       const element = el[0];
       expect(element.innerText).to.include('FORCEPU.SH');
       pages.forEach(page => expect(element.innerText).to.include(page));
@@ -22,7 +21,7 @@ describe('Navigation', () => {
     })
 
     // Test that sign in modal renders
-    header.find('button').contains('Get started').first().click()
+    cy.get(selector).find('button').contains('Get started').first().click()
     cy.get('.ant-modal-body').contains('Sign In')
   })
   it('Footer', () => {
