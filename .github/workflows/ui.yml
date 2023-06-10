@@ -62,7 +62,7 @@ jobs:
         run: |
           npx create-react-app my-app
           cd my-app
-          npm start
+          npm start &
 
       - name: Run UI tests
         uses: cypress-io/github-action@v5
