@@ -62,7 +62,8 @@ jobs:
         run: |
           npm create vite@latest my-app -- --template react-ts
           cd my-app
-          npm start &
+          npm i
+          npm run dev &
           cat << EOF > ../cypress.config.js
           import { defineConfig } from 'cypress'
           export default defineConfig({
