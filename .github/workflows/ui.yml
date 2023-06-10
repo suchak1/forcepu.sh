@@ -60,36 +60,21 @@ jobs:
 
       - name: Create react app and serve
         run: |
-          npm create vite@latest my-app -- --template react-ts
-          cd my-app
-          npm i
-          cat package.json
-          mv ../vite.config.ts ./
-          npx vite --host &
-          cat << EOF > ../cypress.config.js
-          import { defineConfig } from 'cypress'
-          export default defineConfig({
-            video: true,
-            e2e: {
-            },
-          })
-          EOF
-        # cat >/etc/myconfig.conf <<EOL
-        # line 1, ${kernel}
-        # line 2, 
-        # line 3, ${distro}
-        # line 4 line
-        # ... 
-        # EOL
-          
-        # const { defineConfig } = require('cypress')
-
-        # module.exports = defineConfig({
-        #   e2e: {
-        #     baseUrl: 'http://localhost:1234',
-        #   },
-        # })
-
+          npm start &
+# npm create vite@latest my-app -- --template react-ts
+# cd my-app
+# npm i
+# cat package.json
+# mv ../vite.config.ts ./
+# npx vite --host &
+# cat << EOF > ../cypress.config.js
+# import { defineConfig } from 'cypress'
+# export default defineConfig({
+#   video: true,
+#   e2e: {
+#   },
+# })
+# EOF
 
       - name: Run UI tests
         uses: cypress-io/github-action@v5
