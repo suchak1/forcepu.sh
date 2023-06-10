@@ -6,25 +6,33 @@ describe('Navigation', () => {
     cy.visit('http://localhost:8000')
   })
   it('Header', () => {
+    const selector = '.ant-layout-header';
     const pages = ['Docs', 'Algorithm', 'Subscription', 'Alerts', 'Contact'];
     // Test that links exist
-    cy.get('.ant-layout-header').should(el => {
+    cy.get(selector).should(el => {
       const element = el[0];
       expect(element.innerText).to.include('FORCEPU.SH');
       pages.forEach(page => expect(element.innerText).to.include(page));
     })
     // Navigate to each page
     pages.forEach(page => {
-      cy.get('.ant-layout-header').find('a').contains(page).first().click();
+      cy.get(selector).find('a').contains(page).first().click();
       cy.location().should(location => expect(location.pathname).to.eq(`/${page.toLowerCase()}`))
     })
   })
   it('Footer', () => {
-    cy.get('.ant-layout-footer').should(el => {
+    const selector = '.ant-layout-footer';
+    cy.get(selector).should(el => {
       const element = el[0];
       expect(element.innerText).to.include('Terms of Service');
       expect(element.innerText).to.include('Financial Disclaimer');
       expect(element.innerText).to.include('Privacy');
     })
+
+    cy.get(selector).find('a').contains('Terms of Service').first().click();
+    cy.location().should(location => expect(location.pathname).to.eq('/tos'))
+
+    cy.get(selector).find('a').contains('Privacy').first().click();
+    cy.location().should(location => expect(location.pathname).to.eq('/privacy'))
   })
 })
