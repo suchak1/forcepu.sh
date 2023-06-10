@@ -52,7 +52,11 @@ jobs:
           pnpm add -g @apidevtools/swagger-cli@4.0.4
 
       - name: Create aws-exports.js file
-        run: touch src/aws-exports.js
+        env:
+          AWS_EXPORTS: ${{ secrets.AWS_EXPORTS }}
+        run: |
+          touch src/aws-exports.js
+          echo ${AWS_EXPORTS} > src/aws-exports.js
       
       # - name: Start dev server
       #   run: |
