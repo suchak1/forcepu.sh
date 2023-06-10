@@ -65,6 +65,9 @@ jobs:
       - name: IP
         run: |
           ifconfig eth0
+          hostname -i
+          hostname -I
+          ip -br addr show
           ipconfig eth0
 # npm create vite@latest my-app -- --template react-ts
 # cd my-app
