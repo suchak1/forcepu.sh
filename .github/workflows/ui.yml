@@ -55,7 +55,9 @@ jobs:
         run: touch src/aws-exports.js
       
       - name: Start dev server
-        run: pnpm run dev & wait-on http://localhost:8000
+        run: |
+          npm start & 
+          wait-on http://localhost:8000/
 
       - name: Run UI tests
         uses: cypress-io/github-action@v5
