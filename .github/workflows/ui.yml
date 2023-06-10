@@ -49,13 +49,15 @@ jobs:
       - name: Install dependencies
         run: |
           pnpm run ci
-          pnpm add -g @apidevtools/swagger-cli@4.0.4
+          pnpm add -g @apidevtools/swagger-cli@4.0.4 cypress@12.14.0
 
       - name: Create aws-exports.js file
         run: touch src/aws-exports.js
 
       - name: Run UI tests
         uses: cypress-io/github-action@v5
+        with:
+        #   config-file: cypress.config.ts
 
       - name: Build app [dev]
         run: pnpm run build:ui && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV && echo "CF_DISTRO_ID=${CF_DISTRO_ID}" >> $GITHUB_ENV
