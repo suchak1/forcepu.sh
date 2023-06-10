@@ -60,7 +60,16 @@ jobs:
 
       - name: Create react app and serve
         run: |
-          npx vite --host 0.0.0.0 &
+          npx vite --host &
+
+      - name: Public IP
+        id: ip
+        uses: haythem/public-ip@v1.3
+
+      - name: Print Public IP
+        run: |
+          echo ${{ steps.ip.outputs.ipv4 }}
+          echo ${{ steps.ip.outputs.ipv6 }}
 # npm create vite@latest my-app -- --template react-ts
 # cd my-app
 # npm i
