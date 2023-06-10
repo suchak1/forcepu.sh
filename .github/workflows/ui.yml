@@ -57,7 +57,7 @@ jobs:
       - name: Run UI tests
         uses: cypress-io/github-action@v5
         with:
-          install-command: npm i -g cypress@12.14.0
+          install-command: pnpm add -D cypress@12.14.0
           config-file: cypress.config.ts
 
       - name: Build app [dev]
