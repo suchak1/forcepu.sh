@@ -62,14 +62,10 @@ jobs:
         run: |
           npx vite --host &
 
-      - name: Public IP
-        id: ip
-        uses: haythem/public-ip@v1.3
-
-      - name: Print Public IP
+      - name: IP
         run: |
-          echo ${{ steps.ip.outputs.ipv4 }}
-          echo ${{ steps.ip.outputs.ipv6 }}
+          ifconfig eth0
+          ipconfig eth0
 # npm create vite@latest my-app -- --template react-ts
 # cd my-app
 # npm i
