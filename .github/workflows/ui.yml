@@ -56,7 +56,7 @@ jobs:
       
       - name: Start dev server
         run: |
-          npm start & wait-on tcp:8000
+          npx vite --host & wait-on tcp:8000
 
       - name: Run UI tests
         uses: cypress-io/github-action@v5
