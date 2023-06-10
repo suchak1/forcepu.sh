@@ -2,8 +2,12 @@ name: Deploy API
 
 on:
   pull_request:
+    paths:
+      - src/api/**
     branches: [master]
   push:
+    paths:
+      - src/api/**
     branches: [master]
 
   workflow_dispatch:

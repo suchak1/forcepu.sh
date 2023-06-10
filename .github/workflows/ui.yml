@@ -2,8 +2,12 @@ name: Deploy UI
 
 on:
   pull_request:
+    paths-ignore:
+      - src/api/**
     branches: [master]
   push:
+    paths-ignore:
+      - src/api/**
     branches: [master]
 
   workflow_dispatch:
