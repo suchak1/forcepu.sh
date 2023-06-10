@@ -69,6 +69,8 @@ jobs:
         run: |
             HOSTNAME=$(hostname -i)
             sudo echo "${HOSTNAME} localhost" | sudo tee -a /etc/hosts
+            sudo cat /etc/hosts
+            echo "HOSTNAME=${HOSTNAME}" >> $GITHUB_ENV
 # npm create vite@latest my-app -- --template react-ts
 # cd my-app
 # npm i
@@ -94,7 +96,7 @@ jobs:
           wait-on: 'http://localhost:8000'
           config-file: cypress.config.ts
           command-prefix: "--"
-          browser: chrome
+          config: baseUrl=http://${{ env.HOSTNAME }}:8000
         env:
           ELECTRON_ENABLE_LOGGING: 1
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
