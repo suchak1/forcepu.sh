@@ -98,7 +98,7 @@ jobs:
         with:
           record: true
           install: false
-          wait-on: 'http://localhost:5173'
+          wait-on: 'http://localhost:8000'
           config-file: cypress.config.ts
           command-prefix: "--"
         env:
