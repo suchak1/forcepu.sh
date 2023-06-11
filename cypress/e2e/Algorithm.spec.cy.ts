@@ -1,9 +1,6 @@
-// Code coverage
-// https://docs.cypress.io/guides/tooling/code-coverage#E2E-and-unit-code-coverage
-
 describe('Algorithm', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:8000/algorithm')
+    cy.visit('/algorithm')
   })
   it('Plot & Stats', () => {
     const plot = '.plotly';
