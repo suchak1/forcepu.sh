@@ -11,9 +11,7 @@ on:
     branches: [master]
 
   workflow_dispatch:
-# env:
-#   NODE_OPTIONS: --max-old-space-size=6144
-${{ fromJSON('["dev", "prod"]')[github.ref_name == 'master'] }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -67,14 +65,14 @@ jobs:
   # echo "${AWS_EXPORTS}" > src/aws-exports.js
   # node src/aws-exports.js 
 
-  # - name: Start dev server
-  #   run: |
-  #     npx vite --host &
-
-      - name: Create react app and serve
+      - name: Start dev server
         run: |
           npx vite --host &
-          npx cypress run
+
+      # - name: Create react app and serve
+      #   run: |
+      #     npx vite --host &
+      #     npx cypress run
 
       # - name: IP
       #   run: |
@@ -100,27 +98,27 @@ jobs:
 # })
 # EOF
 
-      # - name: Run UI tests
-      #   uses: cypress-io/github-action@v5
-      #   id: cypress
-      #   continue-on-error: true
-      #   with:
-      #     record: true
-      #     install: false
-      #     wait-on: 'http://localhost:8000'
-      #     config-file: cypress.config.ts
-      #     command-prefix: "--"
-      #     # config: baseUrl=http://${{ env.HOSTNAME }}:8000
-      #   env:
-      #     ELECTRON_ENABLE_LOGGING: 1
-      #     CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-      #     CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
+      - name: Run UI tests
+        uses: cypress-io/github-action@v5
+        id: cypress
+        continue-on-error: true
+        with:
+          record: true
+          install: false
+          wait-on: 'http://localhost:8000'
+          config-file: cypress.config.ts
+          command-prefix: "--"
+          # config: baseUrl=http://${{ env.HOSTNAME }}:8000
+        env:
+          ELECTRON_ENABLE_LOGGING: 1
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
       
-      # - name: Print Cypress Cloud URL
-      #   run: |
-      #     echo Cypress finished with: ${{ steps.cypress.outcome }}
-      #     echo See results at ${{ steps.cypress.outputs.resultsUrl }}
-      #     exit ${{ fromJSON('["0", "1"]')[steps.cypress.outcome == 'failure'] }}
+      - name: Print Cypress Cloud URL
+        run: |
+          echo Cypress finished with: ${{ steps.cypress.outcome }}
+          echo See results at ${{ steps.cypress.outputs.resultsUrl }}
+          exit ${{ fromJSON('["0", "1"]')[steps.cypress.outcome == 'failure'] }}
 
       - name: Build app [dev]
         run: pnpm run build:ui && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV && echo "CF_DISTRO_ID=${CF_DISTRO_ID}" >> $GITHUB_ENV
