@@ -41,7 +41,9 @@ jobs:
       - uses: actions/cache@v3
         name: Setup pnpm cache
         with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          path: |
+            ${{ fromJSON('["~/.cache/Cypress", "/Users/runner/Library/Caches/Cypress"]')[steps.cypress.outcome == 'macOS'] }}
+            ${{ steps.pnpm-cache.outputs.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
@@ -103,6 +105,7 @@ jobs:
         id: cypress
         continue-on-error: true
         with:
+          install-command: npx cypress install
           record: true
           wait-on: 'http://localhost:8000'
           config-file: cypress.config.ts
