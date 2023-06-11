@@ -11,9 +11,10 @@ on:
     branches: [master]
 
   workflow_dispatch:
+
 env:
   AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-#   NODE_OPTIONS: --max-old-space-size=6144
+
 jobs:
   build:
     runs-on: ubuntu-latest
