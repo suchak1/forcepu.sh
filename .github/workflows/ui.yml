@@ -104,7 +104,6 @@ jobs:
         continue-on-error: true
         with:
           record: true
-          install: false
           wait-on: 'http://localhost:8000'
           config-file: cypress.config.ts
           command-prefix: "--"
