@@ -1,6 +1,7 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 import vitePreprocessor from 'cypress-vite';
+import codeCoverage from '@cypress/code-coverage/task'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,6 +19,7 @@ export default {
           mode: 'development',
         }),
       )
+      codeCoverage(on, config)
       //   // on("before:browser:launch", (browser = {}, launchOptions) => {
       //   //   // `args` is an array of all the arguments that will
       //   //   // be passed to browsers when it launches
@@ -42,6 +44,7 @@ export default {
 
       //   //   return launchOptions;
       //   // });
+      return config;
     },
     // // testIsolation: false,
   },
