@@ -65,14 +65,14 @@ jobs:
   # echo "${AWS_EXPORTS}" > src/aws-exports.js
   # node src/aws-exports.js 
 
+      # - name: Start dev server
+      #   run: |
+      #     npx vite --host &
+
       - name: Start dev server
         run: |
           npx vite --host &
-
-      # - name: Create react app and serve
-      #   run: |
-      #     npx vite --host &
-      #     npx cypress run
+          npx cypress run
 
       # - name: IP
       #   run: |
