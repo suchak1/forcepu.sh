@@ -2,11 +2,18 @@ name: Deploy UI
 
 on:
   pull_request:
+    paths-ignore:
+      - src/api/**
     branches: [master]
   push:
+    paths-ignore:
+      - src/api/**
     branches: [master]
 
   workflow_dispatch:
+
+env:
+  AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
 
 jobs:
   build:
@@ -37,7 +44,9 @@ jobs:
       - uses: actions/cache@v3
         name: Setup pnpm cache
         with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          path: |
+            ~/.cache/Cypress
+            ${{ steps.pnpm-cache.outputs.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
@@ -47,8 +56,41 @@ jobs:
           pnpm run ci
           pnpm add -g @apidevtools/swagger-cli@4.0.4
 
-      - name: Create aws-exports.js file
-        run: touch src/aws-exports.js
+      - name: Generate aws-exports.js and swagger.json files
+        env:
+          LOCAL_IDENTITY_POOL_ID: ${{ secrets.LOCAL_IDENTITY_POOL_ID }}
+          LOCAL_USER_POOL_ID: ${{ secrets.LOCAL_USER_POOL_ID }}
+          LOCAL_WEB_CLIENT_ID: ${{ secrets.LOCAL_WEB_CLIENT_ID }}
+          LOCAL_OAUTH_DOMAIN: ${{ secrets.LOCAL_OAUTH_DOMAIN }}
+        run: |
+          util/aws_exports.sh
+          pnpm run swagger
+      
+      - name: Start dev server
+        run: |
+          npx vite --host &
+
+      - name: Run UI tests
+        uses: cypress-io/github-action@v5
+        id: cypress
+        continue-on-error: true
+        with:
+          record: true
+          install: false
+          wait-on: 'http://localhost:8000'
+          config-file: cypress.config.ts
+          command-prefix: "--"
+          # config: baseUrl=http://${{ env.HOSTNAME }}:8000
+        env:
+          ELECTRON_ENABLE_LOGGING: 1
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
+      
+      - name: Print Cypress Cloud URL
+        run: |
+          echo Cypress finished with: ${{ steps.cypress.outcome }}
+          echo See results at ${{ steps.cypress.outputs.resultsUrl }}
+          exit ${{ fromJSON('["0", "1"]')[steps.cypress.outcome == 'failure'] }}
 
       - name: Build app [dev]
         run: pnpm run build:ui && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV && echo "CF_DISTRO_ID=${CF_DISTRO_ID}" >> $GITHUB_ENV
@@ -74,14 +116,11 @@ jobs:
           CF_DISTRO_ID: ${{ secrets.CF_DISTRO_ID }}
         if: ${{ github.ref_name == 'master' }}
 
-      - name: Deploy ui
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks --delete
+      - name: Deploy UI
+        run: aws s3 sync dist s3://${{ env.AWS_S3_BUCKET }} --acl public-read --follow-symlinks --delete
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          SOURCE_DIR: "dist"
 
       - name: Invalidate cache
         run: aws cloudfront create-invalidation --distribution-id "${CF_DISTRO_ID}" --paths "/*"

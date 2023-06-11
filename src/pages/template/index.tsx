@@ -22,12 +22,10 @@ import "./index.module.less";
 
 
 const TemplatePage = () => {
-  console.log(template);
   return <div
     style={{ padding: '16px', background: 'white', height: '100%', width: '100%' }}
     dangerouslySetInnerHTML={{ __html: template }}
   />;
-  // <div style={{ height: '100%', width: '100%' }}>a</div>
 };
 
 TemplatePage.displayName = "Template";
