@@ -11,8 +11,9 @@ on:
     branches: [master]
 
   workflow_dispatch:
-env:
-  NODE_OPTIONS: --max-old-space-size=6144
+# env:
+#   NODE_OPTIONS: --max-old-space-size=6144
+${{ fromJSON('["dev", "prod"]')[github.ref_name == 'master'] }}
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -52,11 +53,15 @@ jobs:
           pnpm run ci
           pnpm add -g @apidevtools/swagger-cli@4.0.4
 
-      - name: Create aws-exports.js file
+      - name: Generate aws-exports.js and swagger.json files
         env:
-          AWS_EXPORTS: ${{ secrets.AWS_EXPORTS }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          LOCAL_IDENTITY_POOL_ID: ${{ secrets.LOCAL_IDENTITY_POOL_ID }}
+          LOCAL_USER_POOL_ID: ${{ secrets.LOCAL_USER_POOL_ID }}
+          LOCAL_WEB_CLIENT_ID: ${{ secrets.LOCAL_WEB_CLIENT_ID }}
+          LOCAL_OAUTH_DOMAIN: ${{ secrets.LOCAL_OAUTH_DOMAIN }}
         run: |
-          touch src/aws-exports.js
+          util/aws_exports.sh
           pnpm run swagger
       
   # echo "${AWS_EXPORTS}" > src/aws-exports.js
