@@ -57,13 +57,14 @@ jobs:
           AWS_EXPORTS: ${{ secrets.AWS_EXPORTS }}
         run: |
           touch src/aws-exports.js
-      # echo "${AWS_EXPORTS}" > src/aws-exports.js
-      # node src/aws-exports.js 
           pnpm run swagger
       
-      # - name: Start dev server
-      #   run: |
-      #     npx vite --host &
+  # echo "${AWS_EXPORTS}" > src/aws-exports.js
+  # node src/aws-exports.js 
+
+  # - name: Start dev server
+  #   run: |
+  #     npx vite --host &
 
       - name: Create react app and serve
         run: |
