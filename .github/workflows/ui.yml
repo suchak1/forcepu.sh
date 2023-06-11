@@ -11,10 +11,11 @@ on:
     branches: [master]
 
   workflow_dispatch:
-
+env:
+  NODE_OPTIONS: --max-old-space-size=6144
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-latest-xl
 
     steps:
       - name: Checkout repo
@@ -42,7 +43,7 @@ jobs:
         name: Setup pnpm cache
         with:
           path: |
-            ${{ fromJSON('["~/.cache/Cypress", "/Users/runner/Library/Caches/Cypress"]')[steps.cypress.outcome == 'macOS'] }}
+            ${{ fromJSON('["~/.cache/Cypress", "~/Library/Caches/Cypress"]')[steps.cypress.outcome == 'macOS'] }}
             ${{ steps.pnpm-cache.outputs.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
