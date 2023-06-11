@@ -15,7 +15,7 @@ env:
   NODE_OPTIONS: --max-old-space-size=6144
 jobs:
   build:
-    runs-on: macos-latest-xl
+    runs-on: macos-latest
 
     steps:
       - name: Checkout repo
