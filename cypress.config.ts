@@ -8,7 +8,6 @@ const __dirname = path.dirname(__filename);
 export default {
   video: Boolean(process.env.CI),
   e2e: {
-    experimentalMemoryManagement: Boolean(process.env.CI),
     setupNodeEvents(on, config) {
       // implement node event listeners here
       on(

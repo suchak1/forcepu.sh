@@ -15,7 +15,7 @@ env:
   NODE_OPTIONS: --max-old-space-size=6144
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repo
@@ -42,9 +42,7 @@ jobs:
       - uses: actions/cache@v3
         name: Setup pnpm cache
         with:
-          path: |
-            ${{ fromJSON('["~/.cache/Cypress", "~/Library/Caches/Cypress"]')[steps.cypress.outcome == 'macOS'] }}
-            ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
@@ -54,28 +52,23 @@ jobs:
           pnpm run ci
           pnpm add -g @apidevtools/swagger-cli@4.0.4
 
-      - name: Generate aws-exports.js and swagger.json files
+      - name: Create aws-exports.js file
         env:
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-          LOCAL_IDENTITY_POOL_ID: ${{ secrets.LOCAL_IDENTITY_POOL_ID }}
-          LOCAL_USER_POOL_ID: ${{ secrets.LOCAL_USER_POOL_ID }}
-          LOCAL_WEB_CLIENT_ID: ${{ secrets.LOCAL_WEB_CLIENT_ID }}
-          LOCAL_OAUTH_DOMAIN: ${{ secrets.LOCAL_OAUTH_DOMAIN }}
+          AWS_EXPORTS: ${{ secrets.AWS_EXPORTS }}
         run: |
-          util/aws_exports.sh
+          touch src/aws-exports.js
+          echo "${AWS_EXPORTS}" > src/aws-exports.js
+          node src/aws-exports.js 
           pnpm run swagger
       
-  # echo "${AWS_EXPORTS}" > src/aws-exports.js
-  # node src/aws-exports.js 
-
       # - name: Start dev server
       #   run: |
       #     npx vite --host &
 
-      - name: Start dev server
+      - name: Create react app and serve
         run: |
           npx vite --host &
-      # npx cypress run
+          npx cypress run
 
       # - name: IP
       #   run: |
@@ -101,28 +94,27 @@ jobs:
 # })
 # EOF
 
-      - name: Run UI tests
-        uses: cypress-io/github-action@v5
-        id: cypress
-        continue-on-error: true
-        with:
-          install-command: npx cypress install
-          record: true
-          wait-on: 'http://localhost:8000'
-          config-file: cypress.config.ts
-          command-prefix: "--"
-          browser: chrome
-          # config: baseUrl=http://${{ env.HOSTNAME }}:8000
-        env:
-          ELECTRON_ENABLE_LOGGING: 1
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
+      # - name: Run UI tests
+      #   uses: cypress-io/github-action@v5
+      #   id: cypress
+      #   continue-on-error: true
+      #   with:
+      #     record: true
+      #     install: false
+      #     wait-on: 'http://localhost:8000'
+      #     config-file: cypress.config.ts
+      #     command-prefix: "--"
+      #     # config: baseUrl=http://${{ env.HOSTNAME }}:8000
+      #   env:
+      #     ELECTRON_ENABLE_LOGGING: 1
+      #     CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+      #     CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
       
-      - name: Print Cypress Cloud URL
-        run: |
-          echo Cypress finished with: ${{ steps.cypress.outcome }}
-          echo See results at ${{ steps.cypress.outputs.resultsUrl }}
-          exit ${{ fromJSON('["0", "1"]')[steps.cypress.outcome == 'failure'] }}
+      # - name: Print Cypress Cloud URL
+      #   run: |
+      #     echo Cypress finished with: ${{ steps.cypress.outcome }}
+      #     echo See results at ${{ steps.cypress.outputs.resultsUrl }}
+      #     exit ${{ fromJSON('["0", "1"]')[steps.cypress.outcome == 'failure'] }}
 
       - name: Build app [dev]
         run: pnpm run build:ui && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV && echo "CF_DISTRO_ID=${CF_DISTRO_ID}" >> $GITHUB_ENV
@@ -149,7 +141,7 @@ jobs:
         if: ${{ github.ref_name == 'master' }}
 
       - name: Deploy UI
-        run: aws s3 sync dist s3://${{ env.AWS_S3_BUCKET }} --acl public-read --follow-symlinks --delete
+        run: aws s3 sync ./dist s3://${{ env.AWS_S3_BUCKET }}/ --acl public-read --follow-symlinks --delete
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
