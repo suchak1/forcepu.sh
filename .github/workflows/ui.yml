@@ -72,7 +72,7 @@ jobs:
       - name: Start dev server
         run: |
           npx vite --host &
-          npx cypress run
+      # npx cypress run
 
       # - name: IP
       #   run: |
@@ -108,6 +108,7 @@ jobs:
           wait-on: 'http://localhost:8000'
           config-file: cypress.config.ts
           command-prefix: "--"
+          browser: chrome
           # config: baseUrl=http://${{ env.HOSTNAME }}:8000
         env:
           ELECTRON_ENABLE_LOGGING: 1
