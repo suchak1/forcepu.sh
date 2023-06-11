@@ -2,7 +2,7 @@
   "name": "FORCEPU.SH",
   "private": true,
   "version": "0.6.2",
-  "description": "UmiJS app for FORCEPU.SH",
+  "description": "Vite app for FORCEPU.SH",
   "type": "module",
   "scripts": {
     "dev": "npm run start",
