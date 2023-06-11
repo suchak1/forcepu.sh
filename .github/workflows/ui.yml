@@ -57,8 +57,8 @@ jobs:
           AWS_EXPORTS: ${{ secrets.AWS_EXPORTS }}
         run: |
           touch src/aws-exports.js
-          echo "${AWS_EXPORTS}" > src/aws-exports.js
-          node src/aws-exports.js 
+      # echo "${AWS_EXPORTS}" > src/aws-exports.js
+      # node src/aws-exports.js 
           pnpm run swagger
       
       # - name: Start dev server
@@ -141,7 +141,7 @@ jobs:
         if: ${{ github.ref_name == 'master' }}
 
       - name: Deploy UI
-        run: aws s3 sync ./dist s3://${{ env.AWS_S3_BUCKET }}/ --acl public-read --follow-symlinks --delete
+        run: aws s3 sync dist s3://${{ env.AWS_S3_BUCKET }} --acl public-read --follow-symlinks --delete
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
