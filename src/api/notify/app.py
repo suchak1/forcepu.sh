@@ -108,7 +108,7 @@ def notify_user(user, signal):
                 success = False
         alerts = user.alerts
         now = datetime.now(timezone.utc)
-        alerts['last_sent'] = UTCDateTimeAttribute().serialize(now)
+        alerts['last_sent'] = now
         user.update(actions=[UserModel.alerts.set(alerts)])
         if success:
             return user.email
