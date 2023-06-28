@@ -100,12 +100,14 @@ def notify_user(user, signal):
         last_sent = UTCDateTimeAttribute().deserialize(last_sent)
     if not last_sent or enough_time_has_passed(last_sent, now, reset_duration):
         for alert in alerts:
-            try:
-                alert['fx'](user, signal)
-            except Exception as e:
-                print(f"{alert['type']} alert failed to send for {user.email}")
-                logging.exception(e)
-                success = False
+            if user.alerts[alert['type'].lower()]:
+                try:
+                    alert['fx'](user, signal)
+                except Exception as e:
+                    print(
+                        f"{alert['type']} alert failed to send for {user.email}")
+                    logging.exception(e)
+                    success = False
         alerts = user.alerts
         now = datetime.now(timezone.utc)
         alerts['last_sent'] = now
@@ -141,7 +143,8 @@ def post_notify(event, _):
     ) | (
         UserModel.alerts['sms'] == True
     ) | (
-        UserModel.alerts['webhook'] != ""
+        (UserModel.alerts['webhook'].exists()) &
+        (UserModel.alerts['webhook'] != '')
     )
     users_in_beta = UserModel.in_beta_index.query(1, filter_condition=cond)
     s3 = boto3.client('s3')
