@@ -21,7 +21,7 @@ def transform_signal(raw_signal):
         sig = sig[0]
     if type(sig) == str:
         sig = sig.lower() == 'true'
-    sig = 'BUY' if signal else 'SELL'
+    sig = 'BUY' if sig else 'SELL'
 
     signal['Date'] = date
     signal['Signal'] = sig
