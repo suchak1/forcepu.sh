@@ -44,8 +44,11 @@ def test_options():
         headers["Access-Control-Allow-Methods"] == "GET,HEAD,OPTIONS,POST,PUT")
     assert (
         headers["Access-Control-Allow-Headers"] ==
-        """Origin, X-Requested-With, Content-Type
-        , Accept, Authorization, X-API-Key""")
+        (
+            "Origin, X-Requested-With, Content-Type, "
+            "Accept, Authorization, X-API-Key"
+        )
+    )
 
 
 def test_verify_user():
