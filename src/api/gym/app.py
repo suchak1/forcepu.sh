@@ -31,16 +31,3 @@ def get_exercise_log(*_):
         "body": records,
         "headers": {"Access-Control-Allow-Origin": "*"}
     }
-
-
-def get_exercise_vol():
-    # res = requests.get(
-    #     (
-    #         'https://docs.google.com/spreadsheets/d/'
-    #         '1Pu6T67VpIl049GGIyoe_OARejxuXSl-aWK5x2ORaCcY/'
-    #         'gviz/tq?tqx=out:csv&sheet=Workouts'
-    #     )
-    # )
-    # df = pd.read_csv(BytesIO(res.content))
-    # return df
-    pass
