@@ -43,7 +43,7 @@ def update_access_queue(user):
     # Update user model in db with new access_queue
     user.update(actions=[UserModel.access_queue.set(access_queue)])
     if quota_reached:
-        return None
+        return
 
     # Find out how many requests are left
     remaining = 0
