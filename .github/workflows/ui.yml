@@ -4,10 +4,12 @@ on:
   pull_request:
     paths-ignore:
       - src/api/**
+      - .github/workflows/api.yml
     branches: [master]
   push:
     paths-ignore:
       - src/api/**
+      - .github/workflows/api.yml
     branches: [master]
 
   workflow_dispatch:
