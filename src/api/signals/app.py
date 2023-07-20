@@ -1,12 +1,14 @@
 import os
 import json
 import boto3
-from glob import glob
 from datetime import datetime, timedelta, timezone
 from models import query_by_api_key, UserModel
 from utils import options, error, enough_time_has_passed, res_headers, transform_signal
 
 s3 = boto3.client('s3')
+
+max_accesses = 5
+duration_days = 1
 
 
 def handle_signals(event, _):
@@ -18,25 +20,11 @@ def handle_signals(event, _):
     return response
 
 
-def get_signals(event):
-    # first get user by api key
-    req_headers = event['headers']
-    if 'x-api-key' not in req_headers:
-        return error(401, 'Provide a valid API key.')
-    api_key = req_headers['x-api-key']
-    query_results = query_by_api_key(api_key)
-    if not query_results:
-        return error(401, 'Provide a valid API key.')
-    user = query_results[0]
-
-    if not (user.in_beta or user.subscribed):
-        return error(402, 'This endpoint is for subscribers only.')
-
+def update_access_queue(user):
     # Notes: Instead of using usage plan,
     # store list of last 5 access times
     access_queue = user.access_queue
-    max_accesses = 5
-    duration_days = 1
+
     reset_duration = timedelta(days=duration_days)
     now = datetime.now(timezone.utc)
     quota_reached = False
@@ -55,9 +43,7 @@ def get_signals(event):
     # Update user model in db with new access_queue
     user.update(actions=[UserModel.access_queue.set(access_queue)])
     if quota_reached:
-        return error(403,
-                     f'You have reached your quota of {max_accesses} requests / {duration_days} day(s).'
-                     )
+        return
 
     # Find out how many requests are left
     remaining = 0
@@ -68,6 +54,28 @@ def get_signals(event):
             break
     # This is to cover the case that len(access_queue) < max_accesses
     remaining += max_accesses - len(access_queue)
+    return remaining
+
+
+def get_signals(event):
+    # first get user by api key
+    req_headers = event['headers']
+    if 'x-api-key' not in req_headers:
+        return error(401, 'Provide a valid API key.')
+    api_key = req_headers['x-api-key']
+    query_results = query_by_api_key(api_key)
+    if not query_results:
+        return error(401, 'Provide a valid API key.')
+    user = query_results[0]
+
+    if not (user.in_beta or user.subscribed):
+        return error(402, 'This endpoint is for subscribers only.')
+
+    remaining = update_access_queue(user)
+    if not remaining:
+        return error(403,
+                     f'You have reached your quota of {max_accesses} requests / {duration_days} day(s).'
+                     )
 
     obj = s3.get_object(
         Bucket=os.environ['S3_BUCKET'], Key='models/latest/signals.csv')
