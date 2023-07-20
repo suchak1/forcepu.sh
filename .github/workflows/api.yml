@@ -58,10 +58,10 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           S3_BUCKET: ${{ secrets.HYPERDRIVE_DEV_BUCKET }}
-        run: coverage run --source src/api --omit src/api/test/**/*.py -m pytest -vv -s
+        run: coverage run --source src/api -m pytest -vv -s
   
       - name: Generate test coverage report
-        run: coverage report -m -i --fail-under=10
+        run: coverage report -m -i --fail-under=20
 
       - name: Create parameters.env [prod]
         env:
