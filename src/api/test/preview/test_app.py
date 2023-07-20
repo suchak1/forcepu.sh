@@ -1,7 +1,7 @@
 import sys
 import json
 sys.path.append('src/api')  # noqa
-from preview.app import *
+from preview.app import *  # noqa
 
 
 def test_get_preview():

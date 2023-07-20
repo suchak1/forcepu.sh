@@ -139,9 +139,9 @@ def post_notify(event, _):
     req_body = json.loads(event['body'])
     signal = transform_signal(req_body)
     cond = (
-        UserModel.alerts['email'] == True
+        UserModel.alerts['email'] == True  # noqa
     ) | (
-        UserModel.alerts['sms'] == True
+        UserModel.alerts['sms'] == True  # noqa
     ) | (
         (UserModel.alerts['webhook'].exists()) &
         (UserModel.alerts['webhook'] != '')
@@ -184,7 +184,7 @@ def post_notify(event, _):
     # etc for notify_sms
 
     status_code = 200
-    response = {'message': f'Notifications delivered.'}
+    response = {'message': 'Notifications delivered.'}
     body = json.dumps(response)
     return {
         "statusCode": status_code,

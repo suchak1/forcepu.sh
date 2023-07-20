@@ -1,7 +1,7 @@
 import sys
 sys.path.append('src/api')  # noqa
-from shared.python.utils import *
-from datetime import datetime, timedelta
+from shared.python.utils import *  # noqa
+from datetime import datetime, timedelta  # noqa
 
 
 def test_get_email():
@@ -40,8 +40,12 @@ def test_options():
     headers = opts['headers']
     assert headers["Access-Control-Allow-Origin"] == "*"
     assert headers["Access-Control-Allow-Credentials"] == "true"
-    assert headers["Access-Control-Allow-Methods"] == "GET,HEAD,OPTIONS,POST,PUT"
-    assert headers["Access-Control-Allow-Headers"] == "Origin, X-Requested-With, Content-Type, Accept, Authorization, X-API-Key"
+    assert (
+        headers["Access-Control-Allow-Methods"] == "GET,HEAD,OPTIONS,POST,PUT")
+    assert (
+        headers["Access-Control-Allow-Headers"] ==
+        """Origin, X-Requested-With, Content-Type
+        , Accept, Authorization, X-API-Key""")
 
 
 def test_verify_user():

@@ -1,7 +1,7 @@
 import sys
 import json
 sys.path.append('src/api')  # noqa
-from gym.app import *
+from gym.app import *  # noqa
 
 
 def test_get_exercise_log():

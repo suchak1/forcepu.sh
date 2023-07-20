@@ -50,7 +50,10 @@ def post_account(event):
         email = claims['email']
         user = UserModel.get(email)
         req_body = json.loads(event['body'])
-        if 'permissions' in req_body and 'read_disclaimer' in req_body['permissions'] and req_body['permissions']['read_disclaimer']:
+        if (
+            'permissions' in req_body
+            and 'read_disclaimer' in req_body['permissions']
+                and req_body['permissions']['read_disclaimer']):
             user.permissions.read_disclaimer = True
             user.update(
                 actions=[UserModel.permissions.set(user.permissions)]
