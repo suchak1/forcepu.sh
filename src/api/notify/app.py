@@ -206,6 +206,7 @@ def notify_email(user, signal):
         content = file.read()
     template = Template(content)
     signal['Prefix'] = 'dev.' if STAGE == 'dev' else ''
+    signal['Signal'] = signal['Signal'] == 'BUY'
     html = template.render(signal)
     try:
         client.send_email(
