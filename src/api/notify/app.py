@@ -206,6 +206,7 @@ def notify_email(user, signal):
         content = file.read()
     template = Template(content)
     signal['Prefix'] = 'dev.' if STAGE == 'dev' else ''
+    # this is necessary because template expects boolean value
     signal['Signal'] = signal['Signal'] == 'BUY'
     html = template.render(signal)
     try:
