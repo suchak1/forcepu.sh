@@ -1,12 +1,17 @@
 #!/bin/bash
 
-# # Show env vars
-# grep -v '^#' config.env
+FILE=config.env
 
-# Export env vars
-export $(grep -v '^#' config.env | xargs)
 
-# Export env vars
-set -o allexport
-source config.env
-set +o allexport
+if [[ -f "${FILE}" ]]; then
+    # # Show env vars
+    # grep -v '^#' "${FILE}"
+
+    # Export env vars
+    export $(grep -v '^#' "${FILE}" | xargs)
+
+    # Export env vars
+    set -o allexport
+    source "${FILE}"
+    set +o allexport
+fi
