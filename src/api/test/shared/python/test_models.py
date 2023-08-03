@@ -33,10 +33,16 @@ class TestAlerts():
     verify_alerts(alerts)
 
 
+def verify_permissions(perms):
+    assert type(perms.is_admin) == bool
+    assert not perms.is_admin
+    assert type(perms.read_disclaimer) == bool
+    assert not perms.read_disclaimer
+
+
 class TestPermissions():
     perms = Permissions()
-    assert type(perms.is_admin) == bool
-    assert type(perms.read_disclaimer) == bool
+    verify_permissions(perms)
 
 
 class TestCheckout():
@@ -79,6 +85,7 @@ class TestUserModel():
     assert type(user.alerts) == Alerts
     verify_alerts(user.alerts)
     assert type(user.permissions) == Permissions
+    verify_permissions(user.permissions)
     assert type(user.in_beta) == int
     assert user.in_beta == 0
     assert type(user.subscribed) == int
