@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 res_headers = {"Access-Control-Allow-Origin": "*"}
 
 past_date = datetime(2020, 1, 1, tzinfo=timezone.utc)
+date_fmt = '%Y-%m-%d'
 
 
 def get_email(user, env):
@@ -25,7 +26,7 @@ def transform_signal(raw_signal):
 
     signal['Date'] = date
     signal['Signal'] = sig
-    signal['Day'] = datetime.strptime(date, '%Y-%m-%d').strftime('%A')[:3]
+    signal['Day'] = datetime.strptime(date, date_fmt).strftime('%A')[:3]
     signal['Asset'] = 'BTC'
     return signal
 

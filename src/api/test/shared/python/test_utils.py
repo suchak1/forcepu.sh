@@ -17,6 +17,13 @@ def test_transform_signal():
     assert signal['Date'] == '2020-01-01'
     assert signal['Asset'] == 'BTC'
 
+    raw_signal = {'Time': ['2020-01-01'], 'Sig': ['true']}
+    signal = transform_signal(raw_signal)
+    assert signal['Signal'] == 'BUY'
+    assert signal['Day'] == 'Wed'
+    assert signal['Date'] == '2020-01-01'
+    assert signal['Asset'] == 'BTC'
+
 
 def test_enough_time_has_passed():
     start = datetime(2020, 1, 1)
