@@ -3,7 +3,6 @@ import json
 import pytest
 import numpy as np
 from datetime import datetime
-from pprint import pprint
 sys.path.append('src/api')  # noqa
 from model.app import *  # noqa
 from shared.python.utils import date_fmt  # noqa
