@@ -8,3 +8,8 @@ def test_handle_contact():
     event = {'httpMethod': 'OPTIONS'}
     res = handle_contact(event, None)
     assert res == options()
+
+    event = {'httpMethod': 'POST', 'requestContext': {
+        'authorizer': {'claims': {'email_verified': 'false'}}}}
+    res = handle_contact(event, None)
+    assert res != options()

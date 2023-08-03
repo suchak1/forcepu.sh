@@ -58,7 +58,9 @@ def options():
 
 
 def verify_user(claims):
-    email_verified = claims['email_verified']
+    # email_verified value comes back as str, so explicitly casting as str
+    # in case it comes back as bool in the future
+    email_verified = str(claims['email_verified']).lower()
     # ['email']
     # ['email_verified']
     # ['name']
