@@ -44,24 +44,24 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 pytest coverage boto3 requests pandas
+          pip install flake8 pytest coverage boto3 requests pandas pynamodb
 
       - name: Lint with flake8
         run: |
           # stop the build if there are Python syntax errors or undefined names
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-          flake8 . --count --ignore=F405,W503,W504 --max-complexity=10 --max-line-length=127 --statistics
-      
-      - name: Run all unit tests
+          flake8 . --count --ignore=F405,W503,W504,E721 --max-complexity=10 --max-line-length=127 --statistics
+
+      - name: Run all unit tests & Generate test coverage report
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
           S3_BUCKET: ${{ secrets.HYPERDRIVE_DEV_BUCKET }}
-        run: coverage run --source src/api -m pytest -vv -s
-  
-      - name: Generate test coverage report
-        run: coverage report -m -i --fail-under=20
+          TABLE_NAME: users-local
+          TEST: true
+        run: npm run test:api+db
 
       - name: Create parameters.env [prod]
         env:

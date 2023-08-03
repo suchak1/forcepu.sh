@@ -120,6 +120,8 @@ class UserModel(Model):
     """
     class Meta:
         table_name = os.environ['TABLE_NAME']
+        if str(os.environ.get('TEST')).lower() == "true":
+            host = "http://localhost:8000"
     email = UnicodeAttribute(hash_key=True)
     api_key = UnicodeAttribute(default=get_api_key)
     alerts = MapAttribute(default=Alerts)
