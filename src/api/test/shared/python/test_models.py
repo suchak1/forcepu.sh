@@ -45,15 +45,26 @@ class TestPermissions():
     verify_permissions(perms)
 
 
+def verify_checkout(checkout):
+    assert type(checkout.url) == str
+    assert not checkout.url
+    assert type(checkout.created) == datetime
+    assert checkout.created == past_date
+
+
 class TestCheckout():
     checkout = Checkout()
-    assert type(checkout.url) == str
-    assert type(checkout.created) == datetime
+    verify_checkout(checkout)
+
+
+def verify_stripe(stripe):
+    assert type(stripe.checkout) == Checkout
+    verify_checkout(stripe.checkout)
 
 
 class TestStripe():
     stripe = Stripe()
-    assert type(stripe.checkout) == Checkout
+    verify_stripe(stripe)
 
 
 class TestAPIKeyIndex():
@@ -91,6 +102,7 @@ class TestUserModel():
     assert type(user.subscribed) == int
     assert user.subscribed == 0
     assert type(user.stripe) == Stripe
+    verify_stripe(user.stripe)
     assert type(user.access_queue) == list
     assert user.access_queue == [past_date] * 5
     assert type(user.api_key_index) == APIKeyIndex
