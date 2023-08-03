@@ -4,6 +4,7 @@ AWS_ENDPOINT_URL_DYNAMODB=http://localhost:8000
 if [[ $(aws dynamodb list-tables --endpoint-url=http://localhost:8000 | grep users-local) ]]; then
     aws dynamodb delete-table --table-name users-local --endpoint-url=http://localhost:8000
 fi
+
 aws dynamodb create-table \
     --table-name users-local \
     --key-schema \
