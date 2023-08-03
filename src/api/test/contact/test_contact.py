@@ -1,8 +1,4 @@
 import sys
-import json
-import pytest
-import numpy as np
-from datetime import datetime
 sys.path.append('src/api')  # noqa
 from contact.app import *  # noqa
 from shared.python.utils import options  # noqa
