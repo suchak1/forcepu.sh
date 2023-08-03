@@ -3,7 +3,7 @@ import json
 import logging
 from smtplib import SMTP_SSL as SMTP
 from email.mime.text import MIMEText
-from shared.python.utils import \
+from utils import \
     verify_user, options, \
     error, res_headers, get_email
 
