@@ -59,6 +59,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-1
           S3_BUCKET: ${{ secrets.HYPERDRIVE_DEV_BUCKET }}
+          TABLE_NAME: users-local
           TEST: true
         run: npm run test:api+db
 
