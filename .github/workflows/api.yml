@@ -59,7 +59,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           S3_BUCKET: ${{ secrets.HYPERDRIVE_DEV_BUCKET }}
           TEST: true
-        run: npm run test:api
+        run: npm run test:api+db
 
       - name: Create parameters.env [prod]
         env:
