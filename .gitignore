@@ -52,7 +52,6 @@ swagger.json
 
 
 # local
-test*
 privacy-*
 assets/*:Zone.Identifier
 
