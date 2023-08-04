@@ -61,6 +61,9 @@ jobs:
           S3_BUCKET: ${{ secrets.HYPERDRIVE_DEV_BUCKET }}
           TABLE_NAME: users-local
           TEST: true
+          STAGE: dev
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
         run: npm run test:api+db
 
       - name: Create parameters.env [prod]

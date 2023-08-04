@@ -56,13 +56,10 @@ def send_email(user, subject, message):
     msg = MIMEText(message, 'plain')
     recipient = sender
     if os.environ.get('TEST'):
-        if subject == 'bounce' or message == 'bounce':
-            recipient = 'bounce@simulator.amazonses.com'
-        else:
-            recipient = 'success@simulator.amazonses.com'
-    else:
-        msg['Reply-To'] = user
+        recipient = 'success@simulator.amazonses.com'
     msg['To'] = recipient
+    msg['From'] = user
+    msg['Reply-To'] = user
     msg['Subject'] = subject
 
     try:

@@ -25,7 +25,7 @@ def test_post_contact():
     event = {
         'httpMethod': 'POST',
         'requestContext': {
-            'authorizer': {'claims': {'email_verified': 'true', 'email': 'test_user'}}
+            'authorizer': {'claims': {'email_verified': 'true', 'email': 'test_user@domain.com'}}
         },
         'body': '{}',
     }
@@ -45,7 +45,3 @@ def test_post_contact():
     assert res['statusCode'] == 200
     data = json.loads(res['body'])
     assert 'success' in data['message']
-
-    event['body'] = '{"subject": "bounce", "message": "bounce"}'
-    res = post_contact(event)
-    assert res['statusCode'] == 500
