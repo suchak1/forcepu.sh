@@ -54,10 +54,15 @@ def post_contact(event):
 def send_email(user, subject, message):
     sender = get_email(os.environ['EMAIL_USER'], os.environ['STAGE'])
     msg = MIMEText(message, 'plain')
-    msg['To'] = sender
-    # From header doesn't seem to do anything
-    msg['From'] = user
-    msg['Reply-To'] = user
+    recipient = sender
+    if os.environ.get('TEST'):
+        if subject == 'bounce' or message == 'bounce':
+            recipient = 'bounce@simulator.amazonses.com'
+        else:
+            recipient = 'success@simulator.amazonses.com'
+    else:
+        msg['Reply-To'] = user
+    msg['To'] = recipient
     msg['Subject'] = subject
 
     try:
@@ -65,7 +70,7 @@ def send_email(user, subject, message):
         server.ehlo()
         server.login(sender, os.environ['EMAIL_PASS'])
         # sender email must be same as login email - error otherwise
-        server.sendmail(sender, sender, msg.as_string())
+        server.sendmail(sender, recipient, msg.as_string())
         return True
     except Exception as e:
         logging.exception(e)
