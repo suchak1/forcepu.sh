@@ -1,10 +1,12 @@
 import os
 import sys
 import json
+import stripe
 sys.path.append('src/api')  # noqa
 from subscribe.app import *  # noqa
 from shared.python.models import UserModel  # noqa
 
+stripe.api_key = os.environ['STRIPE_SECRET_KEY']
 price_id = os.environ['STRIPE_PRICE_ID']
 
 
@@ -131,7 +133,9 @@ def test_post_subscribe():
 
 
 def test_cleanup():
-    # clean up mess
-    # delete customers
-    # delete subscriptions?
-    pass
+    customers = stripe.Customer.search(
+        query="email:'test_user@example.com'", limit=100)['data']
+    customer_ids = [customer['id'] for customer in customers]
+    for customer_id in customer_ids:
+        print(customer_id)
+        print(stripe.Customer.delete(customer_id))
