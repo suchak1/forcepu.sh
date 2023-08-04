@@ -45,7 +45,8 @@ class Processor:
         self.total = 0
 
     def run_process(self, conn):
-        while (val := conn.recv()):
+        # this condition prevents exit if val equals zero
+        while ((val := conn.recv()) or val is not None):
             res = self.fx(val, self.data)
             conn.send(res)
 
@@ -79,7 +80,6 @@ class Processor:
         self.results = []
         cpus = os.cpu_count()
         processes = [self.create_process() for _ in range(cpus)]
-        # Don't send 0 otherwise child while loop will end
         [self.process_item(processes[idx % cpus], item)
          for idx, item in enumerate(items)]
         [self.end_process(process) for process in processes]
