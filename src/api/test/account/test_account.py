@@ -28,12 +28,12 @@ def test_handle_account():
 
 
 def test_get_account():
-    user = UserModel.get('test_user')
+    user = UserModel.get('test_user@example.com')
     user_data = json.loads(user.to_json())
     event = {
         'httpMethod': 'GET',
         'requestContext': {
-            'authorizer': {'claims': {'email_verified': 'true', 'email': 'test_user'}}
+            'authorizer': {'claims': {'email_verified': 'true', 'email': 'test_user@example.com'}}
         },
     }
     res = get_account(event)

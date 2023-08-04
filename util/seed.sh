@@ -23,4 +23,4 @@ aws dynamodb create-table \
     --billing-mode PAY_PER_REQUEST \
     --endpoint-url http://localhost:8000 \
     --no-cli-pager
-aws dynamodb put-item --table-name users-local --item "{\"email\":{\"S\":\"test_user\"}, \"api_key\":{\"S\":\"test_api_key\"}}" --endpoint-url http://localhost:8000
+aws dynamodb put-item --table-name users-local --item "{\"email\":{\"S\":\"test_user@example.com\"}, \"api_key\":{\"S\":\"test_api_key\"}}" --endpoint-url http://localhost:8000

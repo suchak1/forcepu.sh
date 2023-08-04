@@ -8,7 +8,7 @@ from pynamodb.attributes import UTCDateTimeAttribute
 from utils import \
     verify_user, options, \
     error, enough_time_has_passed, \
-    past_date, res_headers
+    PAST_DATE, RES_HEADERS, TEST
 
 stripe.api_key = os.environ['STRIPE_SECRET_KEY']
 
@@ -20,7 +20,7 @@ def get_price(price_id):
     return {
         "statusCode": status_code,
         "body": body,
-        "headers": res_headers
+        "headers": RES_HEADERS
     }
 
 
@@ -43,7 +43,7 @@ def get_product(event, _):
     return {
         "statusCode": status_code,
         "body": body,
-        "headers": res_headers
+        "headers": RES_HEADERS
     }
 
 
@@ -148,7 +148,7 @@ def post_checkout(event):
     return {
         "statusCode": status_code,
         "body": body,
-        "headers": res_headers
+        "headers": RES_HEADERS
     }
 
 
@@ -190,34 +190,37 @@ def post_billing(event):
     return {
         "statusCode": status_code,
         "body": body,
-        "headers": res_headers
+        "headers": RES_HEADERS
     }
 
 
 def post_subscribe(event, _):
     # signing key for specific endpoint in Stripe Dashboard
     # not the same as CLI secret
-    webhook_secret = os.environ['STRIPE_WEBHOOK_SECRET']
-    req_body = event['body']
-    req_headers = event['headers']
-    signature = req_headers['Stripe-Signature']
-    try:
-        event = stripe.Webhook.construct_event(
-            req_body, signature, webhook_secret)
-    except ValueError as e:
-        # Invalid payload
-        logging.exception(e)
-        raise e
-    except stripe.error.SignatureVerificationError as e:
-        # Invalid signature
-        logging.exception(e)
-        raise e
+    if TEST:
+        event = json.loads(event['body'])
+    else:
+        webhook_secret = os.environ['STRIPE_WEBHOOK_SECRET']
+        req_body = event['body']
+        req_headers = event['headers']
+        signature = req_headers['Stripe-Signature']
+        try:
+            event = stripe.Webhook.construct_event(
+                req_body, signature, webhook_secret)
+        except ValueError as e:
+            # Invalid payload
+            logging.exception(e)
+            raise e
+        except stripe.error.SignatureVerificationError as e:
+            # Invalid signature
+            logging.exception(e)
+            raise e
 
     body = json.dumps({'status': 'success'})
     response = {
         "statusCode": 200,
         "body": body,
-        "headers": res_headers
+        "headers": RES_HEADERS
     }
     # ONLY events approved in Stripe Dashboard Settings > Webhooks
     # will come through
@@ -247,48 +250,8 @@ def post_subscribe(event, _):
             actions = [UserModel.subscribed.set(int(sub_is_active))]
             if not sub_is_active:
                 stripe_lookup.checkout['created'] = UTCDateTimeAttribute(
-                ).serialize(past_date)
+                ).serialize(PAST_DATE)
                 actions.append(UserModel.stripe.set(stripe_lookup))
             user.update(actions=actions)
 
     return response
-
-    # handle webhooks
-
-#     stripe.api_key = "sk_test_abc"
-#     # see if customer exists
-#     # else create
-#     stripe.Customer.create(
-#         email="{{CUSTOMER_EMAIL}}",
-#         name="{{CUSTOMER_NAME}}",
-#         shipping={
-#             "address": {
-#                 "city": "Brothers",
-#                 "country": "US",
-#                 "line1": "27 Fredrick Ave",
-#                 "postal_code": "97712",
-#                 "state": "CA",
-#             },
-#             "name": "{{CUSTOMER_NAME}}",
-#         },
-#         address={
-#             "city": "Brothers",
-#             "country": "US",
-#             "line1": "27 Fredrick Ave",
-#             "postal_code": "97712",
-#             "state": "CA",
-#         },
-#     )
-#     # save customerid to db?
-#     # new_customer var if not in db
-
-#     # if not new customer, update customer - address?
-
-#     # process payment
-#     # if error and new_customer, delete customer?
-
-#     return {
-#         "statusCode": 200,
-#         "body": 'necessary payment stuff',
-#         "headers": {"Access-Control-Allow-Origin": "*"}
-#     }

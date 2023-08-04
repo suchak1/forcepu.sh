@@ -25,7 +25,7 @@ def test_post_contact():
     event = {
         'httpMethod': 'POST',
         'requestContext': {
-            'authorizer': {'claims': {'email_verified': 'true', 'email': 'test_user@domain.com'}}
+            'authorizer': {'claims': {'email_verified': 'true', 'email': 'test_user@example.com'}}
         },
         'body': '{}',
     }

@@ -2,11 +2,11 @@ import sys
 from datetime import datetime
 sys.path.append('src/api')  # noqa
 from shared.python.models import *  # noqa
-from shared.python.utils import past_date  # noqa
+from shared.python.utils import PAST_DATE  # noqa
 
 
 def test_query_by_api_key():
-    assert query_by_api_key('test_api_key')[0].email == 'test_user'
+    assert query_by_api_key('test_api_key')[0].email == 'test_user@example.com'
 
 
 def test_get_api_key():
@@ -14,7 +14,7 @@ def test_get_api_key():
 
 
 def test_get_default_access_queue():
-    assert get_default_access_queue() == [past_date] * 5
+    assert get_default_access_queue() == [PAST_DATE] * 5
 
 
 def verify_alerts(alerts):
@@ -25,7 +25,7 @@ def verify_alerts(alerts):
     assert type(alerts.webhook) == str
     assert not alerts.webhook
     assert type(alerts.last_sent) == str
-    assert alerts.last_sent == UTCDateTimeAttribute().serialize(past_date)
+    assert alerts.last_sent == UTCDateTimeAttribute().serialize(PAST_DATE)
 
 
 class TestAlerts():
@@ -49,7 +49,7 @@ def verify_checkout(checkout):
     assert type(checkout.url) == str
     assert not checkout.url
     assert type(checkout.created) == datetime
-    assert checkout.created == past_date
+    assert checkout.created == PAST_DATE
 
 
 class TestCheckout():
@@ -88,9 +88,9 @@ class TestSubscribedIndex():
 
 
 class TestUserModel():
-    user = UserModel('test_user')
+    user = UserModel('test_user@example.com')
     assert type(user.email) == str
-    assert user.email == 'test_user'
+    assert user.email == 'test_user@example.com'
     assert type(user.api_key) == str
     assert len(user.api_key) == 86
     assert type(user.alerts) == Alerts
@@ -104,7 +104,7 @@ class TestUserModel():
     assert type(user.stripe) == Stripe
     verify_stripe(user.stripe)
     assert type(user.access_queue) == list
-    assert user.access_queue == [past_date] * 5
+    assert user.access_queue == [PAST_DATE] * 5
     assert type(user.api_key_index) == APIKeyIndex
     assert type(user.customer_id_index) == CustomerIdIndex
     assert type(user.in_beta_index) == InBetaIndex

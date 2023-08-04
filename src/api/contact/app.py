@@ -5,7 +5,7 @@ from smtplib import SMTP_SSL as SMTP
 from email.mime.text import MIMEText
 from utils import \
     verify_user, options, \
-    error, res_headers, get_email
+    error, RES_HEADERS, get_email, TEST
 
 
 def handle_contact(event, _):
@@ -47,7 +47,7 @@ def post_contact(event):
     return {
         "statusCode": status_code,
         "body": body,
-        "headers": res_headers
+        "headers": RES_HEADERS
     }
 
 
@@ -55,7 +55,7 @@ def send_email(user, subject, message):
     sender = get_email(os.environ['EMAIL_USER'], os.environ['STAGE'])
     msg = MIMEText(message, 'plain')
     recipient = sender
-    if os.environ.get('TEST'):
+    if TEST:
         recipient = 'success@simulator.amazonses.com'
     msg['To'] = recipient
     msg['From'] = user

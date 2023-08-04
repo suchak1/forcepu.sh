@@ -16,7 +16,7 @@ from models import UserModel
 from utils import \
     transform_signal, \
     error, enough_time_has_passed, \
-    res_headers, get_email
+    RES_HEADERS, get_email
 
 
 class Cryptographer:
@@ -189,7 +189,7 @@ def post_notify(event, _):
     return {
         "statusCode": status_code,
         "body": body,
-        "headers": res_headers
+        "headers": RES_HEADERS
     }
 
 

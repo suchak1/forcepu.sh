@@ -1,10 +1,12 @@
+import os
 import json
 from datetime import datetime, timezone
 
-res_headers = {"Access-Control-Allow-Origin": "*"}
+RES_HEADERS = {"Access-Control-Allow-Origin": "*"}
 
-past_date = datetime(2020, 1, 1, tzinfo=timezone.utc)
-date_fmt = '%Y-%m-%d'
+PAST_DATE = datetime(2020, 1, 1, tzinfo=timezone.utc)
+DATE_FMT = '%Y-%m-%d'
+TEST = str(os.environ.get('TEST')).lower() == 'true'
 
 
 def get_email(user, env):
@@ -26,7 +28,7 @@ def transform_signal(raw_signal):
 
     signal['Date'] = date
     signal['Signal'] = sig
-    signal['Day'] = datetime.strptime(date, date_fmt).strftime('%A')[:3]
+    signal['Day'] = datetime.strptime(date, DATE_FMT).strftime('%A')[:3]
     signal['Asset'] = 'BTC'
     return signal
 
@@ -41,7 +43,7 @@ def error(status, message):
         "body": json.dumps(
             {'message': message}
         ),
-        "headers": res_headers
+        "headers": RES_HEADERS
     }
 
 

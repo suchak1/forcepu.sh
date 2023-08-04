@@ -4,7 +4,7 @@ from pynamodb.models import Model
 from pynamodb.indexes import GlobalSecondaryIndex, AllProjection
 from pynamodb.attributes import (
     UnicodeAttribute, MapAttribute, BooleanAttribute, ListAttribute, UTCDateTimeAttribute, NumberAttribute)
-from utils import past_date
+from utils import PAST_DATE, TEST
 
 
 def query_by_api_key(api_key):
@@ -21,11 +21,11 @@ def get_api_key():
 
 
 def get_default_access_queue():
-    return [past_date] * 5
+    return [PAST_DATE] * 5
 
 
-attributes_lookup = {UnicodeAttribute: str, BooleanAttribute: bool}
-alerts_lookup = {
+ATTRS_LOOKUP = {UnicodeAttribute: str, BooleanAttribute: bool}
+ALERTS_LOOKUP = {
     'email': {'attr': BooleanAttribute, 'default': False},
     'sms': {'attr': BooleanAttribute, 'default': False},
     'webhook': {'attr': UnicodeAttribute, 'default': ""}
@@ -33,10 +33,10 @@ alerts_lookup = {
 
 
 class Alerts(MapAttribute):
-    for key, val in alerts_lookup.items():
+    for key, val in ALERTS_LOOKUP.items():
         vars()[key] = val['attr'](default=val['default'])
     last_sent = UTCDateTimeAttribute(
-        default=UTCDateTimeAttribute().serialize(past_date))
+        default=UTCDateTimeAttribute().serialize(PAST_DATE))
 
 
 class Permissions(MapAttribute):
@@ -47,7 +47,7 @@ class Permissions(MapAttribute):
 class Checkout(MapAttribute):
     url = UnicodeAttribute(default="")
     created = UTCDateTimeAttribute(
-        default=past_date)
+        default=PAST_DATE)
 
 
 class Stripe(MapAttribute):
@@ -120,7 +120,7 @@ class UserModel(Model):
     """
     class Meta:
         table_name = os.environ['TABLE_NAME']
-        if str(os.environ.get('TEST')).lower() == "true":
+        if TEST:
             host = "http://localhost:8000"
     email = UnicodeAttribute(hash_key=True)
     api_key = UnicodeAttribute(default=get_api_key)
