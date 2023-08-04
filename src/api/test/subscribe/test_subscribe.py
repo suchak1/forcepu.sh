@@ -137,5 +137,7 @@ def test_cleanup():
         query="email:'test_user@example.com'", limit=100)['data']
     customer_ids = [customer['id'] for customer in customers]
     for customer_id in customer_ids:
-        print(customer_id)
-        print(stripe.Customer.delete(customer_id))
+        try:
+            stripe.Customer.delete(customer_id)
+        except stripe.error.InvalidRequestError:
+            pass
