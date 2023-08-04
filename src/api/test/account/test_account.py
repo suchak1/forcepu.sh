@@ -1,6 +1,5 @@
 import sys
 import json
-from pprint import pprint
 import pytest
 sys.path.append('src/api')  # noqa
 from account.app import *  # noqa

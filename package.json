@@ -20,7 +20,7 @@
     "start:db": "docker run -d --rm -p 8000:8000 --name db amazon/dynamodb-local",
     "stop:db": "docker kill --signal=SIGTERM db && sleep 5",
     "seed:db": "util/seed.sh",
-    "test:api": "bash -ic \"source util/env.sh && python -m coverage run --source src/api -m pytest -vv -s && python -m coverage report -m -i --fail-under=60\"",
+    "test:api": "bash -ic \"source util/env.sh && python -m coverage run --source src/api -m pytest -vv -s && python -m coverage report -m -i --fail-under=70\"",
     "test:api+db": "npm run stop:db; npm run start:db && npm run seed:db && npm run test:api && npm run stop:db",
     "invoke:api": "cd src/api && sam local invoke PreviewFunction --parameter-overrides $(cat parameters.env)",
     "ci": "rm -rf node_modules && pnpm install --frozen-lockfile",

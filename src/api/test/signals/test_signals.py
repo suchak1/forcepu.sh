@@ -1,0 +1,56 @@
+import sys
+import json
+from datetime import datetime
+sys.path.append('src/api')  # noqa
+from signals.app import *  # noqa
+from shared.python.models import UserModel  # noqa
+from shared.python.utils import date_fmt  # noqa
+
+
+def test_handle_signals():
+    event = {'httpMethod': 'OPTIONS'}
+    res = handle_signals(event, None)
+    assert res == options()
+
+    event = {
+        'httpMethod': 'GET',
+        'requestContext': {
+            'authorizer': {'claims': {'email_verified': 'false'}}
+        },
+        'headers': {},
+    }
+    res = handle_signals(event, None)
+    assert res != options()
+    assert res['statusCode'] == 401
+
+
+def test_get_signals():
+    event = {
+        'httpMethod': 'GET',
+        'requestContext': {
+            'authorizer': {'claims': {'email_verified': 'true'}}
+        },
+        'headers': {'x-api-key': 'not_real'},
+    }
+    res = get_signals(event)
+    assert res['statusCode'] == 401
+    event['headers']['x-api-key'] = 'test_api_key'
+    res = get_signals(event)
+    assert res['statusCode'] == 402
+    user = UserModel.get('test_user')
+    user.update(actions=[UserModel.subscribed.set(1)])
+    res = get_signals(event)
+    assert res['statusCode'] == 200
+    data = json.loads(res['body'])['data']
+    for datum in data:
+        assert type(datetime.strptime(datum['Date'], date_fmt)) == datetime
+        assert datum['Signal'] == 'BUY' or datum['Signal'] == 'SELL'
+        assert datum['Day'] in set(
+            ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'])
+        assert datum['Asset'] == 'BTC'
+    for _ in range(max_accesses):
+        remaining = update_access_queue(user)
+
+    assert not remaining
+    res = get_signals(event)
+    assert res['statusCode'] == 403
