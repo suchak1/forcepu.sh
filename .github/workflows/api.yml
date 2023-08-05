@@ -44,7 +44,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 pytest coverage boto3 requests pandas pynamodb
+          pip install flake8 pytest coverage boto3 requests pandas pynamodb stripe jinja2 numpy cryptography
 
       - name: Lint with flake8
         run: |
@@ -53,7 +53,7 @@ jobs:
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
           flake8 . --count --ignore=F405,W503,W504,E721 --max-complexity=10 --max-line-length=127 --statistics
 
-      - name: Run all unit tests & Generate test coverage report
+      - name: Run all unit tests
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -61,6 +61,16 @@ jobs:
           S3_BUCKET: ${{ secrets.HYPERDRIVE_DEV_BUCKET }}
           TABLE_NAME: users-local
           TEST: true
+          STAGE: dev
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          SALT: salt
+          CRYPT_PASS: password
+          EMIT_SECRET: secret
+          SIGNAL_EMAIL: ${{ secrets.SIGNAL_EMAIL }}
+          STRIPE_WEBHOOK_SECRET: secret
+          STRIPE_PRICE_ID: ${{ secrets.DEV_STRIPE_PRICE_ID }}
+          STRIPE_SECRET_KEY: ${{ secrets.DEV_STRIPE_SECRET_KEY }}
         run: npm run test:api+db
 
       - name: Create parameters.env [prod]

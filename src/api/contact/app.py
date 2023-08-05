@@ -5,7 +5,7 @@ from smtplib import SMTP_SSL as SMTP
 from email.mime.text import MIMEText
 from utils import \
     verify_user, options, \
-    error, res_headers, get_email
+    error, RES_HEADERS, get_email, TEST
 
 
 def handle_contact(event, _):
@@ -47,15 +47,15 @@ def post_contact(event):
     return {
         "statusCode": status_code,
         "body": body,
-        "headers": res_headers
+        "headers": RES_HEADERS
     }
 
 
 def send_email(user, subject, message):
     sender = get_email(os.environ['EMAIL_USER'], os.environ['STAGE'])
     msg = MIMEText(message, 'plain')
-    msg['To'] = sender
-    # From header doesn't seem to do anything
+    recipient = 'success@simulator.amazonses.com' if TEST else sender
+    msg['To'] = recipient
     msg['From'] = user
     msg['Reply-To'] = user
     msg['Subject'] = subject
@@ -65,7 +65,7 @@ def send_email(user, subject, message):
         server.ehlo()
         server.login(sender, os.environ['EMAIL_PASS'])
         # sender email must be same as login email - error otherwise
-        server.sendmail(sender, sender, msg.as_string())
+        server.sendmail(sender, recipient, msg.as_string())
         return True
     except Exception as e:
         logging.exception(e)

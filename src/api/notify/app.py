@@ -16,7 +16,7 @@ from models import UserModel
 from utils import \
     transform_signal, \
     error, enough_time_has_passed, \
-    res_headers, get_email
+    RES_HEADERS, get_email, TEST
 
 
 class Cryptographer:
@@ -45,7 +45,8 @@ class Processor:
         self.total = 0
 
     def run_process(self, conn):
-        while (val := conn.recv()):
+        # this condition prevents exit if val equals zero
+        while ((val := conn.recv()) or val is not None):
             res = self.fx(val, self.data)
             conn.send(res)
 
@@ -79,7 +80,6 @@ class Processor:
         self.results = []
         cpus = os.cpu_count()
         processes = [self.create_process() for _ in range(cpus)]
-        # Don't send 0 otherwise child while loop will end
         [self.process_item(processes[idx % cpus], item)
          for idx, item in enumerate(items)]
         [self.end_process(process) for process in processes]
@@ -133,7 +133,7 @@ def post_notify(event, _):
     cryptographer = Cryptographer(password, salt)
     decrypted = cryptographer.decrypt(encrypted).decode('UTF-8')
     if not decrypted == emit_secret:
-        sleep(10)
+        sleep(0 if TEST else 10)
         print('Incorrect emit secret provided.')
         return error(401, 'Provide a valid emit secret.')
     req_body = json.loads(event['body'])
@@ -155,7 +155,6 @@ def post_notify(event, _):
                   ['data'][-2:] if data['Name'] == 'hyperdrive'][0]
     signal['Perf'] = hyperdrive['Bal'] - 1
     processor = Processor(notify_user, signal)
-    # processor.signal = signal
     notified = set(processor.run(users_in_beta))
     users_subscribed = UserModel.subscribed_index.query(
         1, filter_condition=cond)
@@ -189,20 +188,20 @@ def post_notify(event, _):
     return {
         "statusCode": status_code,
         "body": body,
-        "headers": res_headers
+        "headers": RES_HEADERS
     }
 
 
 def notify_email(user, signal):
     STAGE = os.environ['STAGE']
     sender = get_email(os.environ['SIGNAL_EMAIL'], STAGE)
-    recipient = user.email
+    recipient = 'success@simulator.amazonses.com' if TEST else user.email
     region = 'us-east-1'
     charset = 'UTF-8'
     client = boto3.client('sesv2', region_name=region)
     subject = f"FORCEPU.SH: {signal['Asset']} (₿) Signal Alert"
     body_text = ("Visit FORCEPU.SH to view the new signal.")
-    with open('template.html.jinja', 'r') as file:
+    with open(os.path.join(os.path.dirname(__file__), 'template.html.jinja'), 'r') as file:
         content = file.read()
     template = Template(content)
     signal['Prefix'] = 'dev.' if STAGE == 'dev' else ''

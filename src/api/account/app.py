@@ -1,5 +1,5 @@
 import json
-from models import UserModel, attributes_lookup, alerts_lookup
+from models import UserModel, ATTRS_LOOKUP, ALERTS_LOOKUP
 from utils import options, verify_user
 
 
@@ -63,10 +63,10 @@ def post_account(event):
             alerts = json.loads(user.to_json())['alerts']
             updated_alerts = req_body['alerts']
             for key, val in updated_alerts.items():
-                if key in alerts_lookup:
+                if key in ALERTS_LOOKUP:
                     # type(getattr(Alerts, 'sms')) == BooleanAttribute
-                    expected_attr = alerts_lookup[key]['attr']
-                    expected_type = attributes_lookup[expected_attr]
+                    expected_attr = ALERTS_LOOKUP[key]['attr']
+                    expected_type = ATTRS_LOOKUP[expected_attr]
                     if type(val) == expected_type:
                         alerts[key] = val
             user.alerts = alerts

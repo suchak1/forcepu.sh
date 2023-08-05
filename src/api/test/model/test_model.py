@@ -5,7 +5,7 @@ import numpy as np
 from datetime import datetime
 sys.path.append('src/api')  # noqa
 from model.app import *  # noqa
-from shared.python.utils import date_fmt  # noqa
+from shared.python.utils import DATE_FMT  # noqa
 
 
 def test_get_model():
@@ -14,9 +14,9 @@ def test_get_model():
     data = json.loads(res['body'])
     assert set(['created', 'start', 'end', 'num_features',
                'accuracy']).issubset(data.keys())
-    created = datetime.strptime(data['created'], date_fmt)
-    start = datetime.strptime(data['start'], date_fmt)
-    end = datetime.strptime(data['end'], date_fmt)
+    created = datetime.strptime(data['created'], DATE_FMT)
+    start = datetime.strptime(data['start'], DATE_FMT)
+    end = datetime.strptime(data['end'], DATE_FMT)
     assert end > start
     assert start < created
     assert type(data['num_features']) == int

@@ -3,7 +3,7 @@ import json
 import boto3
 from datetime import datetime, timedelta, timezone
 from models import query_by_api_key, UserModel
-from utils import options, error, enough_time_has_passed, res_headers, transform_signal
+from utils import options, error, enough_time_has_passed, RES_HEADERS, transform_signal
 
 s3 = boto3.client('s3')
 
@@ -108,7 +108,7 @@ def get_signals(event):
     return {
         "statusCode": status_code,
         "body": body,
-        "headers": res_headers
+        "headers": RES_HEADERS
     }
 
 
