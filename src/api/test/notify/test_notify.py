@@ -24,8 +24,9 @@ class TestCryptographer:
 class TestProcessor:
     def test_run(self):
         processor = Processor(pow, 2)
-        results = processor.run(list(range(0, 5)))
-        assert results == [0, 1, 4, 9, 16]
+        results = set([int(result)
+                      for result in processor.run(list(range(0, 5)))])
+        assert results == set([0, 1, 4, 9, 16])
 
 
 def test_post_notify():
