@@ -58,12 +58,21 @@ def test_post_account():
     assert not user.alerts.email
     assert not user.alerts.sms
     assert not user.alerts.webhook
+    body = {
+        'permissions': {'read_disclaimer': True},
+        'alerts': {'email': True, 'sms': True, 'webhook': 'api.domain.com'}
+    }
     event = {
         'httpMethod': 'GET',
         'requestContext': {
-            'authorizer': {'claims': {'email_verified': 'true', 'email': 'new_user'}}
+            'authorizer': {
+                'claims': {
+                    'email_verified': 'true',
+                    'email': 'new_user'
+                }
+            }
         },
-        'body': '{"permissions": {"read_disclaimer": true }, "alerts": {"email": true, "sms": true, "webhook": "api.domain.com"}}',
+        'body': json.dumps(body)
     }
     res = post_account(event)
     assert res['statusCode'] == 200
