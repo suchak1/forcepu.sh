@@ -64,6 +64,13 @@ jobs:
           STAGE: dev
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          SALT: salt
+          CRYPT_PASS: password
+          EMIT_SECRET: secret
+          SIGNAL_EMAIL: ${{ secrets.SIGNAL_EMAIL }}
+          STRIPE_WEBHOOK_SECRET: secret
+          STRIPE_PRICE_ID: ${{ secrets.DEV_STRIPE_PRICE_ID }}
+          STRIPE_SECRET_KEY: ${{ secrets.DEV_STRIPE_SECRET_KEY }}
         run: npm run test:api+db
 
       - name: Create parameters.env [prod]

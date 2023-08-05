@@ -35,9 +35,10 @@ def test_get_signals():
     res = get_signals(event)
     assert res['statusCode'] == 401
     event['headers']['x-api-key'] = 'test_api_key'
+    user = UserModel.get('test_user@example.com')
+    user.update(actions=[UserModel.in_beta.set(0)])
     res = get_signals(event)
     assert res['statusCode'] == 402
-    user = UserModel.get('test_user@example.com')
     user.update(actions=[UserModel.in_beta.set(1)])
     res = get_signals(event)
     assert res['statusCode'] == 200

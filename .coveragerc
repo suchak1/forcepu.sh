@@ -1,0 +1,9 @@
+[run]
+parallel = True
+concurrency = multiprocessing
+source = src/api
+
+[report]
+ignore_errors = True
+show_missing = True
+fail_under = 95

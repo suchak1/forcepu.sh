@@ -54,9 +54,7 @@ def post_contact(event):
 def send_email(user, subject, message):
     sender = get_email(os.environ['EMAIL_USER'], os.environ['STAGE'])
     msg = MIMEText(message, 'plain')
-    recipient = sender
-    if TEST:
-        recipient = 'success@simulator.amazonses.com'
+    recipient = 'success@simulator.amazonses.com' if TEST else sender
     msg['To'] = recipient
     msg['From'] = user
     msg['Reply-To'] = user

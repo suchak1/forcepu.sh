@@ -1,11 +1,9 @@
-import os
 import sys
 import json
 from math import pow
-# import stripe
 sys.path.append('src/api')  # noqa
 from notify.app import *  # noqa
-# from shared.python.models import UserModel  # noqa
+from shared.python.models import UserModel  # noqa
 
 keeper = Cryptographer(
     'password'.encode('UTF-8'), 'salt'.encode('UTF-8'))
@@ -23,7 +21,30 @@ class TestCryptographer:
 
 class TestProcessor:
     def test_run(self):
-        # processor = Processor(lambda x, y: x ** y, 2)
         processor = Processor(pow, 2)
         results = processor.run(list(range(0, 5)))
         assert results == [0, 1, 4, 9, 16]
+
+
+def test_post_notify():
+    body = {'Time': '2020-01-01', 'Sig': True}
+    event = {
+        'headers': {
+            'emit_secret': keeper.encrypt('wrong'.encode('UTF-8'))
+        },
+        'body': json.dumps(body)
+    }
+    res = post_notify(event, None)
+    assert res['statusCode'] == 401
+    event['headers']['emit_secret'] = keeper.encrypt('secret'.encode('UTF-8'))
+    user = UserModel.get('test_user@example.com')
+    alerts = user.alerts
+    alerts['email'] = True
+    alerts['sms'] = True
+    alerts['webhook'] = ''
+    alerts['last_sent'] = UTCDateTimeAttribute(
+    ).deserialize(alerts['last_sent'])
+    user.update(actions=[UserModel.alerts.set(
+        alerts), UserModel.in_beta.set(1)])
+    res = post_notify(event, None)
+    assert res['statusCode'] == 200
