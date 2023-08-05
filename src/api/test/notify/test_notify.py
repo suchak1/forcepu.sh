@@ -4,6 +4,8 @@ from math import pow
 sys.path.append('src/api')  # noqa
 from notify.app import *  # noqa
 from shared.python.models import UserModel  # noqa
+from shared.python.utils import transform_signal  # noqa
+
 
 keeper = Cryptographer(
     'password'.encode('UTF-8'), 'salt'.encode('UTF-8'))
@@ -48,3 +50,10 @@ def test_post_notify():
         alerts), UserModel.in_beta.set(1)])
     res = post_notify(event, None)
     assert res['statusCode'] == 200
+
+
+def test_notify_email():
+    signal = transform_signal({'Time': '2020-01-01', 'Sig': True})
+    signal['Perf'] = 0.5
+    user = UserModel.get('test_user@example.com')
+    notify_email(user, signal)
