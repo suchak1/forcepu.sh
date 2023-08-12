@@ -15,7 +15,7 @@
     "deploy-dev:api": "cd src/api && sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --parameter-overrides $(cat dev-parameters.env) --config-env dev",
     "deploy:api": "cd src/api && sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --parameter-overrides $(cat parameters.env) --config-env prod",
     "start": "vite",
-    "start:api": "cd src/api && sam local start-api --parameter-overrides $(cat dev-parameters.env)",
+    "start:api": "cd src/api && sam local start-api --parameter-overrides $(cat local-parameters.env)",
     "vite": "npm run start",
     "start:db": "docker run -d --rm -p 8000:8000 --name db amazon/dynamodb-local",
     "stop:db": "docker kill --signal=SIGTERM db && sleep 5",
