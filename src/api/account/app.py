@@ -1,6 +1,10 @@
+import os
 import json
+import stripe
 from models import UserModel, ATTRS_LOOKUP, ALERTS_LOOKUP
 from utils import options, verify_user
+
+stripe.api_key = os.environ['STRIPE_SECRET_KEY']
 
 
 def handle_account(event, _):
@@ -8,6 +12,8 @@ def handle_account(event, _):
         response = options()
     elif event['httpMethod'].upper() == 'POST':
         response = post_account(event)
+    elif event['httpMethod'].upper() == 'DELETE':
+        response = delete_account(event)
     else:
         response = get_account(event)
 
@@ -78,5 +84,21 @@ def post_account(event):
     return {
         "statusCode": status_code,
         "body": body,
+        "headers": {"Access-Control-Allow-Origin": "*"}
+    }
+
+
+def delete_account(event):
+    claims = event['requestContext']['authorizer']['claims']
+    email = claims['email']
+    user = UserModel.get(email)
+    customer_id = user.customer_id
+    if customer_id and customer_id != '_':
+        stripe.Customer.delete(customer_id)
+    user.delete()
+
+    return {
+        "statusCode": 200,
+        "body": 'OK',
         "headers": {"Access-Control-Allow-Origin": "*"}
     }
