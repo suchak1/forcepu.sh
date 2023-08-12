@@ -67,35 +67,6 @@ jobs:
         run: |
           util/aws_exports.sh
           pnpm run swagger
-      
-      - name: Start dev server
-        run: |
-          npx vite --host &
-
-      - name: Run UI tests
-        uses: cypress-io/github-action@v5
-        id: cypress
-        continue-on-error: true
-        with:
-          record: true
-          install: false
-          wait-on: 'http://localhost:8000'
-          config-file: cypress.config.ts
-          command-prefix: "--"
-          # config: baseUrl=http://${{ env.HOSTNAME }}:8000
-        env:
-          ELECTRON_ENABLE_LOGGING: 1
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
-      
-      - name: Cypress results
-        run: |
-          echo Cypress finished with: ${{ steps.cypress.outcome }}
-          echo See results at ${{ steps.cypress.outputs.resultsUrl }}
-          nyc report --reporter=text
-          nyc report --reporter=text-summary
-          nyc check-coverage
-          exit ${{ fromJSON('["0", "1"]')[steps.cypress.outcome == 'failure'] }}
 
       - name: Build app [dev]
         run: pnpm run build:ui && echo "AWS_S3_BUCKET=${AWS_S3_BUCKET}" >> $GITHUB_ENV && echo "CF_DISTRO_ID=${CF_DISTRO_ID}" >> $GITHUB_ENV
@@ -133,3 +104,30 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_EC2_METADATA_DISABLED: true
+      
+      - name: Wait for invalidation
+        run: sleep 30s
+      
+      - name: Run UI tests
+        uses: cypress-io/github-action@v5
+        id: cypress
+        continue-on-error: true
+        with:
+          record: true
+          install: false
+          wait-on: 'https://dev.forcepu.sh'
+          config-file: cypress.config.ts
+          command-prefix: "--"
+        env:
+          ELECTRON_ENABLE_LOGGING: 1
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
+        
+      - name: Cypress results
+        run: |
+          echo Cypress finished with: ${{ steps.cypress.outcome }}
+          echo See results at ${{ steps.cypress.outputs.resultsUrl }}
+          nyc report --reporter=text
+          nyc report --reporter=text-summary
+          nyc check-coverage
+          exit ${{ fromJSON('["0", "1"]')[steps.cypress.outcome == 'failure'] }}

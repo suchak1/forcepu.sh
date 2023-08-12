@@ -94,6 +94,7 @@ def delete_account(event):
     user = UserModel.get(email)
     customer_id = user.customer_id
     if customer_id and customer_id != '_':
+        # deleting a customer automatically cancels subscriptions
         stripe.Customer.delete(customer_id)
     user.delete()
 

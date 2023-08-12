@@ -9,7 +9,8 @@ const __dirname = path.dirname(__filename);
 export default {
   video: Boolean(process.env.CI),
   e2e: {
-    baseUrl: 'http://localhost:8000',
+    // This must be DEV only (NOT prod) since we're using with stripe test credit cards.
+    baseUrl: 'https://dev.forcepu.sh',
     experimentalMemoryManagement: Boolean(process.env.CI),
     setupNodeEvents(on, config) {
       // implement node event listeners here
