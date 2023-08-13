@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "npm run start",
     "typescript": "tsc",
-    "build:ui": "pnpm run swagger && NODE_OPTIONS=--max-old-space-size=4096 vite build",
+    "build:ui": "pnpm run swagger && NODE_OPTIONS=--max-old-space-size=8192 vite build",
     "preview": "vite preview",
     "build:api": "cd src/api && sam build --use-container --cached --parallel",
     "build+start:api": "npm run build:api && npm run start:api",
