@@ -84,6 +84,7 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME: !Ref UsersTable
+          STRIPE_SECRET_KEY: !Ref StripeSecretKey
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref UsersTable
