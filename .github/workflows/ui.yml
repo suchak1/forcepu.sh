@@ -79,7 +79,6 @@ jobs:
           VITE_APP_OAUTH_DOMAIN: ${{ secrets.DEV_OAUTH_DOMAIN }}
           CF_DISTRO_ID: ${{ secrets.DEV_CF_DISTRO_ID }}
           CYPRESS_COVERAGE: true
-          VITE_COVERAGE: true
         if: ${{ github.ref_name != 'master' }}
 
       - name: Build app [prod]

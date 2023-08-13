@@ -24,7 +24,7 @@ export default defineConfig({
     }
   },
 
-  plugins: [react(), istanbul({forceBuildInstrument: true, cypress: true})],
+  plugins: [react(), istanbul({cypress: true})],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
