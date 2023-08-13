@@ -3,6 +3,8 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import istanbul from 'vite-plugin-istanbul';
 
+const VITE_COVERAGE = Boolean(String(process.env['VITE_COVERAGE']).toLowerCase() === 'true')
+
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
@@ -24,7 +26,7 @@ export default defineConfig({
     }
   },
 
-  plugins: [react(), istanbul({cypress: true})],
+  plugins: [react(), istanbul({forceBuildInstrument: VITE_COVERAGE})],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
