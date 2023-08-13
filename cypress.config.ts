@@ -22,7 +22,6 @@ export default {
         'file:preprocessor',
         vitePreprocessor({
           configFile: path.resolve(__dirname, './vite.config.ts'),
-          mode: 'development',
         }),
       )
       codeCoverage(on, config)
