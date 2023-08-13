@@ -7,6 +7,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default {
+  env: {
+    SIGNAL_EMAIL: process.env['SIGNAL_EMAIL'],
+    EMAIL_PASS: process.env['EMAIL_PASS'],
+  },
   video: Boolean(process.env.CI),
   e2e: {
     // This must be DEV only (NOT prod) since we're using with stripe test credit cards.
