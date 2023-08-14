@@ -7,6 +7,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default {
+  experimentalModifyObstructiveThirdPartyCode: true,
+  chromeWebSecurity: false,
   env: {
     SIGNAL_EMAIL: process.env['SIGNAL_EMAIL'],
     EMAIL_PASS: process.env['EMAIL_PASS'],
