@@ -34,6 +34,7 @@ describe('Subscription', () => {
           cy.wait(15000)
         });
 
+        // Cancel subscription through Billing page
         cy.get('.ant-ribbon').contains('Current Plan');
         cy.contains('button', 'Manage subscription').click();
         cy.origin('https://billing.stripe.com', () => {
