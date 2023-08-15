@@ -55,7 +55,7 @@ const SubscriptionPage = () => {
     const url = `${getApiUrl()}/checkout`;
     fetch(url, {
       method: "POST",
-      headers: { Authorization: jwtToken, Origin: window.location.origin },
+      headers: { Authorization: jwtToken },
     })
       .then((response) => {
         if (!response.ok) {
@@ -74,7 +74,7 @@ const SubscriptionPage = () => {
     const url = `${getApiUrl()}/billing`;
     fetch(url, {
       method: "POST",
-      headers: { Authorization: jwtToken, Origin: window.location.origin },
+      headers: { Authorization: jwtToken },
     })
       .then((response) => {
         if (!response.ok) {

@@ -382,6 +382,7 @@ Resources:
           STRIPE_SECRET_KEY: !Ref StripeSecretKey
           TABLE_NAME: !Ref UsersTable
           STRIPE_PRICE_ID: !Ref StripePriceId
+          STAGE: !Ref Stage
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref UsersTable
@@ -414,6 +415,7 @@ Resources:
         Variables:
           STRIPE_SECRET_KEY: !Ref StripeSecretKey
           TABLE_NAME: !Ref UsersTable
+          STAGE: !Ref Stage
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref UsersTable
