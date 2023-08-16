@@ -106,8 +106,8 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_EC2_METADATA_DISABLED: true
       
-      - name: Wait for invalidation
-        run: sleep 30s
+      # - name: Wait for invalidation
+      #   run: sleep 30s
       
       - name: Run UI tests
         uses: cypress-io/github-action@v5

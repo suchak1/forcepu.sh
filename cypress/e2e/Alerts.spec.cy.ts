@@ -8,16 +8,21 @@ describe('Alerts', () => {
       cy.login();
       cy.intercept('GET', 'https://api.dev.forcepu.sh/account').as('getAccount');
       cy.wait('@getAccount').then(({ request, response }) => {
-        cy.wrap(response?.body.in_beta).should('eq', 0);
         const auth = request.headers['authorization'];
-        cy.request({method: 'POST', url: 'https://api.dev.forcepu.sh/account', headers: {Authorization: auth}, body: {in_beta: 1}});
+        if (!response?.body.in_beta) {
+          cy.request({method: 'POST', url: 'https://api.dev.forcepu.sh/account', headers: {Authorization: auth}, body: {in_beta: 1}});
+        }
+        cy.request({method: 'POST', url: 'https://api.dev.forcepu.sh/account', headers: {Authorization: auth}, body: {alerts: {email: false}}});
       });
       cy.reload();
+      cy.intercept('POST', 'https://api.dev.forcepu.sh/account').as('postAccount');
       cy.get(toggle).first().should('not.be.disabled').click();
-      cy.wait('@getAccount').then(({ request, response }) => {
+      cy.wait('@postAccount').then(({ request, response }) => {
         cy.wrap(response?.body.in_beta).should('eq', 1);
+        cy.wrap(response?.body.alerts.email).should('eq', true);
         const auth = request.headers['authorization'];
-        cy.request({method: 'POST', url: 'https://api.dev.forcepu.sh/account', headers: {Authorization: auth}, body: {in_beta: 1}});
+        cy.request({method: 'POST', url: 'https://api.dev.forcepu.sh/account', headers: {Authorization: auth}, body: {in_beta: 0}});
       });
+      cy.get(toggle).first().click();
     })
   })
