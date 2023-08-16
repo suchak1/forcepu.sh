@@ -48,7 +48,7 @@ def test_options():
     assert headers["Access-Control-Allow-Origin"] == "*"
     assert headers["Access-Control-Allow-Credentials"] == "true"
     assert (
-        headers["Access-Control-Allow-Methods"] == "GET,HEAD,OPTIONS,POST,PUT")
+        headers["Access-Control-Allow-Methods"] == "GET,HEAD,OPTIONS,POST,PUT,DELETE")
     assert (
         headers["Access-Control-Allow-Headers"] ==
         (

@@ -84,6 +84,7 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME: !Ref UsersTable
+          STRIPE_SECRET_KEY: !Ref StripeSecretKey
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref UsersTable
@@ -108,6 +109,15 @@ Resources:
           Properties:
             Path: /account
             Method: post
+            RestApiId: !Ref ApiGatewayApi
+            Auth:
+              Authorizer: CognitoAuth
+              # header Authorization: id_token from /token endpoint
+        DeleteAccount:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /account
+            Method: delete
             RestApiId: !Ref ApiGatewayApi
             Auth:
               Authorizer: CognitoAuth
@@ -372,6 +382,7 @@ Resources:
           STRIPE_SECRET_KEY: !Ref StripeSecretKey
           TABLE_NAME: !Ref UsersTable
           STRIPE_PRICE_ID: !Ref StripePriceId
+          STAGE: !Ref Stage
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref UsersTable
@@ -404,6 +415,7 @@ Resources:
         Variables:
           STRIPE_SECRET_KEY: !Ref StripeSecretKey
           TABLE_NAME: !Ref UsersTable
+          STAGE: !Ref Stage
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref UsersTable

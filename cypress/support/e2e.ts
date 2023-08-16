@@ -21,8 +21,11 @@ import './commands'
 
 import '@cypress/code-coverage/support'
 
-// Cypress.on('uncaught:exception', (err, runnable) => {
-//     // returning false here prevents Cypress from
-//     // failing the test
-//     return false
-// })
+Cypress.on('uncaught:exception', (err, runnable) => {
+    const { name } = err;
+    if (name === 'IntegrationError') {
+        return false;
+    }
+    return true;
+})
+

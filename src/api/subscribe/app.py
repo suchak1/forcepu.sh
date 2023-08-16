@@ -69,9 +69,11 @@ def post_checkout(event):
         return error(401, 'This account is not verified.')
 
     price_id = os.environ['STRIPE_PRICE_ID']
+    env = os.environ['STAGE']
     email = claims['email']
     req_headers = event['headers']
-    origin = req_headers['origin']
+    origin = req_headers.get(
+        'origin') or f"https://{'dev.' if env == 'dev' else ''}forcepu.sh"
 
     # Get customerId from user.stripe {} obj
     user = UserModel.get(email)
@@ -171,9 +173,11 @@ def post_billing(event):
     if not verified:
         return error(401, 'This account is not verified.')
 
+    env = os.environ['STAGE']
     email = claims['email']
     req_headers = event['headers']
-    origin = req_headers['origin']
+    origin = req_headers.get(
+        'origin') or f"https://{'dev.' if env == 'dev' else ''}forcepu.sh"
 
     # Get customerId from user.stripe {} obj
     user = UserModel.get(email)
