@@ -1,6 +1,6 @@
 import os
 import boto3
-import pickle
+# import pickle
 s3 = boto3.client('s3')
 
 
@@ -11,7 +11,7 @@ def get_trade(*_):
     data_dir = os.path.join(home_dir, ".tokens")
     pickle_path = os.path.join(data_dir, "robinhood.pickle")
     print(pickle_path)
-    obj = None
+    # obj = None
     return {
         "statusCode": 200,
         # "body": obj['Body'].read(),
