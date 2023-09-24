@@ -1,5 +1,6 @@
 import os
 import boto3
+import pyotp
 from pathlib import Path
 import robin_stocks.robinhood as rh
 from botocore.exceptions import ClientError
@@ -7,7 +8,7 @@ from botocore.exceptions import ClientError
 s3 = boto3.resource('s3')
 
 
-def get_trade(*_):
+def login():
     auth_filename = 'robinhood.pickle'
     auth_path = os.path.join(os.path.expanduser("~"), '.tokens', auth_filename)
     key = f'data/{auth_filename}'
@@ -27,6 +28,11 @@ def get_trade(*_):
     if os.path.exists(auth_path):
         bucket.upload_file(auth_path, key)
         print('Saved auth file to S3.')
+    return rh
+
+
+def get_trade(*_):
+    rh = login()
     print(rh.build_holdings())
 
     return {
