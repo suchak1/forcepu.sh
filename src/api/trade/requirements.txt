@@ -1,1 +1,2 @@
 boto3 == 1.25.3
+robin-stocks == 3.0.6

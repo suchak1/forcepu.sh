@@ -88,7 +88,9 @@ jobs:
           HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
           UserPoolArn: ${{ secrets.USER_POOL_ARN }}
           Salt: ${{ secrets.SALT }}
-          CryptPass: ${{ secrets.CRYPT_PASS }}
+          RHUsername: ${{ secrets.RH_USERNAME }}
+          RHPassword: ${{ secrets.CRYPT_PASS }}
+          RH2FA: ${{ secrets.RH_2FA }}
           EmitSecret: ${{ secrets.EMIT_SECRET }}
         run: |
           echo "
@@ -104,7 +106,9 @@ jobs:
           HostedZoneId=${HostedZoneId}
           UserPoolArn=${UserPoolArn}
           Salt=${Salt}
-          CryptPass=${CryptPass}
+          RHUsername=${RHUsername}
+          RHPassword=${RHPassword}
+          RH2FA=${RH2FA}
           EmitSecret=${EmitSecret}
           " >> src/api/parameters.env
         if: ${{ github.ref_name == 'master' }}
@@ -124,7 +128,9 @@ jobs:
           HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
           UserPoolArn: ${{ secrets.DEV_USER_POOL_ARN }}
           Salt: ${{ secrets.SALT }}
-          CryptPass: ${{ secrets.CRYPT_PASS }}
+          RHUsername: ${{ secrets.RH_USERNAME }}
+          RHPassword: ${{ secrets.CRYPT_PASS }}
+          RH2FA: ${{ secrets.RH_2FA }}
           EmitSecret: ${{ secrets.DEV_EMIT_SECRET }}
         run: |
           echo "
@@ -140,7 +146,9 @@ jobs:
           HostedZoneId=${HostedZoneId}
           UserPoolArn=${UserPoolArn}
           Salt=${Salt}
-          CryptPass=${CryptPass}
+          RHUsername=${RHUsername}
+          RHPassword=${RHPassword}
+          RH2FA=${RH2FA}
           EmitSecret=${EmitSecret}
           " >> src/api/dev-parameters.env
         if: ${{ github.ref_name != 'master' }}

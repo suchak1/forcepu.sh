@@ -37,13 +37,19 @@ Parameters:
   Salt:
     Type: "String"
     NoEcho: true
-  CryptPass:
-    Type: "String"
-    NoEcho: true
   EmitSecret:
     Type: "String"
     NoEcho: true
   SignalEmail:
+    Type: "String"
+    NoEcho: true
+  RHUsername:
+    Type: "String"
+    NoEcho: true
+  RHPassword:
+    Type: "String"
+    NoEcho: true
+  RH2FA:
     Type: "String"
     NoEcho: true
 
@@ -206,6 +212,9 @@ Resources:
       Environment:
         Variables:
           S3_BUCKET: !Ref S3Bucket
+          RH_USERNAME: !Ref RHUsername
+          RH_PASSWORD: !Ref RHPassword
+          RH_2FA: !Ref RH2FA
       Policies:
         - Statement:
             - Sid: S3ReadWritePolicy
@@ -365,7 +374,7 @@ Resources:
       Environment:
         Variables:
           SALT: !Ref Salt
-          CRYPT_PASS: !Ref CryptPass
+          CRYPT_PASS: !Ref RHPassword
           EMIT_SECRET: !Ref EmitSecret
           TABLE_NAME: !Ref UsersTable
           STAGE: !Ref Stage
