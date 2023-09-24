@@ -200,6 +200,31 @@ Resources:
             Path: /preview
             Method: get
             RestApiId: !Ref ApiGatewayApi
+  TradeFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Environment:
+        Variables:
+          S3_BUCKET: !Ref S3Bucket
+      Policies:
+        - Statement:
+            - Sid: S3ReadWritePolicy
+              Effect: Allow
+              Action:
+                - s3:GetObject
+                - s3:PutObject
+              Resource: !Sub "arn:aws:s3:::${S3Bucket}/data/api/robinhood.pickle"
+      PackageType: Zip
+      CodeUri: trade
+      Runtime: python3.8 
+      Handler: app.get_trade
+      Events:
+        Trade:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /trade
+            Method: get
+            RestApiId: !Ref ApiGatewayApi
   ModelFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
