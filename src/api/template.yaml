@@ -227,13 +227,19 @@ Resources:
       PackageType: Zip
       CodeUri: trade
       Runtime: python3.9 
-      Handler: app.get_trade
+      Handler: app.handle_trade
       Events:
         Trade:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /trade
             Method: get
+            RestApiId: !Ref ApiGatewayApi
+        Options:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /trade
+            Method: options
             RestApiId: !Ref ApiGatewayApi
   ModelFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
