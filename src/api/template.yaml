@@ -215,6 +215,7 @@ Resources:
           RH_USERNAME: !Ref RHUsername
           RH_PASSWORD: !Ref RHPassword
           RH_2FA: !Ref RH2FA
+          HOME: /tmp
       Policies:
         - Statement:
             - Sid: S3ReadWritePolicy
