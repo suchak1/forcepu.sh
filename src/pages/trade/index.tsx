@@ -10,13 +10,15 @@ const TradePage = () => {
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
 
   useEffect(() => {
-    (async () => {
-      const jwtToken = loggedIn?.signInUserSession?.idToken?.jwtToken;
-      const url = `${getApiUrl({ localOverride: "dev" })}/trade`;
-      const response = await fetch(url, { method: "GET", headers: { Authorization: jwtToken } });
-      console.log(response.json());
-    })();
-  }, []);
+    if (loggedIn) {
+      (async () => {
+        const jwtToken = loggedIn?.signInUserSession?.idToken?.jwtToken;
+        const url = `${getApiUrl({ localOverride: "dev" })}/trade`;
+        const response = await fetch(url, { method: "GET", headers: { Authorization: jwtToken } });
+        console.log(response.json());
+      })();
+    }
+  }, [loggedIn]);
 
 
   return (<></>
