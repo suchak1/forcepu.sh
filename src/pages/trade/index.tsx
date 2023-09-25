@@ -15,7 +15,8 @@ const TradePage = () => {
         const jwtToken = loggedIn?.signInUserSession?.idToken?.jwtToken;
         const url = `${getApiUrl({ localOverride: "dev" })}/trade`;
         const response = await fetch(url, { method: "GET", headers: { Authorization: jwtToken } });
-        console.log(response.json());
+        const data = await response.json();
+        console.log(data);
       })();
     }
   }, [loggedIn]);

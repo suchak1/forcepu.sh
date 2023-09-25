@@ -51,6 +51,7 @@ def login():
 def get_trade(event):
     claims = event['requestContext']['authorizer']['claims']
     verified = verify_user(claims)
+    print('claims', claims)
 
     status_code = 401
     body = json.dumps({'message': 'This account is not verified.'})
