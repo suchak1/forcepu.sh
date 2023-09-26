@@ -1,26 +1,57 @@
 import os
+from math import log, sqrt
 import json
 import boto3
 import pyotp
 from pathlib import Path
+from statistics import NormalDist
 import robin_stocks.robinhood as rh
 from botocore.exceptions import ClientError
 from utils import \
-    verify_user, options
+    verify_user, options, error
 # error, RES_HEADERS, get_email, TEST
 # import pickle
 s3 = boto3.resource('s3')
 
 
+def calc_d1(stock_price, strike_price, implied_vol, rho, div_yield, time):
+    numerator = log(stock_price / strike_price) + \
+        (rho - div_yield + (implied_vol ** 2) / 2) * time
+    denominator = implied_vol * sqrt(time)
+    return numerator / denominator
+
+
+def calc_d2(d1, implied_vol, time):
+    return d1 - implied_vol * sqrt(time)
+
+
+def chance_of_profit(**kwargs):
+    # rh assumes div_yield is zero when calculating this
+    d1 = calc_d1(**kwargs)
+    d2 = calc_d2(d1, kwargs['implied_vol'], kwargs['time'])
+    return 1 - NormalDist().cdf(d2)
+
+
 def handle_trade(event, _):
     if event['httpMethod'].upper() == 'OPTIONS':
         response = options()
-    # elif event['httpMethod'].upper() == 'POST':
-    #     response = post_account(event)
+
+    claims = event['requestContext']['authorizer']['claims']
+    verified = verify_user(claims)
+
+    # status_code = 401
+    # body = json.dumps({'message': 'This account is not verified.'})
+
+    if not(verified and claims['email'] == os.environ['RH_USERNAME']):
+        return error(401, 'This account is not verified.')
+    
+    rh = login()
+    if event['httpMethod'].upper() == 'POST':
+        response = post_trade(rh)
     # elif event['httpMethod'].upper() == 'DELETE':
     #     response = delete_account(event)
     else:
-        response = get_trade(event)
+        response = get_trade(rh)
 
     return response
 
@@ -48,21 +79,39 @@ def login():
     return rh
 
 
-def get_trade(event):
-    claims = event['requestContext']['authorizer']['claims']
-    verified = verify_user(claims)
-    print('claims', claims)
+def get_trade(rh):
+    # claims = event['requestContext']['authorizer']['claims']
+    # verified = verify_user(claims)
 
-    status_code = 401
-    body = json.dumps({'message': 'This account is not verified.'})
+    # status_code = 401
+    # body = json.dumps({'message': 'This account is not verified.'})
 
-    if verified and claims['email'] == os.environ['RH_USERNAME']:
-        rh = login()
-        body = json.dumps(rh.build_holdings())
-        status_code = 200
+    # if verified and claims['email'] == os.environ['RH_USERNAME']:
+    # rh = login()
+    holdings = rh.build_holdings()
+    for symbol in holdings:
+        holdings[symbol]['open_contracts'] = 0
+    opts = rh.options.get_open_option_positions()
+    for opt in opts:
+        sold = -1 if opt['type'] == 'short' else 1
+        holdings[opt['chain_symbol']
+                    ]['open_contracts'] += int(float(opt['quantity'])) * sold
+        opt = rh.options.get_option_instrument_data_by_id(opt['option_id'])
+        holdings[opt['chain_symbol']
+                    ]['expiration'] = opt['expiration_date']
+        holdings[opt['chain_symbol']]['strike'] = float(
+            opt['strike_price'])
+        opt = rh.options.get_option_market_data_by_id(opt['option_id'])[0]
+        holdings[opt['chain_symbol']]['chance'] = float(opt[f"chance_of_profit_{'short' if holdings[opt['chain_symbol']
+                    ]['open_contracts'] < 0 else 'long'}"])
+    body = holdings
+    status_code = 200
 
     return {
         "statusCode": status_code,
-        "body": body,
+        "body": json.dumps(body),
         "headers": {"Access-Control-Allow-Origin": "*"}
     }
+
+def post_trade(rh):
+    pass

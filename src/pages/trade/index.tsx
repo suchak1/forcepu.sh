@@ -8,6 +8,7 @@ import { getApiUrl } from "@/utils";
 const TradePage = () => {
 
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
+  const [portfolio, setPortfolio] = useState({});
 
   useEffect(() => {
     if (loggedIn) {
@@ -22,7 +23,18 @@ const TradePage = () => {
   }, [loggedIn]);
 
 
-  return (<></>
+
+
+// Goal:
+// table w symbols
+// number of options (should be done), date (should be done), strike price (should be done), chance of profit (should be done), sell (magenta) and roll (cyan) buttons
+// execute (magenta) button executes strategy for all assets
+
+
+  return (
+  <>
+  {/* {Object.keys(portfolio).map(symbol => )} */}
+  </>
   );
 };
 
