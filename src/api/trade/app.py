@@ -140,7 +140,7 @@ def sell(rh, symbols):
     # curr_contracts = {opt['chain_symbol']: 1 for opt in opts}
     # for opt in opts:
     #     if 
-    desired_contracts = {symbol: max_contract - curr_contracts[symbol] for symbol, max_contract in max_contracts} 
+    desired_contracts = {symbol: max_contract - curr_contracts[symbol] for symbol, max_contract in max_contracts.items()} 
     for symbol in symbols:
         quantity = desired_contracts[symbol]
         if not quantity:
