@@ -29,6 +29,9 @@ const TradePage = () => {
 // table w symbols
 // number of options (should be done), date (should be done), strike price (should be done), chance of profit (should be done), sell (magenta) and roll (cyan) buttons
 // execute (magenta) button executes strategy for all assets
+// graph of covered call income over time
+// +$20 premium notification after each sell order
+// total + for the week, filter sum to include filled orders after start of day Mon
 
 
   return (

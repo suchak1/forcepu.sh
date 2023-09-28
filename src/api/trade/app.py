@@ -1,16 +1,16 @@
 import os
-from math import log, sqrt
 import json
 import boto3
 import pyotp
 from pathlib import Path
+from math import log, sqrt
 from statistics import NormalDist
 import robin_stocks.robinhood as rh
+from datetime import datetime, timedelta
 from botocore.exceptions import ClientError
 from utils import \
     verify_user, options, error
-# error, RES_HEADERS, get_email, TEST
-# import pickle
+
 s3 = boto3.resource('s3')
 
 
@@ -39,19 +39,14 @@ def handle_trade(event, _):
     claims = event['requestContext']['authorizer']['claims']
     verified = verify_user(claims)
 
-    # status_code = 401
-    # body = json.dumps({'message': 'This account is not verified.'})
-
     if not(verified and claims['email'] == os.environ['RH_USERNAME']):
         return error(401, 'This account is not verified.')
     
     rh = login()
     if event['httpMethod'].upper() == 'POST':
         response = post_trade(rh)
-    # elif event['httpMethod'].upper() == 'DELETE':
-    #     response = delete_account(event)
     else:
-        response = get_trade(rh)
+        response = get_trade(rh, event)
 
     return response
 
@@ -80,14 +75,6 @@ def login():
 
 
 def get_trade(rh):
-    # claims = event['requestContext']['authorizer']['claims']
-    # verified = verify_user(claims)
-
-    # status_code = 401
-    # body = json.dumps({'message': 'This account is not verified.'})
-
-    # if verified and claims['email'] == os.environ['RH_USERNAME']:
-    # rh = login()
     holdings = rh.build_holdings()
     for symbol in holdings:
         holdings[symbol]['open_contracts'] = 0
@@ -113,5 +100,56 @@ def get_trade(rh):
         "headers": {"Access-Control-Allow-Origin": "*"}
     }
 
-def post_trade(rh):
+def post_trade(rh, event):
+    req_body = json.loads(event['body'])
+    trade_type = req_body['type']
+    symbol = req_body['symbol']
+
+    response = roll() if trade_type.upper() == 'ROLL' else sell(rh, symbol)
+
+    body = 'OK'
+    status_code = 200
+
+    return {
+        "statusCode": status_code,
+        "body": json.dumps(body),
+        "headers": {"Access-Control-Allow-Origin": "*"}
+    }
+
+def get_week(date):
+    one_day = timedelta(days=1)
+    day_idx = (date.weekday() + 1) % 7
+    sunday = date - timedelta(days=day_idx)
+    return [i * one_day + sunday for i in range(7)]
+
+def sell(rh, symbol):
+    chain = rh.options.get_chains(symbol)
+    expirations = chain['expiration_dates']
+    today = datetime.now()
+    week = set([datetime.strftime(day, '%Y-%m-%d') for day in get_week(today)])
+    exp_candidates = [None]
+    for exp in expirations:
+        if exp in week:
+            exp_candidates[0] = exp
+        else:
+            exp_candidates.append(exp)
+            break
+
+
+    # get last day in current week, get next date after that (and date after that too if no expiration in curr week)
+    # in total, list should have len of 2 (fallback for if premium is too low to justify weeklies or 1 month)
+
+
+    # positionEffect (str) – Either ‘open’ for a sell to open effect or ‘close’ for a sell to close effect.
+    # creditOrDebit (str) – Either ‘debit’ or ‘credit’.
+    # price (float) – The limit price to trigger a sell of the option.
+    # symbol (str) – The stock ticker of the stock to trade.
+    # quantity (int) – The number of options to sell.
+    # expirationDate (str) – The expiration date of the option in ‘YYYY-MM-DD’ format.
+    # strike (float) – The strike price of the option.
+    # optionType (str) – This should be ‘call’ or ‘put’
+    rh.orders.order_sell_option_limit('open', 'credit', price, symbol, quantity, expiration, strike, 'call')
+
+def roll():
     pass
+    
