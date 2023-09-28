@@ -5,6 +5,7 @@ import pyotp
 from pathlib import Path
 from math import log, sqrt
 from statistics import NormalDist
+from collections import defaultdict
 import robin_stocks.robinhood as rh
 from datetime import datetime, timedelta
 from botocore.exceptions import ClientError
@@ -103,9 +104,9 @@ def get_trade(rh):
 def post_trade(rh, event):
     req_body = json.loads(event['body'])
     trade_type = req_body['type']
-    symbol = req_body['symbol']
+    symbols = req_body['symbol']
 
-    response = roll() if trade_type.upper() == 'ROLL' else sell(rh, symbol)
+    response = roll() if trade_type.upper() == 'ROLL' else sell(rh, symbols)
 
     body = 'OK'
     status_code = 200
@@ -122,33 +123,54 @@ def get_week(date):
     sunday = date - timedelta(days=day_idx)
     return [i * one_day + sunday for i in range(7)]
 
-def sell(rh, symbol):
-    chain = rh.options.get_chains(symbol)
-    expirations = chain['expiration_dates']
-    today = datetime.now()
-    week = set([datetime.strftime(day, '%Y-%m-%d') for day in get_week(today)])
-    exp_candidates = [None]
-    for exp in expirations:
-        if exp in week:
-            exp_candidates[0] = exp
-        else:
-            exp_candidates.append(exp)
-            break
+def sell(rh, symbols):
+    holdings = rh.build_holdings()
+    max_contracts = {symbol: int(float(holding['quantity']) / 100) for symbol, holding in holdings.items()}
+    
+    instr_to_symbol_lookup = {holding['id']: symbol for symbol, holding in holdings.items()}
+    positions = rh.account.get_open_stock_positions()
+    curr_contracts = defaultdict(lambda: 0)
+    for position in positions:
+        symbol = instr_to_symbol_lookup[position['instrument_id']]
+        curr_contracts[symbol] = int(float(position['shares_held_for_options_collateral']) / 100)
+
+    
+    # opts = rh.options.get_open_option_positions()
+    # curr_contracts = defaultdict(lambda: 0)
+    # curr_contracts = {opt['chain_symbol']: 1 for opt in opts}
+    # for opt in opts:
+    #     if 
+    desired_contracts = {symbol: max_contract - curr_contracts[symbol] for symbol, max_contract in max_contracts} 
+    for symbol in symbols:
+        quantity = desired_contracts[symbol]
+        if not quantity:
+            continue
+        chain = rh.options.get_chains(symbol)
+        expirations = chain['expiration_dates']
+        today = datetime.now()
+        week = set([datetime.strftime(day, '%Y-%m-%d') for day in get_week(today)])
+        exp_candidates = [None]
+        for exp in expirations:
+            if exp in week:
+                exp_candidates[0] = exp
+            else:
+                exp_candidates.append(exp)
+                break
 
 
-    # get last day in current week, get next date after that (and date after that too if no expiration in curr week)
-    # in total, list should have len of 2 (fallback for if premium is too low to justify weeklies or 1 month)
+        # get last day in current week, get next date after that (and date after that too if no expiration in curr week)
+        # in total, list should have len of 2 (fallback for if premium is too low to justify weeklies or 1 month)
 
 
-    # positionEffect (str) – Either ‘open’ for a sell to open effect or ‘close’ for a sell to close effect.
-    # creditOrDebit (str) – Either ‘debit’ or ‘credit’.
-    # price (float) – The limit price to trigger a sell of the option.
-    # symbol (str) – The stock ticker of the stock to trade.
-    # quantity (int) – The number of options to sell.
-    # expirationDate (str) – The expiration date of the option in ‘YYYY-MM-DD’ format.
-    # strike (float) – The strike price of the option.
-    # optionType (str) – This should be ‘call’ or ‘put’
-    rh.orders.order_sell_option_limit('open', 'credit', price, symbol, quantity, expiration, strike, 'call')
+        # positionEffect (str) – Either ‘open’ for a sell to open effect or ‘close’ for a sell to close effect.
+        # creditOrDebit (str) – Either ‘debit’ or ‘credit’.
+        # price (float) – The limit price to trigger a sell of the option.
+        # symbol (str) – The stock ticker of the stock to trade.
+        # quantity (int) – The number of options to sell.
+        # expirationDate (str) – The expiration date of the option in ‘YYYY-MM-DD’ format.
+        # strike (float) – The strike price of the option.
+        # optionType (str) – This should be ‘call’ or ‘put’
+        rh.orders.order_sell_option_limit('open', 'credit', price, symbol, quantity, expiration, strike, 'call')
 
 def roll():
     pass
