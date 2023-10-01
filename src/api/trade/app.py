@@ -155,7 +155,33 @@ def sell(rh, symbols):
                 exp_candidates[0] = exp
             else:
                 exp_candidates.append(exp)
+                if len(exp_candidates) >= 2:
+                    break
+        min_price = 0.05
+        contract = None
+        for expiration in exp_candidates:
+            opt_candidates = rh.options.find_options_by_specific_profitability(symbol, expiration, None, 'call', 'chance_of_profit_short', 0.85, 0.95)
+            opt_candidates.sort(key = lambda opt: abs(float(opt['chance_of_profit_short']) - 0.88))
+            
+            for opt in opt_candidates:
+                key = 'high_fill_rate_sell_price'
+                sell_price = opt[key] if key in opt else (float(opt['ask_price']) + float(opt['bid_price'])) / 2
+                opt_is_viable = float(sell_price) >= min_price
+                if opt_is_viable:
+                    contract = opt
+                    break
+
+            if contract:
                 break
+        if not contract:
+            raise Exception('No viable contracts to write.')
+            throw error about how no matching contracts available
+            try to print out nonmatching options?
+        
+        strike = float(contract['strike_price'])
+        when defining price, make sure high_fill_sell_price is not higher than 5% buffer or something
+        also consider min bid size? increments of 0.05
+        85/88/93
 
 
         # get last day in current week, get next date after that (and date after that too if no expiration in curr week)
