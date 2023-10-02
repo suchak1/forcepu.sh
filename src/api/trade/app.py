@@ -161,7 +161,7 @@ def sell(rh, symbols):
         contract = None
         for expiration in exp_candidates:
             opt_candidates = rh.options.find_options_by_specific_profitability(symbol, expiration, None, 'call', 'chance_of_profit_short', 0.85, 0.95)
-            opt_candidates.sort(key = lambda opt: abs(float(opt['chance_of_profit_short']) - 0.88))
+            opt_candidates.sort(key = lambda opt: abs(float(opt['chance_of_profit_short']) - 0.875))
             
             for opt in opt_candidates:
                 key = 'high_fill_rate_sell_price'
@@ -175,12 +175,12 @@ def sell(rh, symbols):
                 break
         if not contract:
             raise Exception('No viable contracts to write.')
-            throw error about how no matching contracts available
-            try to print out nonmatching options?
         
         strike = float(contract['strike_price'])
         when defining price, make sure high_fill_sell_price is not higher than 5% buffer or something
+        min_tick = float(contract['min_ticks']['below_tick'])
         also consider min bid size? increments of 0.05
+        ensure price is higher than min_price?
         85/88/93
 
 
