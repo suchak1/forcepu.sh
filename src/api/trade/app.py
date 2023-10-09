@@ -3,7 +3,7 @@ import json
 import boto3
 import pyotp
 from pathlib import Path
-from math import log, sqrt
+from math import log, sqrt, ceil
 from statistics import NormalDist
 from collections import defaultdict
 import robin_stocks.robinhood as rh
@@ -123,6 +123,13 @@ def get_week(date):
     sunday = date - timedelta(days=day_idx)
     return [i * one_day + sunday for i in range(7)]
 
+def get_mid_price(opt):
+    return (float(opt['ask_price']) + float(opt['bid_price'])) / 2
+
+def round_up(n, decimals=0):
+    multiplier = 10**decimals
+    return ceil(n * multiplier) / multiplier
+
 def sell(rh, symbols):
     holdings = rh.build_holdings()
     max_contracts = {symbol: int(float(holding['quantity']) / 100) for symbol, holding in holdings.items()}
@@ -161,11 +168,11 @@ def sell(rh, symbols):
         contract = None
         for expiration in exp_candidates:
             opt_candidates = rh.options.find_options_by_specific_profitability(symbol, expiration, None, 'call', 'chance_of_profit_short', 0.85, 0.95)
-            opt_candidates.sort(key = lambda opt: abs(float(opt['chance_of_profit_short']) - 0.875))
+            opt_candidates.sort(key = lambda opt: abs(float(opt['chance_of_profit_short']) - 0.88))
             
             for opt in opt_candidates:
                 key = 'high_fill_rate_sell_price'
-                sell_price = opt[key] if key in opt else (float(opt['ask_price']) + float(opt['bid_price'])) / 2
+                sell_price = opt[key] if key in opt else get_mid_price(opt)
                 opt_is_viable = float(sell_price) >= min_price
                 if opt_is_viable:
                     contract = opt
@@ -177,12 +184,24 @@ def sell(rh, symbols):
             raise Exception('No viable contracts to write.')
         
         strike = float(contract['strike_price'])
+        price = round_up(get_mid_price(opt), 2)
+        
         when defining price, make sure high_fill_sell_price is not higher than 5% buffer or something
         min_tick = float(contract['min_ticks']['below_tick'])
+        price = ceil(price / min_tick) * min_tick
         also consider min bid size? increments of 0.05
         ensure price is higher than min_price?
         85/88/93
+# >>> 24.04 % 0.05
+# 0.039999999999997815
+# >>> 24.05 % 0.05
+# 0.04999999999999938
+# >>> 24.05 / 0.05
+# 481.0
 
+25
+
+10
 
         # get last day in current week, get next date after that (and date after that too if no expiration in curr week)
         # in total, list should have len of 2 (fallback for if premium is too low to justify weeklies or 1 month)
