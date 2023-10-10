@@ -184,24 +184,21 @@ def sell(rh, symbols):
             raise Exception('No viable contracts to write.')
         
         strike = float(contract['strike_price'])
-        price = round_up(get_mid_price(opt), 2)
+        mid_price = get_mid_price(opt)
+        price = round_up(mid_price, 2)
         
-        when defining price, make sure high_fill_sell_price is not higher than 5% buffer or something
         min_tick = float(contract['min_ticks']['below_tick'])
         price = ceil(price / min_tick) * min_tick
-        also consider min bid size? increments of 0.05
-        ensure price is higher than min_price?
-        85/88/93
-# >>> 24.04 % 0.05
-# 0.039999999999997815
-# >>> 24.05 % 0.05
-# 0.04999999999999938
-# >>> 24.05 / 0.05
-# 481.0
+        spread = float(opt['ask_price']) - float(opt['bid_price'])
+        if abs(price - mid_price) > 0.05 * spread:
+        skip
+        # when defining price, make sure high_fill_sell_price is not higher than 5% buffer or something
+        # use spread too
+        # 
+        # or make sure abs((mid_price - price ) / mid_price) < 0.2 or 0.25 or 0.5
+# 25
 
-25
-
-10
+# 10
 
         # get last day in current week, get next date after that (and date after that too if no expiration in curr week)
         # in total, list should have len of 2 (fallback for if premium is too low to justify weeklies or 1 month)
