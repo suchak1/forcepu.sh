@@ -189,13 +189,15 @@ def sell(rh, symbols):
         
         min_tick = float(contract['min_ticks']['below_tick'])
         price = ceil(price / min_tick) * min_tick
-        spread = float(opt['ask_price']) - float(opt['bid_price'])
-        if abs(price - mid_price) > 0.05 * spread:
-        skip
+        # spread = float(opt['ask_price']) - float(opt['bid_price'])
+        # if abs(price - mid_price) > 0.05 * spread:
+        # skip
         # when defining price, make sure high_fill_sell_price is not higher than 5% buffer or something
         # use spread too
         # 
-        # or make sure abs((mid_price - price ) / mid_price) < 0.2 or 0.25 or 0.5
+        # or make sure 
+        if abs((mid_price - price ) / mid_price) > 0.2:
+            raise Exception('Price spread is high.')
 # 25
 
 # 10
