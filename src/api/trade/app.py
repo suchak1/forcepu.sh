@@ -130,7 +130,7 @@ def round_up(n, decimals=0):
     multiplier = 10**decimals
     return ceil(n * multiplier) / multiplier
 
-def sell(rh, symbols):
+def suggest_num_contracts():
     holdings = rh.build_holdings()
     max_contracts = {symbol: int(float(holding['quantity']) / 100) for symbol, holding in holdings.items()}
     
@@ -140,14 +140,13 @@ def sell(rh, symbols):
     for position in positions:
         symbol = instr_to_symbol_lookup[position['instrument_id']]
         curr_contracts[symbol] = int(float(position['shares_held_for_options_collateral']) / 100)
+    return  {symbol: max_contract - curr_contracts[symbol] for symbol, max_contract in max_contracts.items()} 
 
-    
-    # opts = rh.options.get_open_option_positions()
-    # curr_contracts = defaultdict(lambda: 0)
-    # curr_contracts = {opt['chain_symbol']: 1 for opt in opts}
-    # for opt in opts:
-    #     if 
-    desired_contracts = {symbol: max_contract - curr_contracts[symbol] for symbol, max_contract in max_contracts.items()} 
+
+
+def sell(rh, symbols):
+    desired_contracts = suggest_num_contracts()
+
     for symbol in symbols:
         quantity = desired_contracts[symbol]
         if not quantity:
@@ -217,5 +216,6 @@ def sell(rh, symbols):
         rh.orders.order_sell_option_limit('open', 'credit', price, symbol, quantity, expiration, strike, 'call')
 
 def roll():
+    # also implement rolling in as well as out
     pass
     
