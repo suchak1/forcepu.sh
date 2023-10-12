@@ -2,6 +2,7 @@ import os
 import json
 import boto3
 import pyotp
+from time import sleep
 from pathlib import Path
 from math import log, sqrt, ceil
 from statistics import NormalDist
@@ -160,59 +161,61 @@ def sell(rh, symbols):
     desired_contracts = suggest_num_contracts()
     # only use symbols that have positions available
     symbols = filter(lambda symbol: desired_contracts[symbol], symbols)
-    option_lookup = {symbol: {'quantity': desired_contracts[symbol], 'curr': [0, 0] } for symbol in symbols}
+    lookup = {symbol: {'quantity': desired_contracts[symbol], 'curr': [0, 0, 0] } for symbol in symbols}
     results = {}
 
     for symbol in symbols:
         chain = rh.options.get_chains(symbol)
         expirations = chain['expiration_dates']
         expirations = get_expirations(expirations)
-        option_lookup[symbol]['expirations'] = expirations
+        lookup[symbol]['expirations'] = expirations
         # maybe turn these two lines into a fx called update_contracts and run before every trade attempt
         contracts = [get_contracts(symbol, exp) for exp in expirations]
-        option_lookup[symbol]['contracts'] = contracts
+        lookup[symbol]['contracts'] = contracts
         
             # raise Exception('No viable contracts to write.')
 
     while set(results.keys()) != set(symbols):
-        for symbol in symbols:
-
-            # trade
-            pass
+        orders = {}
+        for symbol in filter(lambda symbol: symbol not in results, symbols):
+            option = lookup[symbol]
+            curr = option['curr']
+            expiration = option['expirations'][curr[0]]
+            contract = option['contracts'][curr[1]]
 
             strike = float(contract['strike_price'])
-            mid_price = get_mid_price(opt)
+            mid_price = get_mid_price(contract)
+            # get mid price to two decimal places
             price = round_up(mid_price, 2)
-            
+            # option price increment/step (e.g. 0.01 per contract or 0.05)
             min_tick = float(contract['min_ticks']['below_tick'])
+            # round price up to tick
             price = ceil(price / min_tick) * min_tick
-            quantity = desired_contracts[symbol]
-            # spread = float(opt['ask_price']) - float(opt['bid_price'])
-            # if abs(price - mid_price) > 0.05 * spread:
-            # skip
-            # when defining price, make sure high_fill_sell_price is not higher than 5% buffer or something
-            # use spread too
-            # 
-            # or make sure 
+            # lower price based on attempt
+            price = price - min_tick * curr[2]
+            quantity = option['quantity']
+
             if abs((mid_price - price ) / mid_price) > 0.2:
-                raise Exception('Price spread is high.')
-        # 25
+                print(symbol, f'Price spread is high. Bid: {float(contract["bid_price"])} Ask: {float(contract["ask_price"])} Mid: {mid_price} Price: {price}')
+                # TODO: Should curr[2] be incremented here? or later 
+                continue
+            
+            order = rh.orders.order_sell_option_limit('open', 'credit', price, symbol, quantity, expiration, strike, 'call')
+            print('Order:', json.dumps(order))
+            orders[symbol] = order
+        
+        # wait 5-10 sec
+        if orders:
+            sleep(5) # or 10
+        
+        # check which are fulfilled
+        # if some are, then add to results
+        # if not fulfilled, cancel orders and decrement price or increment contract or increment expiration date
 
-        # 10
-
-            # get last day in current week, get next date after that (and date after that too if no expiration in curr week)
-            # in total, list should have len of 2 (fallback for if premium is too low to justify weeklies or 1 month)
 
 
-            # positionEffect (str) – Either ‘open’ for a sell to open effect or ‘close’ for a sell to close effect.
-            # creditOrDebit (str) – Either ‘debit’ or ‘credit’.
-            # price (float) – The limit price to trigger a sell of the option.
-            # symbol (str) – The stock ticker of the stock to trade.
-            # quantity (int) – The number of options to sell.
-            # expirationDate (str) – The expiration date of the option in ‘YYYY-MM-DD’ format.
-            # strike (float) – The strike price of the option.
-            # optionType (str) – This should be ‘call’ or ‘put’
-            rh.orders.order_sell_option_limit('open', 'credit', price, symbol, quantity, expiration, strike, 'call')
+    # return results as json
+    # print
 
 def roll():
     # also implement rolling in as well as out
