@@ -150,20 +150,11 @@ def get_expirations(expirations, num=2):
 
 def get_contracts(symbol, expiration, num=2):
     min_price = 0.05
+    key = 'high_fill_rate_sell_price'
     opt_candidates = rh.options.find_options_by_specific_profitability(symbol, expiration, None, 'call', 'chance_of_profit_short', 0.85, 0.95)
     opt_candidates.sort(key = lambda opt: abs(float(opt['chance_of_profit_short']) - 0.88))
-    contracts = []
-
-    for opt in opt_candidates:
-        key = 'high_fill_rate_sell_price'
-        sell_price = opt[key] if key in opt else get_mid_price(opt)
-        opt_is_viable = float(sell_price) >= min_price
-        if opt_is_viable:
-            contracts.append(opt)
-            if len(contracts) >= num:
-                break
-    
-    return contracts
+    contracts = [opt for opt in opt_candidates if (float(opt[key]) if key in opt else get_mid_price(opt)) >= min_price]
+    return contracts[0 : num]
 
 def sell(rh, symbols):
     desired_contracts = suggest_num_contracts()
