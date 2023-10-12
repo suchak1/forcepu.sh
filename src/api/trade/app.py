@@ -146,11 +146,10 @@ def suggest_num_contracts():
 
 def sell(rh, symbols):
     desired_contracts = suggest_num_contracts()
+    symbols = filter(lambda symbol: desired_contracts[symbol], symbols)
 
     for symbol in symbols:
         quantity = desired_contracts[symbol]
-        if not quantity:
-            continue
         chain = rh.options.get_chains(symbol)
         expirations = chain['expiration_dates']
         today = datetime.now()
