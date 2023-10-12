@@ -142,14 +142,10 @@ def suggest_num_contracts():
 def get_expirations(expirations, num=2):
     today = datetime.now()
     week = set([datetime.strftime(day, '%Y-%m-%d') for day in get_week(today)])
-    exp_candidates = [None]
-    last_day_in_week = 0
     for idx, exp in enumerate(expirations):
-        if exp in week:
-            last_day_in_week = idx
-        else:
+        if exp not in week:
             break
-    exp_candidates = expirations[last_day_in_week:last_day_in_week + num]
+    exp_candidates = expirations[idx : idx + num]
     return exp_candidates
 
 def get_contracts(symbol, expiration, num=2):
