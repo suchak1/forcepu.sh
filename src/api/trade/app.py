@@ -143,76 +143,86 @@ def suggest_num_contracts():
     return  {symbol: max_contract - curr_contracts[symbol] for symbol, max_contract in max_contracts.items()} 
 
 
+def get_exp_candidates(expirations, num=2):
+    today = datetime.now()
+    week = set([datetime.strftime(day, '%Y-%m-%d') for day in get_week(today)])
+    exp_candidates = [None]
+    for exp in expirations:
+        if exp in week:
+            exp_candidates[0] = exp
+        else:
+            exp_candidates.append(exp)
+            if len(exp_candidates) >= num:
+                break
+    return exp_candidates
+
+def get_opt_candidates(symbol, expiration, num=2):
+    min_price = 0.05
+    opt_candidates = rh.options.find_options_by_specific_profitability(symbol, expiration, None, 'call', 'chance_of_profit_short', 0.85, 0.95)
+    opt_candidates.sort(key = lambda opt: abs(float(opt['chance_of_profit_short']) - 0.88))
+    contracts = []
+
+    for opt in opt_candidates:
+        key = 'high_fill_rate_sell_price'
+        sell_price = opt[key] if key in opt else get_mid_price(opt)
+        opt_is_viable = float(sell_price) >= min_price
+        if opt_is_viable:
+            contracts.append(opt)
+            if len(contracts) >= num:
+                break
+    
+    return contracts
 
 def sell(rh, symbols):
     desired_contracts = suggest_num_contracts()
     symbols = filter(lambda symbol: desired_contracts[symbol], symbols)
+    option_lookup = {symbol: {'quantity': desired_contracts[symbol]} for symbol in symbols}
 
     for symbol in symbols:
-        quantity = desired_contracts[symbol]
         chain = rh.options.get_chains(symbol)
         expirations = chain['expiration_dates']
-        today = datetime.now()
-        week = set([datetime.strftime(day, '%Y-%m-%d') for day in get_week(today)])
-        exp_candidates = [None]
-        for exp in expirations:
-            if exp in week:
-                exp_candidates[0] = exp
-            else:
-                exp_candidates.append(exp)
-                if len(exp_candidates) >= 2:
-                    break
-        min_price = 0.05
-        contract = None
-        for expiration in exp_candidates:
-            opt_candidates = rh.options.find_options_by_specific_profitability(symbol, expiration, None, 'call', 'chance_of_profit_short', 0.85, 0.95)
-            opt_candidates.sort(key = lambda opt: abs(float(opt['chance_of_profit_short']) - 0.88))
-            
-            for opt in opt_candidates:
-                key = 'high_fill_rate_sell_price'
-                sell_price = opt[key] if key in opt else get_mid_price(opt)
-                opt_is_viable = float(sell_price) >= min_price
-                if opt_is_viable:
-                    contract = opt
-                    break
+        exp_candidates = get_exp_candidates(expirations)
+        option_lookup[symbol]['expirations'] = exp_candidates
+        contracts = [get_opt_candidates(symbol, exp) for exp in exp_candidates]
+        option_lookup[symbol]['contracts'] = contracts
+        
+            # raise Exception('No viable contracts to write.')
+        
 
-            if contract:
-                break
-        if not contract:
-            raise Exception('No viable contracts to write.')
-        
-        strike = float(contract['strike_price'])
-        mid_price = get_mid_price(opt)
-        price = round_up(mid_price, 2)
-        
-        min_tick = float(contract['min_ticks']['below_tick'])
-        price = ceil(price / min_tick) * min_tick
-        # spread = float(opt['ask_price']) - float(opt['bid_price'])
-        # if abs(price - mid_price) > 0.05 * spread:
-        # skip
-        # when defining price, make sure high_fill_sell_price is not higher than 5% buffer or something
-        # use spread too
-        # 
-        # or make sure 
-        if abs((mid_price - price ) / mid_price) > 0.2:
-            raise Exception('Price spread is high.')
+
+    strike = float(contract['strike_price'])
+    mid_price = get_mid_price(opt)
+    price = round_up(mid_price, 2)
+    
+    min_tick = float(contract['min_ticks']['below_tick'])
+    price = ceil(price / min_tick) * min_tick
+    quantity = desired_contracts[symbol]
+    # spread = float(opt['ask_price']) - float(opt['bid_price'])
+    # if abs(price - mid_price) > 0.05 * spread:
+    # skip
+    # when defining price, make sure high_fill_sell_price is not higher than 5% buffer or something
+    # use spread too
+    # 
+    # or make sure 
+    if abs((mid_price - price ) / mid_price) > 0.2:
+        raise Exception('Price spread is high.')
 # 25
 
 # 10
 
-        # get last day in current week, get next date after that (and date after that too if no expiration in curr week)
-        # in total, list should have len of 2 (fallback for if premium is too low to justify weeklies or 1 month)
+    # get last day in current week, get next date after that (and date after that too if no expiration in curr week)
+    # in total, list should have len of 2 (fallback for if premium is too low to justify weeklies or 1 month)
 
 
-        # positionEffect (str) – Either ‘open’ for a sell to open effect or ‘close’ for a sell to close effect.
-        # creditOrDebit (str) – Either ‘debit’ or ‘credit’.
-        # price (float) – The limit price to trigger a sell of the option.
-        # symbol (str) – The stock ticker of the stock to trade.
-        # quantity (int) – The number of options to sell.
-        # expirationDate (str) – The expiration date of the option in ‘YYYY-MM-DD’ format.
-        # strike (float) – The strike price of the option.
-        # optionType (str) – This should be ‘call’ or ‘put’
-        rh.orders.order_sell_option_limit('open', 'credit', price, symbol, quantity, expiration, strike, 'call')
+    # positionEffect (str) – Either ‘open’ for a sell to open effect or ‘close’ for a sell to close effect.
+    # creditOrDebit (str) – Either ‘debit’ or ‘credit’.
+    # price (float) – The limit price to trigger a sell of the option.
+    # symbol (str) – The stock ticker of the stock to trade.
+    # quantity (int) – The number of options to sell.
+    # expirationDate (str) – The expiration date of the option in ‘YYYY-MM-DD’ format.
+    # strike (float) – The strike price of the option.
+    # optionType (str) – This should be ‘call’ or ‘put’
+    rh.orders.order_sell_option_limit('open', 'credit', price, symbol, quantity, expiration, strike, 'call')
 
 def roll():
     # also implement rolling in as well as out
