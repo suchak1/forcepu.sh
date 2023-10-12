@@ -133,15 +133,11 @@ def round_up(n, decimals=0):
 def suggest_num_contracts():
     holdings = rh.build_holdings()
     max_contracts = {symbol: int(float(holding['quantity']) / 100) for symbol, holding in holdings.items()}
-    
     instr_to_symbol_lookup = {holding['id']: symbol for symbol, holding in holdings.items()}
     positions = rh.account.get_open_stock_positions()
-    curr_contracts = defaultdict(lambda: 0)
-    for position in positions:
-        symbol = instr_to_symbol_lookup[position['instrument_id']]
-        curr_contracts[symbol] = int(float(position['shares_held_for_options_collateral']) / 100)
-    return  {symbol: max_contract - curr_contracts[symbol] for symbol, max_contract in max_contracts.items()} 
-
+    curr_contracts = defaultdict(int, {instr_to_symbol_lookup[position['instrument_id']]: int(float(position['shares_held_for_options_collateral']) / 100) for position in positions})
+    available_contracts = {symbol: max_contract - curr_contracts[symbol] for symbol, max_contract in max_contracts.items()} 
+    return available_contracts
 
 def get_expirations(expirations, num=2):
     today = datetime.now()
