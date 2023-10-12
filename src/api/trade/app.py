@@ -4,6 +4,7 @@ import boto3
 import pyotp
 from time import sleep
 from pathlib import Path
+from random import random
 from math import log, sqrt, ceil
 from statistics import NormalDist
 from collections import defaultdict
@@ -206,12 +207,21 @@ def sell(rh, symbols):
         
         # wait 5-10 sec
         if orders:
-            sleep(5) # or 10
+            sleep(random() * 5 + 5)
         
         # check which are fulfilled
+        # robin_stocks.robinhood.options.get_aggregate_open_positions
+        # robin_stocks.robinhood.options.get_aggregate_positions
+        # robin_stocks.robinhood.options.get_all_option_positions
+        # robin_stocks.robinhood.orders.get_option_order_info(order_id)
+        # robin_stocks.robinhood.orders.get_all_option_orders
+        # robin_stocks.robinhood.orders.get_all_open_option_orders
+
         # if some are, then add to results
         # if not fulfilled, cancel orders and decrement price or increment contract or increment expiration date
-
+        # robin_stocks.robinhood.orders.cancel_all_option_orders - This might be best and then use returned info
+        # robin_stocks.robinhood.orders.cancel_option_order(orderID)
+        canceled = rh.orders.cancel_all_option_orders()
 
 
     # return results as json
