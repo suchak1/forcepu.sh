@@ -175,10 +175,11 @@ def sell(rh, symbols):
         lookup[symbol]['contracts'] = contracts
         
             # raise Exception('No viable contracts to write.')
-
+    first_run = True
     while set(results.keys()) != set(symbols):
         orders = {}
-        for symbol in filter(lambda symbol: symbol not in results, symbols):
+        remaining = filter(lambda symbol: symbol not in results, symbols)
+        for symbol in remaining:
             option = lookup[symbol]
             curr = option['curr']
             expiration = option['expirations'][curr[0]]
@@ -221,9 +222,18 @@ def sell(rh, symbols):
         # if not fulfilled, cancel orders and decrement price or increment contract or increment expiration date
         # robin_stocks.robinhood.orders.cancel_all_option_orders - This might be best and then use returned info
         # robin_stocks.robinhood.orders.cancel_option_order(orderID)
-        canceled = rh.orders.cancel_all_option_orders()
+        [rh.orders.cancel_option_order(orders[symbol]['id']) for symbol in orders]
+        orders_info = [rh.orders.get_option_order_info(orders[symbol]['id']) for symbol in orders]
+        for symbol in orders:
+            order = rh.orders.get_option_order_info(orders[symbol]['id'])
+            if order['state'] == 'filled':
+                results[symbol] = order
+            elif 
+        results 
+        canceled = [for order in rh.orders.cancel_option_order()]
 
 
+        first_run = False
     # return results as json
     # print
 
