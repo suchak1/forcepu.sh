@@ -173,6 +173,10 @@ def get_price(contract, offset):
 def spread_is_high(mid_price, price):
     abs((mid_price - price ) / mid_price) > 0.2
 
+def update_contract(curr_contract):
+    new_contract = rh.options.get_option_market_data_by_id(curr_contract['id'])[0]
+    return curr_contract | new_contract
+
 # situations:
 # - price is too low, need to reset curr[2] to 0 and increment contract unless contract index =
 def sell(rh, symbols):
@@ -206,30 +210,25 @@ def sell(rh, symbols):
             price = get_price(contract, curr[2])
             quantity = option['quantity']
 
-            # if spread_is_high(mid_price, price):
-            #     print(symbol, f'Price spread is high. Bid: {float(contract["bid_price"])} Ask: {float(contract["ask_price"])} Mid: {mid_price} Price: {price}')
-            #     continue
-            
             order = rh.orders.order_sell_option_limit('open', 'credit', price, symbol, quantity, expiration, strike, 'call')
             print('Order:', json.dumps(order))
             orders[symbol] = order
         
         # wait 5-10 sec
-        # if orders:
         sleep(random() * 5 + 5)
-        
-        [rh.orders.cancel_option_order(orders[symbol]['id']) for symbol in orders]
-        # orders_info = [rh.orders.get_option_order_info(orders[symbol]['id']) for symbol in orders]
+
         for symbol in orders:
+            rh.orders.cancel_option_order(orders[symbol]['id'])
             order = rh.orders.get_option_order_info(orders[symbol]['id'])
             option = lookup[symbol]
             curr = option['curr']
-            curr_contract = option['contracts'][curr[0]][curr[1]]
+            contracts = option['contracts']
             if order['state'] == 'filled':
                 results[symbol] = order
             elif order['state'] == 'cancelled':
-                new_contract = rh.options.get_option_market_data_by_id(curr_contract['id'])[0]
-                curr_contract.update(new_contract)
+                contracts[curr[0]][curr[1]] |= rh.options.get_option_market_data_by_id(contracts[curr[0]][curr[1]]['id'])[0]
+                # new_contract = rh.options.get_option_market_data_by_id(curr_contract['id'])[0]
+                # curr_contract.update(new_contract)
                 curr[2] += 1
                 mid_price = get_mid_price(contract)
                 price = get_price(contract, curr[2])
@@ -247,9 +246,10 @@ def sell(rh, symbols):
                     else:
                         curr[1] += 1
 
-            curr_contract = option['contracts'][curr[0]][curr[1]]
-            new_contract = rh.options.get_option_market_data_by_id(curr_contract['id'])[0]
-            curr_contract.update(new_contract)
+            # curr_contract = option['contracts'][curr[0]][curr[1]]
+            # new_contract = rh.options.get_option_market_data_by_id(curr_contract['id'])[0]
+            # curr_contract.update(new_contract)
+            contracts[curr[0]][curr[1]] |= rh.options.get_option_market_data_by_id(contracts[curr[0]][curr[1]]['id'])[0]
     print(results)
     return {
         "statusCode": 200,
