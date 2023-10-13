@@ -158,6 +158,8 @@ def get_contracts(symbol, expiration, num=2):
     contracts = [opt for opt in opt_candidates if (float(opt[key]) if key in opt else get_mid_price(opt)) >= min_price]
     return contracts[0 : num]
 
+# situations:
+# - price is too low, need to reset curr[2] to 0 and increment contract unless contract index =
 def sell(rh, symbols):
     desired_contracts = suggest_num_contracts()
     # only use symbols that have positions available
@@ -183,7 +185,7 @@ def sell(rh, symbols):
             option = lookup[symbol]
             curr = option['curr']
             expiration = option['expirations'][curr[0]]
-            contract = option['contracts'][curr[1]]
+            contract = option['contracts'][curr[0]][curr[1]]
 
             strike = float(contract['strike_price'])
             mid_price = get_mid_price(contract)
@@ -199,7 +201,7 @@ def sell(rh, symbols):
 
             if abs((mid_price - price ) / mid_price) > 0.2:
                 print(symbol, f'Price spread is high. Bid: {float(contract["bid_price"])} Ask: {float(contract["ask_price"])} Mid: {mid_price} Price: {price}')
-                # TODO: Should curr[2] be incremented here? or later 
+                # TODO: Should curr[1] be incremented here? or later 
                 continue
             
             order = rh.orders.order_sell_option_limit('open', 'credit', price, symbol, quantity, expiration, strike, 'call')
@@ -223,15 +225,17 @@ def sell(rh, symbols):
         # robin_stocks.robinhood.orders.cancel_all_option_orders - This might be best and then use returned info
         # robin_stocks.robinhood.orders.cancel_option_order(orderID)
         [rh.orders.cancel_option_order(orders[symbol]['id']) for symbol in orders]
-        orders_info = [rh.orders.get_option_order_info(orders[symbol]['id']) for symbol in orders]
+        # orders_info = [rh.orders.get_option_order_info(orders[symbol]['id']) for symbol in orders]
         for symbol in orders:
             order = rh.orders.get_option_order_info(orders[symbol]['id'])
+
             if order['state'] == 'filled':
                 results[symbol] = order
-            elif 
-        results 
-        canceled = [for order in rh.orders.cancel_option_order()]
-
+            elif order['state'] == 'cancelled':
+                # should lower price
+                # actually do price lowering logic above
+                # update contracts here based on indices
+                pass
 
         first_run = False
     # return results as json
