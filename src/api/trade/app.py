@@ -45,11 +45,11 @@ def handle_trade(event, _):
     if not(verified and claims['email'] == os.environ['RH_USERNAME']):
         return error(401, 'This account is not verified.')
     
-    rh = login()
+    login()
     if event['httpMethod'].upper() == 'POST':
-        response = post_trade(rh)
+        response = post_trade(event)
     else:
-        response = get_trade(rh, event)
+        response = get_trade()
 
     return response
 
@@ -74,10 +74,9 @@ def login():
     if os.path.exists(auth_path):
         bucket.upload_file(auth_path, key)
         print('Saved auth file to S3.')
-    return rh
 
 
-def get_trade(rh):
+def get_trade():
     holdings = rh.build_holdings()
     for symbol in holdings:
         holdings[symbol]['open_contracts'] = 0
@@ -103,12 +102,12 @@ def get_trade(rh):
         "headers": {"Access-Control-Allow-Origin": "*"}
     }
 
-def post_trade(rh, event):
+def post_trade(event):
     req_body = json.loads(event['body'])
     trade_type = req_body['type']
     symbols = req_body['symbol']
 
-    response = roll() if trade_type.upper() == 'ROLL' else sell(rh, symbols)
+    response = roll() if trade_type.upper() == 'ROLL' else sell(symbols)
 
     body = 'OK'
     status_code = 200
@@ -242,7 +241,7 @@ def adjust_orders(orders, lookup, results):
         contracts[curr[0]][curr[1]] |= rh.options.get_option_market_data_by_id(contracts[curr[0]][curr[1]]['id'])[0]
     return lookup, results
 
-def sell(rh, symbols):
+def sell(symbols):
     results = {}
     lookup = init_chain(symbols)
 
