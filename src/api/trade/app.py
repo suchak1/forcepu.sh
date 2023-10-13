@@ -210,35 +210,45 @@ def execute_orders(lookup, results):
         orders[symbol] = order
     return orders
 
+def update_contract(contracts, curr):
+    old = contracts[curr[0]][curr[1]]
+    new = rh.options.get_option_market_data_by_id(old['id'])[0]
+    contracts[curr[0]][curr[1]] = old | new
+    return contracts
+
+def adjust_option(symbol, option, results):
+    curr = option['curr']
+    contracts = option['contracts']
+    contracts = update_contract(contracts, curr)
+    curr[2] += 1
+    contract = contracts[curr[0]][curr[1]]
+    mid_price = get_mid_price(contract)
+    price = get_price(contract, curr[2])
+
+    if spread_is_high(mid_price, price):
+        print(symbol, f'Price spread is high. Bid: {float(contract["bid_price"])} Ask: {float(contract["ask_price"])} Mid: {mid_price} Price: {price}')
+        curr[2] = 0
+        if curr[1] == len(contracts[curr[0]]) - 1:
+            curr[1] = 0
+            if curr[0] == len(option['expirations']) - 1:
+                results[symbol] = {'error': 'EXHAUSTED'}
+                # continue
+            else:
+                curr[0] += 1
+        else:
+            curr[1] += 1
+    return option, results
+
 def adjust_orders(orders, lookup, results):
     for symbol in orders:
         rh.orders.cancel_option_order(orders[symbol]['id'])
         order = rh.orders.get_option_order_info(orders[symbol]['id'])
-        option = lookup[symbol]
-        curr = option['curr']
-        contracts = option['contracts']
         if order['state'] == 'filled':
             results[symbol] = order
         elif order['state'] == 'cancelled':
-            contracts[curr[0]][curr[1]] |= rh.options.get_option_market_data_by_id(contracts[curr[0]][curr[1]]['id'])[0]
-            curr[2] += 1
-            contract = contracts[curr[0]][curr[1]]
-            mid_price = get_mid_price(contract)
-            price = get_price(contract, curr[2])
-
-            if spread_is_high(mid_price, price):
-                print(symbol, f'Price spread is high. Bid: {float(contract["bid_price"])} Ask: {float(contract["ask_price"])} Mid: {mid_price} Price: {price}')
-                curr[2] = 0
-                if curr[1] == len(option['contracts'][curr[0]]) - 1:
-                    curr[1] = 0
-                    if curr[0] == len(option['expirations']) - 1:
-                        results[symbol] = {'error': 'EXHAUSTED'}
-                        # continue
-                    else:
-                        curr[0] += 1
-                else:
-                    curr[1] += 1
-        contracts[curr[0]][curr[1]] |= rh.options.get_option_market_data_by_id(contracts[curr[0]][curr[1]]['id'])[0]
+            option = lookup[symbol]
+            lookup[symbol], results = lookup[symbol] = adjust_option(symbol, option)
+        lookup[symbol]['contracts'] = update_contract(lookup[symbol]['contracts'], lookup[symbol]['curr'])
     return lookup, results
 
 def sell(symbols):
