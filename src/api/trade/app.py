@@ -192,32 +192,31 @@ def init_chain(symbols):
         contracts = [get_contracts(symbol, exp) for exp in expirations]
         lookup[symbol]['contracts'] = contracts
     return lookup
-    
 
-# situations:
-# - price is too low, need to reset curr[2] to 0 and increment contract unless contract index =
+def execute_orders(lookup, results):
+    remaining = filter(lambda symbol: symbol not in results, list(lookup.keys()))
+    orders = {}
+    for symbol in remaining:
+        option = lookup[symbol]
+        curr = option['curr']
+        expiration = option['expirations'][curr[0]]
+        contract = option['contracts'][curr[0]][curr[1]]
+
+        strike = float(contract['strike_price'])
+        price = get_price(contract, curr[2])
+        quantity = option['quantity']
+
+        order = rh.orders.order_sell_option_limit('open', 'credit', price, symbol, quantity, expiration, strike, 'call')
+        print('Order:', json.dumps(order))
+        orders[symbol] = order
+    return orders
+
 def sell(rh, symbols):
     results = {}
     lookup = init_chain(symbols)
-        
-            # raise Exception('No viable contracts to write.')
-    # first_run = True
-    while set(results.keys()) != set(lookup.keys()):
-        orders = {}
-        remaining = filter(lambda symbol: symbol not in results, list(lookup.keys()))
-        for symbol in remaining:
-            option = lookup[symbol]
-            curr = option['curr']
-            expiration = option['expirations'][curr[0]]
-            contract = option['contracts'][curr[0]][curr[1]]
 
-            strike = float(contract['strike_price'])
-            price = get_price(contract, curr[2])
-            quantity = option['quantity']
-
-            order = rh.orders.order_sell_option_limit('open', 'credit', price, symbol, quantity, expiration, strike, 'call')
-            print('Order:', json.dumps(order))
-            orders[symbol] = order
+    while set(lookup.keys()) != set(results.keys()):
+        orders = execute_orders(lookup, results)
         
         # wait 5-10 sec
         sleep(random() * 5 + 5)
