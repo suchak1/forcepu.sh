@@ -158,6 +158,19 @@ def get_contracts(symbol, expiration, num=2):
     contracts = [opt for opt in opt_candidates if (float(opt[key]) if key in opt else get_mid_price(opt)) >= min_price]
     return contracts[0 : num]
 
+def get_price(contract, offset):
+    mid_price = get_mid_price(contract)
+    # get mid price to two decimal places
+    price = round_up(mid_price, 2)
+    # option price increment/step (e.g. 0.01 per contract or 0.05)
+    min_tick = float(contract['min_ticks']['below_tick'])
+    # round price up to tick
+    price = ceil(price / min_tick) * min_tick
+    # lower price based on attempt
+    price -= min_tick * offset
+    return price
+
+
 # situations:
 # - price is too low, need to reset curr[2] to 0 and increment contract unless contract index =
 def sell(rh, symbols):
@@ -188,21 +201,13 @@ def sell(rh, symbols):
             contract = option['contracts'][curr[0]][curr[1]]
 
             strike = float(contract['strike_price'])
-            mid_price = get_mid_price(contract)
-            # get mid price to two decimal places
-            price = round_up(mid_price, 2)
-            # option price increment/step (e.g. 0.01 per contract or 0.05)
-            min_tick = float(contract['min_ticks']['below_tick'])
-            # round price up to tick
-            price = ceil(price / min_tick) * min_tick
-            # lower price based on attempt
-            price = price - min_tick * curr[2]
+            price = get_price(contract, curr[2])
             quantity = option['quantity']
 
-            if abs((mid_price - price ) / mid_price) > 0.2:
-                print(symbol, f'Price spread is high. Bid: {float(contract["bid_price"])} Ask: {float(contract["ask_price"])} Mid: {mid_price} Price: {price}')
-                # TODO: Should curr[1] be incremented here? or later 
-                continue
+            # if abs((mid_price - price ) / mid_price) > 0.2:
+            #     print(symbol, f'Price spread is high. Bid: {float(contract["bid_price"])} Ask: {float(contract["ask_price"])} Mid: {mid_price} Price: {price}')
+            #     # TODO: Should curr[1] be incremented here? or later 
+            #     continue
             
             order = rh.orders.order_sell_option_limit('open', 'credit', price, symbol, quantity, expiration, strike, 'call')
             print('Order:', json.dumps(order))
@@ -232,6 +237,27 @@ def sell(rh, symbols):
             if order['state'] == 'filled':
                 results[symbol] = order
             elif order['state'] == 'cancelled':
+                option = lookup[symbol]
+                curr = option['curr']
+                curr_contract = option['contracts'][curr[0]][curr[1]]
+                new_contract = rh.options.get_option_market_data_by_id(curr_contract['id'])[0]
+                curr_contract.update(new_contract)
+                curr[2] += 1
+                mid_price = get_mid_price(contract)
+                price = get_price(contract, curr[2])
+
+                if abs((mid_price - price ) / mid_price) > 0.2:
+                    print(symbol, f'Price spread is high. Bid: {float(contract["bid_price"])} Ask: {float(contract["ask_price"])} Mid: {mid_price} Price: {price}')
+                    curr[2] = 0
+                    if curr[1] == len(option['contracts'][curr[0]]) - 1:
+                        curr[1] = 0
+                        curr[]
+                # TODO: Should curr[1] be incremented here? or later 
+                continue
+
+                lookup[symbol]
+                lookup[symbol]['curr'] = 
+                remaining
                 # should lower price
                 # actually do price lowering logic above
                 # update contracts here based on indices
