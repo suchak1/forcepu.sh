@@ -170,6 +170,8 @@ def get_price(contract, offset):
     price -= min_tick * offset
     return price
 
+def spread_is_high(mid_price, price):
+    abs((mid_price - price ) / mid_price) > 0.2
 
 # situations:
 # - price is too low, need to reset curr[2] to 0 and increment contract unless contract index =
@@ -190,7 +192,7 @@ def sell(rh, symbols):
         lookup[symbol]['contracts'] = contracts
         
             # raise Exception('No viable contracts to write.')
-    first_run = True
+    # first_run = True
     while set(results.keys()) != set(symbols):
         orders = {}
         remaining = filter(lambda symbol: symbol not in results, symbols)
@@ -204,9 +206,8 @@ def sell(rh, symbols):
             price = get_price(contract, curr[2])
             quantity = option['quantity']
 
-            # if abs((mid_price - price ) / mid_price) > 0.2:
+            # if spread_is_high(mid_price, price):
             #     print(symbol, f'Price spread is high. Bid: {float(contract["bid_price"])} Ask: {float(contract["ask_price"])} Mid: {mid_price} Price: {price}')
-            #     # TODO: Should curr[1] be incremented here? or later 
             #     continue
             
             order = rh.orders.order_sell_option_limit('open', 'credit', price, symbol, quantity, expiration, strike, 'call')
@@ -214,56 +215,49 @@ def sell(rh, symbols):
             orders[symbol] = order
         
         # wait 5-10 sec
-        if orders:
-            sleep(random() * 5 + 5)
+        # if orders:
+        sleep(random() * 5 + 5)
         
-        # check which are fulfilled
-        # robin_stocks.robinhood.options.get_aggregate_open_positions
-        # robin_stocks.robinhood.options.get_aggregate_positions
-        # robin_stocks.robinhood.options.get_all_option_positions
-        # robin_stocks.robinhood.orders.get_option_order_info(order_id)
-        # robin_stocks.robinhood.orders.get_all_option_orders
-        # robin_stocks.robinhood.orders.get_all_open_option_orders
-
-        # if some are, then add to results
-        # if not fulfilled, cancel orders and decrement price or increment contract or increment expiration date
-        # robin_stocks.robinhood.orders.cancel_all_option_orders - This might be best and then use returned info
-        # robin_stocks.robinhood.orders.cancel_option_order(orderID)
         [rh.orders.cancel_option_order(orders[symbol]['id']) for symbol in orders]
         # orders_info = [rh.orders.get_option_order_info(orders[symbol]['id']) for symbol in orders]
         for symbol in orders:
             order = rh.orders.get_option_order_info(orders[symbol]['id'])
-
+            option = lookup[symbol]
+            curr = option['curr']
+            curr_contract = option['contracts'][curr[0]][curr[1]]
             if order['state'] == 'filled':
                 results[symbol] = order
             elif order['state'] == 'cancelled':
-                option = lookup[symbol]
-                curr = option['curr']
-                curr_contract = option['contracts'][curr[0]][curr[1]]
                 new_contract = rh.options.get_option_market_data_by_id(curr_contract['id'])[0]
                 curr_contract.update(new_contract)
                 curr[2] += 1
                 mid_price = get_mid_price(contract)
                 price = get_price(contract, curr[2])
 
-                if abs((mid_price - price ) / mid_price) > 0.2:
+                if spread_is_high(mid_price, price):
                     print(symbol, f'Price spread is high. Bid: {float(contract["bid_price"])} Ask: {float(contract["ask_price"])} Mid: {mid_price} Price: {price}')
                     curr[2] = 0
                     if curr[1] == len(option['contracts'][curr[0]]) - 1:
                         curr[1] = 0
-                        curr[]
-                # TODO: Should curr[1] be incremented here? or later 
-                continue
+                        if curr[0] == len(option['expirations']) - 1:
+                            results[symbol] = {'error': 'EXHAUSTED'}
+                            # continue
+                        else:
+                            curr[0] += 1
+                    else:
+                        curr[1] += 1
 
-                lookup[symbol]
-                lookup[symbol]['curr'] = 
-                remaining
-                # should lower price
-                # actually do price lowering logic above
-                # update contracts here based on indices
-                pass
+            curr_contract = option['contracts'][curr[0]][curr[1]]
+            new_contract = rh.options.get_option_market_data_by_id(curr_contract['id'])[0]
+            curr_contract.update(new_contract)
+    print(results)
+    return {
+        "statusCode": 200,
+        "body": json.dumps(results),
+        "headers": {"Access-Control-Allow-Origin": "*"}
+    }
 
-        first_run = False
+        # first_run = False
     # return results as json
     # print
 
