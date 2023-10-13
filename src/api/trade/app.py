@@ -210,13 +210,17 @@ def execute_orders(lookup, results):
         orders[symbol] = order
     return orders
 
-def update_contract(contracts, curr):
+def update_contract(symbol, lookup):
+    option = lookup[symbol]
+    curr = option['curr']
+    contracts = option['contracts']
     old = contracts[curr[0]][curr[1]]
     new = rh.options.get_option_market_data_by_id(old['id'])[0]
-    contracts[curr[0]][curr[1]] = old | new
-    return contracts
+    lookup[symbol]['contracts'][curr[0]][curr[1]] = old | new
+    return lookup
 
-def adjust_option(symbol, option, results):
+def adjust_option(symbol, lookup, results):
+    option = lookup[symbol]
     curr = option['curr']
     contracts = option['contracts']
     contracts = update_contract(contracts, curr)
@@ -237,7 +241,8 @@ def adjust_option(symbol, option, results):
                 curr[0] += 1
         else:
             curr[1] += 1
-    return option, results
+    lookup['contracts'] = contracts
+    return lookup, results
 
 def adjust_orders(orders, lookup, results):
     for symbol in orders:
@@ -246,9 +251,8 @@ def adjust_orders(orders, lookup, results):
         if order['state'] == 'filled':
             results[symbol] = order
         elif order['state'] == 'cancelled':
-            option = lookup[symbol]
-            lookup[symbol], results = lookup[symbol] = adjust_option(symbol, option)
-        lookup[symbol]['contracts'] = update_contract(lookup[symbol]['contracts'], lookup[symbol]['curr'])
+            lookup, results = adjust_option(symbol, lookup, results)
+        lookup = update_contract(symbol, lookup)
     return lookup, results
 
 def sell(symbols):
