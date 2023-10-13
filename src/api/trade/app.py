@@ -177,16 +177,13 @@ def update_contract(curr_contract):
     new_contract = rh.options.get_option_market_data_by_id(curr_contract['id'])[0]
     return curr_contract | new_contract
 
-# situations:
-# - price is too low, need to reset curr[2] to 0 and increment contract unless contract index =
-def sell(rh, symbols):
+def init_chain(symbols):
     desired_contracts = suggest_num_contracts()
     # only use symbols that have positions available
     symbols = filter(lambda symbol: desired_contracts[symbol], symbols)
     lookup = {symbol: {'quantity': desired_contracts[symbol], 'curr': [0, 0, 0] } for symbol in symbols}
-    results = {}
 
-    for symbol in symbols:
+    for symbol in lookup:
         chain = rh.options.get_chains(symbol)
         expirations = chain['expiration_dates']
         expirations = get_expirations(expirations)
@@ -194,12 +191,20 @@ def sell(rh, symbols):
         # maybe turn these two lines into a fx called update_contracts and run before every trade attempt
         contracts = [get_contracts(symbol, exp) for exp in expirations]
         lookup[symbol]['contracts'] = contracts
+    return lookup
+    
+
+# situations:
+# - price is too low, need to reset curr[2] to 0 and increment contract unless contract index =
+def sell(rh, symbols):
+    results = {}
+    lookup = init_chain(symbols)
         
             # raise Exception('No viable contracts to write.')
     # first_run = True
-    while set(results.keys()) != set(symbols):
+    while set(results.keys()) != set(lookup.keys()):
         orders = {}
-        remaining = filter(lambda symbol: symbol not in results, symbols)
+        remaining = filter(lambda symbol: symbol not in results, list(lookup.keys()))
         for symbol in remaining:
             option = lookup[symbol]
             curr = option['curr']
@@ -227,8 +232,6 @@ def sell(rh, symbols):
                 results[symbol] = order
             elif order['state'] == 'cancelled':
                 contracts[curr[0]][curr[1]] |= rh.options.get_option_market_data_by_id(contracts[curr[0]][curr[1]]['id'])[0]
-                # new_contract = rh.options.get_option_market_data_by_id(curr_contract['id'])[0]
-                # curr_contract.update(new_contract)
                 curr[2] += 1
                 mid_price = get_mid_price(contract)
                 price = get_price(contract, curr[2])
@@ -245,10 +248,6 @@ def sell(rh, symbols):
                             curr[0] += 1
                     else:
                         curr[1] += 1
-
-            # curr_contract = option['contracts'][curr[0]][curr[1]]
-            # new_contract = rh.options.get_option_market_data_by_id(curr_contract['id'])[0]
-            # curr_contract.update(new_contract)
             contracts[curr[0]][curr[1]] |= rh.options.get_option_market_data_by_id(contracts[curr[0]][curr[1]]['id'])[0]
     print(results)
     return {
