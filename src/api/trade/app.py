@@ -242,6 +242,7 @@ def adjust_option(symbol, lookup, results):
         else:
             curr[1] += 1
     lookup['contracts'] = contracts
+    lookup = update_contract(symbol, lookup)
     return lookup, results
 
 def adjust_orders(orders, lookup, results):
@@ -252,7 +253,6 @@ def adjust_orders(orders, lookup, results):
             results[symbol] = order
         elif order['state'] == 'cancelled':
             lookup, results = adjust_option(symbol, lookup, results)
-        lookup = update_contract(symbol, lookup)
     return lookup, results
 
 def sell(symbols):
