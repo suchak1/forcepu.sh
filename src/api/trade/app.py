@@ -88,6 +88,8 @@ def get_trade():
                  ]['open_contracts'] += int(float(opt['quantity'])) * sold
         opt = rh.options.get_option_instrument_data_by_id(opt['option_id'])
         holdings[opt['chain_symbol']
+                 ]['option_type'] = opt['type'][0].upper()
+        holdings[opt['chain_symbol']
                  ]['expiration'] = opt['expiration_date']
         holdings[opt['chain_symbol']]['strike'] = float(
             opt['strike_price'])
