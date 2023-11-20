@@ -8,7 +8,7 @@ import { getApiUrl } from "@/utils";
 const TradePage = () => {
 
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
-  const [portfolio, setPortfolio] = useState({});
+  const [portfolio, setPortfolio] = useState([]);
 
   // const dataSource = [
   //   {
@@ -31,16 +31,6 @@ const TradePage = () => {
       dataIndex: 'symbol',
       key: 'symbol',
     },
-    {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
-    },
-    {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
-    },
   ];
 
 
@@ -51,7 +41,8 @@ const TradePage = () => {
         const url = `${getApiUrl({ localOverride: "dev" })}/trade`;
         const response = await fetch(url, { method: "GET", headers: { Authorization: jwtToken } });
         const data = await response.json();
-        setPortfolio(data);
+
+        setPortfolio(data.map());
       })();
     }
   }, [loggedIn]);
@@ -70,7 +61,7 @@ const TradePage = () => {
 
   return (
   <>
-  <Table dataSource={dataSource} columns={columns} />
+  <Table dataSource={portfolio} columns={columns} />
   {/* {Object.keys(portfolio).map(symbol => )} */}
   </>
   );
