@@ -79,6 +79,7 @@ def login():
 def get_trade():
     holdings = rh.build_holdings()
     for symbol in holdings:
+        holdings[symbol]['symbol'] = symbol
         holdings[symbol]['open_contracts'] = 0
     opts = rh.options.get_open_option_positions()
     for opt in opts:
@@ -95,7 +96,9 @@ def get_trade():
                                       ]['open_contracts'] < 0 else 'long'
         holdings[opt['chain_symbol']]['chance'] = float(
             opt[f'chance_of_profit_{postfix}'])
-    body = holdings
+    holdings = sorted([holding for _, holding in holdings.items()],
+                      key=lambda holding: holding['symbol'])
+    body = [holding | {'key': idx} for idx, holding in enumerate(holdings)]
     status_code = 200
 
     return {
