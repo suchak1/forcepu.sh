@@ -1,4 +1,4 @@
-import { Typography } from "antd";
+import { Typography, Table } from "antd";
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuthenticator } from "@aws-amplify/ui-react";
@@ -36,6 +36,7 @@ const TradePage = () => {
 
   return (
   <>
+  <Table dataSource={dataSource} columns={columns} />
   {/* {Object.keys(portfolio).map(symbol => )} */}
   </>
   );

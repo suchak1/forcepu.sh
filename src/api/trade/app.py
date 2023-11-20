@@ -42,9 +42,9 @@ def handle_trade(event, _):
     claims = event['requestContext']['authorizer']['claims']
     verified = verify_user(claims)
 
-    if not(verified and claims['email'] == os.environ['RH_USERNAME']):
+    if not (verified and claims['email'] == os.environ['RH_USERNAME']):
         return error(401, 'This account is not verified.')
-    
+
     login()
     if event['httpMethod'].upper() == 'POST':
         response = post_trade(event)
@@ -84,15 +84,17 @@ def get_trade():
     for opt in opts:
         sold = -1 if opt['type'] == 'short' else 1
         holdings[opt['chain_symbol']
-                    ]['open_contracts'] += int(float(opt['quantity'])) * sold
+                 ]['open_contracts'] += int(float(opt['quantity'])) * sold
         opt = rh.options.get_option_instrument_data_by_id(opt['option_id'])
         holdings[opt['chain_symbol']
-                    ]['expiration'] = opt['expiration_date']
+                 ]['expiration'] = opt['expiration_date']
         holdings[opt['chain_symbol']]['strike'] = float(
             opt['strike_price'])
         opt = rh.options.get_option_market_data_by_id(opt['option_id'])[0]
-        holdings[opt['chain_symbol']]['chance'] = float(opt[f"chance_of_profit_{'short' if holdings[opt['chain_symbol']
-                    ]['open_contracts'] < 0 else 'long'}"])
+        postfix = 'short' if holdings[opt['chain_symbol']
+                                      ]['open_contracts'] < 0 else 'long'
+        holdings[opt['chain_symbol']]['chance'] = float(
+            opt[f'chance_of_profit_{postfix}'])
     body = holdings
     status_code = 200
 
@@ -101,6 +103,7 @@ def get_trade():
         "body": json.dumps(body),
         "headers": {"Access-Control-Allow-Origin": "*"}
     }
+
 
 def post_trade(event):
     req_body = json.loads(event['body'])
@@ -118,27 +121,36 @@ def post_trade(event):
         "headers": {"Access-Control-Allow-Origin": "*"}
     }
 
+
 def get_week(date):
     one_day = timedelta(days=1)
     day_idx = (date.weekday() + 1) % 7
     sunday = date - timedelta(days=day_idx)
     return [i * one_day + sunday for i in range(7)]
 
+
 def get_mid_price(opt):
     return (float(opt['ask_price']) + float(opt['bid_price'])) / 2
+
 
 def round_up(n, decimals=0):
     multiplier = 10**decimals
     return ceil(n * multiplier) / multiplier
 
+
 def suggest_num_contracts():
     holdings = rh.build_holdings()
-    max_contracts = {symbol: int(float(holding['quantity']) / 100) for symbol, holding in holdings.items()}
-    instr_to_symbol_lookup = {holding['id']: symbol for symbol, holding in holdings.items()}
+    max_contracts = {symbol: int(
+        float(holding['quantity']) / 100) for symbol, holding in holdings.items()}
+    instr_to_symbol_lookup = {
+        holding['id']: symbol for symbol, holding in holdings.items()}
     positions = rh.account.get_open_stock_positions()
-    curr_contracts = defaultdict(int, {instr_to_symbol_lookup[position['instrument_id']]: int(float(position['shares_held_for_options_collateral']) / 100) for position in positions})
-    available_contracts = {symbol: max_contract - curr_contracts[symbol] for symbol, max_contract in max_contracts.items()} 
+    curr_contracts = defaultdict(int, {instr_to_symbol_lookup[position['instrument_id']]: int(
+        float(position['shares_held_for_options_collateral']) / 100) for position in positions})
+    available_contracts = {symbol: max_contract -
+                           curr_contracts[symbol] for symbol, max_contract in max_contracts.items()}
     return available_contracts
+
 
 def get_expirations(expirations, num=2):
     today = datetime.now()
@@ -146,16 +158,21 @@ def get_expirations(expirations, num=2):
     for idx, exp in enumerate(expirations):
         if exp not in week:
             break
-    exp_candidates = expirations[idx : idx + num]
+    exp_candidates = expirations[idx: idx + num]
     return exp_candidates
+
 
 def get_contracts(symbol, expiration, num=2):
     min_price = 0.05
     key = 'high_fill_rate_sell_price'
-    opt_candidates = rh.options.find_options_by_specific_profitability(symbol, expiration, None, 'call', 'chance_of_profit_short', 0.85, 0.95)
-    opt_candidates.sort(key = lambda opt: abs(float(opt['chance_of_profit_short']) - 0.88))
-    contracts = [opt for opt in opt_candidates if (float(opt[key]) if key in opt else get_mid_price(opt)) >= min_price]
-    return contracts[0 : num]
+    opt_candidates = rh.options.find_options_by_specific_profitability(
+        symbol, expiration, None, 'call', 'chance_of_profit_short', 0.85, 0.95)
+    opt_candidates.sort(key=lambda opt: abs(
+        float(opt['chance_of_profit_short']) - 0.88))
+    contracts = [opt for opt in opt_candidates if (
+        float(opt[key]) if key in opt else get_mid_price(opt)) >= min_price]
+    return contracts[0: num]
+
 
 def get_price(contract, offset):
     mid_price = get_mid_price(contract)
@@ -169,18 +186,23 @@ def get_price(contract, offset):
     price -= min_tick * offset
     return price
 
+
 def spread_is_high(mid_price, price):
-    abs((mid_price - price ) / mid_price) > 0.2
+    abs((mid_price - price) / mid_price) > 0.2
+
 
 def update_contract(curr_contract):
-    new_contract = rh.options.get_option_market_data_by_id(curr_contract['id'])[0]
+    new_contract = rh.options.get_option_market_data_by_id(curr_contract['id'])[
+        0]
     return curr_contract | new_contract
+
 
 def init_chain(symbols):
     desired_contracts = suggest_num_contracts()
     # only use symbols that have positions available
     symbols = filter(lambda symbol: desired_contracts[symbol], symbols)
-    lookup = {symbol: {'quantity': desired_contracts[symbol], 'curr': [0, 0, 0] } for symbol in symbols}
+    lookup = {symbol: {'quantity': desired_contracts[symbol], 'curr': [
+        0, 0, 0]} for symbol in symbols}
 
     for symbol in lookup:
         chain = rh.options.get_chains(symbol)
@@ -192,8 +214,10 @@ def init_chain(symbols):
         lookup[symbol]['contracts'] = contracts
     return lookup
 
+
 def execute_orders(lookup, results):
-    remaining = filter(lambda symbol: symbol not in results, list(lookup.keys()))
+    remaining = filter(lambda symbol: symbol not in results,
+                       list(lookup.keys()))
     orders = {}
     for symbol in remaining:
         option = lookup[symbol]
@@ -205,10 +229,12 @@ def execute_orders(lookup, results):
         price = get_price(contract, curr[2])
         quantity = option['quantity']
 
-        order = rh.orders.order_sell_option_limit('open', 'credit', price, symbol, quantity, expiration, strike, 'call')
+        order = rh.orders.order_sell_option_limit(
+            'open', 'credit', price, symbol, quantity, expiration, strike, 'call')
         print('Order:', json.dumps(order))
         orders[symbol] = order
     return orders
+
 
 def update_contract(symbol, lookup):
     option = lookup[symbol]
@@ -218,6 +244,7 @@ def update_contract(symbol, lookup):
     new = rh.options.get_option_market_data_by_id(old['id'])[0]
     lookup[symbol]['contracts'][curr[0]][curr[1]] = old | new
     return lookup
+
 
 def adjust_option(symbol, lookup, results):
     option = lookup[symbol]
@@ -230,7 +257,8 @@ def adjust_option(symbol, lookup, results):
     price = get_price(contract, curr[2])
 
     if spread_is_high(mid_price, price):
-        print(symbol, f'Price spread is high. Bid: {float(contract["bid_price"])} Ask: {float(contract["ask_price"])} Mid: {mid_price} Price: {price}')
+        print(
+            symbol, f'Price spread is high. Bid: {float(contract["bid_price"])} Ask: {float(contract["ask_price"])} Mid: {mid_price} Price: {price}')
         curr[2] = 0
         if curr[1] == len(contracts[curr[0]]) - 1:
             curr[1] = 0
@@ -245,6 +273,7 @@ def adjust_option(symbol, lookup, results):
     lookup = update_contract(symbol, lookup)
     return lookup, results
 
+
 def adjust_orders(orders, lookup, results):
     for symbol in orders:
         rh.orders.cancel_option_order(orders[symbol]['id'])
@@ -255,13 +284,14 @@ def adjust_orders(orders, lookup, results):
             lookup, results = adjust_option(symbol, lookup, results)
     return lookup, results
 
+
 def sell(symbols):
     results = {}
     lookup = init_chain(symbols)
 
     while set(lookup.keys()) != set(results.keys()):
         orders = execute_orders(lookup, results)
-        
+
         # wait 5-10 sec
         sleep(random() * 5 + 5)
 
@@ -273,11 +303,11 @@ def sell(symbols):
         "headers": {"Access-Control-Allow-Origin": "*"}
     }
 
-        # first_run = False
+    # first_run = False
     # return results as json
     # print
+
 
 def roll():
     # also implement rolling in as well as out
     pass
-    
