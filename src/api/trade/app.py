@@ -110,14 +110,12 @@ def post_trade(event):
     trade_type = req_body['type']
     symbols = req_body['symbol']
 
-    response = roll() if trade_type.upper() == 'ROLL' else sell(symbols)
-
-    body = 'OK'
+    results = roll() if trade_type.upper() == 'ROLL' else sell(symbols)
     status_code = 200
 
     return {
         "statusCode": status_code,
-        "body": json.dumps(body),
+        "body": json.dumps(results),
         "headers": {"Access-Control-Allow-Origin": "*"}
     }
 
@@ -191,10 +189,10 @@ def spread_is_high(mid_price, price):
     abs((mid_price - price) / mid_price) > 0.2
 
 
-def update_contract(curr_contract):
-    new_contract = rh.options.get_option_market_data_by_id(curr_contract['id'])[
-        0]
-    return curr_contract | new_contract
+# def update_contract(curr_contract):
+#     new_contract = rh.options.get_option_market_data_by_id(curr_contract['id'])[
+#         0]
+#     return curr_contract | new_contract
 
 
 def init_chain(symbols):
@@ -258,7 +256,14 @@ def adjust_option(symbol, lookup, results):
 
     if spread_is_high(mid_price, price):
         print(
-            symbol, f'Price spread is high. Bid: {float(contract["bid_price"])} Ask: {float(contract["ask_price"])} Mid: {mid_price} Price: {price}')
+            symbol,
+            f"""
+            Price spread is high. 
+            Bid: {float(contract["bid_price"])}
+            Ask: {float(contract["ask_price"])}
+            Mid: {mid_price} Price: {price}
+            """
+        )
         curr[2] = 0
         if curr[1] == len(contracts[curr[0]]) - 1:
             curr[1] = 0

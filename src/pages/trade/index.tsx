@@ -10,6 +10,40 @@ const TradePage = () => {
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const [portfolio, setPortfolio] = useState({});
 
+  // const dataSource = [
+  //   {
+  //     key: '1',
+  //     name: 'Mike',
+  //     age: 32,
+  //     address: '10 Downing Street',
+  //   },
+  //   {
+  //     key: '2',
+  //     name: 'John',
+  //     age: 42,
+  //     address: '10 Downing Street',
+  //   },
+  // ];
+  
+  const columns = [
+    {
+      title: 'Symbol',
+      dataIndex: 'symbol',
+      key: 'symbol',
+    },
+    {
+      title: 'Age',
+      dataIndex: 'age',
+      key: 'age',
+    },
+    {
+      title: 'Address',
+      dataIndex: 'address',
+      key: 'address',
+    },
+  ];
+
+
   useEffect(() => {
     if (loggedIn) {
       (async () => {
@@ -17,7 +51,7 @@ const TradePage = () => {
         const url = `${getApiUrl({ localOverride: "dev" })}/trade`;
         const response = await fetch(url, { method: "GET", headers: { Authorization: jwtToken } });
         const data = await response.json();
-        console.log(data);
+        setPortfolio(data);
       })();
     }
   }, [loggedIn]);
