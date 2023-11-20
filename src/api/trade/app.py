@@ -91,7 +91,7 @@ def get_trade():
                  ]['expiration'] = opt['expiration_date']
         holdings[opt['chain_symbol']]['strike'] = float(
             opt['strike_price'])
-        opt = rh.options.get_option_market_data_by_id(opt['option_id'])[0]
+        opt = rh.options.get_option_market_data_by_id(opt['id'])[0]
         postfix = 'short' if holdings[opt['chain_symbol']
                                       ]['open_contracts'] < 0 else 'long'
         holdings[opt['chain_symbol']]['chance'] = float(
