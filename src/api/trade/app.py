@@ -37,7 +37,7 @@ def chance_of_profit(**kwargs):
 
 def handle_trade(event, _):
     if event['httpMethod'].upper() == 'OPTIONS':
-        response = options()
+        return options()
 
     claims = event['requestContext']['authorizer']['claims']
     verified = verify_user(claims)
