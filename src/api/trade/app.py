@@ -258,7 +258,7 @@ def adjust_option(symbol, lookup, results):
         print(
             symbol,
             f"""
-            Price spread is high. 
+            Price spread is high.
             Bid: {float(contract["bid_price"])}
             Ask: {float(contract["ask_price"])}
             Mid: {mid_price} Price: {price}
