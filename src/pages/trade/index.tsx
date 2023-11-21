@@ -9,7 +9,7 @@ const TradePage = () => {
 
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   let [portfolio, setPortfolio] = useState([]);
-  const [toggle, setToggle] = useState(true);
+  const [toggle, setToggle] = useState(false);
   const toggleLabels = { OPTIONS: "OPT", STOCKS: "STX" };
 
   portfolio = [
@@ -725,24 +725,24 @@ const TradePage = () => {
     }
 ];
   
-  const columns = [
-    {
-      title: 'Symbol',
-      dataIndex: 'symbol',
-      key: 'symbol',
-    },
-    {
-      title: 'Quantity',
-      dataIndex: 'quantity',
-      key: 'quantity',
-      render: (qty: string, _: any) => parseFloat(qty).toFixed(2),
-    },
-    {
-      title: 'Contracts',
-      dataIndex: 'open_contracts',
-      key: 'open_contracts'
-    }
-  ];
+  const symbol = {
+    title: 'Symbol',
+    dataIndex: 'symbol',
+    key: 'symbol',
+  };
+  const quantity = {
+    title: 'Quantity',
+    dataIndex: 'quantity',
+    key: 'quantity',
+    render: (qty: string, _: any) => parseFloat(qty).toFixed(2),
+  };
+  const contracts = {
+    title: 'Contracts',
+    dataIndex: 'open_contracts',
+    key: 'open_contracts'
+  }
+  const createColumn = (dataName: any, displayName=null, render=null) => ({ title: (displayName || dataName).toLowerCase().replace(/(^| )(\w)/g, (s: string) => s.toUpperCase()), dataIndex: dataName, key: dataName, render});
+  const columns = toggle ? [symbol, createColumn('quantity',null,(qty: string, _: any) => parseFloat(qty).toFixed(2))] : [symbol, contracts]
 
 
   useEffect(() => {
@@ -771,12 +771,15 @@ const TradePage = () => {
 
   return (
   <>
-  <Toggle
-    val={toggle}
-    options={[toggleLabels.OPTIONS, toggleLabels.STOCKS]}
-    defaultValue={toggleLabels.OPTIONS}
-    onChange={(val: string) => setToggle(val === toggleLabels.OPTIONS)}
-  />
+  <Title>Portfolio</Title>
+  <span style={{width: '100%', display: 'flex', justifyContent: 'flex-end'}}>
+    <Toggle
+      val={toggle}
+      options={[toggleLabels.STOCKS, toggleLabels.OPTIONS]}
+      defaultValue={toggleLabels.OPTIONS}
+      onChange={(val: string) => setToggle(val === toggleLabels.STOCKS)}
+    />
+  </span>
   <Table dataSource={portfolio} columns={columns} />
   {/* {Object.keys(portfolio).map(symbol => )} */}
   </>
