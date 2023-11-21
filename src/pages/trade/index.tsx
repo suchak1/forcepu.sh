@@ -724,25 +724,18 @@ const TradePage = () => {
         "key": 36
     }
 ];
+
+  const roundTwoDecimals = (toRound: string) => parseFloat(toRound).toFixed(2);
   
-  const symbol = {
-    title: 'Symbol',
-    dataIndex: 'symbol',
-    key: 'symbol',
-  };
-  const quantity = {
-    title: 'Quantity',
-    dataIndex: 'quantity',
-    key: 'quantity',
-    render: (qty: string, _: any) => parseFloat(qty).toFixed(2),
-  };
-  const contracts = {
-    title: 'Contracts',
-    dataIndex: 'open_contracts',
-    key: 'open_contracts'
-  }
-  const createColumn = (dataName: any, displayName=null, render=null) => ({ title: (displayName || dataName).toLowerCase().replace(/(^| )(\w)/g, (s: string) => s.toUpperCase()), dataIndex: dataName, key: dataName, render});
-  const columns = toggle ? [symbol, createColumn('quantity',null,(qty: string, _: any) => parseFloat(qty).toFixed(2))] : [symbol, contracts]
+  const createColumn = (dataName: string, displayName='', render=(s: string) => s) => ({ title: (displayName || dataName).toLowerCase().replace(/(^| )(\w)/g, (s: string) => s.toUpperCase()), dataIndex: dataName, key: dataName, render});
+  const columns = toggle ? [
+    createColumn('symbol'), 
+    createColumn('quantity', '', (qty: string, _: any) => parseFloat(qty).toFixed(2)),
+    createColumn('price')
+  ] : [
+    createColumn('symbol'), 
+    createColumn('open_contracts', 'Contracts')
+  ]
 
 
   useEffect(() => {
