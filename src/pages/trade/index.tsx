@@ -3,12 +3,14 @@ import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 const { Title } = Typography;
-import { getApiUrl } from "@/utils";
+import { getApiUrl, Toggle } from "@/utils";
 
 const TradePage = () => {
 
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   let [portfolio, setPortfolio] = useState([]);
+  const [toggle, setToggle] = useState(true);
+  const toggleLabels = { OPTIONS: "OPT", STOCKS: "STX" };
 
   portfolio = [
     {
@@ -730,9 +732,10 @@ const TradePage = () => {
       key: 'symbol',
     },
     {
-      title: 'Qty',
+      title: 'Quantity',
       dataIndex: 'quantity',
-      key: 'quantity'
+      key: 'quantity',
+      render: (qty: string, _: any) => parseFloat(qty).toFixed(2),
     },
     {
       title: 'Contracts',
@@ -768,6 +771,12 @@ const TradePage = () => {
 
   return (
   <>
+  <Toggle
+    val={toggle}
+    options={[toggleLabels.OPTIONS, toggleLabels.STOCKS]}
+    defaultValue={toggleLabels.OPTIONS}
+    onChange={(val: string) => setToggle(val === toggleLabels.OPTIONS)}
+  />
   <Table dataSource={portfolio} columns={columns} />
   {/* {Object.keys(portfolio).map(symbol => )} */}
   </>
