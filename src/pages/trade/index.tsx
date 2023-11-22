@@ -725,16 +725,34 @@ const TradePage = () => {
     }
 ];
 
-  const roundTwoDecimals = (toRound: string) => parseFloat(toRound).toFixed(2);
+  const format = (prefix='', suffix='', mult=1, style=(_: any) => 'inherit') => (toRound: string) => {
+    let num = parseFloat(toRound) * mult;
+    // if (num % 1) {
+    //   num = num.toFixed(2);
+    // }
+    return <span style={{color: style(num)}}>{`${prefix}${num % 1 ? num.toFixed(2) : num}${suffix}`}</span>;
+  }
   
   const createColumn = (dataName: string, displayName='', render=(s: string) => s) => ({ title: (displayName || dataName).toLowerCase().replace(/(^| )(\w)/g, (s: string) => s.toUpperCase()), dataIndex: dataName, key: dataName, render});
   const columns = toggle ? [
     createColumn('symbol'), 
-    createColumn('quantity', '', (qty: string, _: any) => parseFloat(qty).toFixed(2)),
-    createColumn('price')
+    createColumn('quantity', '', format()),
+    createColumn('price', '', format('$')),
+    // add cyan / magenta, add triangle up or down, add sort
+    createColumn('percent_change', 'Delta', format('', '%', 1, (num) => num >= 0 ? 'cyan' : 'magenta')),
+    // form pie chart from percentage and sort by percentage?
+    createColumn('percentage', '', format('', '%'))
   ] : [
     createColumn('symbol'), 
-    createColumn('open_contracts', 'Contracts')
+    createColumn('open_contracts', 'Contracts'),
+    createColumn('strike', '', format('$')),
+    createColumn('chance', '', format('', '%', 100, (num) => num >= 80 ? 'cyan' : 'magenta')),
+    Object.assign(createColumn('expiration'), {
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => a.expiration < b.expiration,
+    })
+    // add col for sell vs roll
+    // add chart for premium income per week
   ]
 
 
@@ -773,7 +791,7 @@ const TradePage = () => {
       onChange={(val: string) => setToggle(val === toggleLabels.STOCKS)}
     />
   </span>
-  <Table dataSource={portfolio} columns={columns} />
+  <Table dataSource={toggle ? portfolio : portfolio.filter(holding => parseFloat(holding?.quantity) >= 100)} columns={columns} />
   {/* {Object.keys(portfolio).map(symbol => )} */}
   </>
   );
