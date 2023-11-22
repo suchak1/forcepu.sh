@@ -743,7 +743,17 @@ const TradePage = () => {
     createColumn('quantity', '', format()),
     createColumn('price', '', format('$')),
     // add cyan / magenta, add triangle up or down, add sort
-    createColumn('percent_change', 'Delta', format('', '%', 1, () => 'inherit', true)),
+    createColumn('percent_change', 'Delta', 
+      format(
+        '', 
+        '%', 
+        1, 
+        (num) => num >= 0 ? 'cyan' : 'magenta',
+        // or
+        // () => 'inherit',
+        true
+      )
+    ),
     // form pie chart from percentage and sort by percentage?
     createColumn('percentage', '', format('', '%'))
   ] : [
