@@ -725,12 +725,16 @@ const TradePage = () => {
     }
 ];
 
-  const format = (prefix='', suffix='', mult=1, style=(_: any) => 'inherit') => (toRound: string) => {
+  const format = (prefix='', suffix='', mult=1, color=(_: any) => 'inherit', arrow=false) => (toRound: string) => {
     let num = parseFloat(toRound) * mult;
     // if (num % 1) {
     //   num = num.toFixed(2);
     // }
-    return <span style={{color: style(num)}}>{`${prefix}${num % 1 ? num.toFixed(2) : num}${suffix}`}</span>;
+    return (
+    <>
+      <span style={{color: color(num)}}>{`${prefix}${num % 1 ? num.toFixed(2) : num}${suffix}`}</span>
+      <span style={{color: num >= 0 ? 'cyan' : 'magenta'}}>{arrow && (num >= 0 ? ' ▲' : ' ▼') || ''}</span>
+    </>);
   }
   
   const createColumn = (dataName: string, displayName='', render=(s: string) => s) => ({ title: (displayName || dataName).toLowerCase().replace(/(^| )(\w)/g, (s: string) => s.toUpperCase()), dataIndex: dataName, key: dataName, render});
@@ -739,7 +743,7 @@ const TradePage = () => {
     createColumn('quantity', '', format()),
     createColumn('price', '', format('$')),
     // add cyan / magenta, add triangle up or down, add sort
-    createColumn('percent_change', 'Delta', format('', '%', 1, (num) => num >= 0 ? 'cyan' : 'magenta')),
+    createColumn('percent_change', 'Delta', format('', '%', 1, () => 'inherit', true)),
     // form pie chart from percentage and sort by percentage?
     createColumn('percentage', '', format('', '%'))
   ] : [
