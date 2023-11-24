@@ -743,7 +743,6 @@ const TradePage = () => {
       render
     }, sort ? {
       defaultSortOrder: dataName === 'expiration' ? 'ascend' : '',
-      // defaultSortOrder: sort,
       sorter: (a: { [x: string]: any; }, b: { [x: string]: any; }) => {
         let x = a[dataName];
         let y = b[dataName]
@@ -758,33 +757,27 @@ const TradePage = () => {
     createColumn({dataName: 'symbol'}), 
     createColumn({dataName: 'quantity', render: format()}),
     createColumn({dataName: 'price', render: format('$')}),
-    // add sort
     createColumn({dataName: 'percent_change', displayName: 'Delta', 
       render: format(
         '', 
         '%', 
         1, 
         (num) => num >= 0 ? 'cyan' : 'magenta',
-        // or
-        // () => 'inherit',
         true
       ),
       sort: true,
       }),
-    // form pie chart from percentage and sort by percentage?
     createColumn({dataName: 'percentage', render: format('', '%'), sort: true})
   ] : [
     createColumn({dataName: 'symbol'}), 
     createColumn({dataName: 'open_contracts', displayName: 'Contracts'}),
     createColumn({dataName: 'strike', render: format('$')}),
     createColumn({dataName: 'chance', render: format('', '%', 100, (num) => num >= 80 ? 'cyan' : 'magenta'), sort: true}),
-    // Object.assign(createColumn('expiration'), {
-    //   defaultSortOrder: 'descend',
-    //   sorter: (a, b) => a.expiration < b.expiration,
-    // })
-    createColumn({dataName: 'expiration', sort: true})
+    createColumn({dataName: 'expiration', sort: true}),
+    // createColumn({dataName: })
     // add col for sell vs roll
     // add chart for premium income per week
+    // include dividend income on chart - area chart
   ]
 
 
@@ -801,32 +794,6 @@ const TradePage = () => {
   }, [loggedIn]);
 
   const data = portfolio.map(holding => ({type: holding['symbol'], value: Math.round(holding['percentage'] * 100) / 100}))
-  // const data = [
-  //   {
-  //     type: '分类一',
-  //     value: 27,
-  //   },
-  //   {
-  //     type: '分类二',
-  //     value: 25,
-  //   },
-  //   {
-  //     type: '分类三',
-  //     value: 18,
-  //   },
-  //   {
-  //     type: '分类四',
-  //     value: 15,
-  //   },
-  //   {
-  //     type: '分类五',
-  //     value: 10,
-  //   },
-  //   {
-  //     type: '其他',
-  //     value: 5,
-  //   },
-  // ];
 
   const config = {
     appendPadding: 10,
@@ -839,7 +806,6 @@ const TradePage = () => {
     label: {
       type: 'inner',
       offset: '-50%',
-      // content: '{value}',
       content: (content: { type: any; }) => content.type,
       style: {
         textAlign: 'center',
@@ -877,6 +843,8 @@ const TradePage = () => {
 // graph of covered call income over time
 // +$20 premium notification after each sell order
 // total + for the week, filter sum to include filled orders after start of day Mon
+// include dividend income on chart - area chart
+
 
 
   return (
@@ -891,7 +859,6 @@ const TradePage = () => {
     />
   </span>
   <Table dataSource={toggle ? portfolio : portfolio.filter(holding => parseFloat(holding?.quantity) >= 100)} columns={columns} />
-  {/* {Object.keys(portfolio).map(symbol => )} */}
   {toggle && <Pie {...config} />}
   </>
   );
