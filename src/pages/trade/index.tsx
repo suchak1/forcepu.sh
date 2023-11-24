@@ -727,9 +727,6 @@ const TradePage = () => {
 
   const format = (prefix='', suffix='', mult=1, color=(_: any) => 'inherit', arrow=false) => (toRound: string) => {
     let num = parseFloat(toRound) * mult;
-    // if (num % 1) {
-    //   num = num.toFixed(2);
-    // }
     return (
     <>
       <span style={{color: color(num)}}>{`${prefix}${num % 1 ? num.toFixed(2) : num}${suffix}`}</span>
@@ -737,14 +734,32 @@ const TradePage = () => {
     </>);
   }
   
-  const createColumn = (dataName: string, displayName='', render=(s: string) => s) => ({ title: (displayName || dataName).toLowerCase().replace(/(^| )(\w)/g, (s: string) => s.toUpperCase()), dataIndex: dataName, key: dataName, render});
+  const createColumn = ({dataName='', displayName='', render=(s: string) => s, sort=''}) => (
+    Object.assign({ 
+      title: (displayName || dataName).toLowerCase().replace(/(^| )(\w)/g, (s: string) => s.toUpperCase()), 
+      dataIndex: dataName, 
+      key: dataName, 
+      render
+    }, sort ? {
+      defaultSortOrder: dataName === 'expiration' ? 'ascend' : '',
+      // defaultSortOrder: sort,
+      sorter: (a: { [x: string]: any; }, b: { [x: string]: any; }) => {
+        let x = a[dataName];
+        let y = b[dataName]
+        if (dataName === 'expiration') {
+          x = Date.parse(x);
+          y = Date.parse(y);
+        }
+        return x - y;
+      }
+    } : {}));
   const columns = toggle ? [
-    createColumn('symbol'), 
-    createColumn('quantity', '', format()),
-    createColumn('price', '', format('$')),
-    // add cyan / magenta, add triangle up or down, add sort
-    createColumn('percent_change', 'Delta', 
-      format(
+    createColumn({dataName: 'symbol'}), 
+    createColumn({dataName: 'quantity', render: format()}),
+    createColumn({dataName: 'price', render: format('$')}),
+    // add sort
+    createColumn({dataName: 'percent_change', displayName: 'Delta', 
+      render: format(
         '', 
         '%', 
         1, 
@@ -753,18 +768,19 @@ const TradePage = () => {
         // () => 'inherit',
         true
       )
-    ),
+      }),
     // form pie chart from percentage and sort by percentage?
-    createColumn('percentage', '', format('', '%'))
+    createColumn({dataName: 'percentage', render: format('', '%')})
   ] : [
-    createColumn('symbol'), 
-    createColumn('open_contracts', 'Contracts'),
-    createColumn('strike', '', format('$')),
-    createColumn('chance', '', format('', '%', 100, (num) => num >= 80 ? 'cyan' : 'magenta')),
-    Object.assign(createColumn('expiration'), {
-      defaultSortOrder: 'descend',
-      sorter: (a, b) => a.expiration < b.expiration,
-    })
+    createColumn({dataName: 'symbol'}), 
+    createColumn({dataName: 'open_contracts', displayName: 'Contracts'}),
+    createColumn({dataName: 'strike', render: format('$')}),
+    createColumn({dataName: 'chance', render: format('', '%', 100, (num) => num >= 80 ? 'cyan' : 'magenta'), sort: true}),
+    // Object.assign(createColumn('expiration'), {
+    //   defaultSortOrder: 'descend',
+    //   sorter: (a, b) => a.expiration < b.expiration,
+    // })
+    createColumn({dataName: 'expiration', sort: 'ascend'})
     // add col for sell vs roll
     // add chart for premium income per week
   ]
