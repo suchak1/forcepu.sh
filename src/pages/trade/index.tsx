@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 const { Title } = Typography;
 import { getApiUrl, Toggle } from "@/utils";
+import { Pie } from '@ant-design/charts';
 
 const TradePage = () => {
 
@@ -734,7 +735,7 @@ const TradePage = () => {
     </>);
   }
   
-  const createColumn = ({dataName='', displayName='', render=(s: string) => s, sort=''}) => (
+  const createColumn = ({dataName='', displayName='', render=(s: string) => s, sort=false}) => (
     Object.assign({ 
       title: (displayName || dataName).toLowerCase().replace(/(^| )(\w)/g, (s: string) => s.toUpperCase()), 
       dataIndex: dataName, 
@@ -767,10 +768,11 @@ const TradePage = () => {
         // or
         // () => 'inherit',
         true
-      )
+      ),
+      sort: true,
       }),
     // form pie chart from percentage and sort by percentage?
-    createColumn({dataName: 'percentage', render: format('', '%')})
+    createColumn({dataName: 'percentage', render: format('', '%'), sort: true})
   ] : [
     createColumn({dataName: 'symbol'}), 
     createColumn({dataName: 'open_contracts', displayName: 'Contracts'}),
@@ -780,7 +782,7 @@ const TradePage = () => {
     //   defaultSortOrder: 'descend',
     //   sorter: (a, b) => a.expiration < b.expiration,
     // })
-    createColumn({dataName: 'expiration', sort: 'ascend'})
+    createColumn({dataName: 'expiration', sort: true})
     // add col for sell vs roll
     // add chart for premium income per week
   ]
@@ -797,6 +799,73 @@ const TradePage = () => {
       })();
     }
   }, [loggedIn]);
+
+  const data = portfolio.map(holding => ({type: holding['symbol'], value: Math.round(holding['percentage'] * 100) / 100}))
+  // const data = [
+  //   {
+  //     type: '分类一',
+  //     value: 27,
+  //   },
+  //   {
+  //     type: '分类二',
+  //     value: 25,
+  //   },
+  //   {
+  //     type: '分类三',
+  //     value: 18,
+  //   },
+  //   {
+  //     type: '分类四',
+  //     value: 15,
+  //   },
+  //   {
+  //     type: '分类五',
+  //     value: 10,
+  //   },
+  //   {
+  //     type: '其他',
+  //     value: 5,
+  //   },
+  // ];
+
+  const config = {
+    appendPadding: 10,
+    data,
+    theme: 'dark',
+    angleField: 'value',
+    colorField: 'type',
+    radius: 1,
+    innerRadius: 0.6,
+    label: {
+      type: 'inner',
+      offset: '-50%',
+      // content: '{value}',
+      content: (content: { type: any; }) => content.type,
+      style: {
+        textAlign: 'center',
+        fontSize: 14,
+      },
+    },
+    interactions: [
+      {
+        type: 'element-selected',
+      },
+      {
+        type: 'element-active',
+      },
+    ],
+    statistic: {
+      title: false,
+      content: {
+        style: {
+          whiteSpace: 'pre-wrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+        },
+        content: 'STX',
+      },
+    },
+  };
 
 
 
@@ -823,6 +892,7 @@ const TradePage = () => {
   </span>
   <Table dataSource={toggle ? portfolio : portfolio.filter(holding => parseFloat(holding?.quantity) >= 100)} columns={columns} />
   {/* {Object.keys(portfolio).map(symbol => )} */}
+  {toggle && <Pie {...config} />}
   </>
   );
 };
