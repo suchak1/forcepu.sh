@@ -749,18 +749,7 @@ const TradePage = () => {
       align: 'center',
       render
     }, sort && Object.assign({
-      // defaultSortOrder: dataName === 'expiration' ? 'ascend' : '',
-      sorter: {
-        compare: (a: { [x: string]: any; }, b: { [x: string]: any; }) => {
-          let x = a[dataName];
-          let y = b[dataName]
-          // if (dataName === 'expiration') {
-          //   x = Date.parse(x);
-          //   y = Date.parse(y);
-          // }
-          return x - y;
-        }
-      }
+      sorter: {compare: (a: { [x: string]: any; }, b: { [x: string]: any; }) => a[dataName] - b[dataName]}
     }, sort)));
 
   const columns = toggle ? [
@@ -780,12 +769,9 @@ const TradePage = () => {
     createColumn({dataName: 'percentage', render: format('', '%'), sort: true})
   ] : [
     createColumn({dataName: 'symbol'}), 
-    // pass in custom sort obj and make sort null by default in createCol fx
-    // use multiple sort and make ascend + multiple: 1
     createColumn({dataName: 'open_contracts', displayName: 'Contracts', sort: {defaultSortOrder: 'descend', sorter: {compare: (a, b) => a.open_contracts - b.open_contracts, multiple: 1}}}),
     createColumn({dataName: 'strike', render: format('$')}),
     createColumn({dataName: 'chance', render: format('', '%', 100, (num) => num >= 80 ? 'cyan' : 'magenta'), sort: true}),
-    // use multiple sort w multiple: 2
     createColumn({dataName: 'expiration', sort: {defaultSortOrder: 'ascend', sorter: {compare: (a, b) => Date.parse(a.expiration) - Date.parse(b.expiration), multiple: 2}}}),
     createColumn({displayName: 'Action', render: (holding) => 
       <Button 
@@ -825,7 +811,6 @@ const TradePage = () => {
       >
         {holding.open_contracts ? 'ROLL' : 'SELL'}
       </Button>})
-    // add col for sell vs roll
     // add chart for premium income per week
     // include dividend income on chart - area chart
   ]
