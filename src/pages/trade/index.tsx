@@ -741,25 +741,28 @@ const TradePage = () => {
     </>);
   }
   
-  const createColumn = ({dataName='', displayName='', render=(s: string) => s, sort=false}) => (
+  const createColumn = ({dataName='', displayName='', render=(s: string) => s, sort=null}) => (
     Object.assign({ 
       title: (displayName || dataName).toLowerCase().replace(/(^| )(\w)/g, (s: string) => s.toUpperCase()), 
       dataIndex: dataName, 
       key: dataName, 
       align: 'center',
       render
-    }, sort ? {
-      defaultSortOrder: dataName === 'expiration' ? 'ascend' : '',
-      sorter: (a: { [x: string]: any; }, b: { [x: string]: any; }) => {
-        let x = a[dataName];
-        let y = b[dataName]
-        if (dataName === 'expiration') {
-          x = Date.parse(x);
-          y = Date.parse(y);
+    }, sort && Object.assign({
+      // defaultSortOrder: dataName === 'expiration' ? 'ascend' : '',
+      sorter: {
+        compare: (a: { [x: string]: any; }, b: { [x: string]: any; }) => {
+          let x = a[dataName];
+          let y = b[dataName]
+          // if (dataName === 'expiration') {
+          //   x = Date.parse(x);
+          //   y = Date.parse(y);
+          // }
+          return x - y;
         }
-        return x - y;
       }
-    } : {}));
+    }, sort)));
+
   const columns = toggle ? [
     createColumn({dataName: 'symbol'}), 
     createColumn({dataName: 'quantity', render: format()}),
@@ -779,11 +782,11 @@ const TradePage = () => {
     createColumn({dataName: 'symbol'}), 
     // pass in custom sort obj and make sort null by default in createCol fx
     // use multiple sort and make ascend + multiple: 1
-    createColumn({dataName: 'open_contracts', displayName: 'Contracts', sort: true}),
+    createColumn({dataName: 'open_contracts', displayName: 'Contracts', sort: {defaultSortOrder: 'descend', sorter: {compare: (a, b) => a.open_contracts - b.open_contracts, multiple: 1}}}),
     createColumn({dataName: 'strike', render: format('$')}),
     createColumn({dataName: 'chance', render: format('', '%', 100, (num) => num >= 80 ? 'cyan' : 'magenta'), sort: true}),
     // use multiple sort w multiple: 2
-    createColumn({dataName: 'expiration', sort: true}),
+    createColumn({dataName: 'expiration', sort: {defaultSortOrder: 'ascend', sorter: {compare: (a, b) => Date.parse(a.expiration) - Date.parse(b.expiration), multiple: 2}}}),
     createColumn({displayName: 'Action', render: (holding) => 
       <Button 
         className={holding.open_contracts ? layoutStyles.start : subStyles.subscribe} 
