@@ -114,7 +114,7 @@ def get_trade():
 def post_trade(event):
     req_body = json.loads(event['body'])
     trade_type = req_body['type']
-    symbols = req_body['symbol']
+    symbols = req_body['symbols']
 
     results = roll() if trade_type.upper() == 'ROLL' else sell(symbols)
     status_code = 200
