@@ -751,11 +751,11 @@ const TradePage = () => {
 
   const format = (prefix = '', suffix = '', mult = 1, color = (_: any) => 'inherit', arrow = false) => (toRound: string) => {
     let num = parseFloat(toRound) * mult;
-    return (
+    return num ? (
       <>
         <span style={{ color: color(num) }}>{`${prefix}${num % 1 ? num.toFixed(2) : num}${suffix}`}</span>
         <span style={{ color: num >= 0 ? 'cyan' : 'magenta' }}>{arrow && (num >= 0 ? ' ▲' : ' ▼') || ''}</span>
-      </>);
+      </>) : '';
   }
 
   const createColumn = ({ dataName = '', displayName = '', render = (s: string) => s, sort = null }) => (
