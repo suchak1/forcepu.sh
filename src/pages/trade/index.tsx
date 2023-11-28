@@ -769,7 +769,7 @@ const TradePage = () => {
       sorter: { compare: (a: { [x: string]: any; }, b: { [x: string]: any; }) => a[dataName] - b[dataName] }
     }, sort)));
 
-  const aFx = async (holding) => {
+  const sell = async (holding) => {
     setTradeLoading(holding.symbol);
     const renderError = () => notification.error({
       duration: 10,
@@ -779,37 +779,21 @@ const TradePage = () => {
     const jwtToken = loggedIn?.signInUserSession?.idToken?.jwtToken;
     const url = `${getApiUrl({ localOverride: "dev" })}/trade`;
     try {
-      // const response = await fetch(url, { method: "POST", headers: { Authorization: jwtToken }, body: JSON.stringify({ type: holding.open_contracts ? 'ROLL' : 'SELL', symbols: [holding.symbol] }) });
-      // const data = await response.json();
-      const data = JSON.parse("{\"OKTA\": {\"account_number\": \"\", \"cancel_url\": null, \"canceled_quantity\": \"0.00000\", \"created_at\": \"2023-11-27T17:18:57.991018Z\", \"direction\": \"credit\", \"id\": \"6564cf81-7758-4f8f-b59a-630f53f4c478\", \"legs\": [{\"executions\": [{\"id\": \"6564cf82-af93-45f3-964d-bbc80c55bc92\", \"price\": \"0.93000000\", \"quantity\": \"1.00000\", \"settlement_date\": \"2023-11-28\", \"timestamp\": \"2023-11-27T17:18:58.855000Z\"}], \"id\": \"6564cf81-9a0f-42ce-8d9d-8ac4868d003f\", \"option\": \"https://api.robinhood.com/options/instruments/5d9f7f3c-8d25-4984-8820-99a11a320911/\", \"position_effect\": \"open\", \"ratio_quantity\": 1, \"side\": \"sell\", \"expiration_date\": \"2023-12-08\", \"strike_price\": \"85.0000\", \"option_type\": \"call\", \"long_strategy_code\": \"5d9f7f3c-8d25-4984-8820-99a11a320911_L1\", \"short_strategy_code\": \"5d9f7f3c-8d25-4984-8820-99a11a320911_S1\"}], \"pending_quantity\": \"0.00000\", \"premium\": \"93.00000000\", \"processed_premium\": \"93\", \"net_amount\": \"92.97\", \"net_amount_direction\": \"credit\", \"price\": \"0.93000000\", \"processed_quantity\": \"1.00000\", \"quantity\": \"1.00000\", \"ref_id\": \"cfefb7fd-2808-4ada-855b-970120d7fc01\", \"regulatory_fees\": \"0.03\", \"state\": \"filled\", \"time_in_force\": \"gtc\", \"trigger\": \"immediate\", \"type\": \"limit\", \"updated_at\": \"2023-11-27T17:18:59.412372Z\", \"chain_id\": \"e04b1d5c-ec6e-498e-8811-413ba6fb298d\", \"chain_symbol\": \"OKTA\", \"response_category\": null, \"opening_strategy\": \"short_call\", \"closing_strategy\": null, \"stop_price\": null, \"form_source\": null, \"client_bid_at_submission\": null, \"client_ask_at_submission\": null, \"client_time_at_submission\": null, \"average_net_premium_paid\": \"-93.00000000\", \"estimated_total_net_amount\": \"92.97\", \"estimated_total_net_amount_direction\": \"credit\"}}");
-      console.log('data', data);
+      const response = await fetch(url, { method: "POST", headers: { Authorization: jwtToken }, body: JSON.stringify({ type: holding.open_contracts ? 'ROLL' : 'SELL', symbols: [holding.symbol] }) });
+      const data = await response.json();
 
       if ('error' in data[holding.symbol]) {
         renderError();
       } else {
         notification.success({
           duration: 10,
-          message: <span style={{ display: 'flex', justifyContent: 'space-between' }}><span>Success</span><span style={{ color: 'lime', fontWeight: 'bold' }}>+${parseFloat(data[holding.symbol].premium).toFixed(0)}</span></span>,
+          message: <span style={{ display: 'flex', justifyContent: 'space-between' }}><span>Success</span><span style={{ color: 'lime', fontWeight: 'bold' }}>+ ${parseFloat(data[holding.symbol].premium).toFixed(0)}</span></span>,
           description: `Executed order for ${holding.symbol}!`,
         });
 
-        setPortfolio((prev) => {
-          // const symbol_idx = prev.findIndex(p => p.symbol === holding.symbol);
-          // const new_item = {
-          //   ...prev[symbol_idx],
-          //   ...{
-          //     open_contracts: holding.open_contracts - parseInt(data[holding.symbol].quantity),
-          //     expiration: data[holding.symbol].legs[0].expiration_date,
-          //     strike: parseFloat(data[holding.symbol].legs[0].strike_price),
-          //     chance: 0.88
-          //   }
-          // };
-          // return portfolio.slice(0, symbol_idx).concat([new_item], portfolio.slice(symbol_idx + 1));
-          return portfolio.map(p => {
-            if (p.symbol !== holding.symbol) {
-              return p;
-            }
-            return {
+        setPortfolio(prev => prev.map(p =>
+          p.symbol === holding.symbol ?
+            ({
               ...p,
               ...{
                 open_contracts: holding.open_contracts - parseInt(data[holding.symbol].quantity),
@@ -817,52 +801,8 @@ const TradePage = () => {
                 strike: parseFloat(data[holding.symbol].legs[0].strike_price),
                 chance: 0.88
               }
-            };
-          })
-
-        })
-
-
-
-        // const symbol_idx = portfolio.findIndex(p => p.symbol === holding.symbol);
-        // const new_item = {
-        //   ...portfolio[symbol_idx],
-        //   ...{
-        //     open_contracts: holding.open_contracts - parseInt(data[holding.symbol].quantity),
-        //     expiration: data[holding.symbol].legs[0].expiration_date,
-        //     strike: parseFloat(data[holding.symbol].legs[0].strike_price),
-        //     chance: 0.88
-        //   }
-        // };
-        // setPortfolio(portfolio.slice(0, symbol_idx).concat([new_item], portfolio.slice(symbol_idx + 1)))
-
-
-
-
-
-        // console.log('portfolio', portfolio);
-        // setPortfolio(prev => {
-        //   console.log('prev', prev);
-        //   // return prev;
-        //   // console.log('new prev', prev.map(p => Object.assign(p, p.symbol === holding.symbol ? {
-        //   //   open_contracts: holding.open_contracts - parseInt(data[holding.symbol].quantity),
-        //   //   expiration: data[holding.symbol].legs[0].expiration_date,
-        //   //   strike: parseFloat(data[holding.symbol].legs[0].strike_price),
-        //   //   chance: 0.88
-        //   // } : {}
-        //   // )));
-        //   console.log('open', holding.open_contracts);
-        //   console.log('quant', parseInt(data[holding.symbol].quantity));
-        //   return prev;
-        //   // return prev.map(p => Object.assign(p, p.symbol === holding.symbol ? {
-        //   //   open_contracts: holding.open_contracts - parseInt(data[holding.symbol].quantity),
-        //   //   expiration: data[holding.symbol].legs[0].expiration_date,
-        //   //   strike: parseFloat(data[holding.symbol].legs[0].strike_price),
-        //   //   chance: 0.88
-        //   // } : {}
-        //   // ));
-        // });
-        // console.log('data', data);
+            }) : p
+        ))
       }
     } catch (e) {
       console.error(e);
@@ -897,7 +837,7 @@ const TradePage = () => {
       displayName: 'Action', render: (holding) =>
         <Button
           className={holding.open_contracts ? layoutStyles.start : subStyles.subscribe}
-          onClick={() => aFx(holding)}
+          onClick={() => sell(holding)}
           loading={tradeLoading === holding.symbol}
           disabled={Boolean(tradeLoading)}
         >
@@ -907,7 +847,6 @@ const TradePage = () => {
     // add chart for premium income per week
     // include dividend income on chart - area chart
   ]
-
 
   useEffect(() => {
     if (loggedIn) {
@@ -972,19 +911,12 @@ const TradePage = () => {
     },
   };
 
-
-
-
   // Goal:
-  // table w symbols
   // number of options (should be done), date (should be done), strike price (should be done), chance of profit (should be done), sell (magenta) and roll (cyan) buttons
   // execute (magenta) button executes strategy for all assets
   // graph of covered call income over time
-  // +$20 premium notification after each sell order
   // total + for the week, filter sum to include filled orders after start of day Mon
   // include dividend income on chart - area chart
-
-
 
   return (
     <>
