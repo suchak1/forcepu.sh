@@ -100,7 +100,6 @@ def get_trade():
             opt[f'chance_of_profit_{postfix}'])
     holdings = sorted([holding for _, holding in holdings.items()],
                       key=lambda holding: holding['symbol'])
-    # sort by expiration date instead
     body = [holding | {'key': idx} for idx, holding in enumerate(holdings)]
     status_code = 200
 
