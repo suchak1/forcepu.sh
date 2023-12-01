@@ -115,7 +115,8 @@ def post_trade(event):
     trade_type = req_body['type']
     symbols = req_body['symbols']
 
-    results = roll() if trade_type.upper() == 'ROLL' else sell(symbols)
+    results = roll_out(symbols) if trade_type.upper(
+    ) == 'ROLL' else sell(symbols)
     status_code = 200
 
     return {
@@ -313,11 +314,28 @@ def sell(symbols):
         "headers": {"Access-Control-Allow-Origin": "*"}
     }
 
-    # first_run = False
-    # return results as json
-    # print
+
+def buy(symbols):
+    # this is only buy to close
+    results = {}
+    opts = rh.options.get_open_option_positions()
+    symbols = set(symbols)
+    tradeable = {opt['chain_symbol']: {
+        'quantity': int(opt['quantity'])} for opt in opts if opt['chain_symbol'] in symbols and opt['type'] == 'short'}
+    # get
+    pass
 
 
-def roll():
+def roll_out(symbols):
+    results = {}
+    # need to buy and have wait and retry
+    pass
+
+
+def roll_in():
     # also implement rolling in as well as out
     pass
+
+# also need to add tests backend and frontend
+# also need to create scripts that run at noon each weekday for sell => then rolling in
+# and 2pm or 3pm each day testing if any open positions are expiring same day => then rolling out
