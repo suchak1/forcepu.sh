@@ -318,10 +318,19 @@ def sell(symbols):
 def buy(symbols):
     # this is only buy to close
     results = {}
-    opts = rh.options.get_open_option_positions()
+    # opts = rh.options.get_open_option_positions()
+    opts = rh.options.get_aggregate_open_positions()
     symbols = set(symbols)
-    tradeable = {opt['chain_symbol']: {
-        'quantity': int(opt['quantity'])} for opt in opts if opt['chain_symbol'] in symbols and opt['type'] == 'short'}
+    tradeable = {
+        opt['symbol']: {
+            'quantity': int(opt['quantity']),
+            'expiration': opt['legs'][0]['expiration_date'],
+            'strike': opt['legs'][0]['strike_price']
+        } for opt in opts if (
+            opt['symbol'] in symbols and
+            opt['strategy'] == 'short_call'
+        )
+    }
     # get
     pass
 
