@@ -331,6 +331,16 @@ class Trade:
             lookup, results = self.adjust_orders(orders, lookup, results)
         return results
 
+    def adjust_orders(orders, lookup, results):
+        for symbol in orders:
+            rh.orders.cancel_option_order(orders[symbol]['id'])
+            order = rh.orders.get_option_order_info(orders[symbol]['id'])
+            if order['state'] == 'filled':
+                results[symbol] = order
+            elif order['state'] == 'cancelled':
+                lookup, results = adjust_option(symbol, lookup, results)
+        return lookup, results
+
 # class Sell(Trade):
 #     def init_chain(self, symbols):
 
@@ -346,21 +356,25 @@ class Buy(Trade):
                 'expiration': opt['legs'][0]['expiration_date'],
                 'strike': float(opt['legs'][0]['strike_price']),
                 'curr': 0,
-                'contract': rh.options.get_option_market_data_by_id((
+                'id': (
                     re.search(pattern, opt['legs'][0]['option'], re.IGNORECASE)
                     or re.search(pattern, opt['strategy_code'], re.IGNORECASE)
-                )[0])[0] | {'min_ticks': rh.options.get}
+                )[0],
             } for opt in opts if (
                 opt['symbol'] in symbols and
                 opt['strategy'] == 'short_call'
             )
         }
-        return tradeable
-
-    # def get_price(self):
-    #     # opposite of sell get_price
-    #     # need market data api call beforehand?
-    #     pass
+        lookup = {
+            symbol:
+            info | {
+                'contract':
+                rh.options.get_option_market_data_by_id(info['id'])[0] | {
+                    'min_ticks':
+                    rh.options.get_option_instrument_data_by_id(info['id'])[
+                        'min_ticks']
+                }} for symbol, info in tradeable.items()}
+        return lookup
 
     def get_price(contract, offset):
         # THIS FX STILL NEEDS TO BE CONVERTED
@@ -369,13 +383,36 @@ class Buy(Trade):
         # get mid price to two decimal places
         price = round(mid_price, 2, 'DOWN')  # CONVERTED
         # option price increment/step (e.g. 0.01 per contract or 0.05)
-        # use instrument_data_by_id fx in init_chain to get this?
+        # use instrument_data_by_id fx in init_chain to get this? - DONE
         min_tick = float(contract['min_ticks']['below_tick'])
-        # round price up to tick
-        price = ceil(price / min_tick) * min_tick  # this should be floor?
+        # round price down to tick
+        # this should be floor? - DONE
+        price = floor(price / min_tick) * min_tick
         # lower price based on attempt
-        price -= min_tick * offset  # this should be plus?
+        price += min_tick * offset  # this should be plus? - DONE
         return price
+
+    def adjust_option(self, symbol, lookup, _):
+        option = lookup[symbol]
+        option['curr'] += 1
+        curr = option['curr']
+        contract = option['contract']
+        mid_price = get_mid_price(contract)
+        price = self.get_price(contract, curr)
+
+        if spread_is_high(mid_price, price):
+            print(
+                symbol,
+                f"""
+                Price spread is high.
+                Bid: {float(contract["bid_price"])}
+                Ask: {float(contract["ask_price"])}
+                Mid: {mid_price} Price: {price}
+                """
+            )
+
+        lookup[symbol] = option
+        return lookup, _
 
     def execute_orders(self, lookup, results):
         remaining = filter(lambda symbol: symbol not in results,
