@@ -1,11 +1,12 @@
 import os
+import re
 import json
 import boto3
 import pyotp
 from time import sleep
 from pathlib import Path
 from random import random
-from math import log, sqrt, ceil
+from math import log, sqrt, ceil, floor
 from statistics import NormalDist
 from collections import defaultdict
 import robin_stocks.robinhood as rh
@@ -137,9 +138,10 @@ def get_mid_price(opt):
     return (float(opt['ask_price']) + float(opt['bid_price'])) / 2
 
 
-def round_up(n, decimals=0):
+def round(n, decimals=0, dir='UP'):
+    fx = ceil if dir.upper() == 'UP' else floor
     multiplier = 10**decimals
-    return ceil(n * multiplier) / multiplier
+    return fx(n * multiplier) / multiplier
 
 
 def suggest_num_contracts():
@@ -181,7 +183,7 @@ def get_contracts(symbol, expiration, num=2):
 def get_price(contract, offset):
     mid_price = get_mid_price(contract)
     # get mid price to two decimal places
-    price = round_up(mid_price, 2)
+    price = round(mid_price, 2, 'UP')
     # option price increment/step (e.g. 0.01 per contract or 0.05)
     min_tick = float(contract['min_ticks']['below_tick'])
     # round price up to tick
@@ -315,24 +317,117 @@ def sell(symbols):
     }
 
 
+class Trade:
+    def execute(self, symbols):
+        results = {}
+        lookup = init_chain(symbols)
+
+        while set(lookup.keys()) != set(results.keys()):
+            orders = self.execute_orders(lookup, results)
+
+            # wait 5-10 sec
+            sleep(random() * 5 + 5)
+
+            lookup, results = self.adjust_orders(orders, lookup, results)
+        return results
+
+# class Sell(Trade):
+#     def init_chain(self, symbols):
+
+
+class Buy(Trade):
+    def init_chain(self, symbols):
+        opts = rh.options.get_aggregate_open_positions()
+        symbols = set(symbols)
+        pattern = r"[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}"
+        tradeable = {
+            opt['symbol']: {
+                'quantity': int(opt['quantity']),
+                'expiration': opt['legs'][0]['expiration_date'],
+                'strike': float(opt['legs'][0]['strike_price']),
+                'curr': 0,
+                'contract': rh.options.get_option_market_data_by_id((
+                    re.search(pattern, opt['legs'][0]['option'], re.IGNORECASE)
+                    or re.search(pattern, opt['strategy_code'], re.IGNORECASE)
+                )[0])[0] | {'min_ticks': rh.options.get}
+            } for opt in opts if (
+                opt['symbol'] in symbols and
+                opt['strategy'] == 'short_call'
+            )
+        }
+        return tradeable
+
+    # def get_price(self):
+    #     # opposite of sell get_price
+    #     # need market data api call beforehand?
+    #     pass
+
+    def get_price(contract, offset):
+        # THIS FX STILL NEEDS TO BE CONVERTED
+        # need to make sure contract has bid prices and ticks - DONE
+        mid_price = get_mid_price(contract)
+        # get mid price to two decimal places
+        price = round(mid_price, 2, 'DOWN')  # CONVERTED
+        # option price increment/step (e.g. 0.01 per contract or 0.05)
+        # use instrument_data_by_id fx in init_chain to get this?
+        min_tick = float(contract['min_ticks']['below_tick'])
+        # round price up to tick
+        price = ceil(price / min_tick) * min_tick  # this should be floor?
+        # lower price based on attempt
+        price -= min_tick * offset  # this should be plus?
+        return price
+
+    def execute_orders(self, lookup, results):
+        remaining = filter(lambda symbol: symbol not in results,
+                           list(lookup.keys()))
+        orders = {}
+        for symbol in remaining:
+            option = lookup[symbol]
+            quantity = option['quantity']
+            expiration = option['expiration']
+            strike = option['strike']
+            price = self.get_price(option['contract'], option['curr'])
+            order = rh.orders.order_buy_option_limit(
+                'close', 'debit', price, symbol,
+                quantity, expiration, strike, 'call'
+            )
+            print('Order:', json.dumps(order))
+            orders[symbol] = order
+        return orders
+
+
 def buy(symbols):
-    # this is only buy to close
-    results = {}
-    # opts = rh.options.get_open_option_positions()
-    opts = rh.options.get_aggregate_open_positions()
-    symbols = set(symbols)
-    tradeable = {
-        opt['symbol']: {
-            'quantity': int(opt['quantity']),
-            'expiration': opt['legs'][0]['expiration_date'],
-            'strike': opt['legs'][0]['strike_price']
-        } for opt in opts if (
-            opt['symbol'] in symbols and
-            opt['strategy'] == 'short_call'
-        )
+    trade = Buy()
+    results = trade.execute(symbols)
+    print(results)
+    return {
+        "statusCode": 200,
+        "body": json.dumps(results),
+        "headers": {"Access-Control-Allow-Origin": "*"}
     }
-    # get
-    pass
+
+# use this sell order execution to inspire execute_order override in Buy class
+
+
+def execute_buy_orders(lookup, results):
+    remaining = filter(lambda symbol: symbol not in results,
+                       list(lookup.keys()))
+    orders = {}
+    for symbol in remaining:
+        option = lookup[symbol]
+        curr = option['curr']
+        expiration = option['expirations'][curr[0]]
+        contract = option['contracts'][curr[0]][curr[1]]
+
+        strike = float(contract['strike_price'])
+        price = get_price(contract, curr[2])
+        quantity = option['quantity']
+
+        order = rh.orders.order_sell_option_limit(
+            'open', 'credit', price, symbol, quantity, expiration, strike, 'call')
+        print('Order:', json.dumps(order))
+        orders[symbol] = order
+    return orders
 
 
 def roll_out(symbols):
