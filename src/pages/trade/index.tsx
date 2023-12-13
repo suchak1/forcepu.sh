@@ -781,6 +781,8 @@ const TradePage = () => {
     try {
       const response = await fetch(url, { method: "POST", headers: { Authorization: jwtToken }, body: JSON.stringify({ type: holding.open_contracts ? 'ROLL' : 'SELL', symbols: [holding.symbol] }) });
       const data = await response.json();
+      console.log('data', typeof data, data);
+      console.log('data keys', Object.keys(data));
 
       if ('error' in data[holding.symbol]) {
         renderError();
