@@ -310,11 +310,7 @@ def sell(symbols):
 
         lookup, results = adjust_orders(orders, lookup, results)
     print(results)
-    return {
-        "statusCode": 200,
-        "body": json.dumps(results),
-        "headers": {"Access-Control-Allow-Origin": "*"}
-    }
+    return results
 
 
 class Trade:
