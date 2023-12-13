@@ -464,7 +464,6 @@ def execute_buy_orders(lookup, results):
 
 
 def roll_out(symbols):
-    results = {}
     # need to buy and have wait and retry
     pass
 
