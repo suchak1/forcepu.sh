@@ -172,11 +172,12 @@ def get_contracts(symbol, expiration, num=2):
     min_price = 0.05
     key = 'high_fill_rate_sell_price'
     opt_candidates = rh.options.find_options_by_specific_profitability(
-        symbol, expiration, None, 'call', 'chance_of_profit_short', 0.8, 1)
+        symbol, expiration, None, 'call', 'chance_of_profit_short', 0.85, 0.95)
     opt_candidates.sort(key=lambda opt: abs(
         float(opt['chance_of_profit_short']) - 0.88))
     contracts = [opt for opt in opt_candidates if (
-        float(opt[key]) if key in opt else get_mid_price(opt)) >= min_price]
+        float(opt[key]) if key in opt and opt[key] else get_mid_price(opt)
+    ) >= min_price]
     return contracts[0: num]
 
 
