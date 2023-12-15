@@ -319,7 +319,7 @@ def sell(symbols):
 class Trade:
     def execute(self, symbols):
         results = {}
-        lookup = init_chain(symbols)
+        lookup = self.init_chain(symbols)
 
         while set(lookup.keys()) != set(results.keys()):
             orders = self.execute_orders(lookup, results)
@@ -330,14 +330,14 @@ class Trade:
             lookup, results = self.adjust_orders(orders, lookup, results)
         return results
 
-    def adjust_orders(orders, lookup, results):
+    def adjust_orders(self, orders, lookup, results):
         for symbol in orders:
             rh.orders.cancel_option_order(orders[symbol]['id'])
             order = rh.orders.get_option_order_info(orders[symbol]['id'])
             if order['state'] == 'filled':
                 results[symbol] = order
             elif order['state'] == 'cancelled':
-                lookup, results = adjust_option(symbol, lookup, results)
+                lookup, results = self.adjust_option(symbol, lookup, results)
         return lookup, results
 
 # class Sell(Trade):
@@ -376,7 +376,7 @@ class Buy(Trade):
         print('lookup', lookup)
         return lookup
 
-    def get_price(contract, offset):
+    def get_price(self, contract, offset):
         # THIS FX STILL NEEDS TO BE CONVERTED
         # need to make sure contract has bid prices and ticks - DONE
         mid_price = get_mid_price(contract)
