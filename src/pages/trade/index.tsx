@@ -779,7 +779,7 @@ const TradePage = () => {
     const jwtToken = loggedIn?.signInUserSession?.idToken?.jwtToken;
     const url = `${getApiUrl({ localOverride: "dev" })}/trade`;
     try {
-      const response = await fetch(url, { method: "POST", headers: { Authorization: jwtToken }, body: JSON.stringify({ type: holding.open_contracts ? 'ROLL' : 'SELL', symbols: [holding.symbol] }) });
+      const response = await fetch(url, { method: "POST", headers: { Authorization: jwtToken }, body: JSON.stringify({ type: holding.open_contracts ? 'BUY' : 'SELL', symbols: [holding.symbol] }) });
       const data = await response.json();
       console.log('data', typeof data, data);
       console.log('data keys', Object.keys(data));
@@ -843,7 +843,7 @@ const TradePage = () => {
           loading={tradeLoading === holding.symbol}
           disabled={Boolean(tradeLoading)}
         >
-          {holding.open_contracts ? 'ROLL' : 'SELL'}
+          {holding.open_contracts ? 'BUY' : 'SELL'}
         </Button>
     })
     // add chart for premium income per week
