@@ -97,9 +97,10 @@ def get_trade():
         opt = rh.options.get_option_market_data_by_id(opt['id'])[0]
         postfix = 'short' if holdings[opt['symbol']
                                       ]['open_contracts'] < 0 else 'long'
-        print('opt', opt)
-        holdings[opt['symbol']]['chance'] = float(
-            opt[f'chance_of_profit_{postfix}'])
+        chance = opt[f'chance_of_profit_{postfix}']
+        if not chance:
+            print('opt', f"{opt['symbol']}: {opt}")
+        holdings[opt['symbol']]['chance'] = float(chance) if chance else chance
     holdings = sorted([holding for _, holding in holdings.items()],
                       key=lambda holding: holding['symbol'])
     body = [holding | {'key': idx} for idx, holding in enumerate(holdings)]
