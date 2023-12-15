@@ -97,6 +97,7 @@ def get_trade():
         opt = rh.options.get_option_market_data_by_id(opt['id'])[0]
         postfix = 'short' if holdings[opt['symbol']
                                       ]['open_contracts'] < 0 else 'long'
+        print('opt', opt)
         holdings[opt['symbol']]['chance'] = float(
             opt[f'chance_of_profit_{postfix}'])
     holdings = sorted([holding for _, holding in holdings.items()],
@@ -116,8 +117,8 @@ def post_trade(event):
     trade_type = req_body['type']
     symbols = req_body['symbols']
 
-    results = roll_out(symbols) if trade_type.upper(
-    ) == 'ROLL' else sell(symbols)
+    results = buy(symbols) if trade_type.upper(
+    ) == 'BUY' else sell(symbols)
     status_code = 200
 
     return {
