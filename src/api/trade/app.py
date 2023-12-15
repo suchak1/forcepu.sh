@@ -373,6 +373,7 @@ class Buy(Trade):
                     rh.options.get_option_instrument_data_by_id(info['id'])[
                         'min_ticks']
                 }} for symbol, info in tradeable.items()}
+        print('lookup', lookup)
         return lookup
 
     def get_price(contract, offset):
