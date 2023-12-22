@@ -384,7 +384,7 @@ class Buy(Trade):
         price = round(mid_price, 2, 'DOWN')  # CONVERTED
         # option price increment/step (e.g. 0.01 per contract or 0.05)
         # use instrument_data_by_id fx in init_chain to get this? - DONE
-        min_tick = float(contract['min_ticks']['below_tick'])
+        min_tick = float(contract['min_ticks']['above_tick'])
         # round price down to tick
         # this should be floor? - DONE
         price = floor(price / min_tick) * min_tick
@@ -437,11 +437,7 @@ def buy(symbols):
     trade = Buy()
     results = trade.execute(symbols)
     print(results)
-    return {
-        "statusCode": 200,
-        "body": json.dumps(results),
-        "headers": {"Access-Control-Allow-Origin": "*"}
-    }
+    return results
 
 # use this sell order execution to inspire execute_order override in Buy class
 
