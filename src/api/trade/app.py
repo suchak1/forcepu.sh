@@ -117,9 +117,8 @@ def post_trade(event):
     req_body = json.loads(event['body'])
     trade_type = req_body['type']
     symbols = req_body['symbols']
-
-    results = buy(symbols) if trade_type.upper(
-    ) == 'BUY' else sell(symbols)
+    trade = Buy() if trade_type.upper() == 'BUY' else Sell()
+    results = trade.execute(symbols)
     status_code = 200
 
     return {
@@ -183,19 +182,6 @@ def get_contracts(symbol, expiration, num=2):
     return contracts[0: num]
 
 
-def get_price(contract, offset):
-    mid_price = get_mid_price(contract)
-    # get mid price to two decimal places
-    price = round(mid_price, 2, 'UP')
-    # option price increment/step (e.g. 0.01 per contract or 0.05)
-    min_tick = float(contract['min_ticks']['below_tick'])
-    # round price up to tick
-    price = ceil(price / min_tick) * min_tick
-    # lower price based on attempt
-    price -= min_tick * offset
-    return price
-
-
 def spread_is_high(mid_price, price):
     abs((mid_price - price) / mid_price) > 0.2
 
@@ -205,46 +191,6 @@ def spread_is_high(mid_price, price):
 #         0]
 #     return curr_contract | new_contract
 
-
-def init_chain(symbols):
-    desired_contracts = suggest_num_contracts()
-    # only use symbols that have positions available
-    symbols = filter(lambda symbol: desired_contracts[symbol], symbols)
-    lookup = {symbol: {'quantity': desired_contracts[symbol], 'curr': [
-        0, 0, 0]} for symbol in symbols}
-
-    for symbol in lookup:
-        chain = rh.options.get_chains(symbol)
-        expirations = chain['expiration_dates']
-        expirations = get_expirations(expirations)
-        lookup[symbol]['expirations'] = expirations
-        # maybe turn these two lines into a fx called update_contracts and run before every trade attempt
-        contracts = [get_contracts(symbol, exp) for exp in expirations]
-        lookup[symbol]['contracts'] = contracts
-    return lookup
-
-
-def execute_orders(lookup, results):
-    remaining = filter(lambda symbol: symbol not in results,
-                       list(lookup.keys()))
-    orders = {}
-    for symbol in remaining:
-        option = lookup[symbol]
-        curr = option['curr']
-        expiration = option['expirations'][curr[0]]
-        contract = option['contracts'][curr[0]][curr[1]]
-
-        strike = float(contract['strike_price'])
-        price = get_price(contract, curr[2])
-        quantity = option['quantity']
-
-        order = rh.orders.order_sell_option_limit(
-            'open', 'credit', price, symbol, quantity, expiration, strike, 'call')
-        print('Order:', json.dumps(order))
-        orders[symbol] = order
-    return orders
-
-
 def update_contract(symbol, lookup):
     option = lookup[symbol]
     curr = option['curr']
@@ -253,67 +199,6 @@ def update_contract(symbol, lookup):
     new = rh.options.get_option_market_data_by_id(old['id'])[0]
     lookup[symbol]['contracts'][curr[0]][curr[1]] = old | new
     return lookup
-
-
-def adjust_option(symbol, lookup, results):
-    option = lookup[symbol]
-    curr = option['curr']
-    contracts = option['contracts']
-    contracts = update_contract(contracts, curr)
-    curr[2] += 1
-    contract = contracts[curr[0]][curr[1]]
-    mid_price = get_mid_price(contract)
-    price = get_price(contract, curr[2])
-
-    if spread_is_high(mid_price, price):
-        print(
-            symbol,
-            f"""
-            Price spread is high.
-            Bid: {float(contract["bid_price"])}
-            Ask: {float(contract["ask_price"])}
-            Mid: {mid_price} Price: {price}
-            """
-        )
-        curr[2] = 0
-        if curr[1] == len(contracts[curr[0]]) - 1:
-            curr[1] = 0
-            if curr[0] == len(option['expirations']) - 1:
-                results[symbol] = {'error': 'EXHAUSTED'}
-                # continue
-            else:
-                curr[0] += 1
-        else:
-            curr[1] += 1
-    lookup['contracts'] = contracts
-    lookup = update_contract(symbol, lookup)
-    return lookup, results
-
-
-def adjust_orders(orders, lookup, results):
-    for symbol in orders:
-        rh.orders.cancel_option_order(orders[symbol]['id'])
-        order = rh.orders.get_option_order_info(orders[symbol]['id'])
-        if order['state'] == 'filled':
-            results[symbol] = order
-        elif order['state'] == 'cancelled':
-            lookup, results = adjust_option(symbol, lookup, results)
-    return lookup, results
-
-
-def sell(symbols):
-    results = {}
-    lookup = init_chain(symbols)
-
-    while set(lookup.keys()) != set(results.keys()):
-        orders = execute_orders(lookup, results)
-
-        # wait 5-10 sec
-        sleep(random() * 5 + 5)
-
-        lookup, results = adjust_orders(orders, lookup, results)
-    print(results)
-    return results
 
 
 class Trade:
@@ -340,8 +225,90 @@ class Trade:
                 lookup, results = self.adjust_option(symbol, lookup, results)
         return lookup, results
 
-# class Sell(Trade):
-#     def init_chain(self, symbols):
+
+class Sell(Trade):
+    def init_chain(self, symbols):
+        desired_contracts = suggest_num_contracts()
+        # only use symbols that have positions available
+        symbols = filter(lambda symbol: desired_contracts[symbol], symbols)
+        lookup = {symbol: {'quantity': desired_contracts[symbol], 'curr': [
+            0, 0, 0]} for symbol in symbols}
+
+        for symbol in lookup:
+            chain = rh.options.get_chains(symbol)
+            expirations = chain['expiration_dates']
+            expirations = get_expirations(expirations)
+            lookup[symbol]['expirations'] = expirations
+            # maybe turn these two lines into a fx called update_contracts and run before every trade attempt
+            contracts = [get_contracts(symbol, exp) for exp in expirations]
+            lookup[symbol]['contracts'] = contracts
+        return lookup
+
+    def get_price(self, contract, offset):
+        mid_price = get_mid_price(contract)
+        # get mid price to two decimal places
+        price = round(mid_price, 2, 'UP')
+        # option price increment/step (e.g. 0.01 per contract or 0.05)
+        min_tick = float(contract['min_ticks']['below_tick'])
+        # round price up to tick
+        price = ceil(price / min_tick) * min_tick
+        # lower price based on attempt
+        price -= min_tick * offset
+        return price
+
+    def adjust_option(self, symbol, lookup, results):
+        option = lookup[symbol]
+        curr = option['curr']
+        contracts = option['contracts']
+        contracts = update_contract(contracts, curr)
+        curr[2] += 1
+        contract = contracts[curr[0]][curr[1]]
+        mid_price = get_mid_price(contract)
+        price = self.get_price(contract, curr[2])
+
+        if spread_is_high(mid_price, price):
+            print(
+                symbol,
+                f"""
+                Price spread is high.
+                Bid: {float(contract["bid_price"])}
+                Ask: {float(contract["ask_price"])}
+                Mid: {mid_price} Price: {price}
+                """
+            )
+            curr[2] = 0
+            if curr[1] == len(contracts[curr[0]]) - 1:
+                curr[1] = 0
+                if curr[0] == len(option['expirations']) - 1:
+                    results[symbol] = {'error': 'EXHAUSTED'}
+                    # continue
+                else:
+                    curr[0] += 1
+            else:
+                curr[1] += 1
+        lookup['contracts'] = contracts
+        lookup = update_contract(symbol, lookup)
+        return lookup, results
+
+    def execute_orders(self, lookup, results):
+        remaining = filter(lambda symbol: symbol not in results,
+                           list(lookup.keys()))
+        orders = {}
+        for symbol in remaining:
+            option = lookup[symbol]
+            curr = option['curr']
+            expiration = option['expirations'][curr[0]]
+            contract = option['contracts'][curr[0]][curr[1]]
+
+            strike = float(contract['strike_price'])
+            price = self.get_price(contract, curr[2])
+            quantity = option['quantity']
+
+            order = rh.orders.order_sell_option_limit(
+                'open', 'credit', price, symbol, quantity, expiration, strike, 'call')
+            print('Order:', json.dumps(order))
+            orders[symbol] = order
+        return orders
 
 
 class Buy(Trade):
@@ -431,36 +398,6 @@ class Buy(Trade):
             print('Order:', json.dumps(order))
             orders[symbol] = order
         return orders
-
-
-def buy(symbols):
-    trade = Buy()
-    results = trade.execute(symbols)
-    print(results)
-    return results
-
-# use this sell order execution to inspire execute_order override in Buy class
-
-
-def execute_buy_orders(lookup, results):
-    remaining = filter(lambda symbol: symbol not in results,
-                       list(lookup.keys()))
-    orders = {}
-    for symbol in remaining:
-        option = lookup[symbol]
-        curr = option['curr']
-        expiration = option['expirations'][curr[0]]
-        contract = option['contracts'][curr[0]][curr[1]]
-
-        strike = float(contract['strike_price'])
-        price = get_price(contract, curr[2])
-        quantity = option['quantity']
-
-        order = rh.orders.order_sell_option_limit(
-            'open', 'credit', price, symbol, quantity, expiration, strike, 'call')
-        print('Order:', json.dumps(order))
-        orders[symbol] = order
-    return orders
 
 
 def roll_out(symbols):
