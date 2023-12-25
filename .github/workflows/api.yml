@@ -90,6 +90,9 @@ jobs:
           RHUsername: ${{ secrets.RH_USERNAME }}
           RHPassword: ${{ secrets.CRYPT_PASS }}
           RH2FA: ${{ secrets.RH_2FA}}
+          RHUsername2: ${{ secrets.RH_USERNAME2 }}
+          RHPassword2: ${{ secrets.RH_PASSWORD2 }}
+          RH2FA2: ${{ secrets.RH_2FA2}}
           EmitSecret: ${{ fromJSON(format('["{0}","{1}"]', secrets.DEV_EMIT_SECRET, secrets.EMIT_SECRET))[github.ref_name == 'master'] }}
           FILE_PREFIX: ${{ fromJSON('["dev-",""]')[github.ref_name == 'master'] }}
         run: |
@@ -109,6 +112,9 @@ jobs:
           RHUsername=${RHUsername}
           RHPassword=${RHPassword}
           RH2FA=${RH2FA}
+          RHUsername2=${RHUsername2}
+          RHPassword2=${RHPassword2}
+          RH2FA2=${RH2FA2}
           EmitSecret=${EmitSecret}
           " >> src/api/${FILE_PREFIX}parameters.env
 

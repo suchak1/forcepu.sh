@@ -45,8 +45,9 @@ def handle_trade(event, _):
 
     if not (verified and claims['email'] == os.environ['RH_USERNAME']):
         return error(401, 'This account is not verified.')
-
-    login()
+    params = event["queryStringParameters"]
+    variant = params.get('variant') or False
+    login(variant)
     if event['httpMethod'].upper() == 'POST':
         response = post_trade(event)
     else:
