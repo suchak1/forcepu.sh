@@ -16,6 +16,7 @@ const TradePage = () => {
   const [tradeLoading, setTradeLoading] = useState();
   const [toggle, setToggle] = useState(false);
   const [variant, setVariant] = useState(0);
+  const [toggle2, setToggle2] = useState(true);
   const toggleLabels = { OPTIONS: "OPT", STOCKS: "STX" };
   const isLocal = getEnvironment() === "local";
   const mockData = [
@@ -870,15 +871,19 @@ const TradePage = () => {
       (async () => {
         setLoading(true);
         const jwtToken = loggedIn?.signInUserSession?.idToken?.jwtToken;
-        const url = `${getApiUrl({ localOverride: "dev" })}/trade?variant=${Boolean(variant)}`;
+        const variants = [0, 1];
         try {
-          const response = await fetch(url, { method: "GET", headers: { Authorization: jwtToken } });
-          if (response.ok) {
-            const data = await response.json();
-            setPortfolio([data, []]);
-          } else if (isLocal) {
-            setPortfolio([mockData, []]);
-          }
+          const promises = variants.map(async v => {
+            const url = `${getApiUrl({ localOverride: "dev" })}/trade?variant=${Boolean(v)}`;
+            const response = await fetch(url, { method: "GET", headers: { Authorization: jwtToken } });
+            if (response.ok) {
+              const data = await response.json();
+              return data;
+            } else if (isLocal) {
+              return mockData;
+            }
+          })
+          setPortfolio(await Promise.all(promises));
         } catch (e) {
           console.error(e);
         } finally {
@@ -934,11 +939,24 @@ const TradePage = () => {
   // graph of covered call income over time
   // total + for the week, filter sum to include filled orders after start of day Mon
   // include dividend income on chart - area chart
-
+  console.log('variant', variant);
+  console.log('toggle2', toggle2);
   return (
     <>
       <Title>Portfolio</Title>
-      <span style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+      <span style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+        <Toggle
+          val={!variant}
+          options={['DEFAULT', 'VARIANT']}
+          defaultValue={'DEFAULT'}
+          onChange={(val: string) => setVariant(Number(val === 'VARIANT'))}
+        />
+        {/* <Toggle
+          val={toggle2}
+          options={['1', '2']}
+          defaultValue={'1'}
+          onChange={(val: string) => setToggle2(!toggle2)}
+        /> */}
         <Toggle
           val={toggle}
           options={[toggleLabels.STOCKS, toggleLabels.OPTIONS]}
