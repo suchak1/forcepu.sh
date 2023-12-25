@@ -11,10 +11,11 @@ import subStyles from "@/pages/subscription/index.module.less";
 const TradePage = () => {
 
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
-  const [portfolio, setPortfolio] = useState([]);
+  const [portfolio, setPortfolio] = useState([[], []]);
   const [loading, setLoading] = useState(true);
   const [tradeLoading, setTradeLoading] = useState();
   const [toggle, setToggle] = useState(false);
+  const [variant, setVariant] = useState(0);
   const toggleLabels = { OPTIONS: "OPT", STOCKS: "STX" };
   const isLocal = getEnvironment() === "local";
   const mockData = [
@@ -803,18 +804,22 @@ const TradePage = () => {
           description: `Executed order for ${holding.symbol}!`,
         });
 
-        setPortfolio(prev => prev.map(p =>
-          p.symbol === holding.symbol ?
-            ({
-              ...p,
-              ...{
-                open_contracts: holding.open_contracts - parseInt(data[holding.symbol].quantity),
-                expiration: data[holding.symbol].legs[0].expiration_date,
-                strike: parseFloat(data[holding.symbol].legs[0].strike_price),
-                chance: 0.88
-              }
-            }) : p
-        ))
+        setPortfolio(prev => [
+          prev.slice(0, variant).length === 1 ? prev.slice(0, variant) : ...prev.slice(0, variant),
+          prev[variant].map(p =>
+            p.symbol === holding.symbol ?
+              ({
+                ...p,
+                ...{
+                  open_contracts: holding.open_contracts - parseInt(data[holding.symbol].quantity),
+                  expiration: data[holding.symbol].legs[0].expiration_date,
+                  strike: parseFloat(data[holding.symbol].legs[0].strike_price),
+                  chance: 0.88
+                }
+              }) : p
+          ),
+          prev.slice(variant + 1).length === 1 ? prev.slice(variant + 1) : ...prev.slice(variant + 1),
+        ])
       }
     } catch (e) {
       console.error(e);
@@ -870,9 +875,9 @@ const TradePage = () => {
           const response = await fetch(url, { method: "GET", headers: { Authorization: jwtToken } });
           if (response.ok) {
             const data = await response.json();
-            setPortfolio(data);
+            setPortfolio([data, []]);
           } else if (isLocal) {
-            setPortfolio(mockData);
+            setPortfolio([mockData, []]);
           }
         } catch (e) {
           console.error(e);
@@ -883,7 +888,7 @@ const TradePage = () => {
     }
   }, [loggedIn]);
 
-  const data = portfolio.map(holding => ({ type: holding['symbol'], value: Math.round(holding['percentage'] * 100) / 100 }))
+  const data = portfolio[variant].map(holding => ({ type: holding['symbol'], value: Math.round(holding['percentage'] * 100) / 100 }))
 
   const config = {
     appendPadding: 10,
@@ -941,7 +946,7 @@ const TradePage = () => {
           onChange={(val: string) => setToggle(val === toggleLabels.STOCKS)}
         />
       </span>
-      <Table loading={loading} dataSource={toggle ? portfolio : portfolio.filter(holding => parseFloat(holding?.quantity) >= 100)} columns={columns} />
+      <Table loading={loading} dataSource={toggle ? portfolio[variant] : portfolio[variant].filter(holding => parseFloat(holding?.quantity) >= 100)} columns={columns} />
       {toggle && <Pie {...config} />}
     </>
   );
