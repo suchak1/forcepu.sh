@@ -778,7 +778,7 @@ const TradePage = () => {
       description: `Failed to execute order for ${holding.symbol}.`,
     });
     const jwtToken = loggedIn?.signInUserSession?.idToken?.jwtToken;
-    const url = `${getApiUrl({ localOverride: "dev" })}/trade`;
+    const url = `${getApiUrl({ localOverride: "dev" })}/trade?variant=${Boolean(variant)}`;
     try {
       const response = await fetch(url, { method: "POST", headers: { Authorization: jwtToken }, body: JSON.stringify({ type: holding.open_contracts ? 'BUY' : 'SELL', symbols: [holding.symbol] }) });
       const data = await response.json();
@@ -805,7 +805,7 @@ const TradePage = () => {
         });
 
         setPortfolio(prev => [
-          prev.slice(0, variant).length === 1 ? prev.slice(0, variant) : ...prev.slice(0, variant),
+          ...(prev.slice(0, variant).length === 1 ? [prev.slice(0, variant)] : prev.slice(0, variant)),
           prev[variant].map(p =>
             p.symbol === holding.symbol ?
               ({
@@ -818,7 +818,7 @@ const TradePage = () => {
                 }
               }) : p
           ),
-          prev.slice(variant + 1).length === 1 ? prev.slice(variant + 1) : ...prev.slice(variant + 1),
+          ...(prev.slice(variant + 1).length === 1 ? [prev.slice(variant + 1)] : prev.slice(variant + 1))
         ])
       }
     } catch (e) {
@@ -870,7 +870,7 @@ const TradePage = () => {
       (async () => {
         setLoading(true);
         const jwtToken = loggedIn?.signInUserSession?.idToken?.jwtToken;
-        const url = `${getApiUrl({ localOverride: "dev" })}/trade`;
+        const url = `${getApiUrl({ localOverride: "dev" })}/trade?variant=${Boolean(variant)}`;
         try {
           const response = await fetch(url, { method: "GET", headers: { Authorization: jwtToken } });
           if (response.ok) {
