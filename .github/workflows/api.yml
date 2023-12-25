@@ -78,23 +78,23 @@ jobs:
           EmailUser: ${{ secrets.EMAIL_USER }}
           SignalEmail: ${{ secrets.SIGNAL_EMAIL }}
           EmailPass: ${{ secrets.EMAIL_PASS }}
-          StripePriceId: ${{ fromJSON(join(secrets.DEV_STRIPE_PRICE_ID, secrets.STRIPE_PRICE_ID))[github.ref_name == 'master'] }}
+          StripePriceId: ${{ join(secrets.DEV_STRIPE_PRICE_ID, secrets.STRIPE_PRICE_ID) }}
         run: |
           echo StripePriceId="${StripePriceId}"
 
-      - name: Build API
-        run: npm run build:api
+      # - name: Build API
+      #   run: npm run build:api
 
-      - name: Deploy API [prod]
-        run: npm run deploy:api
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        if: ${{ github.ref_name == 'master' }}
+      # - name: Deploy API [prod]
+      #   run: npm run deploy:api
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #   if: ${{ github.ref_name == 'master' }}
 
-      - name: Deploy API [dev]
-        run: npm run deploy-dev:api
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        if: ${{ github.ref_name != 'master' }}
+      # - name: Deploy API [dev]
+      #   run: npm run deploy-dev:api
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #   if: ${{ github.ref_name != 'master' }}
