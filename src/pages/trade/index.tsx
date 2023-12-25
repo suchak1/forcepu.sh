@@ -16,8 +16,8 @@ const TradePage = () => {
   const [tradeLoading, setTradeLoading] = useState();
   const [toggle, setToggle] = useState(false);
   const [variant, setVariant] = useState(0);
-  const [toggle2, setToggle2] = useState(true);
   const toggleLabels = { OPTIONS: "OPT", STOCKS: "STX" };
+  const variantLabels = { DEF: "DEFAULT", VAR: "VARIANT" };
   const isLocal = getEnvironment() === "local";
   const mockData = [
     {
@@ -939,24 +939,16 @@ const TradePage = () => {
   // graph of covered call income over time
   // total + for the week, filter sum to include filled orders after start of day Mon
   // include dividend income on chart - area chart
-  console.log('variant', variant);
-  console.log('toggle2', toggle2);
   return (
     <>
       <Title>Portfolio</Title>
       <span style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
         <Toggle
           val={!variant}
-          options={['DEFAULT', 'VARIANT']}
-          defaultValue={'DEFAULT'}
-          onChange={(val: string) => setVariant(Number(val === 'VARIANT'))}
+          options={[variantLabels.DEF, variantLabels.VAR]}
+          defaultValue={variantLabels.DEF}
+          onChange={(val: string) => setVariant(Number(val === variantLabels.VAR))}
         />
-        {/* <Toggle
-          val={toggle2}
-          options={['1', '2']}
-          defaultValue={'1'}
-          onChange={(val: string) => setToggle2(!toggle2)}
-        /> */}
         <Toggle
           val={toggle}
           options={[toggleLabels.STOCKS, toggleLabels.OPTIONS]}
