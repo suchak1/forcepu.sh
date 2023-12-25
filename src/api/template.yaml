@@ -52,6 +52,15 @@ Parameters:
   RH2FA:
     Type: "String"
     NoEcho: true
+  RHUsername2:
+    Type: "String"
+    NoEcho: true
+  RHPassword2:
+    Type: "String"
+    NoEcho: true
+  RH2FA2:
+    Type: "String"
+    NoEcho: true
 
 Globals:
   Function:
@@ -217,6 +226,9 @@ Resources:
           RH_USERNAME: !Ref RHUsername
           RH_PASSWORD: !Ref RHPassword
           RH_2FA: !Ref RH2FA
+          RH_USERNAME2: !Ref RHUsername2
+          RH_PASSWORD2: !Ref RHPassword2
+          RH_2FA2: !Ref RH2FA2
           HOME: /tmp
       Policies:
         - Statement:
@@ -225,7 +237,8 @@ Resources:
               Action:
                 - s3:GetObject
                 - s3:PutObject
-              Resource: !Sub "arn:aws:s3:::${S3Bucket}/data/robinhood.pickle"
+              # maybe should be *
+              Resource: !Sub "arn:aws:s3:::${S3Bucket}/data/robinhood?.pickle"
       PackageType: Zip
       CodeUri: trade
       Runtime: python3.9 

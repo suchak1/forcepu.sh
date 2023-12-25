@@ -55,8 +55,9 @@ def handle_trade(event, _):
     return response
 
 
-def login():
-    auth_filename = 'robinhood.pickle'
+def login(variant=False):
+    postfix = '2' if variant else ''
+    auth_filename = f'robinhood{postfix}.pickle'
     auth_path = os.path.join(os.path.expanduser("~"), '.tokens', auth_filename)
     key = f'data/{auth_filename}'
     try:
@@ -68,9 +69,9 @@ def login():
     except ClientError:
         print('Could not load auth file from S3.')
         os.remove(auth_path)
-    username = os.environ['RH_USERNAME']
-    password = os.environ['RH_PASSWORD']
-    mfa_code = pyotp.TOTP(os.environ['RH_2FA']).now()
+    username = os.environ[f'RH_USERNAME{postfix}']
+    password = os.environ[f'RH_PASSWORD{postfix}']
+    mfa_code = pyotp.TOTP(os.environ[f'RH_2FA{postfix}']).now()
     rh.login(username, password, mfa_code=mfa_code)
     if os.path.exists(auth_path):
         bucket.upload_file(auth_path, key)
