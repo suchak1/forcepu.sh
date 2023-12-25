@@ -13,7 +13,7 @@ import robin_stocks.robinhood as rh
 from datetime import datetime, timedelta
 from botocore.exceptions import ClientError
 from utils import \
-    verify_user, options, error
+    verify_user, options, error, str_to_bool
 
 s3 = boto3.resource('s3')
 
@@ -46,7 +46,7 @@ def handle_trade(event, _):
     if not (verified and claims['email'] == os.environ['RH_USERNAME']):
         return error(401, 'This account is not verified.')
     params = event["queryStringParameters"]
-    variant = bool(params and params.get('variant'))
+    variant = str_to_bool(str(params and params.get('variant')))
     login(variant)
     if event['httpMethod'].upper() == 'POST':
         response = post_trade(event)
