@@ -78,7 +78,8 @@ jobs:
           EmailUser: ${{ secrets.EMAIL_USER }}
           SignalEmail: ${{ secrets.SIGNAL_EMAIL }}
           EmailPass: ${{ secrets.EMAIL_PASS }}
-          StripePriceId: ${{ fromJSON(format('[{0},{1}]', secrets.DEV_STRIPE_PRICE_ID, secrets.STRIPE_PRICE_ID)) }}
+          StripePriceId: ${{ fromJSON(format('[{0},{1}]', 'a', 'b')) }}
+          # StripePriceId: ${{ fromJSON(format('[{0},{1}]', secrets.DEV_STRIPE_PRICE_ID, secrets.STRIPE_PRICE_ID)) }}
           # [github.ref_name == 'master'] }}
         run: |
           echo StripePriceId="${StripePriceId}"
