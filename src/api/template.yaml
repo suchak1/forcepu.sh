@@ -237,8 +237,7 @@ Resources:
               Action:
                 - s3:GetObject
                 - s3:PutObject
-              # maybe should be *
-              Resource: !Sub "arn:aws:s3:::${S3Bucket}/data/robinhood?.pickle"
+              Resource: !Sub "arn:aws:s3:::${S3Bucket}/data/robinhood*.pickle"
       PackageType: Zip
       CodeUri: trade
       Runtime: python3.9 
