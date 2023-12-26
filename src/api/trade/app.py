@@ -187,6 +187,8 @@ def get_contracts(symbol, expiration, num=2):
 
 
 def spread_is_high(mid_price, price):
+    print('mid_price', mid_price)
+    print('price', price)
     abs((mid_price - price) / mid_price) > 0.2
 
 
