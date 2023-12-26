@@ -932,6 +932,9 @@ const TradePage = () => {
       },
     },
   };
+  // Use webhooks to get around 30s timeout
+  // https://github.com/aws-samples/simple-websockets-chat-app
+
 
   // Goal:
   // number of options (should be done), date (should be done), strike price (should be done), chance of profit (should be done), sell (magenta) and roll (cyan) buttons
