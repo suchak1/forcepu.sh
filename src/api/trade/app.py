@@ -60,15 +60,11 @@ def handle_trade(event, _):
 
 def login(variant=False):
     postfix = '2' if variant else ''
-    # issue here where file is saved as robinhood2.pickle but needs to be put in robinhood.pickle
-    # and saved from robinhood.pickle to robinhood2.pickle
-    ext = 'pickle'
+    ext = '.pickle'
     filename = 'robinhood'
-    # key =
-    # auth_filename = f'robinhood{postfix}.pickle'
     auth_path = os.path.join(os.path.expanduser(
-        "~"), '.tokens', f'{filename}.{ext}')
-    key = f'data/{filename}{postfix}.{ext}'
+        "~"), '.tokens', f'{filename}{ext}')
+    key = f'data/{filename}{postfix}{ext}'
     try:
         Path(auth_path).parent.mkdir(parents=True, exist_ok=True)
         with open(auth_path, 'wb') as file:
@@ -197,7 +193,9 @@ def spread_is_high(mid_price, price):
     print('price', price)
     # issue here where spread_is_high is being reached with < 5 dollar diff
     # should be exception where <$5 diff is allowed
-    abs((mid_price - price) / mid_price) > 0.2
+    is_high = abs((mid_price - price) / mid_price) > 0.2
+    print('is_high', is_high)
+    return is_high
 
 
 # def update_contract(curr_contract):
