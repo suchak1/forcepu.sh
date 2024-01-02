@@ -229,11 +229,13 @@ class Trade:
 
     def adjust_orders(self, orders, lookup, results):
         for symbol in orders:
-            rh.orders.cancel_option_order(orders[symbol]['id'])
-            order = rh.orders.get_option_order_info(orders[symbol]['id'])
+            id = orders[symbol].get('id')
+            if id:
+                rh.orders.cancel_option_order(id)
+                order = rh.orders.get_option_order_info(id)
             if order['state'] == 'filled':
                 results[symbol] = order
-            elif order['state'] == 'cancelled':
+            elif not id or order['state'] == 'cancelled':
                 lookup, results = self.adjust_option(symbol, lookup, results)
         return lookup, results
 
