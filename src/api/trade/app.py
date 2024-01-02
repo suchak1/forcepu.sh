@@ -46,9 +46,7 @@ def handle_trade(event, _):
     if not (verified and claims['email'] == os.environ['RH_USERNAME']):
         return error(401, 'This account is not verified.')
     params = event["queryStringParameters"]
-    print('params', params)
     variant = str_to_bool(str(params and params.get('variant')))
-    print('variant', variant)
     login(variant)
     if event['httpMethod'].upper() == 'POST':
         response = post_trade(event)
@@ -104,8 +102,6 @@ def get_trade():
         postfix = 'short' if holdings[opt['symbol']
                                       ]['open_contracts'] < 0 else 'long'
         chance = opt[f'chance_of_profit_{postfix}']
-        if not chance:
-            print('opt', f"{opt['symbol']}: {opt}")
         holdings[opt['symbol']]['chance'] = float(chance) if chance else chance
     holdings = sorted([holding for _, holding in holdings.items()],
                       key=lambda holding: holding['symbol'])
@@ -171,7 +167,8 @@ def get_expirations(expirations, num=2):
     for idx, exp in enumerate(expirations):
         if exp not in week:
             break
-    exp_candidates = expirations[idx: idx + num]
+    offset = int(bool(idx))
+    exp_candidates = expirations[idx - offset: idx + num - offset]
     return exp_candidates
 
 
@@ -204,7 +201,6 @@ def spread_is_high(mid_price, price):
 #     return curr_contract | new_contract
 
 def update_contract(symbol, lookup):
-    print('lookup', lookup)
     option = lookup[symbol]
     curr = option['curr']
     contracts = option['contracts']
@@ -357,7 +353,6 @@ class Buy(Trade):
                     rh.options.get_option_instrument_data_by_id(info['id'])[
                         'min_ticks']
                 }} for symbol, info in tradeable.items()}
-        print('lookup', lookup)
         return lookup
 
     def get_price(self, contract, offset):
