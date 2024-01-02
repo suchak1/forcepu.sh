@@ -772,10 +772,7 @@ const TradePage = () => {
     }, sort)));
 
   const sell = async (holding) => {
-    setTradeLoading(prev => {
-      prev[variant ? variantLabels.DEF : variantLabels.VAR].add(holding.symbol)
-      return prev
-    });
+    setTradeLoading(prev => prev[variant ? variantLabels.DEF : variantLabels.VAR].add(holding.symbol) && prev);
     const renderError = () => notification.error({
       duration: 10,
       message: "Failure",
@@ -829,7 +826,7 @@ const TradePage = () => {
       console.error(e);
       renderError()
     }
-    setTradeLoading();
+    setTradeLoading(prev => prev[variant ? variantLabels.DEF : variantLabels.VAR].delete(holding.symbol) ? prev : prev);
   }
 
   const columns = toggle ? [
