@@ -204,6 +204,7 @@ def spread_is_high(mid_price, price):
 #     return curr_contract | new_contract
 
 def update_contract(symbol, lookup):
+    print('lookup', lookup)
     option = lookup[symbol]
     curr = option['curr']
     contracts = option['contracts']
@@ -271,10 +272,10 @@ class Sell(Trade):
         return price
 
     def adjust_option(self, symbol, lookup, results):
+        lookup = update_contract(symbol, lookup)
         option = lookup[symbol]
         curr = option['curr']
         contracts = option['contracts']
-        contracts = update_contract(contracts, curr)
         curr[2] += 1
         contract = contracts[curr[0]][curr[1]]
         mid_price = get_mid_price(contract)
@@ -300,8 +301,8 @@ class Sell(Trade):
                     curr[0] += 1
             else:
                 curr[1] += 1
-        lookup['contracts'] = contracts
-        lookup = update_contract(symbol, lookup)
+        # lookup['contracts'] = contracts
+        # lookup = update_contract(symbol, lookup)
         return lookup, results
 
     def execute_orders(self, lookup, results):
