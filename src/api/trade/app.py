@@ -253,6 +253,7 @@ class Sell(Trade):
             chain = rh.options.get_chains(symbol)
             expirations = chain['expiration_dates']
             expirations = get_expirations(expirations)
+            print('expirations', expirations)
             lookup[symbol]['expirations'] = expirations
             # maybe turn these two lines into a fx called update_contracts and run before every trade attempt
             contracts = [get_contracts(symbol, exp) for exp in expirations]
@@ -298,6 +299,7 @@ class Sell(Trade):
                     results[symbol] = {'error': 'EXHAUSTED'}
                     # continue
                 else:
+                    print('Seeking further expiration date...')
                     curr[0] += 1
             else:
                 curr[1] += 1

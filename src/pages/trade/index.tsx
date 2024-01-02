@@ -857,7 +857,7 @@ const TradePage = () => {
           className={holding.open_contracts ? layoutStyles.start : subStyles.subscribe}
           onClick={() => sell(holding)}
           loading={tradeLoading === holding.symbol}
-          disabled={Boolean(tradeLoading)}
+          disabled={tradeLoading === holding.symbol}
         >
           {holding.open_contracts ? 'BUY' : 'SELL'}
         </Button>
