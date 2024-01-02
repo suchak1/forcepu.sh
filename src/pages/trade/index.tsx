@@ -13,11 +13,11 @@ const TradePage = () => {
   const { user: loggedIn } = useAuthenticator((context) => [context.user]);
   const [portfolio, setPortfolio] = useState([[], []]);
   const [loading, setLoading] = useState(true);
-  const [tradeLoading, setTradeLoading] = useState();
+  const variantLabels = { DEF: "DEFAULT", VAR: "VARIANT" };
+  const [tradeLoading, setTradeLoading] = useState({ [variantLabels.DEF]: new Set(), [variantLabels.VAR]: new Set() });
   const [toggle, setToggle] = useState(false);
   const [variant, setVariant] = useState(0);
   const toggleLabels = { OPTIONS: "OPT", STOCKS: "STX" };
-  const variantLabels = { DEF: "DEFAULT", VAR: "VARIANT" };
   const isLocal = getEnvironment() === "local";
   const mockData = [
     {
@@ -772,7 +772,10 @@ const TradePage = () => {
     }, sort)));
 
   const sell = async (holding) => {
-    setTradeLoading(holding.symbol);
+    setTradeLoading(prev => {
+      prev[variant ? variantLabels.DEF : variantLabels.VAR].add(holding.symbol)
+      return prev
+    });
     const renderError = () => notification.error({
       duration: 10,
       message: "Failure",
@@ -856,8 +859,8 @@ const TradePage = () => {
         <Button
           className={holding.open_contracts ? layoutStyles.start : subStyles.subscribe}
           onClick={() => sell(holding)}
-          loading={tradeLoading === holding.symbol}
-          disabled={tradeLoading === holding.symbol}
+          loading={tradeLoading[variant ? variantLabels.DEF : variantLabels.VAR].has(holding.symbol)}
+          disabled={tradeLoading[variant ? variantLabels.DEF : variantLabels.VAR].has(holding.symbol)}
         >
           {holding.open_contracts ? 'BUY' : 'SELL'}
         </Button>
