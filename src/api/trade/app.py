@@ -233,7 +233,7 @@ class Trade:
             if id:
                 rh.orders.cancel_option_order(id)
                 order = rh.orders.get_option_order_info(id)
-            if order['state'] == 'filled':
+            if id and order['state'] == 'filled':
                 results[symbol] = order
             elif not id or order['state'] == 'cancelled':
                 lookup, results = self.adjust_option(symbol, lookup, results)
