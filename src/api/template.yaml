@@ -72,6 +72,12 @@ Conditions:
     !Equals [!Ref Stage, prod]
 
 Resources:
+  WebSocketApi:
+      Type: AWS::ApiGatewayV2::Api
+      Properties:
+        Name: WebSocketApi
+        ProtocolType: WEBSOCKET
+        RouteSelectionExpression: "$request.body.action"
   ApiGatewayApi:
     Type: AWS::Serverless::Api
     Properties:
