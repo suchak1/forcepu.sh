@@ -78,6 +78,20 @@ Resources:
         Name: WebSocketApi
         ProtocolType: WEBSOCKET
         RouteSelectionExpression: "$request.body.action"
+  WebSocketAuth:
+    Type: AWS::ApiGatewayV2::Authorizer
+    Properties:
+      Name: WebSocketAuth
+      ApiId: !Ref WebSocketApi
+      AuthorizerType: JWT
+      # JWR
+      # AuthorizerUri:
+      #   Fn::Sub:
+      #     arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaRequestAuthFunction.Arn}/invocations
+      IdentitySource:
+        - "$request.header.Authorization"
+  # Could use this instead inside websocket sendMessage fx
+  # https://github.com/awslabs/aws-jwt-verify
   ApiGatewayApi:
     Type: AWS::Serverless::Api
     Properties:
