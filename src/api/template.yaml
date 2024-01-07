@@ -19,6 +19,9 @@ Parameters:
   UserPoolArn:
     Type: "String"
     NoEcho: true
+  UserPoolId:
+    Type: "String"
+    NoEcho: true
   StripeSecretKey:
     Type: "String"
     NoEcho: true
@@ -84,10 +87,10 @@ Resources:
       Name: WebSocketAuth
       ApiId: !Ref WebSocketApi
       AuthorizerType: JWT
-      # JWR
-      # AuthorizerUri:
-      #   Fn::Sub:
-      #     arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaRequestAuthFunction.Arn}/invocations
+      JwtConfiguration:
+        Audience: 
+          - audience
+        Issuer: !Sub "https://cognito-idp.${AWS::Region}.amazonaws.com/${UserPoolId}"
       IdentitySource:
         - "$request.header.Authorization"
   # Could use this instead inside websocket sendMessage fx

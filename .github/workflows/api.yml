@@ -87,6 +87,7 @@ jobs:
           CertArn: ${{ fromJSON(format('["{0}","{1}"]', secrets.DEV_CERT_ARN, secrets.CERT_ARN))[github.ref_name == 'master'] }}
           HostedZoneId: ${{ secrets.HOSTED_ZONE_ID }}
           UserPoolArn: ${{ fromJSON(format('["{0}","{1}"]', secrets.DEV_USER_POOL_ARN, secrets.USER_POOL_ARN))[github.ref_name == 'master'] }}
+          UserPoolId: ${{ fromJSON(format('["{0}","{1}"]', secrets.DEV_USER_POOL_ID, secrets.USER_POOL_ID))[github.ref_name == 'master'] }}
           Salt: ${{ secrets.SALT }}
           RHUsername: ${{ secrets.RH_USERNAME }}
           RHPassword: ${{ secrets.CRYPT_PASS }}
@@ -108,6 +109,7 @@ jobs:
           Stage=${Stage}
           CertArn=${CertArn}
           HostedZoneId=${HostedZoneId}
+          UserPoolId=${UserPoolId}
           UserPoolArn=${UserPoolArn}
           Salt=${Salt}
           RHUsername=${RHUsername}
