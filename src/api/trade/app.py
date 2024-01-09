@@ -56,6 +56,15 @@ def handle_trade(event, _):
     return response
 
 
+def handle_ws(event, _):
+    print(event)
+    return {
+        "statusCode": 200,
+        "body": 'OK',
+        "headers": {"Access-Control-Allow-Origin": "*"}
+    }
+
+
 def login(variant=False):
     postfix = '2' if variant else ''
     ext = '.pickle'

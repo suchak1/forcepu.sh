@@ -130,10 +130,34 @@ Resources:
   WebSocketFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: sendmessage/
-      Handler: app.handler
-      MemorySize: 256
-      Runtime: nodejs14.x
+      MemorySize: 10240 # 10GB
+      Timeout: 900 # 15 min
+      Environment:
+        Variables:
+          S3_BUCKET: !Ref S3Bucket
+          RH_USERNAME: !Ref RHUsername
+          RH_PASSWORD: !Ref RHPassword
+          RH_2FA: !Ref RH2FA
+          RH_USERNAME2: !Ref RHUsername2
+          RH_PASSWORD2: !Ref RHPassword2
+          RH_2FA2: !Ref RH2FA2
+          HOME: /tmp
+      Policies:
+        - Statement:
+            - Sid: S3ReadWritePolicy
+              Effect: Allow
+              Action:
+                - s3:GetObject
+                - s3:PutObject
+              Resource: !Sub "arn:aws:s3:::${S3Bucket}/data/robinhood*.pickle"
+      PackageType: Zip
+      CodeUri: trade
+      Runtime: python3.9 
+      Handler: app.handle_ws
+      Layers:
+      - !Ref SharedLayer
+      # MemorySize: 256
+      # Runtime: nodejs14.x
       # Environment:
       #   Variables:
       #     TABLE_NAME: !Ref TableName
@@ -154,18 +178,18 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Ref WebSocketFunction
       Principal: apigateway.amazonaws.com
-  WebSocketFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: index.handler
-      Timeout: 30
-      Runtime: nodejs8.10
-      CodeUri: ./
-      # Policies:
-      #   - AWSLambdaFullAccess
-      #   - CloudWatchLogsFullAccess
-      #   - AmazonAPIGatewayInvokeFullAccess
-      #   - AmazonAPIGatewayAdministrator
+  # WebSocketFunction:
+  #   Type: AWS::Serverless::Function
+  #   Properties:
+  #     Handler: index.handler
+  #     Timeout: 30
+  #     Runtime: nodejs8.10
+  #     CodeUri: ./
+  #     # Policies:
+  #     #   - AWSLambdaFullAccess
+  #     #   - CloudWatchLogsFullAccess
+  #     #   - AmazonAPIGatewayInvokeFullAccess
+  #     #   - AmazonAPIGatewayAdministrator
   ApiGatewayApi:
     Type: AWS::Serverless::Api
     Properties:
