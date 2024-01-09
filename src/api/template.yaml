@@ -81,20 +81,91 @@ Resources:
         Name: WebSocketApi
         ProtocolType: WEBSOCKET
         RouteSelectionExpression: "$request.body.action"
-  WebSocketAuth:
-    Type: AWS::ApiGatewayV2::Authorizer
-    Properties:
-      Name: WebSocketAuth
-      ApiId: !Ref WebSocketApi
-      AuthorizerType: JWT
-      JwtConfiguration:
-        Audience: 
-          - audience
-        Issuer: !Sub "https://cognito-idp.${AWS::Region}.amazonaws.com/${UserPoolId}"
-      IdentitySource:
-        - "$request.header.Authorization"
+  # WebSocketAuth:
+  #   Type: AWS::ApiGatewayV2::Authorizer
+  #   Properties:
+  #     Name: WebSocketAuth
+  #     ApiId: !Ref WebSocketApi
+  #     AuthorizerType: JWT
+  #     JwtConfiguration:
+  #       Audience: 
+  #         - audience
+  #       Issuer: !Sub "https://cognito-idp.${AWS::Region}.amazonaws.com/${UserPoolId}"
+  #     IdentitySource:
+  #       - "$request.header.Authorization"
   # Could use this instead inside websocket sendMessage fx
   # https://github.com/awslabs/aws-jwt-verify
+
+  WebSocketRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref WebSocketApi
+      RouteKey: ws
+      AuthorizationType: NONE
+      OperationName: WebSocketRoute
+      Target: !Join
+        - '/'
+        - - 'integrations'
+          - !Ref WebSocketIntegration
+  WebSocketIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref WebSocketApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: 
+        Fn::Sub:
+            arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${WebSocketFunction.Arn}/invocations
+  WebSocketDeployment:
+    Type: AWS::ApiGatewayV2::Deployment
+    DependsOn:
+    - WebSocketRoute
+    Properties:
+      ApiId: !Ref WebSocketApi
+  WebSocketStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      StageName: !Ref Stage
+      DeploymentId: !Ref WebSocketDeployment
+      ApiId: !Ref WebSocketApi
+  WebSocketFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: sendmessage/
+      Handler: app.handler
+      MemorySize: 256
+      Runtime: nodejs14.x
+      # Environment:
+      #   Variables:
+      #     TABLE_NAME: !Ref TableName
+      # Policies:
+      # - DynamoDBCrudPolicy:
+      #     TableName: !Ref TableName
+      # - Statement:
+      #   - Effect: Allow
+      #     Action:
+      #     - 'execute-api:ManageConnections'
+      #     Resource:
+      #     - !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${SimpleChatWebSocket}/*'
+  WebSocketPermission:
+    Type: AWS::Lambda::Permission
+    DependsOn:
+      - WebSocketApi
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref WebSocketFunction
+      Principal: apigateway.amazonaws.com
+  WebSocketFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Timeout: 30
+      Runtime: nodejs8.10
+      CodeUri: ./
+      # Policies:
+      #   - AWSLambdaFullAccess
+      #   - CloudWatchLogsFullAccess
+      #   - AmazonAPIGatewayInvokeFullAccess
+      #   - AmazonAPIGatewayAdministrator
   ApiGatewayApi:
     Type: AWS::Serverless::Api
     Properties:
