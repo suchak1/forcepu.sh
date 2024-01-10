@@ -131,7 +131,7 @@ Resources:
     Type: AWS::ApiGatewayV2::DomainName
     Properties:
       DomainName: !Join [ "", ["api2.", !If [IsProd, "", "dev."], forcepu.sh ] ]
-      DomainNameConfiguration:
+      DomainNameConfigurations:
         - CertificateArn: !Ref CertArn
           EndpointType: REGIONAL
   WebSocketMapping:
