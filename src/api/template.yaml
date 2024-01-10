@@ -78,7 +78,7 @@ Resources:
   WebSocketApi:
       Type: AWS::ApiGatewayV2::Api
       Properties:
-        Name: !Sub "websocket-api-${Stage}"
+        Name: !Sub "ws-api-${Stage}"
         ProtocolType: WEBSOCKET
         RouteSelectionExpression: "$request.body.action"
   # WebSocketAuth:
@@ -100,7 +100,7 @@ Resources:
     Type: AWS::ApiGatewayV2::Route
     Properties:
       ApiId: !Ref WebSocketApi
-      RouteKey: ws
+      RouteKey: $default
       AuthorizationType: NONE
       OperationName: WebSocketRoute
       Target: !Join
