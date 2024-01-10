@@ -127,18 +127,18 @@ Resources:
       StageName: !Ref Stage
       DeploymentId: !Ref WebSocketDeployment
       ApiId: !Ref WebSocketApi
-  # WebSocketDomain:
-  #   Type: AWS::ApiGatewayV2::DomainName
-  #   Properties:
-  #     DomainName: !Join [ "", ["api.", !If [IsProd, "", "dev."], forcepu.sh ] ]
-  #     DomainNameConfiguration:
-  #       - CertificateArn: !Ref CertArn
-  #         EndpointType: EDGE
+  WebSocketDomain:
+    Type: AWS::ApiGatewayV2::DomainName
+    Properties:
+      DomainName: !Join [ "", ["api2.", !If [IsProd, "", "dev."], forcepu.sh ] ]
+      DomainNameConfiguration:
+        - CertificateArn: !Ref CertArn
+          EndpointType: REGIONAL
   WebSocketMapping:
     Type: AWS::ApiGatewayV2::ApiMapping
     Properties:
       ApiId: !Ref WebSocketApi
-      DomainName: !Join [ "", ["api.", !If [IsProd, "", "dev."], forcepu.sh ] ]
+      DomainName: !Join [ "", ["api2.", !If [IsProd, "", "dev."], forcepu.sh ] ]
       Stage: !Ref Stage
   WebSocketFunction:
     Type: AWS::Serverless::Function
