@@ -136,10 +136,12 @@ Resources:
           EndpointType: REGIONAL
   WebSocketMapping:
     Type: AWS::ApiGatewayV2::ApiMapping
+    DependsOn:
+    - WebSocketDomain
     Properties:
       ApiId: !Ref WebSocketApi
       DomainName: !Join [ "", ["api2.", !If [IsProd, "", "dev."], forcepu.sh ] ]
-      Stage: !Ref Stage
+      Stage: !Ref WebSocketStage
   WebSocketFunction:
     Type: AWS::Serverless::Function
     Properties:
