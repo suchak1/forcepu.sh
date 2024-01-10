@@ -78,7 +78,7 @@ Resources:
   WebSocketApi:
       Type: AWS::ApiGatewayV2::Api
       Properties:
-        Name: WebSocketApi
+        Name: !Sub "websocket-api-${Stage}"
         ProtocolType: WEBSOCKET
         RouteSelectionExpression: "$request.body.action"
   # WebSocketAuth:
@@ -127,6 +127,19 @@ Resources:
       StageName: !Ref Stage
       DeploymentId: !Ref WebSocketDeployment
       ApiId: !Ref WebSocketApi
+  # WebSocketDomain:
+  #   Type: AWS::ApiGatewayV2::DomainName
+  #   Properties:
+  #     DomainName: !Join [ "", ["api.", !If [IsProd, "", "dev."], forcepu.sh ] ]
+  #     DomainNameConfiguration:
+  #       - CertificateArn: !Ref CertArn
+  #         EndpointType: EDGE
+  WebSocketMapping:
+    Type: AWS::ApiGatewayV2::ApiMapping
+    Properties:
+      ApiId: !Ref WebSocketApi
+      DomainName: !Join [ "", ["api.", !If [IsProd, "", "dev."], forcepu.sh ] ]
+      Stage: !Ref Stage
   WebSocketFunction:
     Type: AWS::Serverless::Function
     Properties:
