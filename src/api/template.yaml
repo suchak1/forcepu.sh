@@ -127,6 +127,12 @@ Resources:
       StageName: !Ref Stage
       DeploymentId: !Ref WebSocketDeployment
       ApiId: !Ref WebSocketApi
+  WebSocketRouteResponse:
+    Type: 'AWS::ApiGatewayV2::RouteResponse'
+    Properties:
+      RouteId: !Ref WebSocketRoute
+      ApiId: !Ref WebSocketApi
+      RouteResponseKey: $default
   WebSocketDomain:
     Type: AWS::ApiGatewayV2::DomainName
     Properties:
