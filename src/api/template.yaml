@@ -127,8 +127,9 @@ Resources:
       StageName: !Ref Stage
       DeploymentId: !Ref WebSocketDeployment
       ApiId: !Ref WebSocketApi
+      AutoDeploy: true
   WebSocketRouteResponse:
-    Type: 'AWS::ApiGatewayV2::RouteResponse'
+    Type: AWS::ApiGatewayV2::RouteResponse
     Properties:
       RouteId: !Ref WebSocketRoute
       ApiId: !Ref WebSocketApi
