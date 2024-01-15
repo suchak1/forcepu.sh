@@ -183,10 +183,11 @@ Resources:
                 - s3:PutObject
               Resource: !Sub "arn:aws:s3:::${S3Bucket}/data/robinhood*.pickle"
         - Statement:
-            - Sid: InvokeWebSocket
+            - Sid: ConnectWebSocket
               Effect: Allow
               Action:
                 - execute-api:Invoke
+                - execute-api:ManageConnections
               # Resource: !Sub "arn:aws:execute-api:::${S3Bucket}/data/robinhood*.pickle"
               Resource: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${WebSocketApi}/*'
       PackageType: Zip
