@@ -141,6 +141,15 @@ Resources:
       DomainNameConfigurations:
         - CertificateArn: !Ref CertArn
           EndpointType: REGIONAL
+  WebSocketRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      Type: A
+      Name: !Join [ "", ["api2.", !If [IsProd, "", "dev."], forcepu.sh ] ]
+      AliasTarget:
+        DNSName: !GetAtt WebSocketDomain.RegionalDomainName
+        # EvaluateTargetHealth: Boolean
+        HostedZoneId: !GetAtt WebSocketDomain.RegionalHostedZoneId
   WebSocketMapping:
     Type: AWS::ApiGatewayV2::ApiMapping
     DependsOn:
