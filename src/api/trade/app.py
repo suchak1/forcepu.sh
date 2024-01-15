@@ -67,9 +67,12 @@ def handle_ws(event, _):
     # /{stage}'
     print(callback)
     client = boto3.client('apigatewaymanagementapi', endpoint_url=callback)
+    i = 0
     while True:
-        client.post_to_connection(Data=b'alive', ConnectionId=connection)
+        data = f'alive_{i}_{connection}'.encode()
+        client.post_to_connection(Data=data, ConnectionId=connection)
         sleep(15)
+        i += 1
 
     print(event)
     return {
