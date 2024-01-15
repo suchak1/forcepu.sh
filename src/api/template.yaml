@@ -182,6 +182,13 @@ Resources:
                 - s3:GetObject
                 - s3:PutObject
               Resource: !Sub "arn:aws:s3:::${S3Bucket}/data/robinhood*.pickle"
+        - Statement:
+            - Sid: InvokeWebSocket
+              Effect: Allow
+              Action:
+                - execute-api:Invoke
+              # Resource: !Sub "arn:aws:execute-api:::${S3Bucket}/data/robinhood*.pickle"
+              Resource: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${WebSocketApi}/*'
       PackageType: Zip
       CodeUri: trade
       Runtime: python3.9 
