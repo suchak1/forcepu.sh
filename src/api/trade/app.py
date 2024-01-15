@@ -64,6 +64,7 @@ def handle_ws(event, _):
     verified = verify_token(event)
 
     if not (verified and verified['email'] == os.environ['RH_USERNAME']):
+        print('websocket auth failure')
         return error(401, 'This account is not verified.')
 
     print('verified', verified)
