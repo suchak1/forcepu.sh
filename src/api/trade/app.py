@@ -63,7 +63,8 @@ def handle_ws(event, _):
     stage = context['stage']
     print(stage)
     connection = context['connectionId']
-    callback = f'https://{domain}/{stage}'
+    callback = f'https://{domain}'
+    # /{stage}'
     print(callback)
     client = boto3.client('apigatewaymanagementapi', endpoint_url=callback)
     while True:
