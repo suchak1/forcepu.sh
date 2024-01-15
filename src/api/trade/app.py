@@ -3,19 +3,27 @@ import re
 import json
 import boto3
 import pyotp
+import requests
 from time import sleep
 from pathlib import Path
+# from jose import jwk, jwt
 from random import random
 from math import log, sqrt, ceil, floor
 from statistics import NormalDist
 from collections import defaultdict
 import robin_stocks.robinhood as rh
+# from jose.utils import base64url_decode
 from datetime import datetime, timedelta
 from botocore.exceptions import ClientError
 from utils import \
     verify_user, options, error, str_to_bool
+from ws_utils import verify_token
 
 s3 = boto3.resource('s3')
+# region = os.env.get('REGION')
+# userpool_id = os.env.get('USER_POOL_ID')
+# keys_url = f'https://cognito-idp.{region}.amazonaws.com/{userpool_id}/.well-known/jwks.json'
+# keys = requests.get(keys_url).json()['keys']
 
 
 def calc_d1(stock_price, strike_price, implied_vol, rho, div_yield, time):
@@ -40,10 +48,9 @@ def handle_trade(event, _):
     if event['httpMethod'].upper() == 'OPTIONS':
         return options()
 
-    claims = event['requestContext']['authorizer']['claims']
-    verified = verify_user(claims)
+    verified = verify_user(event)
 
-    if not (verified and claims['email'] == os.environ['RH_USERNAME']):
+    if not (verified and verified['email'] == os.environ['RH_USERNAME']):
         return error(401, 'This account is not verified.')
     params = event["queryStringParameters"]
     variant = str_to_bool(str(params and params.get('variant')))
@@ -57,16 +64,12 @@ def handle_trade(event, _):
 
 
 def handle_ws(event, _):
-    # add auth mw using idToken querystr and aws jwt python lib
+    verified = verify_token(event)
     context = event['requestContext']
     domain = context['domainName']
-    print(domain)
-    stage = context['stage']
-    print(stage)
     connection = context['connectionId']
     callback = f'https://{domain}'
-    # /{stage}'
-    print(callback)
+
     client = boto3.client('apigatewaymanagementapi', endpoint_url=callback)
     i = 0
     while i < 3:

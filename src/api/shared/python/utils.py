@@ -1,6 +1,8 @@
 import os
 import json
 from datetime import datetime, timezone
+from jose import jwk, jwt
+from jose.utils import base64url_decode
 
 RES_HEADERS = {"Access-Control-Allow-Origin": "*"}
 
@@ -65,7 +67,11 @@ def options():
     }
 
 
-def verify_user(claims):
+def verify_user(event):
+    claims = (
+        event['requestContext']['authorizer']['claims']
+        if 'requestContext' in event else event
+    )
     # email_verified value comes back as str, so explicitly casting as str
     # in case it comes back as bool in the future
     verified = str_to_bool(str(claims['email_verified']))
@@ -81,4 +87,4 @@ def verify_user(claims):
             if 'providerName' in identities:
                 if identities['providerName'] in providers:
                     verified = True
-    return verified
+    return verified and claims

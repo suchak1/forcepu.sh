@@ -903,13 +903,14 @@ const TradePage = () => {
     readyState,
     getWebSocket,
   } = useWebSocket(socketUrl, {
-    // queryParams: { jwtToken: loggedIn?.signInUserSession?.idToken?.jwtToken },
+    queryParams: { token: loggedIn?.signInUserSession?.idToken?.jwtToken },
     onOpen: () => console.log('opened'),
     onClose: () => console.log('closed'),
     // //Will attempt to reconnect on all close events, such as server shutting down
     // shouldReconnect: (closeEvent) => false,
   });
   useEffect(() => {
+    // fires twice
     sendMessage('hi')
   }, [])
 
