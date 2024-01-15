@@ -249,3 +249,5 @@ export const Toggle = styled(Segmented)`
     border-bottom-color: ${(props: { var: string, val: boolean }) => (props.var === 'home' ? (props.val ? toggleGray : "#F7931A") : 'unset')};
   }
 `;
+
+const isEmpty = (obj: Object) => !(obj && Object.keys(obj).length)

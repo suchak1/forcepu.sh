@@ -46,6 +46,7 @@
     "react-plotly.js": "^2.6.0",
     "react-router-dom": "^6.6.1",
     "react-syntax-highlighter": "^15.5.0",
+    "react-use-websocket": "^4.5.0",
     "styled-components": "^5.3.6",
     "swagger-ui-react": "^4.12.0"
   },

@@ -5,6 +5,7 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 const { Title } = Typography;
 import { getApiUrl, Toggle, getEnvironment } from "@/utils";
 import { Pie } from '@ant-design/charts';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
 import layoutStyles from "@/layouts/index.module.less";
 import subStyles from "@/pages/subscription/index.module.less";
 
@@ -884,6 +885,20 @@ const TradePage = () => {
             }
           })
           setPortfolio(await Promise.all(promises));
+          const socketUrl = 'wss://api2.dev.forcepu.sh'
+          const {
+            sendMessage,
+            sendJsonMessage,
+            lastMessage,
+            lastJsonMessage,
+            readyState,
+            getWebSocket,
+          } = useWebSocket(socketUrl, {
+            onOpen: () => console.log('opened'),
+            onClose: () => console.log('closed'),
+            // //Will attempt to reconnect on all close events, such as server shutting down
+            // shouldReconnect: (closeEvent) => false,
+          });
         } catch (e) {
           console.error(e);
         } finally {

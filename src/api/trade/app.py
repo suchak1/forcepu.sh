@@ -57,6 +57,7 @@ def handle_trade(event, _):
 
 
 def handle_ws(event, _):
+    # add auth mw using idToken querystr and aws jwt python lib
     context = event['requestContext']
     domain = context['domainName']
     print(domain)
@@ -68,11 +69,14 @@ def handle_ws(event, _):
     print(callback)
     client = boto3.client('apigatewaymanagementapi', endpoint_url=callback)
     i = 0
-    while True:
-        data = f'alive_{i}_{connection}'.encode()
+    while i < 3:
+        # data = f'alive_{i}_{connection}'.encode()
+        data = json.dumps({i: i}).encode()
         client.post_to_connection(Data=data, ConnectionId=connection)
         sleep(15)
         i += 1
+    client.delete_connection(ConnectionId=connection)
+    client.close()
 
     print(event)
     return {
