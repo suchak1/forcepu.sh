@@ -3,16 +3,13 @@ import re
 import json
 import boto3
 import pyotp
-# import requests
 from time import sleep
 from pathlib import Path
-# from jose import jwk, jwt
 from random import random
 from math import log, sqrt, ceil, floor
 from statistics import NormalDist
 from collections import defaultdict
 import robin_stocks.robinhood as rh
-# from jose.utils import base64url_decode
 from datetime import datetime, timedelta
 from botocore.exceptions import ClientError
 from utils import \
