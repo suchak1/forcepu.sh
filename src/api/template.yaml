@@ -150,6 +150,7 @@ Resources:
         DNSName: !GetAtt WebSocketDomain.RegionalDomainName
         # EvaluateTargetHealth: Boolean
         HostedZoneId: !GetAtt WebSocketDomain.RegionalHostedZoneId
+      HostedZoneId: !Ref HostedZoneId
   WebSocketMapping:
     Type: AWS::ApiGatewayV2::ApiMapping
     DependsOn:
