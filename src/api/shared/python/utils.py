@@ -1,8 +1,8 @@
 import os
 import json
 from datetime import datetime, timezone
-from jose import jwk, jwt
-from jose.utils import base64url_decode
+# from jose import jwk, jwt
+# from jose.utils import base64url_decode
 
 RES_HEADERS = {"Access-Control-Allow-Origin": "*"}
 

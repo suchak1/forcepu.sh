@@ -3,7 +3,7 @@ import re
 import json
 import boto3
 import pyotp
-import requests
+# import requests
 from time import sleep
 from pathlib import Path
 # from jose import jwk, jwt
