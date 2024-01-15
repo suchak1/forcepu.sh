@@ -5,8 +5,9 @@ from jose import jwk, jwt
 from jose.utils import base64url_decode
 
 region = os.env.get('REGION')
-userpool_id = os.env.get('USER_POOL_ID')
-keys_url = f'https://cognito-idp.{region}.amazonaws.com/{userpool_id}/.well-known/jwks.json'
+user_pool_id = os.env.get('USER_POOL_ID')
+web_client_id = os.env.get('WEB_CLIENT_ID')
+keys_url = f'https://cognito-idp.{region}.amazonaws.com/{user_pool_id}/.well-known/jwks.json'
 keys = requests.get(keys_url).json()['keys']
 
 
@@ -44,7 +45,7 @@ def verify_token(event):
         print('Token is expired')
         return False
     # and the Audience  (use claims['client_id'] if verifying an access token)
-    if claims['aud'] != app_client_id:
+    if claims['aud'] != web_client_id:
         print('Token was not issued for this audience')
         return False
     # now we can use the claims

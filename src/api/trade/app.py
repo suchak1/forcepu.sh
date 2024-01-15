@@ -65,6 +65,11 @@ def handle_trade(event, _):
 
 def handle_ws(event, _):
     verified = verify_token(event)
+
+    if not (verified and verified['email'] == os.environ['RH_USERNAME']):
+        return error(401, 'This account is not verified.')
+
+    print('verified', verified)
     context = event['requestContext']
     domain = context['domainName']
     connection = context['connectionId']

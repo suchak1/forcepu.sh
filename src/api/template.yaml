@@ -22,6 +22,9 @@ Parameters:
   UserPoolId:
     Type: "String"
     NoEcho: true
+  WebClientId:
+    Type: "String"
+    NoEcho: true
   StripeSecretKey:
     Type: "String"
     NoEcho: true
@@ -176,6 +179,7 @@ Resources:
           HOME: /tmp
           REGION: !Ref AWS::Region
           USER_POOL_ID: !Ref UserPoolId
+          WEB_CLIENT_ID: !Ref WebClientId
       Policies:
         - Statement:
             - Sid: S3ReadWritePolicy
