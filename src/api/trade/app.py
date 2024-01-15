@@ -57,6 +57,19 @@ def handle_trade(event, _):
 
 
 def handle_ws(event, _):
+    context = event['requestContext']
+    domain = context['domainName']
+    print(domain)
+    stage = context['stage']
+    print(stage)
+    connection = context['connectionId']
+    callback = f'https://{domain}/{stage}'
+    print(callback)
+    client = boto3.client('apigatewaymanagementapi', endpoint_url=callback)
+    while True:
+        client.post_to_connection(b'alive', connection)
+        sleep(15)
+
     print(event)
     return {
         "statusCode": 200,
