@@ -885,20 +885,6 @@ const TradePage = () => {
             }
           })
           setPortfolio(await Promise.all(promises));
-          const socketUrl = 'wss://api2.dev.forcepu.sh'
-          const {
-            sendMessage,
-            sendJsonMessage,
-            lastMessage,
-            lastJsonMessage,
-            readyState,
-            getWebSocket,
-          } = useWebSocket(socketUrl, {
-            onOpen: () => console.log('opened'),
-            onClose: () => console.log('closed'),
-            // //Will attempt to reconnect on all close events, such as server shutting down
-            // shouldReconnect: (closeEvent) => false,
-          });
         } catch (e) {
           console.error(e);
         } finally {
@@ -907,6 +893,36 @@ const TradePage = () => {
       })();
     }
   }, [loggedIn]);
+
+  const socketUrl = 'wss://api2.dev.forcepu.sh'
+  const {
+    sendMessage,
+    sendJsonMessage,
+    lastMessage,
+    lastJsonMessage,
+    readyState,
+    getWebSocket,
+  } = useWebSocket(socketUrl, {
+    // queryParams: { jwtToken: loggedIn?.signInUserSession?.idToken?.jwtToken },
+    onOpen: () => console.log('opened'),
+    onClose: () => console.log('closed'),
+    // //Will attempt to reconnect on all close events, such as server shutting down
+    // shouldReconnect: (closeEvent) => false,
+  });
+  useEffect(() => {
+    sendMessage('hi')
+  }, [])
+
+  useEffect(() => {
+    if (lastJsonMessage) {
+      console.log('lastJsonMessage', lastJsonMessage)
+    }
+  }, [lastJsonMessage])
+  useEffect(() => {
+    if (lastMessage) {
+      console.log('lastMessage', lastMessage)
+    }
+  }, [lastMessage])
 
   const data = portfolio[variant].map(holding => ({ type: holding['symbol'], value: Math.round(holding['percentage'] * 100) / 100 }))
 

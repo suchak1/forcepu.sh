@@ -71,7 +71,7 @@ def handle_ws(event, _):
     i = 0
     while i < 3:
         # data = f'alive_{i}_{connection}'.encode()
-        data = json.dumps({i: i}).encode()
+        data = json.dumps({'i': i, 'conn': connection}).encode()
         client.post_to_connection(Data=data, ConnectionId=connection)
         sleep(15)
         i += 1
