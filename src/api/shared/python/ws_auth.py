@@ -4,9 +4,9 @@ from time import time
 from jose import jwk, jwt
 from jose.utils import base64url_decode
 
-region = os.env.get('REGION')
-user_pool_id = os.env.get('USER_POOL_ID')
-web_client_id = os.env.get('WEB_CLIENT_ID')
+region = os.environ.get('REGION')
+user_pool_id = os.environ.get('USER_POOL_ID')
+web_client_id = os.environ.get('WEB_CLIENT_ID')
 keys_url = f'https://cognito-idp.{region}.amazonaws.com/{user_pool_id}/.well-known/jwks.json'
 keys = requests.get(keys_url).json()['keys']
 
