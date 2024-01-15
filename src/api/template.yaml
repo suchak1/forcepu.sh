@@ -209,14 +209,14 @@ Resources:
       #     - 'execute-api:ManageConnections'
       #     Resource:
       #     - !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${SimpleChatWebSocket}/*'
-  # WebSocketPermission:
-  #   Type: AWS::Lambda::Permission
-  #   DependsOn:
-  #     - WebSocketApi
-  #   Properties:
-  #     Action: lambda:InvokeFunction
-  #     FunctionName: !Ref WebSocketFunction
-  #     Principal: apigateway.amazonaws.com
+  WebSocketPermission:
+    Type: AWS::Lambda::Permission
+    DependsOn:
+      - WebSocketApi
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref WebSocketFunction
+      Principal: apigateway.amazonaws.com
   # WebSocketFunction:
   #   Type: AWS::Serverless::Function
   #   Properties:
