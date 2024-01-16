@@ -310,9 +310,15 @@ class Sell(Trade):
         curr = option['curr']
         contracts = option['contracts']
         if not contracts[curr[0]]:
-            curr[0] += 1
-            if curr[0] >= len(lookup[symbol]['expirations']):
+            # curr[0] += 1
+            # curr[1] = 0
+            # curr[2] = 0
+            if curr[0] == len(option['expirations']) - 1:
                 results[symbol] = {'error': 'EXHAUSTED'}
+            else:
+                lookup[symbol]['curr'] = [curr[0] + 1, 0, 0]
+            # if curr[0] >= len(lookup[symbol]['expirations']):
+            #     results[symbol] = {'error': 'EXHAUSTED'}
             # lookup = update_contract(symbol, lookup)
             # return lookup, results
         else:
@@ -336,7 +342,6 @@ class Sell(Trade):
                     curr[1] = 0
                     if curr[0] == len(option['expirations']) - 1:
                         results[symbol] = {'error': 'EXHAUSTED'}
-                        # continue
                     else:
                         print('Seeking further expiration date...')
                         curr[0] += 1
