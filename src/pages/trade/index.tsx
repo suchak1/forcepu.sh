@@ -779,6 +779,10 @@ const TradePage = () => {
 
   useEffect(() => {
     if (!isEmpty(message)) {
+      if (message?.message) {
+        console.error(message.message);
+        return;
+      }
       Object.keys(message).forEach(symbol => {
         if ('error' in message[symbol]) {
           notification.error({
@@ -852,7 +856,7 @@ const TradePage = () => {
     const token = loggedIn?.signInUserSession?.idToken?.jwtToken;
     // const url = `${getApiUrl({ localOverride: "dev" })}/trade?variant=${Boolean(variant)}`;
     try {
-      sendMessage({ token, type: holding.open_contracts ? 'BUY' : 'SELL', symbols: [holding.symbol] });
+      sendMessage({ token, type: holding.open_contracts ? 'BUY' : 'SELL', symbols: [holding.symbol], variant });
       // const response = await fetch(url, { method: "POST", headers: { Authorization: jwtToken }, body: JSON.stringify({ type: holding.open_contracts ? 'BUY' : 'SELL', symbols: [holding.symbol] }) });
       // const data = await response.json();
       // console.log('data', typeof data, data);
