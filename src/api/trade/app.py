@@ -313,34 +313,35 @@ class Sell(Trade):
             curr[0] += 1
             if curr[0] >= len(lookup[symbol]['expirations']):
                 results[symbol] = {'error': 'EXHAUSTED'}
-            lookup = update_contract(symbol, lookup)
-            return lookup, results
-        curr[2] += 1
-        contract = contracts[curr[0]][curr[1]]
-        mid_price = get_mid_price(contract)
-        price = self.get_price(contract, curr[2])
+            # lookup = update_contract(symbol, lookup)
+            # return lookup, results
+        else:
+            curr[2] += 1
+            contract = contracts[curr[0]][curr[1]]
+            mid_price = get_mid_price(contract)
+            price = self.get_price(contract, curr[2])
 
-        if spread_is_high(mid_price, price):
-            print(
-                symbol,
-                f"""
-                Price spread is high.
-                Bid: {float(contract["bid_price"])}
-                Ask: {float(contract["ask_price"])}
-                Mid: {mid_price} Price: {price}
-                """
-            )
-            curr[2] = 0
-            if curr[1] == len(contracts[curr[0]]) - 1:
-                curr[1] = 0
-                if curr[0] == len(option['expirations']) - 1:
-                    results[symbol] = {'error': 'EXHAUSTED'}
-                    # continue
+            if spread_is_high(mid_price, price):
+                print(
+                    symbol,
+                    f"""
+                    Price spread is high.
+                    Bid: {float(contract["bid_price"])}
+                    Ask: {float(contract["ask_price"])}
+                    Mid: {mid_price} Price: {price}
+                    """
+                )
+                curr[2] = 0
+                if curr[1] == len(contracts[curr[0]]) - 1:
+                    curr[1] = 0
+                    if curr[0] == len(option['expirations']) - 1:
+                        results[symbol] = {'error': 'EXHAUSTED'}
+                        # continue
+                    else:
+                        print('Seeking further expiration date...')
+                        curr[0] += 1
                 else:
-                    print('Seeking further expiration date...')
-                    curr[0] += 1
-            else:
-                curr[1] += 1
+                    curr[1] += 1
         # lookup['contracts'] = contracts
         lookup = update_contract(symbol, lookup)
         return lookup, results
