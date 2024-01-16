@@ -348,6 +348,7 @@ class Sell(Trade):
             option = lookup[symbol]
             curr = option['curr']
             expiration = option['expirations'][curr[0]]
+            print('symbol', symbol, 'option', option)
             contract = option['contracts'][curr[0]][curr[1]]
 
             strike = float(contract['strike_price'])
