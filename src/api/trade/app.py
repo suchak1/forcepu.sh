@@ -253,7 +253,7 @@ class Trade:
         lookup = self.init_chain(symbols)
 
         while set(lookup.keys()) != set(results.keys()):
-            orders = self.execute_orders(lookup, results)
+            lookup, orders = self.execute_orders(lookup, results)
 
             # wait 5-10 sec
             sleep(random() * 5 + 5)
@@ -310,6 +310,11 @@ class Sell(Trade):
         option = lookup[symbol]
         curr = option['curr']
         contracts = option['contracts']
+        if not contracts[curr[0]]:
+            curr[0] += 1
+            if curr[0] >= len(lookup[symbol]['expirations']):
+                results[symbol] = {'error': 'EXHAUSTED'}
+            return lookup, results
         curr[2] += 1
         contract = contracts[curr[0]][curr[1]]
         mid_price = get_mid_price(contract)
@@ -350,19 +355,20 @@ class Sell(Trade):
             expiration = option['expirations'][curr[0]]
             print('symbol', symbol, 'option', option)
             contract_candidates = option['contracts'][curr[0]]
-            if not contract_candidates:
-                continue
-            contract = contract_candidates[curr[1]]
+            if contract_candidates:
+                contract = contract_candidates[curr[1]]
 
-            strike = float(contract['strike_price'])
-            price = self.get_price(contract, curr[2])
-            quantity = option['quantity']
+                strike = float(contract['strike_price'])
+                price = self.get_price(contract, curr[2])
+                quantity = option['quantity']
 
-            order = rh.orders.order_sell_option_limit(
-                'open', 'credit', price, symbol, quantity, expiration, strike, 'call')
-            print('Order:', json.dumps(order))
-            orders[symbol] = order
-        return orders
+                order = rh.orders.order_sell_option_limit(
+                    'open', 'credit', price, symbol, quantity, expiration, strike, 'call')
+                print('Order:', json.dumps(order))
+                orders[symbol] = order
+            else:
+                orders[symbol] = {'state': 'cancelled'}
+        return lookup, orders
 
 
 class Buy(Trade):
@@ -450,7 +456,7 @@ class Buy(Trade):
             )
             print('Order:', json.dumps(order))
             orders[symbol] = order
-        return orders
+        return lookup, orders
 
 
 def roll_out(symbols):
