@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 from botocore.exceptions import ClientError
 from utils import \
     verify_user, options, error, str_to_bool
-from ws_utils import verify_token
+from auth import verify_token
 
 s3 = boto3.resource('s3')
 # region = os.env.get('REGION')
