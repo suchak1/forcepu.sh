@@ -394,6 +394,9 @@ Resources:
           RH_PASSWORD2: !Ref RHPassword2
           RH_2FA2: !Ref RH2FA2
           HOME: /tmp
+          REGION: !Ref AWS::Region
+          USER_POOL_ID: !Ref UserPoolId
+          WEB_CLIENT_ID: !Ref WebClientId
       Policies:
         - Statement:
             - Sid: S3ReadWritePolicy
