@@ -19,7 +19,7 @@ const TradePage = () => {
   const [toggle, setToggle] = useState(false);
   const [variant, setVariant] = useState(0);
   const toggleLabels = { OPTIONS: "OPT", STOCKS: "STX" };
-  const [message, setMessage] = useState({});
+  // const [message, setMessage] = useState({});
   const isLocal = getEnvironment() === "local";
   const mockData = [
     {
@@ -772,7 +772,10 @@ const TradePage = () => {
     }, sort && Object.assign({
       sorter: { compare: (a: { [x: string]: any; }, b: { [x: string]: any; }) => a[dataName] - b[dataName] }
     }, sort)));
-  console.log(portfolio);
+  // can add route cache=random to end to force new connections?
+  // and set share=false
+  const socketUrl = 'wss://api2.dev.forcepu.sh';
+  const { sendJsonMessage: sendMessage, lastJsonMessage: message } = useWebSocket(socketUrl);
 
   useEffect(() => {
     if (!isEmpty(message)) {
@@ -849,12 +852,7 @@ const TradePage = () => {
     const token = loggedIn?.signInUserSession?.idToken?.jwtToken;
     // const url = `${getApiUrl({ localOverride: "dev" })}/trade?variant=${Boolean(variant)}`;
     try {
-      // can add route cache=random to end to force new connections?
-      // and set share=false
-      const socketUrl = 'wss://api2.dev.forcepu.sh';
-      const { sendJsonMessage, lastJsonMessage } = useWebSocket(socketUrl);
-      sendJsonMessage({ token });
-      setMessage(lastJsonMessage);
+      sendMessage({ token });
       // const response = await fetch(url, { method: "POST", headers: { Authorization: jwtToken }, body: JSON.stringify({ type: holding.open_contracts ? 'BUY' : 'SELL', symbols: [holding.symbol] }) });
       // const data = await response.json();
       // console.log('data', typeof data, data);
