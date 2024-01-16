@@ -252,7 +252,7 @@ class Trade:
         lookup = self.init_chain(symbols)
 
         while set(lookup.keys()) != set(results.keys()):
-            lookup, orders = self.execute_orders(lookup, results)
+            orders = self.execute_orders(lookup, results)
 
             # wait 5-10 sec
             sleep(random() * 5 + 5)
@@ -305,22 +305,14 @@ class Sell(Trade):
         return price
 
     def adjust_option(self, symbol, lookup, results):
-        # lookup = update_contract(symbol, lookup)
         option = lookup[symbol]
         curr = option['curr']
         contracts = option['contracts']
         if not contracts[curr[0]]:
-            # curr[0] += 1
-            # curr[1] = 0
-            # curr[2] = 0
             if curr[0] == len(option['expirations']) - 1:
                 results[symbol] = {'error': 'EXHAUSTED'}
             else:
                 lookup[symbol]['curr'] = [curr[0] + 1, 0, 0]
-            # if curr[0] >= len(lookup[symbol]['expirations']):
-            #     results[symbol] = {'error': 'EXHAUSTED'}
-            # lookup = update_contract(symbol, lookup)
-            # return lookup, results
         else:
             curr[2] += 1
             contract = contracts[curr[0]][curr[1]]
@@ -347,7 +339,6 @@ class Sell(Trade):
                         curr[0] += 1
                 else:
                     curr[1] += 1
-        # lookup['contracts'] = contracts
         lookup = update_contract(symbol, lookup)
         return lookup, results
 
@@ -359,7 +350,6 @@ class Sell(Trade):
             option = lookup[symbol]
             curr = option['curr']
             expiration = option['expirations'][curr[0]]
-            print('symbol', symbol, 'option', option)
             contract_candidates = option['contracts'][curr[0]]
             if contract_candidates:
                 contract = contract_candidates[curr[1]]
@@ -374,7 +364,7 @@ class Sell(Trade):
                 orders[symbol] = order
             else:
                 orders[symbol] = {'state': 'cancelled'}
-        return lookup, orders
+        return orders
 
 
 class Buy(Trade):
@@ -462,7 +452,7 @@ class Buy(Trade):
             )
             print('Order:', json.dumps(order))
             orders[symbol] = order
-        return lookup, orders
+        return orders
 
 
 def roll_out(symbols):
