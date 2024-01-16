@@ -313,6 +313,7 @@ class Sell(Trade):
             curr[0] += 1
             if curr[0] >= len(lookup[symbol]['expirations']):
                 results[symbol] = {'error': 'EXHAUSTED'}
+            lookup = update_contract(symbol, lookup)
             return lookup, results
         curr[2] += 1
         contract = contracts[curr[0]][curr[1]]
