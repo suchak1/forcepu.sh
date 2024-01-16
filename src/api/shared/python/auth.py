@@ -1,4 +1,5 @@
 import os
+import json
 import requests
 from time import time
 from jose import jwk, jwt
@@ -12,7 +13,7 @@ keys = requests.get(keys_url).json()['keys']
 
 
 def verify_token(event):
-    token = event['queryStringParameters']['token']
+    token = json.loads(event['body'])['token']
     # get the kid from the headers prior to verification
     headers = jwt.get_unverified_headers(token)
     kid = headers['kid']

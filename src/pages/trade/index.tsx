@@ -903,7 +903,7 @@ const TradePage = () => {
     // readyState,
     // getWebSocket,
   } = useWebSocket(socketUrl, {
-    queryParams: { token: loggedIn?.signInUserSession?.idToken?.jwtToken },
+    // queryParams: { token: loggedIn?.signInUserSession?.idToken?.jwtToken },
     onOpen: () => console.log('opened'),
     onClose: () => console.log('closed'),
     // //Will attempt to reconnect on all close events, such as server shutting down
@@ -915,7 +915,7 @@ const TradePage = () => {
   useEffect(() => {
     if (loggedIn) {
       // fires twice
-      sendJsonMessage({ hi: 1 })
+      sendJsonMessage({ token: loggedIn?.signInUserSession?.idToken?.jwtToken })
     }
   }, [loggedIn])
 
