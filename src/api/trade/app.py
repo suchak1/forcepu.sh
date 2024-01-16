@@ -61,6 +61,7 @@ def handle_trade(event, _):
 
 
 def handle_ws(event, _):
+    print('event', event)
     verified = verify_token(event)
 
     if not (verified and verified['email'] == os.environ['RH_USERNAME']):

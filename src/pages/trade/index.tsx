@@ -893,37 +893,37 @@ const TradePage = () => {
       })();
     }
   }, [loggedIn]);
-
-  const socketUrl = 'wss://api2.dev.forcepu.sh'
+  // let sendJsonMessage: Function = () => { }, lastJsonMessage: Object;
+  const socketUrl = 'wss://api2.dev.forcepu.sh';
+  // if (loggedIn) {
+  //   (
   const {
-    sendMessage,
     sendJsonMessage,
-    lastMessage,
     lastJsonMessage,
-    readyState,
-    getWebSocket,
+    // readyState,
+    // getWebSocket,
   } = useWebSocket(socketUrl, {
     queryParams: { token: loggedIn?.signInUserSession?.idToken?.jwtToken },
     onOpen: () => console.log('opened'),
     onClose: () => console.log('closed'),
     // //Will attempt to reconnect on all close events, such as server shutting down
     // shouldReconnect: (closeEvent) => false,
-  });
+  }
+  )
+  // );
+  // }
   useEffect(() => {
-    // fires twice
-    sendMessage('hi')
-  }, [])
+    if (loggedIn) {
+      // fires twice
+      sendJsonMessage({ hi: 1 })
+    }
+  }, [loggedIn])
 
   useEffect(() => {
     if (lastJsonMessage) {
       console.log('lastJsonMessage', lastJsonMessage)
     }
-  }, [lastJsonMessage])
-  useEffect(() => {
-    if (lastMessage) {
-      console.log('lastMessage', lastMessage)
-    }
-  }, [lastMessage])
+  }, [lastJsonMessage]);
 
   const data = portfolio[variant].map(holding => ({ type: holding['symbol'], value: Math.round(holding['percentage'] * 100) / 100 }))
 
