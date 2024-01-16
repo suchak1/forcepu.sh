@@ -852,7 +852,7 @@ const TradePage = () => {
     const token = loggedIn?.signInUserSession?.idToken?.jwtToken;
     // const url = `${getApiUrl({ localOverride: "dev" })}/trade?variant=${Boolean(variant)}`;
     try {
-      sendMessage({ token });
+      sendMessage({ token, type: holding.open_contracts ? 'BUY' : 'SELL', symbols: [holding.symbol] });
       // const response = await fetch(url, { method: "POST", headers: { Authorization: jwtToken }, body: JSON.stringify({ type: holding.open_contracts ? 'BUY' : 'SELL', symbols: [holding.symbol] }) });
       // const data = await response.json();
       // console.log('data', typeof data, data);

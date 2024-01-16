@@ -52,40 +52,33 @@ def handle_trade(event, _):
     params = event["queryStringParameters"]
     variant = str_to_bool(str(params and params.get('variant')))
     login(variant)
-    if event['httpMethod'].upper() == 'POST':
-        response = post_trade(event)
-    else:
-        response = get_trade()
-
+    response = get_trade()
     return response
 
 
 def handle_ws(event, _):
-    print('event', event)
+    # print('event', event)
     verified = verify_token(event)
 
     if not (verified and verified['email'] == os.environ['RH_USERNAME']):
         print('websocket auth failure')
         return error(401, 'This account is not verified.')
 
-    print('verified', verified)
     context = event['requestContext']
     domain = context['domainName']
     connection = context['connectionId']
     callback = f'https://{domain}'
 
     client = boto3.client('apigatewaymanagementapi', endpoint_url=callback)
-    i = 0
-    while i < 3:
-        # data = f'alive_{i}_{connection}'.encode()
-        data = json.dumps({'i': i, 'conn': connection}).encode()
-        client.post_to_connection(Data=data, ConnectionId=connection)
-        sleep(15)
-        i += 1
+    req_body = json.loads(event['body'])
+    variant = bool(req_body.get('variant'))
+    login(variant)
+    response = post_trade(event)
+    client.post_to_connection(Data=response, ConnectionId=connection)
     client.delete_connection(ConnectionId=connection)
     client.close()
 
-    print(event)
+    # print(event)
     return {
         "statusCode": 200,
         "body": 'OK',
@@ -158,6 +151,7 @@ def post_trade(event):
     symbols = req_body['symbols']
     trade = Buy() if trade_type.upper() == 'BUY' else Sell()
     results = trade.execute(symbols)
+    return results
     status_code = 200
 
     return {
