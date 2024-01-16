@@ -349,7 +349,10 @@ class Sell(Trade):
             curr = option['curr']
             expiration = option['expirations'][curr[0]]
             print('symbol', symbol, 'option', option)
-            contract = option['contracts'][curr[0]][curr[1]]
+            contract_candidates = option['contracts'][curr[0]]
+            if not contract_candidates:
+                continue
+            contract = contract_candidates[curr[1]]
 
             strike = float(contract['strike_price'])
             price = self.get_price(contract, curr[2])
