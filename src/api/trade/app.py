@@ -232,11 +232,6 @@ def spread_is_high(mid_price, price):
     return is_high
 
 
-# def update_contract(curr_contract):
-#     new_contract = rh.options.get_option_market_data_by_id(curr_contract['id'])[
-#         0]
-#     return curr_contract | new_contract
-
 def update_contract(symbol, lookup):
     option = lookup[symbol]
     curr = option['curr']
@@ -248,6 +243,10 @@ def update_contract(symbol, lookup):
 
 
 class Trade:
+    # curr[x, y, z]
+    # x is expiration index
+    # y is contract index
+    # z is price index
     def execute(self, symbols):
         results = {}
         lookup = self.init_chain(symbols)
@@ -306,7 +305,7 @@ class Sell(Trade):
         return price
 
     def adjust_option(self, symbol, lookup, results):
-        lookup = update_contract(symbol, lookup)
+        # lookup = update_contract(symbol, lookup)
         option = lookup[symbol]
         curr = option['curr']
         contracts = option['contracts']
@@ -342,7 +341,7 @@ class Sell(Trade):
             else:
                 curr[1] += 1
         # lookup['contracts'] = contracts
-        # lookup = update_contract(symbol, lookup)
+        lookup = update_contract(symbol, lookup)
         return lookup, results
 
     def execute_orders(self, lookup, results):
