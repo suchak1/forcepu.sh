@@ -820,6 +820,7 @@ const TradePage = () => {
             ),
             ...(prev.slice(variant + 1).length === 1 ? [prev.slice(variant + 1)] : prev.slice(variant + 1))
           ])
+          setTradeLoading(prev => prev[variant ? variantLabels.DEF : variantLabels.VAR].delete(symbol) ? prev : prev);
         }
       })
 
@@ -853,7 +854,7 @@ const TradePage = () => {
 
     }
   }, [message]);
-
+  console.log('tradeLoading', tradeLoading);
   const sell = async (holding) => {
     setTradeLoading(prev => prev[variant ? variantLabels.DEF : variantLabels.VAR].add(holding.symbol) && prev);
     const renderError = () => notification.error({
@@ -910,7 +911,7 @@ const TradePage = () => {
       console.error(e);
       renderError()
     }
-    setTradeLoading(prev => prev[variant ? variantLabels.DEF : variantLabels.VAR].delete(holding.symbol) ? prev : prev);
+    // setTradeLoading(prev => prev[variant ? variantLabels.DEF : variantLabels.VAR].delete(holding.symbol) ? prev : prev);
   }
 
   const columns = toggle ? [
