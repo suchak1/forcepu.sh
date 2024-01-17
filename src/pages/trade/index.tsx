@@ -779,8 +779,16 @@ const TradePage = () => {
 
   useEffect(() => {
     if (!isEmpty(message)) {
-      if (message?.message) {
-        console.error(message.message);
+      const { message: error } = message;
+      if (error) {
+        console.error(error);
+        if (error === 'Internal server error') {
+          notification.error({
+            duration: 10,
+            message: "Failure",
+            description: `Failed to execute order.`,
+          });
+        }
         return;
       }
       Object.keys(message).forEach(symbol => {
