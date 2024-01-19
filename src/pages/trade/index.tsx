@@ -855,6 +855,7 @@ const TradePage = () => {
     }
   }, [message]);
   console.log('tradeLoading', tradeLoading);
+  // getting added to wrong set in tradeLoading (variant instead of default)
   const sell = async (holding) => {
     setTradeLoading(prev => prev[variant ? variantLabels.DEF : variantLabels.VAR].add(holding.symbol) && prev);
     const renderError = () => notification.error({

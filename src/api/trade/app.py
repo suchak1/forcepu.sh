@@ -74,7 +74,9 @@ def handle_ws(event, _):
     variant = bool(req_body.get('variant'))
     login(variant)
     response = post_trade(event)
-    client.post_to_connection(Data=response, ConnectionId=connection)
+    # convert response to bytes
+    data = json.dumps(response).encode('utf-8')
+    client.post_to_connection(Data=data, ConnectionId=connection)
     client.delete_connection(ConnectionId=connection)
     client.close()
 
@@ -361,6 +363,10 @@ class Sell(Trade):
         return orders
 
 
+class SellOut(Trade):
+    pass
+
+
 class Buy(Trade):
     def init_chain(self, symbols):
         opts = rh.options.get_aggregate_open_positions()
@@ -451,12 +457,20 @@ class Buy(Trade):
 
 def roll_out(symbols):
     # need to buy and have wait and retry
-    pass
+    trade = Buy()
+    buy_results = trade.execute(symbols)
+    trade = SellOut()
+    sell_results = trade.execute(symbols, buy_results)
+    # return sell minus buy results
 
 
-def roll_in():
+def roll_in(symbols):
     # also implement rolling in as well as out
-    pass
+    trade = Buy()
+    buy_results = trade.execute(symbols)
+    trade = SellIn()
+    sell_results = trade.execute(symbols, buy_results)
+    # return sell minus buy results
 
 # also need to add tests backend and frontend
 # also need to create scripts that run at noon each weekday for sell => then rolling in
