@@ -367,6 +367,10 @@ class SellOut(Trade):
     pass
 
 
+class SellIn(Trade):
+    pass
+
+
 class Buy(Trade):
     def init_chain(self, symbols):
         opts = rh.options.get_aggregate_open_positions()
@@ -462,6 +466,7 @@ def roll_out(symbols):
     trade = SellOut()
     sell_results = trade.execute(symbols, buy_results)
     # return sell minus buy results
+    return sell_results
 
 
 def roll_in(symbols):
@@ -471,6 +476,8 @@ def roll_in(symbols):
     trade = SellIn()
     sell_results = trade.execute(symbols, buy_results)
     # return sell minus buy results
+    return sell_results
+
 
 # also need to add tests backend and frontend
 # also need to create scripts that run at noon each weekday for sell => then rolling in
