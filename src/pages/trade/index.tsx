@@ -821,7 +821,7 @@ const TradePage = () => {
             ),
             ...(prev.slice(variant + 1).length === 1 ? [prev.slice(variant + 1)] : prev.slice(variant + 1))
           ])
-          setTradeLoading(prev => prev[variant ? variantLabels.DEF : variantLabels.VAR].delete(symbol) ? prev : prev);
+          setTradeLoading(prev => prev[variant ? variantLabels.VAR : variantLabels.DEF].delete(symbol) ? prev : prev);
         }
       })
 
@@ -858,7 +858,7 @@ const TradePage = () => {
   console.log('tradeLoading', tradeLoading);
   // getting added to wrong set in tradeLoading (variant instead of default)
   const sell = async (holding) => {
-    setTradeLoading(prev => prev[variant ? variantLabels.DEF : variantLabels.VAR].add(holding.symbol) && prev);
+    setTradeLoading(prev => prev[variant ? variantLabels.VAR : variantLabels.DEF].add(holding.symbol) && prev);
     const renderError = () => notification.error({
       duration: 10,
       message: "Failure",
@@ -943,8 +943,8 @@ const TradePage = () => {
         <Button
           className={holding.open_contracts ? layoutStyles.start : subStyles.subscribe}
           onClick={() => sell(holding)}
-          loading={tradeLoading[variant ? variantLabels.DEF : variantLabels.VAR].has(holding.symbol)}
-          disabled={tradeLoading[variant ? variantLabels.DEF : variantLabels.VAR].has(holding.symbol)}
+          loading={tradeLoading[variant ? variantLabels.VAR : variantLabels.DEF].has(holding.symbol)}
+          disabled={tradeLoading[variant ? variantLabels.VAR : variantLabels.DEF].has(holding.symbol)}
         >
           {holding.open_contracts ? 'BUY' : 'SELL'}
         </Button>
