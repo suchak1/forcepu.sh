@@ -799,9 +799,10 @@ const TradePage = () => {
             description: `Failed to execute order for ${symbol}.`,
           });
         } else {
+          const { direction } = message[symbol];
           notification.success({
             duration: 10,
-            message: <span style={{ display: 'flex', justifyContent: 'space-between' }}><span>Success</span><span style={{ color: 'lime', fontWeight: 'bold' }}>+ ${parseFloat(message[symbol].premium).toFixed(0)}</span></span>,
+            message: <span style={{ display: 'flex', justifyContent: 'space-between' }}><span>Success</span><span style={{ color: direction === 'credit' ? 'lime' : 'red', fontWeight: 'bold' }}>{direction === 'credit' ? '+' : '-'} ${(parseFloat(message[symbol].premium) * parseFloat(message[symbol].quantity)).toFixed(0)}</span></span>,
             description: `Executed order for ${symbol}!`,
           });
           setPortfolio(prev => [
@@ -811,7 +812,7 @@ const TradePage = () => {
                 ({
                   ...p,
                   ...{
-                    open_contracts: p.open_contracts - parseInt(message[symbol].quantity),
+                    open_contracts: p.open_contracts + (direction === 'credit' ? -1 : 1) * parseInt(message[symbol].quantity),
                     expiration: message[symbol].legs[0].expiration_date,
                     strike: parseFloat(message[symbol].legs[0].strike_price),
                     chance: 0.88
