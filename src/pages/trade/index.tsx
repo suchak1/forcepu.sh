@@ -811,7 +811,7 @@ const TradePage = () => {
                 ({
                   ...p,
                   ...{
-                    open_contracts: portfolio[variant][symbol].open_contracts - parseInt(message[symbol].quantity),
+                    open_contracts: p.open_contracts - parseInt(message[symbol].quantity),
                     expiration: message[symbol].legs[0].expiration_date,
                     strike: parseFloat(message[symbol].legs[0].strike_price),
                     chance: 0.88
