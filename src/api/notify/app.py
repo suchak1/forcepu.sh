@@ -191,6 +191,7 @@ def post_notify(event: dict[str, Any], _: Any) -> dict[str, Any]:
     emit_secret = os.environ["EMIT_SECRET"]
     req_headers = normalize_headers(event)
     origin = get_origin(event)
+    print("headers", req_headers)
     header = "emit-secret"
     if not req_headers.get(header) == emit_secret:
         sleep(0 if TEST else 10)
