@@ -22,12 +22,12 @@ def test_post_notify() -> None:
     """Test post_notify validates secret and sends notifications."""
     body = {"Time": "2020-01-01", "Sig": True}
     event = {
-        "headers": {"emit-secret": "wrong"},
+        "headers": {"emit_secret": "wrong"},
         "body": json.dumps(body),
     }
     res = post_notify(event, None)
     assert res["statusCode"] == 401
-    event["headers"]["emit-secret"] = "secret"
+    event["headers"]["emit_secret"] = "secret"
     user = UserModel.get("test_user@example.com")
     alerts = user.alerts
     alerts["email"] = True
